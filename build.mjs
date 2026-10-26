@@ -264,9 +264,20 @@ ${body}
 `;
 }
 
-const socials = () =>
+// Icônes officielles des réseaux (Simple Icons, CC0), en ligne. Blanches ; dégradé du site au survol.
+const SOCIAL_ICON_FILE = { Instagram: 'instagram', TikTok: 'tiktok', YouTube: 'youtube', Facebook: 'facebook', X: 'x' };
+function socialIcon(nom, suffix) {
+  const file = SOCIAL_ICON_FILE[nom];
+  if (!file) return '';
+  const svg = readFileSync(join(ROOT, 'icons', 'simple-icons', `${file}.svg`), 'utf8');
+  const d = svg.match(/<path d="([^"]+)"/)[1];
+  const id = `si-${file}-${suffix}`;
+  return `<svg class="social-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="24" y2="0"><stop offset="0" stop-color="#7C3AED"/><stop offset=".45" stop-color="#3B5BFF"/><stop offset="1" stop-color="#FF3CAC"/></linearGradient></defs><path d="${d}" style="--icon-hover: url(#${id})"/></svg>`;
+}
+
+const socials = ({ icons = false, suffix = '' } = {}) =>
   `<ul class="socials">
-        ${site.reseaux.map((r) => `<li><a href="${esc(r.url)}" rel="me noopener" target="_blank">${esc(r.nom)}</a></li>`).join('\n        ')}
+        ${site.reseaux.map((r) => `<li><a href="${esc(r.url)}" rel="me noopener" target="_blank">${icons ? socialIcon(r.nom, suffix) : ''}${esc(r.nom)}</a></li>`).join('\n        ')}
       </ul>`;
 
 const sectionHead = (label, title, intro, id, tag = 'h2') => `<p class="label" data-reveal>${esc(label)}</p>
@@ -315,7 +326,7 @@ function contactBlock(lang, { tag = 'h2', id = 'contact-title' } = {}) {
       </dl>
       <div data-reveal>
         <p class="label">${esc(L.contact.suivre)}</p>
-        ${socials()}
+        ${socials({ icons: tag === 'h1', suffix: lang })}
       </div>
     </div>
     <form class="contact-form card glass" name="contact" method="POST" action="${ROUTES.merci[lang]}" data-netlify="true" netlify-honeypot="bot-field" data-reveal
