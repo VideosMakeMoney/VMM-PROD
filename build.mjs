@@ -37,8 +37,8 @@ const LOGO = {
   webm: '/logo/vmm-logo-spin.webm',
   mp4: '/logo/vmm-logo-spin.mp4',
   poster: '/logo/vmm-logo-spin-poster.jpg',
-  width: 512,
-  height: 512,
+  width: 480,
+  height: 480,
 };
 
 // ---------- utilitaires ----------

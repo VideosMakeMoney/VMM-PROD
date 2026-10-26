@@ -160,7 +160,8 @@ ul { list-style: none; margin: 0; padding: 0; }
 .logo span { color: var(--pink); }
 /* Logo 3D animé : le fond noir de la vidéo se fond dans le fond du site */
 .logo-video { display: inline-flex; align-items: center; min-height: 44px; }
-.logo-spin, .logo-still { display: block; height: 2rem; width: auto; mix-blend-mode: screen; }
+/* Vidéo carrée avec marge : à 48 px, le logo visible fait environ 24 px, la hauteur de l'ancien texte */
+.logo-spin, .logo-still { display: block; height: 48px; width: auto; mix-blend-mode: screen; }
 .logo-still { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .logo-spin { display: none; }
