@@ -158,6 +158,14 @@ ul { list-style: none; margin: 0; padding: 0; }
 .header-inner { display: flex; align-items: center; justify-content: space-between; min-height: var(--header-h); gap: 1rem; }
 .logo { font: 900 1.5rem/1 var(--font-title); color: var(--text); text-decoration: none; margin: 0; }
 .logo span { color: var(--pink); }
+/* Logo 3D animé : le fond noir de la vidéo se fond dans le fond du site */
+.logo-video { display: inline-flex; align-items: center; min-height: 44px; }
+.logo-spin, .logo-still { display: block; height: 2rem; width: auto; mix-blend-mode: screen; }
+.logo-still { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .logo-spin { display: none; }
+  .logo-still { display: block; }
+}
 .menu-toggle {
   min-height: 44px;
   min-width: 44px;

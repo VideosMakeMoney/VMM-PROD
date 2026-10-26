@@ -4,6 +4,9 @@
   root.classList.add('js');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // « Réduire les animations » : seulement l'image fixe du logo, sans télécharger la vidéo
+  if (reduced) document.querySelector('.logo-spin')?.remove();
+
   // Menu mobile
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.getElementById('menu');
