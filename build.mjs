@@ -451,6 +451,21 @@ function clientMarquee() {
   return `<div class="marquee" data-reveal><ul class="marquee-track">${items(false)}${items(true)}</ul></div>`;
 }
 
+// Icônes des 6 services (Lucide, ISC), en trait, dans l'ordre de content/*.json → services.items.
+const SERVICE_ICONS = ['video', 'camera', 'drone', 'clapperboard', 'scissors', 'sparkles'];
+function serviceIcon(i, lang) {
+  const svg = readFileSync(join(ROOT, 'icons', 'lucide', `${SERVICE_ICONS[i]}.svg`), 'utf8');
+  // Formes du SVG, avec pathLength pour l'animation de tracé (svc-stroke)
+  const shapes = svg
+    .slice(svg.indexOf('>', svg.indexOf('<svg')) + 1, svg.lastIndexOf('</svg>'))
+    .trim()
+    .split('\n')
+    .map((l) => l.trim().replace(/\s*\/>$/, ' pathLength="300" />'))
+    .join('');
+  const id = `svc-grad-${i + 1}-${lang}`;
+  return `<svg class="svc-icon" viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="url(#${id})" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="24" y2="0"><stop offset="0" stop-color="#7C3AED"/><stop offset=".45" stop-color="#3B5BFF"/><stop offset="1" stop-color="#FF3CAC"/></linearGradient></defs>${shapes}</svg>`;
+}
+
 function servicesPage(lang) {
   const L = langs[lang];
   const S = L.services;
@@ -462,7 +477,7 @@ function servicesPage(lang) {
         .map((s, i) => {
           const n = String(i + 1).padStart(2, '0');
           return `<li class="card glass service" data-reveal>
-        <svg class="svc-num" viewBox="0 0 120 64" aria-hidden="true"><text x="0" y="54">${n}</text></svg>
+        ${serviceIcon(i, lang)}
         <h2>${t(s.titre)}</h2>
         <p class="muted">${t(s.texte)}</p>
       </li>`;
