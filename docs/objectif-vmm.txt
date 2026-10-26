@@ -1,0 +1,18 @@
+Reconstruire la landing page d'accueil de VMM Productions (Videos Make Money), vidéaste corporatif du Grand Montréal et des Laurentides, sur le domaine videosmakemoney.ca.
+
+Direction : « Notre passion, aider la vôtre à grandir. » Le site montre d'abord le portfolio et l'authenticité, et invite sans pression, sans discours de vente.
+
+Accueil en défilement, 5 sections dans cet ordre :
+1. Bandeau : vidéo muette en lecture auto et en boucle, H1 « Videos Make Money. », sous-titre « Notre passion, aider la vôtre à grandir. », un SEUL bouton « Nous contacter ↓ » qui défile jusqu'à la section Contact.
+2. Ce que nous créons : 4 vignettes ouvrant chacune une lightbox vidéo (vidéos promotionnelles, couverture événementielle, histoires d'entreprises, coulisses/making-of/bandes-annonces), bouton « Découvrir nos services → » vers /services.
+3. Derrière VMM : JD (fondateur) et Renaud (cameraman, près de 10 ans d'expérience), bouton « Faire notre connaissance → » vers /about.
+4. Nos réalisations : vidéos vedettes, bouton « Explorer notre portfolio → » vers /portfolio.
+5. Contact : formulaire actuel (Nom, Courriel, Entreprise, Fourchette de budget, Projet), courriel jeandavid@videosmakemoney.ca.
+
+Navigation : Accueil, Services, Portfolio, À propos, Contact, avec la bascule EN/FR sur chaque page. Retirer Process, Pricing et « Prendre rendez-vous ».
+
+Mobile : une seule colonne, boutons tactiles d'au moins 44 px, vidéos verticales affichées entières sans recadrage.
+
+SEO/GEO local : Montréal, Laurentides, vidéaste corporatif, vidéo promotionnelle. Title et meta uniques en FR et EN, hreflang fr-CA/en-CA/x-default, JSON-LD schema.org (LocalBusiness, VideoObject, Person, FAQPage), sitemap.xml, llms.txt, contenu lisible sans JavaScript, lazy-load des vidéos.
+
+Livrable : code sur GitHub et démo sur Netlify. Rien en ligne sur le vrai domaine sans l'accord de Max.

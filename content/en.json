@@ -1,0 +1,148 @@
+{
+  "_aide": "English copy: draft translation of the French, awaiting approval. The FAQ answers must be taken from the current site's EN dictionary.",
+  "lang": "en-CA",
+  "avisTraduction": "[TO CONFIRM: English copy is a draft translation awaiting approval]",
+  "nav": {
+    "accueil": "Home",
+    "services": "Services",
+    "portfolio": "Portfolio",
+    "apropos": "About",
+    "contact": "Contact",
+    "menu": "Menu",
+    "fermer": "Close",
+    "allerAuContenu": "Skip to content",
+    "autreLangue": "FR",
+    "autreLangueNom": "Français",
+    "filAriane": "Breadcrumb"
+  },
+  "seo": {
+    "accueil": { "title": "VMM Productions | Video Production, Greater Montreal and the Laurentians", "description": "VMM Productions (Videos Make Money), corporate videographer in Greater Montreal and the Laurentians: promotional videos, event coverage, business stories and behind the scenes." },
+    "services": { "title": "Video Production and Drone Services | VMM Productions, Montreal and Laurentians", "description": "Video production, photography, aerial drone footage, scriptwriting, editing and motion graphics: VMM Productions services in Greater Montreal and the Laurentians." },
+    "portfolio": { "title": "Business Video Portfolio | VMM Productions, Montreal and Laurentians", "description": "Final productions by client and behind-the-scenes footage: the video portfolio of VMM Productions, corporate videographer in Greater Montreal and the Laurentians." },
+    "apropos": { "title": "About | JD and Renaud, the VMM Productions team", "description": "The faces behind VMM Productions: JD, founder, and Renaud, camera operator with nearly ten years of experience, in Greater Montreal and the Laurentians." },
+    "contact": { "title": "Contact | VMM Productions, Corporate Videographer in Montreal and the Laurentians", "description": "Tell us about your video project. VMM Productions works in Greater Montreal and the Laurentians. Email: jeandavid@videosmakemoney.ca." },
+    "merci": { "title": "Message sent | VMM Productions", "description": "Your message was sent to VMM Productions." },
+    "introuvable": { "title": "Page not found | VMM Productions", "description": "This page does not exist." }
+  },
+  "hero": {
+    "surtitre": "VMM PRODUCTIONS · CINEMA AND STORYTELLING",
+    "titre": "Videos Make Money.",
+    "sousTitre": "Our passion: helping yours grow.",
+    "texte": "Bringing someone's vision to life is something special. At VMM, we bring story, image and sound together to capture what makes your business different: the people, the passion and the pride behind every project.",
+    "bouton": "Contact us ↓",
+    "posterManquant": "[TO CONFIRM: video and poster image to be provided]",
+    "pause": "Pause video",
+    "lecture": "Play video"
+  },
+  "creons": {
+    "etiquette": "What we create",
+    "titre": "What we create",
+    "intro": "Every business has a story worth telling. Here are four ways to bring it to life on video.",
+    "videoManquante": "[TO CONFIRM: category video]",
+    "bouton": "Discover our services →"
+  },
+  "equipe": {
+    "etiquette": "Behind VMM",
+    "titre": "Behind VMM",
+    "intro": "Great productions start with the people behind the camera. Meet the ones who bring our work to life.",
+    "membres": [
+      { "id": "jd", "nom": "JD", "nomComplet": "Jean-David", "role": "Founder", "texte": "From construction sites to film sets, JD brings a hands-on perspective to every production. For him, filming means showcasing what people build and what they are passionate about.", "photo": "" },
+      { "id": "renaud", "nom": "Renaud", "nomComplet": "Renaud", "role": "Camera operator", "texte": "With nearly ten years of experience behind the camera, Renaud brings creativity, energy and an immersive approach to capturing the action as it happens.", "photo": "" }
+    ],
+    "photoManquante": "[TO CONFIRM: authentic photo to be provided]",
+    "bouton": "Meet us →"
+  },
+  "realisations": {
+    "etiquette": "Our work",
+    "titre": "Our work",
+    "intro": "A glimpse of the stories, people and moments we have had the privilege to capture.",
+    "vedettesMin": 4,
+    "vedetteManquante": "[TO CONFIRM: featured video]",
+    "bouton": "Explore our portfolio →"
+  },
+  "avis": {
+    "etiquette": "Google reviews",
+    "titre": "What people say",
+    "placeholder": "[TO CONFIRM: placement and account for the Google reviews widget]"
+  },
+  "contact": {
+    "etiquette": "Contact",
+    "titre": "Let's talk about your project",
+    "texte": "Write to us, no strings attached. We work in Greater Montreal and the Laurentians. [TO CONFIRM: final copy]",
+    "courrielLabel": "Email",
+    "zoneLabel": "Area",
+    "zone": "Greater Montreal and the Laurentians",
+    "suivre": "Follow us",
+    "champs": {
+      "nom": "Name",
+      "courriel": "Email",
+      "entreprise": "Company",
+      "budget": "Budget range",
+      "budgetChoisir": "Choose a range",
+      "projet": "Project",
+      "envoyer": "Send",
+      "envoi": "Sending…",
+      "succes": "Thank you! Your message is on its way. We'll get back to you shortly.",
+      "erreur": "Sending failed. Please try again, or email us directly at jeandavid@videosmakemoney.ca."
+    }
+  },
+  "faq": {
+    "titre": "Frequently asked questions",
+    "items": [
+      { "q": "How long does a typical project take?", "r": "[TO CONFIRM: original EN answer from the current site's dictionary]" },
+      { "q": "What is included in the production process?", "r": "[TO CONFIRM: original EN answer from the current site's dictionary]" },
+      { "q": "Do you offer bilingual content (French & English)?", "r": "[TO CONFIRM: original EN answer from the current site's dictionary]" },
+      { "q": "What if I don't know what type of content my business needs?", "r": "[TO CONFIRM: original EN answer from the current site's dictionary]" }
+    ]
+  },
+  "services": {
+    "titre": "Our services.",
+    "intro": "From the first idea to the final cut, we bring together the creative and technical skills needed to bring your vision to life.",
+    "items": [
+      { "titre": "Video production", "texte": "Professional on-location shoots to bring your ideas to life." },
+      { "titre": "Photography", "texte": "Images that capture people, moments and the details that matter." },
+      { "titre": "Aerial and drone footage", "texte": "Unique aerial perspectives to enrich your visuals." },
+      { "titre": "Scriptwriting and storytelling", "texte": "Ideas turned into structured stories, full of meaning and emotion." },
+      { "titre": "Editing and post-production", "texte": "Image, sound and story brought together in a creative edit." },
+      { "titre": "Animation and motion graphics", "texte": "Titles, graphics and animated effects that bring your images to life." }
+    ],
+    "bouton": "Explore our work →"
+  },
+  "portfolio": {
+    "titre": "Our portfolio.",
+    "intro": "Discover our final productions and the moments that come to life behind the camera.",
+    "vedettesTitre": "Featured productions",
+    "parClientTitre": "Final productions by client",
+    "parClientIntro": "Final productions are grouped by business, with no arbitrary limit on the number of videos.",
+    "coulissesTitre": "Behind the scenes, trailers and making-of",
+    "coulissesIntro": "Step behind the camera and see how our productions take shape, from preparation to the final frame.",
+    "aVenirTitre": "Coming soon to the portfolio",
+    "videos": "videos",
+    "video": "video",
+    "titreManquant": "[TO CONFIRM: title]",
+    "vedetteManquante": "[TO CONFIRM: featured video for this category]",
+    "bouton": "Meet the people behind VMM →"
+  },
+  "apropos": {
+    "titre": "The faces behind VMM.",
+    "intro": "Real people. Genuine passion. Stories to tell.",
+    "membres": [
+      { "id": "jd", "titre": "Meet JD", "texte": "My journey began with a passion for visual storytelling. I studied at the Toronto Film School before having to put my studies on hold for financial reasons. Today, I work in construction while building VMM Productions: two worlds that taught me the value of hard work and human relationships. Every production is a chance to bring a vision to life and show the pride behind the work." },
+      { "id": "renaud", "titre": "Meet Renaud", "texte": "With nearly ten years behind the camera, Renaud brings experience, originality and an instinct for capturing the action. His immersive approach turns spontaneous moments into vivid images.", "note": "[TO CONFIRM: bio to be validated]" }
+    ],
+    "bluewise": "[TO CONFIRM: BlueWise AI paragraph]",
+    "bouton": "Get in touch →"
+  },
+  "lightbox": {
+    "fermer": "Close video",
+    "titre": "Video player",
+    "voir": "Watch the video",
+    "manquante": "[TO CONFIRM: video to be provided]"
+  },
+  "pied": {
+    "slogan": "[TO CONFIRM: footer copy]",
+    "droits": "All rights reserved."
+  },
+  "merci": { "titre": "Thank you!", "texte": "Your message is on its way. We'll get back to you shortly.", "retour": "Back to home" },
+  "introuvable": { "titre": "Page not found", "texte": "This page does not exist or has moved.", "retour": "Back to home" }
+}

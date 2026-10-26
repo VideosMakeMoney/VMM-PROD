@@ -1,0 +1,21 @@
+Client : JD (Jean-David), VMM Productions Inc. Développeur : Max Rochon. Source de vérité : le document « VMM Site Reconstruction 2026 » de JD.
+
+Règles absolues : ne jamais inventer de faits, clients, témoignages, chiffres ou bios. Ce qui manque reste un placeholder visible [À CONFIRMER]. Ne reprendre aucune statistique de l'ancienne maquette (« +1.2M conversions », etc.). Aucune stratégie pub ni service IA.
+
+Charte graphique extraite de videosmakemoney.ca, à garder à l'identique :
+- Polices (Google Fonts) : Syne 700/800/900 pour les titres, Space Grotesk 400/500/600 pour le texte, JetBrains Mono 600/700 pour les étiquettes. Le bandeau actuel est en Inter 400/700/800 [À CONFIRMER avec JD : Syne partout ou Inter pour le bandeau].
+- Couleurs : fond #08080f, surfaces #0f0f1a et #14142b, violet #7b2fff, violet clair #bf7fff, rose néon #ff2d78, cyan #00f5ff, texte #f0eeff / #8b8ba8 / #7a7a9a, bordures #1e1e3a / #3d2080.
+- Dégradé des titres : linear-gradient(90deg, #7C3AED 0%, #3B5BFF 45%, #FF3CAC 100%) appliqué au texte.
+- Halos violets rgba(123,47,255,.12) et roses rgba(255,45,120,.08), floutés à 100-120 px.
+- Bouton néon : box-shadow 0 0 24px #ff3cac59, inset 0 0 12px #7c3aed2e (plus fort au survol). Cartes en verre flouté, coins de 8 px à 1.5rem.
+- Animations : GSAP + ScrollTrigger, défilement fluide Lenis, fade-in .8s cubic-bezier(.16,1,.3,1), halo-pulse 3.2s. Respecter « réduire les animations ».
+
+Médias existants : vidéo héro en version ordi (vmm-hero-desktop.mp4) et mobile (vmm-hero-mobile.mp4). 23 YouTube Shorts verticaux : Tapis Rouge (7), Pur Construction (7), Hors-Paire Excavation (2), BlueWise (2), coulisses (5). À ajouter plus tard : HH Portes et Fenêtres, Paintball Mirabel.
+
+Réseaux sociaux : instagram.com/videosmakemoney, tiktok.com/@videosmakemoney3, YouTube (chaîne UCFuY4K2iKcRxa5R6vx6Hmxg), Facebook (id 61579432510766), x.com/IncVmm47623.
+
+Technique : JD doit pouvoir ajouter lui-même ses vidéos et ses clients (CMS ou fichier JSON éditable). Le formulaire passe aujourd'hui par Vercel (/api/contact) et doit être refait sur Netlify (Netlify Forms ou Function). Ton : français québécois, vouvoiement.
+
+Devis DEV-2026-667 : 650 $ pour le site et 250 $ pour le SEO/GEO, fin prévue le 15 novembre 2026.
+
+Placeholders à garder : bio complète de Renaud, photos authentiques de JD et Renaud, 4 vidéos vedettes, réponses FAQ, textes EN, liens de HH Portes et Fenêtres et Paintball Mirabel.
