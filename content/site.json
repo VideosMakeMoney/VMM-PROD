@@ -1,0 +1,58 @@
+{
+  "_aide": "Infos partagées FR/EN. Tout ce qui contient [À CONFIRMER] reste visible sur le site tant que ce n'est pas remplacé.",
+  "nom": "VMM Productions",
+  "nomLegal": "VMM Productions Inc.",
+  "marque": "Videos Make Money",
+  "siteUrl": "https://videosmakemoney.ca",
+  "courriel": "jeandavid@videosmakemoney.ca",
+  "telephone": "",
+  "adresse": {
+    "_aide": "Laisser vide si aucune adresse publique. Sert au JSON-LD LocalBusiness.",
+    "rue": "",
+    "ville": "",
+    "region": "QC",
+    "codePostal": "",
+    "pays": "CA"
+  },
+  "zonesDesservies": [
+    "Grand Montréal",
+    "Laurentides"
+  ],
+  "reseaux": [
+    {
+      "nom": "Instagram",
+      "url": "https://www.instagram.com/videosmakemoney"
+    },
+    {
+      "nom": "TikTok",
+      "url": "https://www.tiktok.com/@videosmakemoney3"
+    },
+    {
+      "nom": "YouTube",
+      "url": "https://www.youtube.com/channel/UCFuY4K2iKcRxa5R6vx6Hmxg"
+    },
+    {
+      "nom": "Facebook",
+      "url": "https://www.facebook.com/profile.php?id=61579432510766"
+    },
+    {
+      "nom": "X",
+      "url": "https://x.com/IncVmm47623"
+    }
+  ],
+  "heroVideo": {
+    "_aide": "Fichiers dans static/images/ (mêmes chemins que le site actuel). Le poster est l'image affichée avant la lecture. Un .webm optionnel est essayé en premier s'il existe.",
+    "ordi": "/images/vmm-hero-desktop.mp4",
+    "mobile": "/images/vmm-hero-mobile.mp4",
+    "ordiWebm": "",
+    "mobileWebm": "",
+    "poster": ""
+  },
+  "budgets": [
+    "[À CONFIRMER : reprendre les fourchettes de budget du formulaire actuel]"
+  ],
+  "avisGoogle": {
+    "_aide": "Code du widget d'avis Google existant, collé tel quel. Laisser vide tant que l'emplacement et le compte ne sont pas confirmés.",
+    "widgetHtml": ""
+  }
+}

@@ -1,0 +1,365 @@
+{
+  "_aide": "Portfolio de VMM, éditable par JD. Une entrée par vidéo. youtubeId = l'identifiant dans l'URL (youtube.com/shorts/ABC123 → ABC123). type : \"finale\" (production finale, classée par client) ou \"coulisses\" (coulisses, bandes-annonces, making-of). categorie : promo, evenements, histoires ou coulisses. vedette : true pour l'afficher dans « Nos réalisations » et dans les vedettes par catégorie. langue : fr ou en. titre vide = « [À CONFIRMER] » affiché. dateMiseEnLigne (AAAA-MM-JJ) aide Google.",
+  "categories": [
+    {
+      "id": "promo",
+      "titre": {
+        "fr": "Vidéos promotionnelles",
+        "en": "Promotional videos"
+      },
+      "texte": {
+        "fr": "Mettez en lumière votre savoir-faire, votre différence et ce qui vous anime.",
+        "en": "Showcase your know-how, what sets you apart and what drives you."
+      },
+      "videoAccueil": ""
+    },
+    {
+      "id": "evenements",
+      "titre": {
+        "fr": "Couverture événementielle",
+        "en": "Event coverage"
+      },
+      "texte": {
+        "fr": "Revivez l'énergie, l'ambiance et les moments marquants de votre événement.",
+        "en": "Relive the energy, the atmosphere and the standout moments of your event."
+      },
+      "videoAccueil": ""
+    },
+    {
+      "id": "histoires",
+      "titre": {
+        "fr": "Histoires d'entreprises",
+        "en": "Business stories"
+      },
+      "texte": {
+        "fr": "Donnez une voix aux personnes derrière votre entreprise et à leur passion.",
+        "en": "Give a voice to the people behind your business and their passion."
+      },
+      "videoAccueil": ""
+    },
+    {
+      "id": "coulisses",
+      "titre": {
+        "fr": "Coulisses, making-of et bandes-annonces",
+        "en": "Behind the scenes, making-of and trailers"
+      },
+      "texte": {
+        "fr": "Découvrez la créativité et le travail d'équipe derrière chaque tournage.",
+        "en": "Discover the creativity and teamwork behind every shoot."
+      },
+      "videoAccueil": ""
+    }
+  ],
+  "_aideCategories": "videoAccueil = ID YouTube de la vidéo ouverte par la vignette sur l'accueil. [À CONFIRMER : vidéo de chaque catégorie]",
+  "clients": [
+    {
+      "nom": "Tapis Rouge",
+      "url": ""
+    },
+    {
+      "nom": "Pur Construction",
+      "url": "",
+      "note": "[À CONFIRMER : orthographe « Pur » ou « PUR »]"
+    },
+    {
+      "nom": "Hors-Paire Excavation",
+      "url": "",
+      "note": "[À CONFIRMER : orthographe « Hors-Paire »]"
+    },
+    {
+      "nom": "BlueWise",
+      "url": ""
+    }
+  ],
+  "clientsAVenir": [
+    {
+      "nom": "HH Portes et Fenêtres",
+      "url": "",
+      "note": "[À CONFIRMER : liens des vidéos]"
+    },
+    {
+      "nom": "Paintball Mirabel",
+      "url": "",
+      "note": "[À CONFIRMER : liens du making-of et de l'album photo]"
+    }
+  ],
+  "videos": [
+    {
+      "client": "Tapis Rouge",
+      "categorie": "evenements",
+      "type": "finale",
+      "youtubeId": "",
+      "langue": "",
+      "titre": "Une équipe soudée",
+      "vedette": true,
+      "vertical": true,
+      "dateMiseEnLigne": "",
+      "note": "[À CONFIRMER : ID YouTube]"
+    },
+    {
+      "client": "Hors-Paire Excavation",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "",
+      "langue": "",
+      "titre": "ICI, TOUT A CHANGÉ",
+      "vedette": true,
+      "vertical": true,
+      "dateMiseEnLigne": "",
+      "note": "[À CONFIRMER : ID YouTube et catégorie (« production »)]"
+    },
+    {
+      "client": "Tapis Rouge",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "HeLdEo_awQ0",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "Tapis Rouge",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "t7zXkOFUdBs",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "Tapis Rouge",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "3ru2cIaqzeo",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "Tapis Rouge",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "g8pY-zSgljI",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "Tapis Rouge",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "kKz1pKN44dM",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "Tapis Rouge",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "O2UTFiYzGU0",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "Tapis Rouge",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "hmrhpcyGGEk",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "Pur Construction",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "3T-zTO2Q30A",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "Pur Construction",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "F8bCIpVoDFI",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "Pur Construction",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "G3owwW2k1Po",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "Pur Construction",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "duRjqB2By-0",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "Pur Construction",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "wNGp61LUV8g",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "Pur Construction",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "VaEXZ5aXcE0",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "Pur Construction",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "FOeE9sB-UtY",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "Hors-Paire Excavation",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "fxGb6xSqsfw",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "Hors-Paire Excavation",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "aRr26p8dQxk",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "BlueWise",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "LQmzAY6qCv8",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "BlueWise",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "zga2uMl5zhk",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "",
+      "categorie": "coulisses",
+      "type": "coulisses",
+      "youtubeId": "a6L9xFtDSgc",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "",
+      "categorie": "coulisses",
+      "type": "coulisses",
+      "youtubeId": "hOUNzv6MYc8",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "",
+      "categorie": "coulisses",
+      "type": "coulisses",
+      "youtubeId": "n7_rIrZQLk8",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "",
+      "categorie": "coulisses",
+      "type": "coulisses",
+      "youtubeId": "5cwIdsVO0Jc",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    },
+    {
+      "client": "",
+      "categorie": "coulisses",
+      "type": "coulisses",
+      "youtubeId": "z2eTv3wpHDA",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": ""
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+# Démo Netlify. L'indexation reste coupée tant que VMM_ALLOW_INDEX n'est pas "true".
+# Ne pas brancher le domaine videosmakemoney.ca sans l'accord de Max.
+[build]
+  command = "node build.mjs"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"

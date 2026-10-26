@@ -1,0 +1,148 @@
+{
+  "_aide": "Textes français du site. Tout ce qui contient [À CONFIRMER] reste visible sur le site tant que ce n'est pas remplacé.",
+  "lang": "fr-CA",
+  "avisTraduction": "",
+  "nav": {
+    "accueil": "Accueil",
+    "services": "Services",
+    "portfolio": "Portfolio",
+    "apropos": "À propos",
+    "contact": "Contact",
+    "menu": "Menu",
+    "fermer": "Fermer",
+    "allerAuContenu": "Aller au contenu",
+    "autreLangue": "EN",
+    "autreLangueNom": "English",
+    "filAriane": "Fil d'Ariane"
+  },
+  "seo": {
+    "accueil": { "title": "VMM Productions | Production vidéo, Grand Montréal et Laurentides", "description": "VMM Productions (Videos Make Money), vidéaste corporatif du Grand Montréal et des Laurentides : vidéos promotionnelles, couverture événementielle, histoires d'entreprises et coulisses." },
+    "services": { "title": "Services de production vidéo et drone | VMM Productions, Montréal et Laurentides", "description": "Production vidéo, photographie, images aériennes par drone, scénarisation, montage et animation : les services de VMM Productions dans le Grand Montréal et les Laurentides." },
+    "portfolio": { "title": "Portfolio vidéo d'entreprise | VMM Productions, Montréal et Laurentides", "description": "Productions finales classées par client et coulisses de tournage : le portfolio vidéo de VMM Productions, vidéaste corporatif du Grand Montréal et des Laurentides." },
+    "apropos": { "title": "À propos | JD et Renaud, l'équipe de VMM Productions", "description": "Les visages derrière VMM Productions : JD, fondateur, et Renaud, cameraman avec près de dix ans d'expérience, dans le Grand Montréal et les Laurentides." },
+    "contact": { "title": "Contact | VMM Productions, vidéaste corporatif à Montréal et dans les Laurentides", "description": "Parlez-nous de votre projet vidéo. VMM Productions travaille dans le Grand Montréal et les Laurentides. Courriel : jeandavid@videosmakemoney.ca." },
+    "merci": { "title": "Message envoyé | VMM Productions", "description": "Votre message a bien été envoyé à VMM Productions." },
+    "introuvable": { "title": "Page introuvable | VMM Productions", "description": "Cette page n'existe pas." }
+  },
+  "hero": {
+    "surtitre": "VMM PRODUCTIONS · CINÉMA ET RÉCIT",
+    "titre": "Videos Make Money.",
+    "sousTitre": "Notre passion, aider la vôtre à grandir.",
+    "texte": "Donner vie à la vision de quelqu'un a quelque chose d'unique. Chez VMM, nous réunissons récit, image et son pour capter ce qui rend votre entreprise différente : les gens, la passion et la fierté derrière chaque projet.",
+    "bouton": "Nous contacter ↓",
+    "posterManquant": "[À CONFIRMER : vidéo et image poster à fournir]",
+    "pause": "Mettre la vidéo en pause",
+    "lecture": "Lire la vidéo"
+  },
+  "creons": {
+    "etiquette": "Ce que nous créons",
+    "titre": "Ce que nous créons",
+    "intro": "Chaque entreprise a une histoire qui mérite d'être racontée. Voici quatre façons de lui donner vie en vidéo.",
+    "videoManquante": "[À CONFIRMER : vidéo de la catégorie]",
+    "bouton": "Découvrir nos services →"
+  },
+  "equipe": {
+    "etiquette": "Derrière VMM",
+    "titre": "Derrière VMM",
+    "intro": "Les grandes productions commencent par les personnes derrière la caméra. Découvrez celles qui donnent vie à notre travail.",
+    "membres": [
+      { "id": "jd", "nom": "JD", "nomComplet": "Jean-David", "role": "Fondateur", "texte": "Des chantiers de construction aux plateaux de tournage, JD apporte une perspective concrète à chaque production. Pour lui, filmer, c'est mettre en valeur ce que les gens bâtissent et ce qui les passionne.", "photo": "" },
+      { "id": "renaud", "nom": "Renaud", "nomComplet": "Renaud", "role": "Cameraman", "texte": "Avec près de dix ans d'expérience derrière la caméra, Renaud apporte créativité, énergie et une approche immersive pour saisir l'action sur le vif.", "photo": "" }
+    ],
+    "photoManquante": "[À CONFIRMER : photo authentique à fournir]",
+    "bouton": "Faire notre connaissance →"
+  },
+  "realisations": {
+    "etiquette": "Nos réalisations",
+    "titre": "Nos réalisations",
+    "intro": "Un aperçu des histoires, des personnes et des moments que nous avons eu le privilège de capter.",
+    "vedettesMin": 4,
+    "vedetteManquante": "[À CONFIRMER : vidéo vedette]",
+    "bouton": "Explorer notre portfolio →"
+  },
+  "avis": {
+    "etiquette": "Avis Google",
+    "titre": "Ce qu'on dit de nous",
+    "placeholder": "[À CONFIRMER : emplacement et compte du widget d'avis Google]"
+  },
+  "contact": {
+    "etiquette": "Contact",
+    "titre": "Parlons de votre projet",
+    "texte": "Écrivez-nous, sans engagement. Nous travaillons dans le Grand Montréal et les Laurentides. [À CONFIRMER : textes finaux]",
+    "courrielLabel": "Courriel",
+    "zoneLabel": "Zone",
+    "zone": "Grand Montréal et Laurentides",
+    "suivre": "Suivez-nous",
+    "champs": {
+      "nom": "Nom",
+      "courriel": "Courriel",
+      "entreprise": "Entreprise",
+      "budget": "Fourchette de budget",
+      "budgetChoisir": "Choisir une fourchette",
+      "projet": "Projet",
+      "envoyer": "Envoyer",
+      "envoi": "Envoi en cours…",
+      "succes": "Merci ! Votre message est bien parti. Nous vous répondrons sous peu.",
+      "erreur": "L'envoi n'a pas fonctionné. Réessayez, ou écrivez-nous directement à jeandavid@videosmakemoney.ca."
+    }
+  },
+  "faq": {
+    "titre": "Questions fréquentes",
+    "items": [
+      { "q": "Combien de temps prend un projet typique ?", "r": "La plupart des projets sont livrés en 1 à 2 semaines selon la complexité. Les clients en production continue reçoivent leurs livrables de façon régulière." },
+      { "q": "Qu'est-ce qui est inclus dans le processus de production ?", "r": "Chaque projet inclut la stratégie, le script, le tournage professionnel, le montage avancé et la direction créative — avec des options comme les prises de drone, motion graphics, animation de logo, visuels IA, voix off et livraison bilingue (FR + EN).", "note": "[À CONFIRMER : la réponse originale mentionne « stratégie » et « visuels IA », alors que la règle est « aucune stratégie pub ni service IA »]" },
+      { "q": "Offrez-vous du contenu bilingue (français & anglais) ?", "r": "Oui. Tous les forfaits incluent la livraison bilingue (FR + EN) adaptée au marché québécois pour un message naturel et efficace dans les deux langues." },
+      { "q": "Et si je ne sais pas quel type de contenu mon entreprise a besoin ?", "r": "Aucun problème. On vous guide vers la meilleure stratégie selon votre entreprise, vos objectifs et votre clientèle — pour créer du contenu conçu pour attirer l'attention, bâtir la confiance et générer de l'action." }
+    ]
+  },
+  "services": {
+    "titre": "Nos services.",
+    "intro": "De la première idée au montage final, nous réunissons les compétences créatives et techniques nécessaires pour donner vie à votre vision.",
+    "items": [
+      { "titre": "Production vidéo", "texte": "Des tournages professionnels sur le terrain pour donner vie à vos idées." },
+      { "titre": "Photographie", "texte": "Des images qui immortalisent les gens, les moments et les détails importants." },
+      { "titre": "Images aériennes et drone", "texte": "Des perspectives aériennes uniques pour enrichir vos images." },
+      { "titre": "Scénarisation et narration", "texte": "Des idées transformées en récits structurés, porteurs de sens et d'émotion." },
+      { "titre": "Montage et postproduction", "texte": "L'image, le son et le récit réunis dans un montage créatif." },
+      { "titre": "Animation et habillage graphique", "texte": "Des titres, graphiques et effets animés qui donnent vie à vos images." }
+    ],
+    "bouton": "Explorer nos réalisations →"
+  },
+  "portfolio": {
+    "titre": "Notre portfolio.",
+    "intro": "Découvrez nos productions finales et les moments qui prennent vie derrière la caméra.",
+    "vedettesTitre": "Productions vedettes",
+    "parClientTitre": "Productions finales par client",
+    "parClientIntro": "Les productions finales sont regroupées par entreprise, sans limite arbitraire du nombre de vidéos.",
+    "coulissesTitre": "Coulisses, bandes-annonces et making-of",
+    "coulissesIntro": "Passez derrière la caméra et découvrez comment nos productions prennent forme, de la préparation à la dernière image.",
+    "aVenirTitre": "Bientôt au portfolio",
+    "videos": "vidéos",
+    "video": "vidéo",
+    "titreManquant": "[À CONFIRMER : titre]",
+    "vedetteManquante": "[À CONFIRMER : vidéo vedette de la catégorie]",
+    "bouton": "Rencontrer les gens derrière VMM →"
+  },
+  "apropos": {
+    "titre": "Les visages derrière VMM.",
+    "intro": "De vraies personnes. Une passion authentique. Des histoires à raconter.",
+    "membres": [
+      { "id": "jd", "titre": "Rencontrez JD", "texte": "Mon parcours a commencé avec une passion pour le récit visuel. J'ai étudié à la Toronto Film School avant de devoir interrompre mes études pour des raisons financières. Aujourd'hui, je travaille dans la construction tout en développant VMM Productions : deux univers qui m'ont appris la valeur du travail et des relations humaines. Chaque production est une occasion de donner vie à une vision et de montrer la fierté derrière le travail accompli." },
+      { "id": "renaud", "titre": "Rencontrez Renaud", "texte": "Avec près de dix ans derrière la caméra, Renaud apporte expérience, originalité et instinct pour saisir l'action. Son approche immersive transforme les moments spontanés en images vivantes.", "note": "[À CONFIRMER : bio à valider]" }
+    ],
+    "bluewise": "[À CONFIRMER : paragraphe BlueWise AI]",
+    "bouton": "Nous joindre →"
+  },
+  "lightbox": {
+    "fermer": "Fermer la vidéo",
+    "titre": "Lecteur vidéo",
+    "voir": "Voir la vidéo",
+    "manquante": "[À CONFIRMER : vidéo à fournir]"
+  },
+  "pied": {
+    "slogan": "[À CONFIRMER : texte du pied de page]",
+    "droits": "Tous droits réservés."
+  },
+  "merci": { "titre": "Merci !", "texte": "Votre message est bien parti. Nous vous répondrons sous peu.", "retour": "Retour à l'accueil" },
+  "introuvable": { "titre": "Page introuvable", "texte": "Cette page n'existe pas ou a été déplacée.", "retour": "Retour à l'accueil" }
+}
