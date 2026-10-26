@@ -32,6 +32,15 @@ const ROUTES = {
 };
 const INDEXABLE = ['accueil', 'services', 'portfolio', 'apropos', 'contact'];
 
+// Logo 3D animé de l'en-tête (fichiers dans static/logo/). width/height = dimensions réelles de la vidéo.
+const LOGO = {
+  webm: '/logo/vmm-logo-spin.webm',
+  mp4: '/logo/vmm-logo-spin.mp4',
+  poster: '/logo/vmm-logo-spin-poster.jpg',
+  width: 480,
+  height: 480,
+};
+
 // ---------- utilitaires ----------
 const PLACEHOLDER = /\[(?:À CONFIRMER|TO CONFIRM)[^\]]*\]/g;
 const isPlaceholder = (s) => !s || /\[(?:À CONFIRMER|TO CONFIRM)/.test(s);
@@ -222,7 +231,13 @@ ${INDEXABLE.includes(key) ? structuredData(key, lang, videos) : ''}
 ${L.avisTraduction ? `<div class="notice">${t(L.avisTraduction)}</div>` : ''}
 <header class="site-header">
   <div class="container header-inner">
-    <a class="logo" href="${ROUTES.accueil[lang]}" aria-label="${esc(site.nom)}, ${esc(L.nav.accueil)}">VMM<span>.</span></a>
+    <a class="logo logo-video" href="${ROUTES.accueil[lang]}" aria-label="${esc(site.nom)}, ${esc(L.nav.accueil)}">
+      <video class="logo-spin" autoplay muted loop playsinline poster="${LOGO.poster}" aria-label="${esc(site.nom)}" width="${LOGO.width}" height="${LOGO.height}">
+        <source src="${LOGO.webm}" type="video/webm">
+        <source src="${LOGO.mp4}" type="video/mp4">
+      </video>
+      <img class="logo-still" src="${LOGO.poster}" alt="${esc(site.nom)}" width="${LOGO.width}" height="${LOGO.height}">
+    </a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu" data-open="${esc(L.nav.menu)}" data-close="${esc(L.nav.fermer)}">${esc(L.nav.menu)}</button>
     <nav id="menu" class="site-nav" aria-label="Navigation">
       <ul>
