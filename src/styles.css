@@ -440,8 +440,12 @@ html:not(.js) .hero-toggle { display: none; }
 @media (min-width: 720px) { .footer-inner { grid-template-columns: 1fr 1fr; } }
 .socials { display: flex; flex-wrap: wrap; gap: .5rem; }
 .socials a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); text-decoration: none; }
+/* Page Contact seulement : icône + texte, les 5 boutons sur une ligne sur ordi */
+.page-contact .socials a { gap: .4rem; }
+@media (min-width: 768px) { .page-contact .socials a { padding: 0 12px; } }
+@media (min-width: 1024px) { .page-contact .socials { gap: .4rem; } .page-contact .socials a { padding: 0 10px; } }
 .socials a:hover { border-color: var(--border-strong); color: var(--violet-light); }
-.social-icon { flex: none; width: 20px; height: 20px; margin-right: .5rem; }
+.social-icon { flex: none; width: 20px; height: 20px; }
 .social-icon path { fill: #fff; transition: fill .3s var(--ease); }
 .socials a:hover .social-icon path, .socials a:focus-visible .social-icon path { fill: var(--icon-hover); }
 
