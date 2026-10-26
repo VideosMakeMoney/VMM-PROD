@@ -159,9 +159,10 @@ ul { list-style: none; margin: 0; padding: 0; }
 .logo { font: 900 1.5rem/1 var(--font-title); color: var(--text); text-decoration: none; margin: 0; }
 .logo span { color: var(--pink); }
 /* Logo 3D animé : le fond noir de la vidéo se fond dans le fond du site */
-.logo-video { display: inline-flex; align-items: center; min-height: 44px; }
-/* Vidéo carrée avec marge : à 48 px, le logo visible fait environ 24 px, la hauteur de l'ancien texte */
-.logo-spin, .logo-still { display: block; height: 48px; width: auto; mix-blend-mode: screen; }
+.logo-video { display: inline-flex; align-items: center; min-height: 44px; height: var(--header-h); overflow: hidden; }
+/* Vidéo carrée avec marge noire : à 96 px, le logo visible fait environ 50 px.
+   Les marges négatives et overflow: hidden gardent l'en-tête à 64 px sans déborder. */
+.logo-spin, .logo-still { display: block; height: 96px; width: auto; margin-block: -16px; mix-blend-mode: screen; }
 .logo-still { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .logo-spin { display: none; }
