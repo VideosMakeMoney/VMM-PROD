@@ -112,6 +112,66 @@
 
   if (reduced || !window.gsap) document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-visible'));
 
+  // Caméra qui se démonte (Services) : sur ordi, la vidéo suit le défilement ;
+  // sur mobile ou avec « réduire les animations », simple lecture en boucle.
+  // Rien n'est téléchargé avant que la section approche de l'écran.
+  const scrub = document.querySelector('[data-scrub]');
+  const camVideo = scrub?.querySelector('video');
+  if (scrub && camVideo) {
+    const desktop = window.matchMedia('(min-width: 768px)');
+    let near = false;
+    let mode = null;
+    let target = 0;
+    let shown = 0;
+    let ticking = false;
+
+    const progress = () => {
+      const r = scrub.getBoundingClientRect();
+      const run = r.height - window.innerHeight;
+      return run > 0 ? Math.min(1, Math.max(0, -r.top / run)) : 0;
+    };
+    const step = () => {
+      ticking = false;
+      const d = camVideo.duration;
+      if (mode !== 'scrub' || !d) return;
+      target = progress() * (d - 0.05);
+      shown += (target - shown) * 0.25;
+      if (Math.abs(target - shown) < 0.01) shown = target;
+      if (Math.abs(camVideo.currentTime - shown) > 0.005) camVideo.currentTime = shown;
+      if (shown !== target) request();
+    };
+    const request = () => { if (!ticking) { ticking = true; requestAnimationFrame(step); } };
+
+    const apply = () => {
+      const next = desktop.matches && !reduced ? 'scrub' : 'loop';
+      if (next !== mode) {
+        mode = next;
+        scrub.classList.toggle('is-scrub', mode === 'scrub');
+        camVideo.loop = mode === 'loop';
+        camVideo.autoplay = mode === 'loop';
+        if (mode === 'scrub') camVideo.pause();
+      }
+      if (!near) return;
+      if (camVideo.preload !== 'auto') { camVideo.preload = 'auto'; camVideo.load(); }
+      if (mode === 'loop') camVideo.play().catch(() => {});
+      else request();
+    };
+
+    // Après le chargement de la page, pour ne pas lui voler de bande passante
+    const watch = () => new IntersectionObserver((entries) => {
+      near = entries[0].isIntersecting;
+      if (near) apply();
+      else if (mode === 'loop') camVideo.pause();
+    }, { rootMargin: '50% 0px' }).observe(scrub);
+    if (document.readyState === 'complete') watch();
+    else window.addEventListener('load', watch, { once: true });
+
+    window.addEventListener('scroll', () => { if (mode === 'scrub' && near) request(); }, { passive: true });
+    camVideo.addEventListener('loadedmetadata', () => { shown = progress() * camVideo.duration; request(); });
+    desktop.addEventListener('change', apply);
+    apply();
+  }
+
   // Lightbox vidéo (l'iframe YouTube n'est chargé qu'à l'ouverture)
   const dialog = document.querySelector('.lightbox');
   if (!dialog || typeof dialog.showModal !== 'function') return;
