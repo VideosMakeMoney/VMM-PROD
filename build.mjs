@@ -34,9 +34,9 @@ const INDEXABLE = ['accueil', 'services', 'portfolio', 'apropos', 'contact'];
 
 // Logo 3D animé de l'en-tête (fichiers dans static/logo/). width/height = dimensions réelles de la vidéo.
 const LOGO = {
-  webm: '/logo/vmm-logo-spin.webm',
-  mp4: '/logo/vmm-logo-spin.mp4',
-  poster: '/logo/vmm-logo-spin-poster.jpg',
+  webm: '/logo/vmm-logo-spin.webm?v=3',
+  mp4: '/logo/vmm-logo-spin.mp4?v=3',
+  poster: '/logo/vmm-logo-spin-poster.jpg?v=3',
   width: 480,
   height: 480,
 };
