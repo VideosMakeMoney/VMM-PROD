@@ -52,10 +52,14 @@ const note = (s) => (s ? ` ${t(s)}` : '');
 const abs = (p) => SITE_URL + p;
 const jsonLd = (obj) => `<script type="application/ld+json">${JSON.stringify(obj).replace(/</g, '\\u003c')}</script>`;
 
+// Titres : un mot composé (bandes-annonces, post-production) ne se coupe pas au trait d'union
+const keepCompounds = (html) => html.replace(/<(h[1-3])\b[^>]*>[\s\S]*?<\/\1>/g, (h) =>
+  h.replace(/>([^<]+)</g, (m, text) => '>' + text.replace(/[^\s-]+(?:-[^\s-]+)+/g, (w) => `<span class="nowrap">${w}</span>`) + '<'));
+
 function write(path, content) {
   const file = join(OUT, path.endsWith('/') ? path + 'index.html' : path);
   mkdirSync(dirname(file), { recursive: true });
-  writeFileSync(file, content);
+  writeFileSync(file, /\.html$/.test(file) ? keepCompounds(content) : content);
 }
 
 // ---------- vidéos ----------
@@ -213,6 +217,7 @@ ${indexable ? '' : '<meta name="robots" content="noindex, nofollow">\n'}${
 <meta property="og:description" content="${esc(seo.description)}">
 ${routed ? `<meta property="og:url" content="${abs(route[lang])}">\n` : ''}${ogImage ? `<meta property="og:image" content="${ogImage}">\n` : ''}<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/cinzel-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=JetBrains+Mono:wght@600;700&family=Space+Grotesk:wght@400;500;600&family=Syne:wght@700;800;900&display=swap">

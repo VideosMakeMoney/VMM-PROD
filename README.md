@@ -74,6 +74,6 @@ Redirections 301 (`_redirects`) : `/work` → `/portfolio`, `/process` → `/ser
 - FAQ 2 : la réponse originale parle de « stratégie » et de « visuels IA », ce qui contredit la règle « aucune stratégie pub ni service IA ». Gardée telle quelle et signalée.
 
 **Charte**
-- Inter (bandeau actuel) ou Syne partout : variable `--font-hero` dans `src/styles.css`.
+- Inter (bandeau actuel) ou la police des titres (Cinzel) partout : variable `--font-hero` dans `src/styles.css`.
 - Courbes exactes des keyframes (float-in, aurora-drift, marquee, shimmer, spin-border, svc-stroke/svc-fill, leak-drift) : le fichier `identite_visuelle.md` n'a pas été fourni, elles sont reconstituées.
 - Page Contact « identique à l'actuelle » : reconstruite selon la charte, à comparer avec la page en ligne.
