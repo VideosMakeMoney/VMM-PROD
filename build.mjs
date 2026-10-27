@@ -533,7 +533,7 @@ function servicesPage(lang) {
   // Sur ordi, main.js passe à la vidéo « scroll » et la cale sur le défilement ; sinon, boucle
   const camera = `<section class="camera-scrub" aria-labelledby="camera-title" data-scrub>
   <div class="camera-stage">
-    <h2 id="camera-title" class="gradient-text" data-reveal>${t(S.camera.titre)}</h2>
+    <h2 id="camera-title" data-reveal>${t(S.camera.titre)}</h2>
     <video class="camera-video" muted playsinline preload="none" poster="${CAMERA.poster}" width="${CAMERA.width}" height="${CAMERA.height}" aria-label="${esc(S.camera.videoLabel)}" data-scroll-webm="${CAMERA.scroll.webm}" data-scroll-mp4="${CAMERA.scroll.mp4}">
       <source src="${CAMERA.loop.webm}" type="video/webm">
       <source src="${CAMERA.loop.mp4}" type="video/mp4">
