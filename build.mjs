@@ -33,10 +33,11 @@ const ROUTES = {
 const INDEXABLE = ['accueil', 'services', 'portfolio', 'apropos', 'contact'];
 
 // Logo 3D animé de l'en-tête (fichiers dans static/logo/). width/height = dimensions réelles de la vidéo.
-// Vidéo de la caméra qui se démonte (page Services, fichiers dans static/videos/). width/height = dimensions réelles.
+// Caméra qui se démonte (page Services, fichiers dans static/videos/). width/height = dimensions réelles.
+// scroll : suit le défilement sur ordi (0 % = assemblée, 100 % = démontée) ; loop : boucle pour mobile et animations réduites.
 const CAMERA = {
-  webm: '/videos/vmm-camera-explode.webm',
-  mp4: '/videos/vmm-camera-explode.mp4',
+  scroll: { webm: '/videos/vmm-camera-scroll.webm', mp4: '/videos/vmm-camera-scroll.mp4' },
+  loop: { webm: '/videos/vmm-camera-explode.webm', mp4: '/videos/vmm-camera-explode.mp4' },
   poster: '/videos/vmm-camera-explode-poster.jpg',
   width: 1920,
   height: 1080,
@@ -508,13 +509,13 @@ function serviceIcon(i) {
 function servicesPage(lang) {
   const L = langs[lang];
   const S = L.services;
-  // Défile image par image sur ordi (main.js) ; lecture en boucle sur mobile et avec « réduire les animations »
+  // Sur ordi, main.js passe à la vidéo « scroll » et la cale sur le défilement ; sinon, boucle
   const camera = `<section class="camera-scrub" aria-labelledby="camera-title" data-scrub>
   <div class="camera-stage">
     <h2 id="camera-title" class="gradient-text" data-reveal>${t(S.camera.titre)}</h2>
-    <video class="camera-video" muted playsinline preload="none" poster="${CAMERA.poster}" width="${CAMERA.width}" height="${CAMERA.height}" aria-label="${esc(S.camera.videoLabel)}">
-      <source src="${CAMERA.webm}" type="video/webm">
-      <source src="${CAMERA.mp4}" type="video/mp4">
+    <video class="camera-video" muted playsinline preload="none" poster="${CAMERA.poster}" width="${CAMERA.width}" height="${CAMERA.height}" aria-label="${esc(S.camera.videoLabel)}" data-scroll-webm="${CAMERA.scroll.webm}" data-scroll-mp4="${CAMERA.scroll.mp4}">
+      <source src="${CAMERA.loop.webm}" type="video/webm">
+      <source src="${CAMERA.loop.mp4}" type="video/mp4">
     </video>
   </div>
 </section>`;
