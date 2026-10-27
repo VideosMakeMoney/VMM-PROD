@@ -66,10 +66,31 @@ const jsonLd = (obj) => `<script type="application/ld+json">${JSON.stringify(obj
 const keepCompounds = (html) => html.replace(/<(h[1-3])\b[^>]*>[\s\S]*?<\/\1>/g, (h) =>
   h.replace(/>([^<]+)</g, (m, text) => '>' + text.replace(/[^\s-]+(?:-[^\s-]+)+/g, (w) => `<span class="nowrap">${w}</span>`) + '<'));
 
+// h1 et h2 : texte blanc, dernier mot en dégradé violet (<span class="accent">), posé au build pour éviter un flash.
+// Les placeholders [À CONFIRMER] (.tbc) sont ignorés ; un mot composé garde son <span class="nowrap">.
+const accentLast = (html) => html.replace(/<(h[12])\b([^>]*)>([\s\S]*?)<\/\1>/g, (all, tag, attrs, inner) => {
+  const parts = inner.split(/(<[^>]+>)/);
+  const skip = new Array(parts.length).fill(false);
+  for (let i = 0, depth = 0, inTbc = 0; i < parts.length; i++) {
+    const p = parts[i];
+    if (p.startsWith('<')) {
+      if (/^<span\b/.test(p)) { depth++; if (inTbc || /class="tbc"/.test(p)) inTbc++; }
+      else if (/^<\/span>/.test(p)) { depth--; if (inTbc) inTbc--; }
+      skip[i] = true;
+    } else skip[i] = inTbc > 0;
+  }
+  for (let i = parts.length - 1; i >= 0; i--) {
+    if (skip[i] || !/\S/.test(parts[i])) continue;
+    parts[i] = parts[i].replace(/(\S+(?:\s+[!?:;»]+)?)(\s*)$/, '<span class="accent">$1</span>$2'); // « Merci ! » : le point d'exclamation suit son mot
+    break;
+  }
+  return `<${tag}${attrs}>${parts.join('')}</${tag}>`;
+});
+
 function write(path, content) {
   const file = join(OUT, path.endsWith('/') ? path + 'index.html' : path);
   mkdirSync(dirname(file), { recursive: true });
-  writeFileSync(file, /\.html$/.test(file) ? keepCompounds(content) : content);
+  writeFileSync(file, /\.html$/.test(file) ? accentLast(keepCompounds(content)) : content);
 }
 
 // ---------- vidéos ----------
@@ -311,12 +332,12 @@ const socials = ({ icons = false, suffix = '' } = {}) =>
       </ul>`;
 
 const sectionHead = (label, title, intro, id, tag = 'h2') => `<p class="label" data-reveal>${esc(label)}</p>
-    <${tag} id="${id}" class="gradient-text" data-reveal>${t(title)}</${tag}>
+    <${tag} id="${id}" data-reveal>${t(title)}</${tag}>
     ${intro ? `<p class="intro" data-reveal>${t(intro)}</p>` : ''}`;
 
 const pageHead = (title, intro) => `<section class="page-hero">
   <div class="container">
-    <h1 class="gradient-text" data-reveal>${t(title)}</h1>
+    <h1 data-reveal>${t(title)}</h1>
     <p class="intro" data-reveal>${t(intro)}</p>
   </div>
 </section>`;
@@ -410,7 +431,7 @@ function homePage(lang) {
   </div>
   <div class="container hero-content">
     <p class="label hero-kicker" data-reveal>${esc(L.hero.surtitre)}</p>
-    <h1 id="hero-title" class="hero-title gradient-text" data-reveal>${t(L.hero.titre)}</h1>
+    <h1 id="hero-title" class="hero-title" data-reveal>${t(L.hero.titre)}</h1>
     <p class="hero-sub" data-reveal>${t(L.hero.sousTitre)}</p>
     <p class="hero-text" data-reveal>${t(L.hero.texte)}</p>
     <a class="btn btn-neon" href="#contact" data-scroll-contact data-reveal>${esc(L.hero.bouton)}</a>
@@ -552,7 +573,7 @@ function portfolioPage(lang) {
   const body = `${pageHead(P.titre, P.intro)}
 <section class="section section-tight" aria-labelledby="vedettes-title">
   <div class="container">
-    <h2 id="vedettes-title" class="gradient-text" data-reveal>${esc(P.vedettesTitre)}</h2>
+    <h2 id="vedettes-title" data-reveal>${esc(P.vedettesTitre)}</h2>
     <ul class="grid grid-4">
       ${portfolio.categories
         .map(
@@ -568,7 +589,7 @@ function portfolioPage(lang) {
 
 <section class="section" aria-labelledby="clients-title">
   <div class="container">
-    <h2 id="clients-title" class="gradient-text" data-reveal>${esc(P.parClientTitre)}</h2>
+    <h2 id="clients-title" data-reveal>${esc(P.parClientTitre)}</h2>
     <p class="intro" data-reveal>${t(P.parClientIntro)}</p>
     ${clientNames
       .map((name) => {
@@ -594,7 +615,7 @@ function portfolioPage(lang) {
 
 <section class="section" aria-labelledby="coulisses-title">
   <div class="container">
-    <h2 id="coulisses-title" class="gradient-text" data-reveal>${esc(P.coulissesTitre)}</h2>
+    <h2 id="coulisses-title" data-reveal>${esc(P.coulissesTitre)}</h2>
     <p class="intro" data-reveal>${t(P.coulissesIntro)}</p>
     <ul class="grid grid-5">
       ${behind.map((v) => `<li data-reveal>${videoTile(v, lang)}</li>`).join('\n      ')}
@@ -641,7 +662,7 @@ function contactPage(lang) {
 </section>
 <section class="section section-tight" aria-labelledby="faq-title">
   <div class="container faq">
-    <h2 id="faq-title" class="gradient-text" data-reveal>${esc(L.faq.titre)}</h2>
+    <h2 id="faq-title" data-reveal>${esc(L.faq.titre)}</h2>
     ${L.faq.items.map((f) => `<details data-reveal><summary>${t(f.q)}</summary><p>${t(f.r)}</p>${f.note ? `<p class="small">${t(f.note)}</p>` : ''}</details>`).join('\n    ')}
   </div>
 </section>`;
@@ -651,7 +672,7 @@ function contactPage(lang) {
 function messagePage(lang, key, data) {
   const body = `<section class="section page-simple">
   <div class="container">
-    <h1 class="gradient-text">${t(data.titre)}</h1>
+    <h1>${t(data.titre)}</h1>
     <p class="intro">${t(data.texte)}</p>
     <p class="cta-row"><a class="btn btn-neon" href="${ROUTES.accueil[lang]}">${esc(data.retour)}</a></p>
   </div>
