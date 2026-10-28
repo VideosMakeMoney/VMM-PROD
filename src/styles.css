@@ -332,6 +332,16 @@ html:not(.js) .hero-toggle { display: none; }
 /* Services : numéros en contour qui se remplissent */
 .service { padding: 1.5rem; }
 .service h2 { font-size: 1.35rem; margin: 0; }
+
+/* Section caméra (Services) : fond du site, la vidéo se fond dedans (le noir disparaît avec lighten) */
+.camera-scrub { background: var(--bg); padding-block: 2rem; }
+.camera-stage { display: flex; flex-direction: column; align-items: center; gap: 1rem; padding-inline: 16px; text-align: center; }
+.camera-stage h2 { margin: 0; }
+.camera-video { display: block; width: 100%; max-width: 960px; height: auto; background: var(--bg); mix-blend-mode: lighten; }
+/* Ordi : section collante d'environ 200vh, la vidéo suit le défilement (classe ajoutée par main.js) */
+.camera-scrub.is-scrub { height: 200vh; padding-block: 0; }
+.camera-scrub.is-scrub .camera-stage { position: sticky; top: var(--header-h); height: calc(100vh - var(--header-h)); justify-content: center; }
+.camera-scrub.is-scrub .camera-video { width: auto; max-width: 100%; max-height: calc(100vh - var(--header-h) - 7rem); }
 /* Icônes des services : 40 px dans la même hauteur (52 px) que les anciens chiffres */
 .svc-icon { display: block; width: 40px; height: 40px; margin-block: 6px; overflow: visible; stroke: var(--violet); }
 .svc-icon > * { stroke-dasharray: 300; stroke-dashoffset: 0; }

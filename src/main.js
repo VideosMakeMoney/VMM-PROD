@@ -112,6 +112,77 @@
 
   if (reduced || !window.gsap) document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-visible'));
 
+  // Caméra qui se démonte (Services) : sur ordi, la vidéo « scroll » suit exactement le défilement
+  // (pas de lecture auto) ; sur mobile ou avec « réduire les animations », la boucle joue toute seule.
+  // Rien n'est téléchargé avant que la section approche de l'écran.
+  const scrub = document.querySelector('[data-scrub]');
+  const camVideo = scrub?.querySelector('video');
+  if (scrub && camVideo) {
+    // Deux vidéos : « scroll » (ordi, suit le défilement) et la boucle (mobile, animations réduites)
+    const [webmSource, mp4Source] = camVideo.querySelectorAll('source');
+    const sources = {
+      loop: [webmSource.getAttribute('src'), mp4Source.getAttribute('src')],
+      scrub: [camVideo.dataset.scrollWebm, camVideo.dataset.scrollMp4],
+    };
+    let loaded = null;
+    const desktop = window.matchMedia('(min-width: 768px)');
+    let near = false;
+    let mode = null;
+    let ticking = false;
+
+    const progress = () => {
+      const r = scrub.getBoundingClientRect();
+      const run = r.height - window.innerHeight;
+      return run > 0 ? Math.min(1, Math.max(0, -r.top / run)) : 0;
+    };
+    const step = () => {
+      ticking = false;
+      const d = camVideo.duration;
+      if (mode !== 'scrub' || !d) return;
+      // Position de la vidéo = position du défilement (0 % assemblée, 100 % démontée)
+      const target = progress() * (d - 0.04);
+      if (Math.abs(camVideo.currentTime - target) > 0.005) camVideo.currentTime = target;
+    };
+    const request = () => { if (!ticking) { ticking = true; requestAnimationFrame(step); } };
+
+    const apply = () => {
+      const next = desktop.matches && !reduced ? 'scrub' : 'loop';
+      if (next !== mode) {
+        mode = next;
+        scrub.classList.toggle('is-scrub', mode === 'scrub');
+        camVideo.loop = mode === 'loop';
+        camVideo.autoplay = mode === 'loop';
+        if (mode === 'scrub' && !camVideo.paused) camVideo.pause();
+      }
+      if (!near) return;
+      if (loaded !== mode) {
+        loaded = mode;
+        [webmSource.src, mp4Source.src] = sources[mode];
+        // preload après load() : sinon le navigateur commence par télécharger l'ancienne source
+        camVideo.load();
+        camVideo.preload = 'auto';
+      }
+      if (mode === 'loop') camVideo.play().catch(() => {});
+      else request();
+    };
+
+    // Après le chargement de la page, pour ne pas lui voler de bande passante
+    const watch = () => new IntersectionObserver((entries) => {
+      near = entries[0].isIntersecting;
+      if (near) apply();
+      else if (mode === 'loop') camVideo.pause();
+    }, { rootMargin: '50% 0px' }).observe(scrub);
+    if (document.readyState === 'complete') watch();
+    else window.addEventListener('load', watch, { once: true });
+
+    window.addEventListener('scroll', () => { if (mode === 'scrub' && near) request(); }, { passive: true });
+    camVideo.addEventListener('loadedmetadata', request);
+    // Si un seek est en cours, la dernière position demandée est rattrapée dès qu'il se termine
+    camVideo.addEventListener('seeked', () => { if (mode === 'scrub') request(); });
+    desktop.addEventListener('change', apply);
+    apply();
+  }
+
   // Lightbox vidéo (l'iframe YouTube n'est chargé qu'à l'ouverture)
   const dialog = document.querySelector('.lightbox');
   if (!dialog || typeof dialog.showModal !== 'function') return;

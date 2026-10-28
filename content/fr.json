@@ -98,6 +98,7 @@
   "services": {
     "titre": "Nos services.",
     "intro": "De la première idée au montage final, nous réunissons les compétences créatives et techniques nécessaires pour donner vie à votre vision.",
+    "camera": { "titre": "Pièce par pièce", "videoLabel": "Caméra Sony a7 IV qui se démonte en pièces puis se remonte" },
     "items": [
       { "titre": "Production vidéo", "texte": "Des tournages professionnels sur le terrain pour donner vie à vos idées." },
       { "titre": "Photographie", "texte": "Des images qui immortalisent les gens, les moments et les détails importants." },
