@@ -39,8 +39,8 @@ const CAMERA = {
   scroll: { webm: '/videos/vmm-camera-scroll.webm', mp4: '/videos/vmm-camera-scroll.mp4' },
   loop: { webm: '/videos/vmm-camera-explode.webm', mp4: '/videos/vmm-camera-explode.mp4' },
   poster: '/videos/vmm-camera-poster.jpg', // première image : caméra assemblée
-  width: 1920,
-  height: 1080,
+  width: 1280,
+  height: 720,
 };
 
 const LOGO = {

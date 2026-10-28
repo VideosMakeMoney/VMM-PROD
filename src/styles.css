@@ -333,11 +333,19 @@ html:not(.js) .hero-toggle { display: none; }
 .service { padding: 1.5rem; }
 .service h2 { font-size: 1.35rem; margin: 0; }
 
-/* Section caméra (Services) : fond du site, la vidéo se fond dedans (le noir disparaît avec lighten) */
+/* Section caméra (Services) : fond du site, la vidéo se fond dedans (le noir disparaît avec lighten).
+   .camera-stage porte aussi le fond : en sticky, il crée son propre contexte de fusion. */
 .camera-scrub { background: var(--bg); padding-block: 2rem; }
-.camera-stage { display: flex; flex-direction: column; align-items: center; gap: 1rem; padding-inline: 16px; text-align: center; }
+.camera-stage { background: var(--bg); display: flex; flex-direction: column; align-items: center; gap: 1rem; padding-inline: 16px; text-align: center; }
 .camera-stage h2 { margin: 0; }
-.camera-video { display: block; width: 100%; max-width: 960px; height: auto; background: var(--bg); mix-blend-mode: lighten; }
+.camera-video {
+  display: block; width: 100%; max-width: 960px; height: auto; background: var(--bg); mix-blend-mode: lighten;
+  /* Bords adoucis : les éclats qui touchent le bord de l'image ne dessinent pas de rectangle */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent), linear-gradient(transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent), linear-gradient(transparent, #000 8%, #000 92%, transparent);
+  mask-composite: intersect;
+}
 /* Ordi : section collante d'environ 200vh, la vidéo suit le défilement (classe ajoutée par main.js) */
 .camera-scrub.is-scrub { height: 200vh; padding-block: 0; }
 .camera-scrub.is-scrub .camera-stage { position: sticky; top: var(--header-h); height: calc(100vh - var(--header-h)); justify-content: center; }
