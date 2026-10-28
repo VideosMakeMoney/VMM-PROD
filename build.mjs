@@ -33,6 +33,16 @@ const ROUTES = {
 const INDEXABLE = ['accueil', 'services', 'portfolio', 'apropos', 'contact'];
 
 // Logo 3D animé de l'en-tête (fichiers dans static/logo/). width/height = dimensions réelles de la vidéo.
+// Caméra qui se démonte (page Services, fichiers dans static/videos/). width/height = dimensions réelles.
+// scroll : suit le défilement sur ordi (0 % = assemblée, 100 % = démontée) ; loop : boucle pour mobile et animations réduites.
+const CAMERA = {
+  scroll: { webm: '/videos/vmm-camera-scroll.webm', mp4: '/videos/vmm-camera-scroll.mp4' },
+  loop: { webm: '/videos/vmm-camera-explode.webm', mp4: '/videos/vmm-camera-explode.mp4' },
+  poster: '/videos/vmm-camera-poster.jpg', // première image : caméra assemblée
+  width: 1280,
+  height: 720,
+};
+
 const LOGO = {
   webm: '/logo/vmm-logo-spin.webm?v=3',
   mp4: '/logo/vmm-logo-spin.mp4?v=3',
@@ -520,7 +530,18 @@ function serviceIcon(i) {
 function servicesPage(lang) {
   const L = langs[lang];
   const S = L.services;
+  // Sur ordi, main.js passe à la vidéo « scroll » et la cale sur le défilement ; sinon, boucle
+  const camera = `<section class="camera-scrub" aria-labelledby="camera-title" data-scrub>
+  <div class="camera-stage">
+    <h2 id="camera-title" data-reveal>${t(S.camera.titre)}</h2>
+    <video class="camera-video" muted playsinline preload="none" poster="${CAMERA.poster}" width="${CAMERA.width}" height="${CAMERA.height}" aria-label="${esc(S.camera.videoLabel)}" data-scroll-webm="${CAMERA.scroll.webm}" data-scroll-mp4="${CAMERA.scroll.mp4}">
+      <source src="${CAMERA.loop.webm}" type="video/webm">
+      <source src="${CAMERA.loop.mp4}" type="video/mp4">
+    </video>
+  </div>
+</section>`;
   const body = `${pageHead(S.titre, S.intro)}
+${camera}
 <section class="section section-tight" aria-label="${esc(L.nav.services)}">
   <div class="container">
     <ol class="grid grid-3 services">

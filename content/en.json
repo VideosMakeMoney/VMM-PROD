@@ -98,6 +98,7 @@
   "services": {
     "titre": "Our services.",
     "intro": "From the first idea to the final cut, we bring together the creative and technical skills needed to bring your vision to life.",
+    "camera": { "titre": "Piece by piece", "videoLabel": "Sony a7 IV camera coming apart piece by piece, then back together" },
     "items": [
       { "titre": "Video production", "texte": "Professional on-location shoots to bring your ideas to life." },
       { "titre": "Photography", "texte": "Images that capture people, moments and the details that matter." },
