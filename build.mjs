@@ -16,6 +16,7 @@ const readJson = (f) => JSON.parse(readFileSync(join(ROOT, 'content', f), 'utf8'
 
 const site = readJson('site.json');
 const portfolio = readJson('portfolio.json');
+const clips = readJson('clips.json');
 const langs = { fr: readJson('fr.json'), en: readJson('en.json') };
 const SITE_URL = (process.env.SITE_URL || site.siteUrl).replace(/\/$/, '');
 const ALLOW_INDEX = process.env.VMM_ALLOW_INDEX === 'true';
@@ -31,6 +32,12 @@ const ROUTES = {
   merci: { fr: '/merci/', en: '/en/thanks/' },
 };
 const INDEXABLE = ['accueil', 'services', 'portfolio', 'apropos', 'contact'];
+
+// Une page par client qui a au moins une vidéo (portfolio.json). Ajouter un client = modifier seulement ce fichier.
+const clientSlug = (c) => c.slug || slug(c.nom);
+const clientVideos = (c) => portfolio.videos.filter((v) => v.type !== 'coulisses' && v.client === c.nom);
+const CLIENTS = portfolio.clients.filter((c) => clientVideos(c).length);
+const clientRoute = (c) => ({ fr: `${ROUTES.portfolio.fr}${clientSlug(c)}/`, en: `${ROUTES.portfolio.en}${clientSlug(c)}/` });
 
 // Logo 3D animé de l'en-tête (fichiers dans static/logo/). width/height = dimensions réelles de la vidéo.
 // Caméra qui se démonte (page Services, fichiers dans static/videos/). width/height = dimensions réelles.
@@ -50,6 +57,27 @@ const LOGO = {
   width: 480,
   height: 480,
 };
+
+// Clips de fond de JD (content/clips.json) : <nom>.mp4, <nom>.webm, <nom>-poster.jpg dans static/videos/jd/.
+const clipFiles = (name) => (name ? { mp4: `${clips.dossier}${name}.mp4`, webm: `${clips.dossier}${name}.webm`, poster: `${clips.dossier}${name}-poster.jpg` } : null);
+
+// Vidéo de fond muette en boucle. main.js ne charge que la version de l'appareil (mobile ou ordi), et seulement
+// quand la section approche ; avec « réduire les animations », le poster reste seul. Sans version ordi,
+// le clip 9:16 est centré sur un fond flou de son poster (data-portrait-ordi), sans être coupé.
+function bgVideo(id) {
+  const clip = clips.clips[id];
+  if (!clip) return '';
+  const mobile = clipFiles(clip.mobile);
+  const ordi = clipFiles(clip.ordi);
+  const desk = ordi || mobile;
+  return `<div class="bg-video" data-bg-video${ordi ? '' : ' data-portrait-ordi'} aria-hidden="true" style="--poster-ordi: url('${desk.poster}')"
+    data-mobile-mp4="${mobile.mp4}" data-mobile-webm="${mobile.webm}" data-mobile-poster="${mobile.poster}"
+    data-ordi-mp4="${desk.mp4}" data-ordi-webm="${desk.webm}" data-ordi-poster="${desk.poster}">
+    <span class="bg-video-blur"></span>
+    <video class="bg-video-media" muted loop playsinline preload="none" poster="${mobile.poster}"></video>
+    <span class="bg-video-veil"></span>
+  </div>`;
+}
 
 // ---------- utilitaires ----------
 const PLACEHOLDER = /\[(?:À CONFIRMER|TO CONFIRM)[^\]]*\]/g;
@@ -131,7 +159,7 @@ function videoObject(v, lang) {
 }
 
 // ---------- JSON-LD ----------
-function structuredData(key, lang, pageVideos = []) {
+function structuredData(key, lang, pageVideos = [], page = null) {
   const L = langs[lang];
   const biz = `${SITE_URL}/#entreprise`;
   const persons = L.equipe.membres.map((m) => {
@@ -172,9 +200,11 @@ function structuredData(key, lang, pageVideos = []) {
     employee: persons.map((p) => ({ '@id': p['@id'] })),
     sameAs: site.reseaux.map((r) => r.url),
   };
-  const pageUrl = abs(ROUTES[key][lang]);
+  const seo = page?.seo || L.seo[key];
+  const pageUrl = abs((page?.route || ROUTES[key])[lang]);
   const crumbs = [{ name: L.nav.accueil, url: abs(ROUTES.accueil[lang]) }];
-  if (key !== 'accueil') crumbs.push({ name: L.nav[key] || L[key]?.titre || '', url: pageUrl });
+  if (key !== 'accueil') crumbs.push({ name: L.nav[key] || L[key]?.titre || '', url: abs(ROUTES[key][lang]) });
+  if (page?.crumb) crumbs.push({ name: page.crumb, url: pageUrl });
   const graph = [
     business,
     ...persons,
@@ -183,8 +213,8 @@ function structuredData(key, lang, pageVideos = []) {
       '@type': key === 'contact' ? 'ContactPage' : key === 'apropos' ? 'AboutPage' : 'WebPage',
       '@id': pageUrl + '#page',
       url: pageUrl,
-      name: L.seo[key].title,
-      description: L.seo[key].description,
+      name: seo.title,
+      description: seo.description,
       inLanguage: L.lang,
       isPartOf: { '@id': `${SITE_URL}/#site` },
       about: { '@id': biz },
@@ -212,12 +242,13 @@ function structuredData(key, lang, pageVideos = []) {
 }
 
 // ---------- gabarit commun ----------
-function layout({ key, lang, body, videos = [] }) {
+// page : pour une page sans clé propre (page client) : { route, seo, crumb }.
+function layout({ key, lang, body, videos = [], page = null }) {
   const L = langs[lang];
   const other = lang === 'fr' ? 'en' : 'fr';
-  const routed = Boolean(ROUTES[key]);
-  const route = ROUTES[key] || ROUTES.accueil;
-  const seo = L.seo[key];
+  const routed = Boolean(page?.route || ROUTES[key]);
+  const route = page?.route || ROUTES[key] || ROUTES.accueil;
+  const seo = page?.seo || L.seo[key];
   const indexable = INDEXABLE.includes(key) && ALLOW_INDEX;
   const navLink = (k) => `<li><a href="${ROUTES[k][lang]}"${k === key ? ' aria-current="page"' : ''}>${esc(L.nav[k])}</a></li>`;
   const ogImage = site.heroVideo.poster ? abs(site.heroVideo.poster) : '';
@@ -253,7 +284,7 @@ ${routed ? `<meta property="og:url" content="${abs(route[lang])}">\n` : ''}${ogI
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=JetBrains+Mono:wght@600;700&family=Space+Grotesk:wght@400;500;600&family=Syne:wght@700;800;900&display=swap">
 <link rel="stylesheet" href="/styles.css?v=${BUILD_ID}">
-${INDEXABLE.includes(key) ? structuredData(key, lang, videos) : ''}
+${INDEXABLE.includes(key) ? structuredData(key, lang, videos, page) : ''}
 </head>
 <body class="page-${key}">
 <a class="skip" href="#contenu">${esc(L.nav.allerAuContenu)}</a>
@@ -335,7 +366,8 @@ const sectionHead = (label, title, intro, id, tag = 'h2') => `<p class="label" d
     <${tag} id="${id}" data-reveal>${t(title)}</${tag}>
     ${intro ? `<p class="intro" data-reveal>${t(intro)}</p>` : ''}`;
 
-const pageHead = (title, intro) => `<section class="page-hero">
+const pageHead = (title, intro, clip = '') => `<section class="page-hero${clip ? ' has-bg-video' : ''}">
+  ${clip ? bgVideo(clip) : ''}
   <div class="container">
     <h1 data-reveal>${t(title)}</h1>
     <p class="intro" data-reveal>${t(intro)}</p>
@@ -540,7 +572,7 @@ function servicesPage(lang) {
     </video>
   </div>
 </section>`;
-  const body = `${pageHead(S.titre, S.intro)}
+  const body = `${pageHead(S.titre, S.intro, 'services')}
 ${camera}
 <section class="section section-tight" aria-label="${esc(L.nav.services)}">
   <div class="container">
@@ -562,16 +594,46 @@ ${camera}
   return layout({ key: 'services', lang, body });
 }
 
+// Image d'une carte client : poster de sa bande-annonce, sinon miniature de sa première vidéo.
+function clientImage(c) {
+  const clip = clips.clips[c.clip];
+  if (clip) return clipFiles(clip.mobile).poster;
+  const first = clientVideos(c).find((v) => v.youtubeId);
+  return first ? ytThumb(first.youtubeId) : '';
+}
+
 function portfolioPage(lang) {
   const L = langs[lang];
   const P = L.portfolio;
-  const finals = portfolio.videos.filter((v) => v.type !== 'coulisses');
   const behind = portfolio.videos.filter((v) => v.type === 'coulisses');
-  const clientNames = [...new Set([...portfolio.clients.map((c) => c.nom), ...finals.map((v) => v.client)])];
   const count = (n) => `${n} ${n > 1 ? P.videos : P.video}`;
   const catVideos = portfolio.categories.map(categoryVideo);
-  const body = `${pageHead(P.titre, P.intro)}
-<section class="section section-tight" aria-labelledby="vedettes-title">
+  const body = `${pageHead(P.titre, P.intro, 'work')}
+<section class="section section-tight" aria-labelledby="clients-title">
+  <div class="container">
+    <h2 id="clients-title" data-reveal>${esc(P.parClientTitre)}</h2>
+    <p class="intro" data-reveal>${t(P.parClientIntro)}</p>
+    <ul class="grid grid-4 client-cards">
+      ${CLIENTS.map((c) => {
+        const img = clientImage(c);
+        return `<li data-reveal>
+        <a class="client-card card glass" href="${clientRoute(c)[lang]}">
+          <span class="client-card-img">${img ? `<img src="${img}" alt="" loading="lazy" decoding="async">` : '<span class="thumb-empty" aria-hidden="true"></span>'}</span>
+          <span class="client-card-text"><strong>${esc(c.nom)}</strong><span class="muted">${count(clientVideos(c).length)}</span>${note(c.note)}</span>
+        </a>
+      </li>`;
+      }).join('\n      ')}
+    </ul>
+    <div class="client-group upcoming" data-reveal>
+      <h3>${esc(P.aVenirTitre)}</h3>
+      <ul class="pills">
+        ${portfolio.clientsAVenir.map((c) => `<li>${c.url ? `<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.nom)}</a>` : esc(c.nom)}${note(c.note)}</li>`).join('\n        ')}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="vedettes-title">
   <div class="container">
     <h2 id="vedettes-title" data-reveal>${esc(P.vedettesTitre)}</h2>
     <ul class="grid grid-4">
@@ -587,32 +649,6 @@ function portfolioPage(lang) {
   </div>
 </section>
 
-<section class="section" aria-labelledby="clients-title">
-  <div class="container">
-    <h2 id="clients-title" data-reveal>${esc(P.parClientTitre)}</h2>
-    <p class="intro" data-reveal>${t(P.parClientIntro)}</p>
-    ${clientNames
-      .map((name) => {
-        const client = portfolio.clients.find((c) => c.nom === name) || {};
-        const list = finals.filter((v) => v.client === name);
-        if (!list.length) return '';
-        return `<article class="client-group" aria-labelledby="client-${slug(name)}">
-      <h3 id="client-${slug(name)}">${client.url ? `<a href="${esc(client.url)}" target="_blank" rel="noopener">${esc(name)}</a>` : esc(name)} <span class="muted small">${count(list.filter((v) => v.youtubeId).length)}</span>${note(client.note)}</h3>
-      <ul class="grid grid-5">
-        ${list.map((v) => `<li data-reveal>${videoTile(v, lang)}</li>`).join('\n        ')}
-      </ul>
-    </article>`;
-      })
-      .join('\n    ')}
-    <div class="client-group upcoming" data-reveal>
-      <h3>${esc(P.aVenirTitre)}</h3>
-      <ul class="pills">
-        ${portfolio.clientsAVenir.map((c) => `<li>${c.url ? `<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.nom)}</a>` : esc(c.nom)}${note(c.note)}</li>`).join('\n        ')}
-      </ul>
-    </div>
-  </div>
-</section>
-
 <section class="section" aria-labelledby="coulisses-title">
   <div class="container">
     <h2 id="coulisses-title" data-reveal>${esc(P.coulissesTitre)}</h2>
@@ -623,10 +659,45 @@ function portfolioPage(lang) {
     <p class="cta-row"><a class="btn btn-neon" href="${ROUTES.apropos[lang]}">${esc(P.bouton)}</a></p>
   </div>
 </section>`;
-  return layout({ key: 'portfolio', lang, body, videos: portfolio.videos });
+  return layout({ key: 'portfolio', lang, body, videos: portfolio.videos.filter((v) => v.vedette || v.type === 'coulisses') });
 }
 
-const slug = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+// Page d'un client : bande-annonce en fond (si le client a un clip), puis toutes ses vidéos.
+function clientPage(c, lang) {
+  const L = langs[lang];
+  const P = L.portfolio;
+  const list = clientVideos(c);
+  const n = list.length;
+  const fill = (s) => s.replaceAll('{client}', c.nom);
+  const back = `<a class="btn btn-neon btn-back" href="${ROUTES.portfolio[lang]}">${esc(P.retour)}</a>`;
+  const body = `<section class="page-hero client-hero${c.clip ? ' has-bg-video' : ''}">
+  ${c.clip ? bgVideo(c.clip) : ''}
+  <div class="container">
+    <p class="back-row" data-reveal>${back}</p>
+    <h1 data-reveal>${esc(c.nom)}</h1>
+    <p class="intro" data-reveal>${n} ${n > 1 ? P.videos : P.video}${note(c.note)}</p>
+  </div>
+</section>
+<section class="section section-tight" aria-label="${esc(c.nom)}">
+  <div class="container">
+    <ul class="grid grid-5 library">
+      ${list.map((v) => `<li data-reveal>${videoTile(v, lang)}</li>`).join('\n      ')}
+    </ul>
+    <p class="cta-row">${back}</p>
+  </div>
+</section>`;
+  return layout({
+    key: 'portfolio',
+    lang,
+    body,
+    videos: list,
+    page: { route: clientRoute(c), seo: { title: fill(P.clientSeoTitre), description: fill(P.clientSeoDescription) }, crumb: c.nom },
+  });
+}
+
+function slug(s) {
+  return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
 
 function aboutPage(lang) {
   const L = langs[lang];
@@ -657,7 +728,8 @@ function aboutPage(lang) {
 
 function contactPage(lang) {
   const L = langs[lang];
-  const body = `<section class="section section-contact page-contact" aria-labelledby="contact-page-title">
+  const body = `<section class="section section-contact page-contact has-bg-video" aria-labelledby="contact-page-title">
+  ${bgVideo('contact-logo')}
   ${contactBlock(lang, { tag: 'h1', id: 'contact-page-title' })}
 </section>
 <section class="section section-tight" aria-labelledby="faq-title">
@@ -683,8 +755,9 @@ function messagePage(lang, key, data) {
 // ---------- fichiers SEO/GEO ----------
 function sitemap() {
   const xml = (s) => esc(s);
+  // Vidéos d'une page : une liste, ou la clé d'une page (portfolio : vedettes et coulisses ; les autres sont sur les pages clients)
   const videoEntries = (key, lang) => {
-    const list = key === 'portfolio' ? portfolio.videos : [];
+    const list = Array.isArray(key) ? key : key === 'portfolio' ? portfolio.videos.filter((v) => v.vedette || v.type === 'coulisses') : [];
     return list
       .filter((v) => v.youtubeId)
       .map((v) => {
@@ -699,16 +772,16 @@ function sitemap() {
       })
       .join('');
   };
-  const urls = INDEXABLE.flatMap((k) =>
-    ['fr', 'en'].map(
-      (lang) => `  <url>
-    <loc>${abs(ROUTES[k][lang])}</loc>
-    <xhtml:link rel="alternate" hreflang="fr-CA" href="${abs(ROUTES[k].fr)}"/>
-    <xhtml:link rel="alternate" hreflang="en-CA" href="${abs(ROUTES[k].en)}"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="${abs(ROUTES[k].fr)}"/>${videoEntries(k, lang)}
-  </url>`
-    )
-  );
+  const entry = (route, lang, videos) => `  <url>
+    <loc>${abs(route[lang])}</loc>
+    <xhtml:link rel="alternate" hreflang="fr-CA" href="${abs(route.fr)}"/>
+    <xhtml:link rel="alternate" hreflang="en-CA" href="${abs(route.en)}"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="${abs(route.fr)}"/>${videos}
+  </url>`;
+  const urls = [
+    ...INDEXABLE.flatMap((k) => ['fr', 'en'].map((lang) => entry(ROUTES[k], lang, videoEntries(k, lang)))),
+    ...CLIENTS.flatMap((c) => ['fr', 'en'].map((lang) => entry(clientRoute(c), lang, videoEntries(clientVideos(c), lang)))),
+  ];
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 ${urls.join('\n')}
@@ -719,7 +792,6 @@ ${urls.join('\n')}
 function llmsTxt() {
   const fr = langs.fr;
   const known = (s) => !isPlaceholder(s);
-  const finals = portfolio.videos.filter((v) => v.type !== 'coulisses' && v.youtubeId);
   const lines = [
     `# ${site.nom} (${site.marque})`,
     '',
@@ -737,7 +809,7 @@ function llmsTxt() {
     ...fr.equipe.membres.map((m) => `- ${m.nomComplet} (${m.nom}), ${m.role} : ${m.texte}`),
     '',
     '## Clients filmés',
-    ...portfolio.clients.map((c) => `- ${c.nom} (${finals.filter((v) => v.client === c.nom).length} vidéos)`),
+    ...portfolio.clients.map((c) => `- ${c.nom} (${clientVideos(c).length} vidéos)${CLIENTS.includes(c) ? ` : ${abs(clientRoute(c).fr)}` : ''}`),
     '',
     '## Zones desservies',
     ...site.zonesDesservies.map((z) => `- ${z}`),
@@ -766,6 +838,7 @@ for (const lang of ['fr', 'en']) {
   write(ROUTES.accueil[lang], homePage(lang));
   write(ROUTES.services[lang], servicesPage(lang));
   write(ROUTES.portfolio[lang], portfolioPage(lang));
+  for (const c of CLIENTS) write(clientRoute(c)[lang], clientPage(c, lang));
   write(ROUTES.apropos[lang], aboutPage(lang));
   write(ROUTES.contact[lang], contactPage(lang));
   write(ROUTES.merci[lang], messagePage(lang, 'merci', L.merci));

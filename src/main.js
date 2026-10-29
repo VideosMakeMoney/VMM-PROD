@@ -112,6 +112,46 @@
 
   if (reduced || !window.gsap) document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-visible'));
 
+  // Clips de fond de JD : chaque appareil ne télécharge que sa version (mobile ou ordi), seulement quand la
+  // section approche ; avec « réduire les animations », le poster reste seul et rien n'est téléchargé.
+  const bgVideos = document.querySelectorAll('[data-bg-video]');
+  const wide = window.matchMedia('(min-width: 768px)');
+  // Le bon poster pour l'appareil, même quand la vidéo n'est jamais chargée
+  const bgPosters = () => bgVideos.forEach((box) => { box.querySelector('video').poster = box.dataset[`${wide.matches ? 'ordi' : 'mobile'}Poster`]; });
+  bgPosters();
+  if (reduced) wide.addEventListener('change', bgPosters);
+  if (bgVideos.length && !reduced) {
+    const setup = (box) => {
+      const video = box.querySelector('video');
+      const kind = wide.matches ? 'ordi' : 'mobile';
+      if (box.dataset.loaded === kind) return;
+      box.dataset.loaded = kind;
+      video.poster = box.dataset[`${kind}Poster`];
+      video.replaceChildren(
+        Object.assign(document.createElement('source'), { src: box.dataset[`${kind}Webm`], type: 'video/webm' }),
+        Object.assign(document.createElement('source'), { src: box.dataset[`${kind}Mp4`], type: 'video/mp4' })
+      );
+      video.load();
+      video.preload = 'auto';
+    };
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(({ target, isIntersecting }) => {
+        const video = target.querySelector('video');
+        if (isIntersecting) { setup(target); video.play().catch(() => {}); }
+        else if (target.dataset.loaded) video.pause();
+      });
+    }, { rootMargin: '50% 0px' });
+    const start = () => bgVideos.forEach((box) => io.observe(box));
+    if (document.readyState === 'complete') start();
+    else window.addEventListener('load', start, { once: true });
+    // Passage mobile ↔ ordi : on recharge seulement les clips déjà commencés
+    wide.addEventListener('change', () => bgVideos.forEach((box) => {
+      if (!box.dataset.loaded) return;
+      setup(box);
+      box.querySelector('video').play().catch(() => {});
+    }));
+  }
+
   // Caméra qui se démonte (Services) : sur ordi, la vidéo « scroll » suit exactement le défilement
   // (pas de lecture auto) ; sur mobile ou avec « réduire les animations », la boucle joue toute seule.
   // Rien n'est téléchargé avant que la section approche de l'écran.

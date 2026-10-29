@@ -5,7 +5,7 @@
   "nav": {
     "accueil": "Home",
     "services": "Services",
-    "portfolio": "Portfolio",
+    "portfolio": "Work",
     "apropos": "About",
     "contact": "Contact",
     "menu": "Menu",
@@ -110,7 +110,12 @@
     "bouton": "Explore our work →"
   },
   "portfolio": {
-    "titre": "Our portfolio.",
+    "titre": "Work.",
+    "retour": "← Back to work",
+    "voirClient": "See the videos",
+    "aucuneVideo": "[TO CONFIRM: videos for this client]",
+    "clientSeoTitre": "Videos for {client} | VMM Productions",
+    "clientSeoDescription": "Videos produced by VMM Productions for {client}, corporate videographer in Greater Montreal and the Laurentians.",
     "intro": "Discover our final productions and the moments that come to life behind the camera.",
     "vedettesTitre": "Featured productions",
     "parClientTitre": "Final productions by client",

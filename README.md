@@ -26,8 +26,11 @@ Tout se trouve dans `content/`, en JSON, modifiable directement sur GitHub (cray
 | `content/portfolio.json` | Vidéos (client, catégorie, ID YouTube, langue, titre, vedette oui/non), clients, catégories |
 | `content/fr.json` / `content/en.json` | Tous les textes FR / EN, titres et descriptions Google |
 | `content/site.json` | Courriel, réseaux sociaux, vidéo du bandeau, fourchettes de budget, widget d'avis Google |
+| `content/clips.json` | Clips muets de JD joués en fond (Projets, pages clients, Services, Contact) : version mobile 9:16 et, plus tard, version ordi 16:9. Fichiers dans `static/videos/jd/` |
 
 Ajouter une vidéo : copier une entrée de `videos` dans `portfolio.json`, coller l'ID YouTube (`youtube.com/shorts/ABC123` → `ABC123`), mettre le client. Netlify reconstruit le site tout seul après chaque modification.
+
+Chaque client de `clients` qui a au moins une vidéo a sa page : `/portfolio/<slug>/` et `/en/portfolio/<slug>/`, avec toutes ses vidéos. Le nombre de vidéos de sa carte sur « Projets » est calculé automatiquement. Ajouter un client : une entrée dans `clients` (nom, slug, clip facultatif), puis ses vidéos dans `videos` avec le même nom de client.
 
 Tout texte contenant `[À CONFIRMER ...]` ou `[TO CONFIRM ...]` s'affiche en rose pointillé sur le site jusqu'à ce qu'il soit remplacé.
 
