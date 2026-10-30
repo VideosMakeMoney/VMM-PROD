@@ -65,17 +65,18 @@ const clipFiles = (name) => (name ? { mp4: `${clips.dossier}${name}.mp4`, webm: 
 
 // Vidéo de fond muette en boucle. main.js ne charge que la version de l'appareil (mobile ou ordi), et seulement
 // quand la section approche ; avec « réduire les animations », le poster reste seul. Sans version ordi,
-// le clip 9:16 est centré sur un fond flou de son poster (data-portrait-ordi), sans être coupé.
+// le clip 9:16 est centré, sans être coupé, sur la même vidéo agrandie et floue (data-portrait-ordi) ;
+// avec « réduire les animations », ce fond est le poster flou.
 function bgVideo(id) {
   const clip = clips.clips[id];
   if (!clip) return '';
   const mobile = clipFiles(clip.mobile);
   const ordi = clipFiles(clip.ordi);
   const desk = ordi || mobile;
-  return `<div class="bg-video" data-bg-video${ordi ? '' : ' data-portrait-ordi'} aria-hidden="true" style="--poster-ordi: url('${desk.poster}')"
+  return `<div class="bg-video" data-bg-video${ordi ? '' : ' data-portrait-ordi'} aria-hidden="true"
     data-mobile-mp4="${mobile.mp4}" data-mobile-webm="${mobile.webm}" data-mobile-poster="${mobile.poster}"
     data-ordi-mp4="${desk.mp4}" data-ordi-webm="${desk.webm}" data-ordi-poster="${desk.poster}">
-    <span class="bg-video-blur"></span>
+    ${ordi ? '' : `<video class="bg-video-blur" muted loop playsinline preload="none" poster="${desk.poster}"></video>`}
     <video class="bg-video-media" muted loop playsinline preload="none" poster="${mobile.poster}"></video>
     <span class="bg-video-veil"></span>
   </div>`;

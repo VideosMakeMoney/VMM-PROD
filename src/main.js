@@ -114,28 +114,43 @@
   const bgVideos = document.querySelectorAll('[data-bg-video]');
   const wide = window.matchMedia('(min-width: 768px)');
   // Le bon poster pour l'appareil, même quand la vidéo n'est jamais chargée
-  const bgPosters = () => bgVideos.forEach((box) => { box.querySelector('video').poster = box.dataset[`${wide.matches ? 'ordi' : 'mobile'}Poster`]; });
+  const bgPosters = () => bgVideos.forEach((box) => { box.querySelector('.bg-video-media').poster = box.dataset[`${wide.matches ? 'ordi' : 'mobile'}Poster`]; });
   bgPosters();
   if (reduced) wide.addEventListener('change', bgPosters);
   if (bgVideos.length && !reduced) {
+    const sourcesOf = (box, kind) => [
+      Object.assign(document.createElement('source'), { src: box.dataset[`${kind}Webm`], type: 'video/webm' }),
+      Object.assign(document.createElement('source'), { src: box.dataset[`${kind}Mp4`], type: 'video/mp4' }),
+    ];
+    // Fond flou (clip 9:16 sur ordi) : la même vidéo, chargée seulement sur ordi et calée sur le clip net
+    const blurOf = (box) => (wide.matches ? box.querySelector('.bg-video-blur') : null);
     const setup = (box) => {
-      const video = box.querySelector('video');
+      const video = box.querySelector('.bg-video-media');
       const kind = wide.matches ? 'ordi' : 'mobile';
       if (box.dataset.loaded === kind) return;
       box.dataset.loaded = kind;
       video.poster = box.dataset[`${kind}Poster`];
-      video.replaceChildren(
-        Object.assign(document.createElement('source'), { src: box.dataset[`${kind}Webm`], type: 'video/webm' }),
-        Object.assign(document.createElement('source'), { src: box.dataset[`${kind}Mp4`], type: 'video/mp4' })
-      );
+      video.replaceChildren(...sourcesOf(box, kind));
       video.load();
       video.preload = 'auto';
+      const blur = blurOf(box);
+      if (blur && !blur.dataset.loaded) {
+        blur.dataset.loaded = '1';
+        blur.replaceChildren(...sourcesOf(box, kind));
+        blur.load();
+        blur.preload = 'auto';
+        const sync = () => { if (Math.abs(blur.currentTime - video.currentTime) > 0.25) blur.currentTime = video.currentTime; };
+        video.addEventListener('playing', sync);
+        video.addEventListener('seeked', sync);
+        video.addEventListener('timeupdate', sync);
+      }
     };
+    const play = (box) => [box.querySelector('.bg-video-media'), blurOf(box)].forEach((v) => v?.play().catch(() => {}));
+    const pause = (box) => box.querySelectorAll('video').forEach((v) => v.pause());
     const io = new IntersectionObserver((entries) => {
       entries.forEach(({ target, isIntersecting }) => {
-        const video = target.querySelector('video');
-        if (isIntersecting) { setup(target); video.play().catch(() => {}); }
-        else if (target.dataset.loaded) video.pause();
+        if (isIntersecting) { setup(target); play(target); }
+        else if (target.dataset.loaded) pause(target);
       });
     }, { rootMargin: '50% 0px' });
     const start = () => bgVideos.forEach((box) => io.observe(box));
@@ -145,7 +160,8 @@
     wide.addEventListener('change', () => bgVideos.forEach((box) => {
       if (!box.dataset.loaded) return;
       setup(box);
-      box.querySelector('video').play().catch(() => {});
+      if (!wide.matches) box.querySelector('.bg-video-blur')?.pause();
+      play(box);
     }));
   }
 
