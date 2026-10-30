@@ -50,12 +50,14 @@ const CAMERA = {
   height: 720,
 };
 
+// Logo de face (image tirée de la vidéo vmm-logo-spin, recadrée, fond noir rendu transparent) :
+// la rotation se fait en CSS. Le revers montre la même face, pour que VMM se lise toujours à l'endroit.
+// Les fichiers vmm-logo-spin.* restent dans static/logo/.
 const LOGO = {
-  webm: '/logo/vmm-logo-spin.webm?v=3',
-  mp4: '/logo/vmm-logo-spin.mp4?v=3',
-  poster: '/logo/vmm-logo-spin-poster.jpg?v=3',
-  width: 480,
-  height: 480,
+  src: '/logo/vmm-logo-face.webp?v=4',
+  png: '/logo/vmm-logo-face.png?v=4',
+  width: 444,
+  height: 281,
 };
 
 // Clips de fond de JD (content/clips.json) : <nom>.mp4, <nom>.webm, <nom>-poster.jpg dans static/videos/jd/.
@@ -299,11 +301,10 @@ ${L.avisTraduction ? `<div class="notice">${t(L.avisTraduction)}</div>` : ''}
 <header class="site-header">
   <div class="container header-inner">
     <a class="logo logo-video" href="${ROUTES.accueil[lang]}" aria-label="${esc(site.nom)}, ${esc(L.nav.accueil)}">
-      <video class="logo-spin" autoplay muted loop playsinline poster="${LOGO.poster}" aria-label="${esc(site.nom)}" width="${LOGO.width}" height="${LOGO.height}">
-        <source src="${LOGO.webm}" type="video/webm">
-        <source src="${LOGO.mp4}" type="video/mp4">
-      </video>
-      <img class="logo-still" src="${LOGO.poster}" alt="${esc(site.nom)}" width="${LOGO.width}" height="${LOGO.height}">
+      <span class="logo-spin">
+        <picture class="logo-face"><source srcset="${LOGO.src}" type="image/webp"><img src="${LOGO.png}" alt="${esc(site.nom)}" width="${LOGO.width}" height="${LOGO.height}"></picture>
+        <picture class="logo-face logo-back"><source srcset="${LOGO.src}" type="image/webp"><img src="${LOGO.png}" alt="" aria-hidden="true" width="${LOGO.width}" height="${LOGO.height}"></picture>
+      </span>
     </a>
     <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu" data-open="${esc(L.nav.menu)}" data-close="${esc(L.nav.fermer)}">${esc(L.nav.menu)}</button>
     <nav id="menu" class="site-nav" aria-label="Navigation">

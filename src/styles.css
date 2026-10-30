@@ -178,15 +178,16 @@ ul { list-style: none; margin: 0; padding: 0; }
 .header-inner { display: flex; align-items: center; justify-content: space-between; min-height: var(--header-h); gap: 1rem; }
 .logo { font: 900 1.5rem/1 var(--font-logo); color: var(--text); text-decoration: none; margin: 0; }
 .logo span { color: var(--pink); }
-/* Logo 3D animé : le fond noir de la vidéo se fond dans le fond du site */
-.logo-video { display: inline-flex; align-items: center; min-height: 44px; height: var(--header-h); overflow: hidden; }
-/* Vidéo carrée avec marge noire : à 96 px, le logo visible fait environ 50 px.
-   Les marges négatives et overflow: hidden gardent l'en-tête à 64 px sans déborder. */
-.logo-spin, .logo-still { display: block; height: 96px; width: auto; margin-block: -16px; mix-blend-mode: screen; }
-.logo-still { display: none; }
+/* Logo : rotation seule sur l'axe vertical, en boucle, vitesse constante.
+   Deux faces dos à dos : le revers est la même image retournée, pour que VMM se lise à l'endroit. */
+.logo-video { display: inline-flex; align-items: center; min-height: 44px; height: var(--header-h); perspective: 600px; }
+.logo-spin { position: relative; display: block; height: 52px; aspect-ratio: 444 / 281; transform-style: preserve-3d; animation: logo-spin 6s linear infinite; }
+.logo-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.logo-face img { display: block; width: 100%; height: 100%; }
+.logo-back { transform: rotateY(180deg); }
+@keyframes logo-spin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
 @media (prefers-reduced-motion: reduce) {
-  .logo-spin { display: none; }
-  .logo-still { display: block; }
+  .logo-spin { animation: none; }
 }
 .menu-toggle {
   min-height: 44px;
@@ -465,7 +466,8 @@ html:not(.js) .hero-toggle { display: none; }
 .contact-details dt { margin-bottom: .25rem; }
 .contact-details dd { margin: 0; font-size: 1.125rem; }
 .contact-info .socials { margin-bottom: 0; }
-.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
+/* section.page-contact : le <body> de la page Contact porte aussi la classe page-contact */
+section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
 .page-contact h1 { font-weight: 900; font-size: clamp(2.5rem, 7vw, 4.5rem); }
 .faq { max-width: 52rem; }
 .faq details { border-top: 1px solid var(--border); }
