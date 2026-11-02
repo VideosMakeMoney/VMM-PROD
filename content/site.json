@@ -54,5 +54,9 @@
   "avisGoogle": {
     "_aide": "Code du widget d'avis Google existant, collé tel quel. Laisser vide tant que l'emplacement et le compte ne sont pas confirmés.",
     "widgetHtml": ""
+  },
+  "drapeaux": {
+    "_aide": "Interrupteurs de contenu en attente de JD. strategie : carte « Stratégie vidéo et contenu publicitaire » et slogan « Strategy first. Camera second. » sur la page Services [À CONFIRMER]. Mettre false pour les retirer.",
+    "strategie": true
   }
 }

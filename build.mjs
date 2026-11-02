@@ -73,7 +73,8 @@ function bgVideo(id) {
   const mobile = clipFiles(clip.mobile);
   const ordi = clipFiles(clip.ordi);
   const desk = ordi || mobile;
-  return `<div class="bg-video" data-bg-video${ordi ? '' : ' data-portrait-ordi'} aria-hidden="true"
+  const focal = clip.focal ? ` style="--focal-mobile: ${esc(clip.focal.mobile || '50% 50%')}; --focal-ordi: ${esc(clip.focal.ordi || '50% 50%')}"` : '';
+  return `<div class="bg-video" data-bg-video${ordi ? '' : ' data-portrait-ordi'}${focal} aria-hidden="true"
     data-mobile-mp4="${mobile.mp4}" data-mobile-webm="${mobile.webm}" data-mobile-poster="${mobile.poster}"
     data-ordi-mp4="${desk.mp4}" data-ordi-webm="${desk.webm}" data-ordi-poster="${desk.poster}">
     ${ordi ? '' : `<video class="bg-video-blur" muted loop playsinline preload="none" poster="${desk.poster}"></video>`}
@@ -90,6 +91,13 @@ const esc = (s = '') =>
 // Texte affiché : échappé, et les placeholders sont rendus bien visibles.
 const t = (s = '') => esc(s).replace(PLACEHOLDER, (m) => `<span class="tbc">${m}</span>`);
 const note = (s) => (s ? ` ${t(s)}` : '');
+// Titres des pages Services et À propos : *mot* = mot en violet, retour à la ligne = <br>
+const rich = (s = '') => t(s).replace(/\*([^*]+)\*/g, '<span class="accent">$1</span>').replace(/\n/g, '<br>');
+// Drapeaux de content/site.json (contenu en attente de JD) : un élément avec « drapeau » n'apparaît que si son drapeau est true
+const shown = (x) => !x?.drapeau || site.drapeaux?.[x.drapeau] === true;
+// Image .webp + repli .jpg/.png (chemin sans extension, fichiers dans static/img/)
+const picture = (src, alt, { w, h, cls = '', fallback = 'jpg', lazy = true } = {}) =>
+  `<picture${cls ? ` class="${cls}"` : ''}><source srcset="${src}.webp" type="image/webp"><img src="${src}.${fallback}" alt="${esc(alt)}" width="${w}" height="${h}"${lazy ? ' loading="lazy"' : ''} decoding="async"></picture>`;
 const abs = (p) => SITE_URL + p;
 const jsonLd = (obj) => `<script type="application/ld+json">${JSON.stringify(obj).replace(/</g, '\\u003c')}</script>`;
 
@@ -99,7 +107,9 @@ const keepCompounds = (html) => html.replace(/<(h[1-3])\b[^>]*>[\s\S]*?<\/\1>/g,
 
 // h1 et h2 : texte blanc, dernier mot en dégradé violet (<span class="accent">), posé au build pour éviter un flash.
 // Les placeholders [À CONFIRMER] (.tbc) sont ignorés ; un mot composé garde son <span class="nowrap">.
+// Titre qui place lui-même ses mots violets (*mot* dans content/*.json) ou marqué data-no-accent : laissé tel quel.
 const accentLast = (html) => html.replace(/<(h[12])\b([^>]*)>([\s\S]*?)<\/\1>/g, (all, tag, attrs, inner) => {
+  if (/data-no-accent/.test(attrs) || /class="accent"/.test(inner)) return all;
   const parts = inner.split(/(<[^>]+>)/);
   const skip = new Array(parts.length).fill(false);
   for (let i = 0, depth = 0, inTbc = 0; i < parts.length; i++) {
@@ -166,7 +176,8 @@ function structuredData(key, lang, pageVideos = [], page = null) {
   const L = langs[lang];
   const biz = `${SITE_URL}/#entreprise`;
   const persons = L.equipe.membres.map((m) => {
-    const bio = L.apropos.membres.find((b) => b.id === m.id);
+    const found = L.apropos.membres.find((b) => b.id === m.id);
+    const bio = found && { ...found, texte: found.texte || (found.paragraphes || []).join(' ') };
     return {
       '@type': 'Person',
       '@id': `${SITE_URL}/#${m.id}`,
@@ -175,7 +186,7 @@ function structuredData(key, lang, pageVideos = [], page = null) {
       jobTitle: m.role,
       worksFor: { '@id': biz },
       ...(bio && !isPlaceholder(bio.note) ? { description: bio.texte } : {}),
-      ...(m.photo ? { image: abs(m.photo) } : {}),
+      ...(m.photo ? { image: abs(m.photo) } : bio?.photo ? { image: abs(`${bio.photo}.jpg`) } : {}),
     };
   });
   const a = site.adresse;
@@ -198,7 +209,7 @@ function structuredData(key, lang, pageVideos = [], page = null) {
       { '@type': 'City', name: 'Montréal' },
       { '@type': 'AdministrativeArea', name: 'Laurentides' },
     ],
-    knowsAbout: L.services.items.map((s) => s.titre),
+    knowsAbout: L.services.items.filter(shown).map((s) => s.titre),
     founder: { '@id': `${SITE_URL}/#jd` },
     employee: persons.map((p) => ({ '@id': p['@id'] })),
     sameAs: site.reseaux.map((r) => r.url),
@@ -547,52 +558,92 @@ function clientMarquee() {
   return `<div class="marquee" data-reveal><ul class="marquee-track">${items(false)}${items(true)}</ul></div>`;
 }
 
-// Icônes des 6 services (Lucide, ISC), en trait, dans l'ordre de content/*.json → services.items.
-const SERVICE_ICONS = ['video', 'camera', 'drone', 'clapperboard', 'scissors', 'sparkles'];
-function serviceIcon(i) {
-  const svg = readFileSync(join(ROOT, 'icons', 'lucide', `${SERVICE_ICONS[i]}.svg`), 'utf8');
-  // Formes du SVG, avec pathLength pour l'animation de tracé (svc-stroke)
+// Icône Lucide (ISC) en trait, en ligne. pathLength sert à l'animation de tracé (svc-stroke).
+function lucide(name, cls = 'svc-icon', size = 40) {
+  const svg = readFileSync(join(ROOT, 'icons', 'lucide', `${name}.svg`), 'utf8');
   const shapes = svg
     .slice(svg.indexOf('>', svg.indexOf('<svg')) + 1, svg.lastIndexOf('</svg>'))
     .trim()
     .split('\n')
     .map((l) => l.trim().replace(/\s*\/>$/, ' pathLength="300" />'))
     .join('');
-  return `<svg class="svc-icon" viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${shapes}</svg>`;
+  return `<svg class="${cls}" viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${shapes}</svg>`;
 }
 
+// Bandeau vidéo plein écran (Services, À propos) : un seul titre, en bas à gauche, et un bouton pause (vidéo de plus de 5 s).
+function fullHero(clipId, title, L) {
+  return `<section class="page-hero full-hero has-bg-video" aria-labelledby="hero-title">
+  ${bgVideo(clipId)}
+  <div class="container">
+    <h1 id="hero-title" class="hero-word" data-no-accent>${esc(title)}</h1>
+  </div>
+  <button class="bg-toggle" type="button" data-bg-toggle data-pause="${esc(L.services.heroPause)}" data-play="${esc(L.services.heroLecture)}" aria-label="${esc(L.services.heroPause)}"><span aria-hidden="true">❚❚</span></button>
+</section>`;
+}
+
+// Page Services : maquette de JD (PDF « VMM Service Section LAYOUT + DIRECTIONS »).
 function servicesPage(lang) {
   const L = langs[lang];
   const S = L.services;
+  const V = S.vision;
+  const items = S.items;
   // Sur ordi, main.js passe à la vidéo « scroll » et la cale sur le défilement ; sinon, boucle
   const camera = `<section class="camera-scrub" aria-labelledby="camera-title" data-scrub>
   <div class="camera-stage">
     <h2 id="camera-title" data-reveal>${t(S.camera.titre)}</h2>
+    ${S.camera.note ? `<p class="small" data-reveal>${t(S.camera.note)}</p>` : ''}
     <video class="camera-video" muted playsinline preload="none" poster="${CAMERA.poster}" width="${CAMERA.width}" height="${CAMERA.height}" aria-label="${esc(S.camera.videoLabel)}" data-scroll-webm="${CAMERA.scroll.webm}" data-scroll-mp4="${CAMERA.scroll.mp4}">
       <source src="${CAMERA.loop.webm}" type="video/webm">
       <source src="${CAMERA.loop.mp4}" type="video/mp4">
     </video>
   </div>
 </section>`;
-  const body = `${pageHead(S.titre, S.intro, 'services')}
-${camera}
-<section class="section section-tight" aria-label="${esc(L.nav.services)}">
-  <div class="container">
-    <ol class="grid grid-3 services">
-      ${S.items
-        .map((s, i) => {
-          const n = String(i + 1).padStart(2, '0');
-          return `<li class="card glass service" data-reveal>
-        ${serviceIcon(i)}
-        <h2>${t(s.titre)}</h2>
-        <p class="muted">${t(s.texte)}</p>
-      </li>`;
-        })
-        .join('\n      ')}
-    </ol>
-    <p class="cta-row"><a class="btn btn-neon" href="${ROUTES.portfolio[lang]}">${esc(S.bouton)}</a></p>
+  const card = (s) => `<li class="svc-card" data-reveal>
+          ${picture(`/img/${s.icone}`, '', { w: 600, h: 600, cls: 'svc-art', fallback: 'png' })}
+          <h3>${t(s.titre)}</h3>
+          <p>${t(s.texte)}</p>
+        </li>`;
+  const groups = S.groupes
+    .map((g, gi) => {
+      const list = g.items.map((i) => items[i]).filter(shown);
+      return `<section class="jd-screen svc-group" aria-labelledby="svc-${gi + 1}">
+  <div class="jd-wrap">
+    <p class="jd-label" data-reveal>${esc(S.etiquette)}</p>
+    <h2 id="svc-${gi + 1}" data-reveal>${rich(g.titre)}</h2>
+    <ul class="svc-grid${list.length === 1 ? ' is-single' : ''}">
+        ${list.map(card).join('\n        ')}
+    </ul>
   </div>
 </section>`;
+    })
+    .join('\n');
+  const body = `${fullHero('services', S.titre, L)}
+<section class="jd-screen jd-vision" aria-labelledby="vision-title">
+  <div class="jd-wrap vision-grid">
+    <div class="vision-text">
+      <p class="jd-label jd-label-line" data-reveal>${esc(V.etiquette)}</p>
+      <h2 id="vision-title" class="vision-title" data-reveal>${rich(V.titre)}</h2>
+      <p class="jd-lead" data-reveal>${t(V.texte)}</p>
+      <ul class="reperes" data-reveal>
+        ${V.reperes.map((r) => `<li>${lucide(r.icone, 'repere-icon', 44)}<strong>${esc(r.titre)}</strong><span>${esc(r.texte)}</span></li>`).join('\n        ')}
+      </ul>
+    </div>
+    <div class="vision-photo" data-reveal>
+      ${picture('/img/services-jd-detoure', V.photoAlt, { w: 683, h: 1200, fallback: 'png' })}
+    </div>
+  </div>
+</section>
+${groups}
+${camera}
+<section class="jd-screen jd-end" aria-labelledby="fin-title">
+  <div class="jd-wrap">
+    <p class="jd-label" data-reveal>${esc(S.fin.etiquette)}</p>
+    <h2 id="fin-title" data-reveal data-no-accent>${t(S.fin.titre)}</h2>
+    <p class="jd-lead" data-reveal>${t(S.fin.texte)}</p>
+    <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.portfolio[lang]}">${esc(S.fin.bouton)}</a></p>
+  </div>
+</section>
+${shown(S.slogan) ? `<p class="jd-slogan">${esc(S.slogan.texte)}</p>` : ''}`;
   return layout({ key: 'services', lang, body });
 }
 
@@ -701,28 +752,46 @@ function slug(s) {
   return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
+// Page À propos : maquette de JD (PDF « VMM About Section LAYOUT + DIRECTIONS »), même identité que Services.
 function aboutPage(lang) {
   const L = langs[lang];
   const A = L.apropos;
-  const body = `${pageHead(A.titre, A.intro)}
-<section class="section section-tight" aria-label="${esc(L.equipe.titre)}">
-  <div class="container about">
-    ${A.membres
-      .map((b) => {
-        const m = L.equipe.membres.find((x) => x.id === b.id);
-        return `<article class="card glass member member-large" id="${b.id}" data-reveal>
-      ${memberPhoto(m, L)}
-      <div class="member-text">
-        <h2>${esc(b.titre)}</h2>
-        <p class="role">${t(m.role)}</p>
-        <p>${t(b.texte)}</p>
-        ${b.note ? `<p class="small">${t(b.note)}</p>` : ''}
+  const label = `<p class="jd-label" data-reveal>${esc(A.etiquette)}</p>`;
+  const members = A.membres
+    .map(
+      (m) => `<section class="jd-screen" id="${m.id}" aria-labelledby="${m.id}-title">
+  <div class="jd-wrap">
+    ${label}
+    <div class="person">
+      <div class="person-photo" data-reveal>
+        ${m.photo ? picture(m.photo, m.photoAlt, { w: 900, h: 1200 }) : `<span class="tbc">${t(L.equipe.photoManquante)}</span>`}
       </div>
-    </article>`;
-      })
-      .join('\n    ')}
-    <p data-reveal>${t(A.bluewise)}</p>
-    <p class="cta-row"><a class="btn btn-neon" href="${ROUTES.contact[lang]}">${esc(A.bouton)}</a></p>
+      <div class="person-text">
+        <p class="jd-role" data-reveal>${esc(m.role)}</p>
+        <h2 id="${m.id}-title" data-reveal>${rich(m.titre)}</h2>
+        ${m.paragraphes.map((p) => `<p data-reveal>${t(p)}</p>`).join('\n        ')}
+        ${m.note ? `<p class="small" data-reveal>${t(m.note)}</p>` : ''}
+      </div>
+    </div>
+  </div>
+</section>`
+    )
+    .join('\n');
+  const body = `${fullHero('about', A.titre, L)}
+<section class="jd-screen jd-vision" aria-labelledby="visages-title">
+  <div class="jd-wrap">
+    ${label}
+    <h2 id="visages-title" class="vision-title" data-reveal>${rich(A.vision.titre)}</h2>
+    <p class="jd-lead" data-reveal>${t(A.vision.texte)}</p>
+  </div>
+</section>
+${members}
+<section class="jd-screen jd-closing" aria-labelledby="gens-title">
+  <div class="jd-wrap">
+    ${label}
+    <h2 id="gens-title" class="vision-title" data-reveal>${rich(A.fin.titre)}</h2>
+    <p class="jd-lead" data-reveal>${t(A.fin.texte)}</p>
+    <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.contact[lang]}">${esc(A.fin.bouton)}</a></p>
   </div>
 </section>`;
   return layout({ key: 'apropos', lang, body });
@@ -805,7 +874,7 @@ function llmsTxt() {
     ...portfolio.categories.map((c) => `- ${c.titre.fr} : ${c.texte.fr}`),
     '',
     '## Services',
-    ...fr.services.items.map((s) => `- ${s.titre} : ${s.texte}`),
+    ...fr.services.items.filter(shown).map((s) => `- ${s.titre} : ${s.texte}`),
     '',
     '## Équipe',
     ...fr.equipe.membres.map((m) => `- ${m.nomComplet} (${m.nom}), ${m.role} : ${m.texte}`),
