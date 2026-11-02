@@ -73,7 +73,7 @@ function bgVideo(id) {
   const mobile = clipFiles(clip.mobile);
   const ordi = clipFiles(clip.ordi);
   const desk = ordi || mobile;
-  return `<div class="bg-video" data-bg-video${ordi ? '' : ' data-portrait-ordi'} aria-hidden="true"
+  return `<div class="bg-video" data-bg-video data-clip="${id}"${ordi ? '' : ' data-portrait-ordi'} aria-hidden="true"
     data-mobile-mp4="${mobile.mp4}" data-mobile-webm="${mobile.webm}" data-mobile-poster="${mobile.poster}"
     data-ordi-mp4="${desk.mp4}" data-ordi-webm="${desk.webm}" data-ordi-poster="${desk.poster}">
     ${ordi ? '' : `<video class="bg-video-blur" muted loop playsinline preload="none" poster="${desk.poster}"></video>`}
@@ -368,7 +368,7 @@ const sectionHead = (label, title, intro, id, tag = 'h2') => `<p class="label" d
     <${tag} id="${id}" data-reveal>${t(title)}</${tag}>
     ${intro ? `<p class="intro" data-reveal>${t(intro)}</p>` : ''}`;
 
-const pageHead = (title, intro, clip = '') => `<section class="page-hero${clip ? ' has-bg-video' : ''}">
+const pageHead = (title, intro, clip = '') => `<section class="page-hero${clip ? ` has-bg-video bg-clip-${clip}` : ''}">
   ${clip ? bgVideo(clip) : ''}
   <div class="container">
     <h1 data-reveal>${t(title)}</h1>
@@ -447,15 +447,32 @@ function homePage(lang) {
   const slots = [...vedettes];
   while (slots.length < L.realisations.vedettesMin) slots.push(null);
   const catVideos = portfolio.categories.map(categoryVideo);
+  // Seuls les fichiers présents dans static/ sont appelés : un fichier manquant ne donne jamais de 404.
+  const exists = (url) => Boolean(url) && existsSync(join(ROOT, 'static', url));
+  const sources = [
+    [hv.mobileWebm, 'video/webm', '(max-width: 767px)'],
+    [hv.mobile, 'video/mp4', '(max-width: 767px)'],
+    [hv.ordiWebm, 'video/webm', ''],
+    [hv.ordi, 'video/mp4', ''],
+  ].filter(([src]) => exists(src));
+  const hasVideo = sources.length > 0;
+  const poster = exists(hv.poster) ? hv.poster : '';
+  const attenteOrdi = exists(hv.posterAttenteOrdi) ? hv.posterAttenteOrdi : '';
+  const attenteMobile = exists(hv.posterAttenteMobile) ? hv.posterAttenteMobile : attenteOrdi;
+  const heroMedia = hasVideo
+    ? `<video class="hero-video" autoplay muted loop playsinline preload="metadata"${poster ? ` poster="${poster}"` : ''}>
+      ${sources.map(([src, type, media]) => `<source src="${src}" type="${type}"${media ? ` media="${media}"` : ''}>`).join('\n      ')}
+    </video>`
+    : poster || attenteOrdi
+      ? `<picture class="hero-poster">
+      ${!poster && attenteMobile ? `<source srcset="${attenteMobile}" media="(max-width: 767px)">` : ''}
+      <img src="${poster || attenteOrdi}" alt="" decoding="async" fetchpriority="high">
+    </picture>`
+      : '';
   const body = `
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero-media" aria-hidden="true">
-    <video class="hero-video" autoplay muted loop playsinline preload="metadata"${hv.poster ? ` poster="${hv.poster}"` : ''}>
-      ${hv.mobileWebm ? `<source src="${hv.mobileWebm}" type="video/webm" media="(max-width: 767px)">` : ''}
-      <source src="${hv.mobile}" type="video/mp4" media="(max-width: 767px)">
-      ${hv.ordiWebm ? `<source src="${hv.ordiWebm}" type="video/webm">` : ''}
-      <source src="${hv.ordi}" type="video/mp4">
-    </video>
+    ${heroMedia}
     <div class="hero-vignette"></div>
     <div class="halo halo-violet"></div>
     <div class="halo halo-rose"></div>
@@ -469,9 +486,9 @@ function homePage(lang) {
     <p class="hero-sub" data-reveal>${t(L.hero.sousTitre)}</p>
     <p class="hero-text" data-reveal>${t(L.hero.texte)}</p>
     <a class="btn btn-neon" href="#contact" data-scroll-contact data-reveal>${esc(L.hero.bouton)}</a>
-    ${hv.poster ? '' : `<p class="hero-missing small">${t(L.hero.posterManquant)}</p>`}
+    ${hasVideo && poster ? '' : `<p class="hero-missing small">${t(L.hero.posterManquant)}</p>`}
   </div>
-  <button class="hero-toggle" type="button" aria-pressed="false" data-pause="${esc(L.hero.pause)}" data-play="${esc(L.hero.lecture)}" aria-label="${esc(L.hero.pause)}"><span aria-hidden="true">❚❚</span></button>
+  ${hasVideo ? `<button class="hero-toggle" type="button" aria-pressed="false" data-pause="${esc(L.hero.pause)}" data-play="${esc(L.hero.lecture)}" aria-label="${esc(L.hero.pause)}"><span aria-hidden="true">❚❚</span></button>` : ''}
 </section>
 
 <section class="section" id="creations" aria-labelledby="creons-title">

@@ -46,7 +46,10 @@
     "mobile": "/images/vmm-hero-mobile.mp4",
     "ordiWebm": "",
     "mobileWebm": "",
-    "poster": ""
+    "poster": "",
+    "_aideAttente": "Tant que les fichiers vidéo ci-dessus n'existent pas dans static/, le bandeau n'appelle aucune vidéo (pas de 404) et affiche ces images d'attente (logo VMM, mêmes images que le fond de Contact). Dès que JD fournit la vidéo héro, la déposer au chemin « ordi »/« mobile » et elle remplace l'image automatiquement.",
+    "posterAttenteOrdi": "/videos/jd/contact-logo-16x9-poster.jpg",
+    "posterAttenteMobile": "/videos/jd/contact-logo-9x16-poster.jpg"
   },
   "budgets": [
     "[À CONFIRMER : reprendre les fourchettes de budget du formulaire actuel]"

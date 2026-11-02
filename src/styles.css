@@ -247,6 +247,9 @@ ul { list-style: none; margin: 0; padding: 0; }
   background: radial-gradient(ellipse at 30% 20%, var(--surface-2), var(--bg) 70%);
 }
 .hero-media { position: absolute; inset: 0; z-index: -1; }
+/* Image d'attente tant que la vidéo héro n'est pas fournie (aucune vidéo appelée, donc aucun 404) */
+.hero-poster, .hero-poster img { display: block; width: 100%; height: 100%; }
+.hero-poster img { object-fit: cover; }
 .hero-video { width: 100%; height: 100%; object-fit: cover; filter: brightness(1.1) saturate(1.35) contrast(1.1); }
 .hero-vignette {
   position: absolute;
@@ -559,6 +562,17 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
       linear-gradient(180deg, rgba(8, 8, 15, .3) 0%, rgba(8, 8, 15, 0) 20%, rgba(8, 8, 15, 0) 72%, rgba(8, 8, 15, .7) 100%);
   }
 }
+/* Projets (/portfolio) : aucun voile sombre, ordi et mobile. Le fond flou garde sa pleine luminosité
+   des deux côtés du clip ; le titre et l'intro restent lisibles grâce à une petite ombre portée. */
+.bg-clip-work .bg-video-veil { display: none; }
+@media (min-width: 768px) {
+  .bg-clip-work .bg-video[data-portrait-ordi] .bg-video-blur { filter: blur(36px) saturate(1.4); }
+}
+.bg-clip-work h1, .bg-clip-work .intro { text-shadow: 0 2px 4px rgba(0, 0, 0, .6), 0 0 16px rgba(0, 0, 0, .45); }
+/* Sans voile, le gris habituel de l'intro disparaît sur un fond clair : texte presque blanc ici */
+.bg-clip-work .intro { color: var(--text); }
+/* Le mot en dégradé : text-shadow passerait par-dessus le dégradé, on prend drop-shadow à la place */
+.bg-clip-work .accent { text-shadow: none; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .55)); }
 .page-contact.has-bg-video { padding-bottom: clamp(3rem, 8vw, 6rem); }
 
 /* Cartes clients (Projets) */
