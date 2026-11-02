@@ -151,8 +151,7 @@
       {
         "titre": "Video strategy and advertising content",
         "texte": "Content designed to attract the right people, communicate a clear offer and turn attention into action.",
-        "icone": "service-01-strategie",
-        "drapeau": "strategie"
+        "icone": "service-01-strategie"
       },
       {
         "titre": "Professional filming and photography",
@@ -181,11 +180,13 @@
       }
     ],
     "camera": {
+      "drapeau": "servicesCamera",
       "titre": "Piece by piece",
       "videoLabel": "Sony a7 IV camera coming apart piece by piece, then back together",
       "note": "[TO CONFIRM: keep the camera section below the services]"
     },
     "fin": {
+      "drapeau": "servicesFin",
       "etiquette": "Keep exploring",
       "titre": "Discover our work.",
       "texte": "Explore the projects and stories we have created for our clients.",
@@ -254,7 +255,11 @@
     "etiquette": "About",
     "vision": {
       "titre": "The faces behind VMM.",
-      "texte": "Passionate people who bring visions to life and reveal the pride behind every project."
+      "texte": "Passionate people who bring visions to life and reveal the pride behind every project.",
+      "photo": "/img/about-jd",
+      "photoAlt": "Portrait of JD, founder of VMM Productions",
+      "photoFormat": "jpg",
+      "photoAide": "Preview: about-jd until JD sends the transparent PNG."
     },
     "membres": [
       {
@@ -275,7 +280,7 @@
         "paragraphes": [
           "With nearly ten years behind the camera, Renaud brings experience, originality and an instinct for capturing the action. His immersive approach turns spontaneous moments into vivid images."
         ],
-        "note": "[TO CONFIRM: bio to be expanded with Renaud’s answers]",
+        "noteInterne": "[TO CONFIRM: bio to be expanded with Renaud’s answers] Preview: not shown on the site.",
         "photo": "/img/about-renaud",
         "photoAlt": "Portrait of Renaud, camera operator at VMM Productions"
       }

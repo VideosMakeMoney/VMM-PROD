@@ -185,7 +185,7 @@ function structuredData(key, lang, pageVideos = [], page = null) {
       alternateName: m.nom,
       jobTitle: m.role,
       worksFor: { '@id': biz },
-      ...(bio && !isPlaceholder(bio.note) ? { description: bio.texte } : {}),
+      ...(bio && !isPlaceholder(bio.note || bio.noteInterne) ? { description: bio.texte } : {}),
       ...(m.photo ? { image: abs(m.photo) } : bio?.photo ? { image: abs(`${bio.photo}.jpg`) } : {}),
     };
   });
@@ -634,15 +634,15 @@ function servicesPage(lang) {
   </div>
 </section>
 ${groups}
-${camera}
-<section class="jd-screen jd-end" aria-labelledby="fin-title">
+${shown(S.camera) ? camera : ''}
+${shown(S.fin) ? `<section class="jd-screen jd-end" aria-labelledby="fin-title">
   <div class="jd-wrap">
     <p class="jd-label" data-reveal>${esc(S.fin.etiquette)}</p>
     <h2 id="fin-title" data-reveal data-no-accent>${t(S.fin.titre)}</h2>
     <p class="jd-lead" data-reveal>${t(S.fin.texte)}</p>
     <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.portfolio[lang]}">${esc(S.fin.bouton)}</a></p>
   </div>
-</section>
+</section>` : ''}
 ${shown(S.slogan) ? `<p class="jd-slogan">${esc(S.slogan.texte)}</p>` : ''}`;
   return layout({ key: 'services', lang, body });
 }
@@ -779,10 +779,15 @@ function aboutPage(lang) {
     .join('\n');
   const body = `${fullHero('about', A.titre, L)}
 <section class="jd-screen jd-vision" aria-labelledby="visages-title">
-  <div class="jd-wrap">
-    ${label}
-    <h2 id="visages-title" class="vision-title" data-reveal>${rich(A.vision.titre)}</h2>
-    <p class="jd-lead" data-reveal>${t(A.vision.texte)}</p>
+  <div class="jd-wrap${A.vision.photo ? ' vision-grid' : ''}">
+    <div class="vision-text">
+      ${label}
+      <h2 id="visages-title" class="vision-title" data-reveal>${rich(A.vision.titre)}</h2>
+      <p class="jd-lead" data-reveal>${t(A.vision.texte)}</p>
+    </div>
+    ${A.vision.photo ? `<div class="vision-photo vision-portrait${A.vision.photoFormat === 'png' ? ' is-cutout' : ''}" data-reveal>
+      ${picture(A.vision.photo, A.vision.photoAlt, { w: 900, h: 1200, fallback: A.vision.photoFormat || 'jpg' })}
+    </div>` : ''}
   </div>
 </section>
 ${members}

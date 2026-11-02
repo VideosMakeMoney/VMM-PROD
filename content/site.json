@@ -56,7 +56,9 @@
     "widgetHtml": ""
   },
   "drapeaux": {
-    "_aide": "Interrupteurs de contenu en attente de JD. strategie : carte « Stratégie vidéo et contenu publicitaire » et slogan « Strategy first. Camera second. » sur la page Services [À CONFIRMER]. Mettre false pour les retirer.",
-    "strategie": true
+    "_aide": "Interrupteurs de contenu (true = affiché, false = masqué ; le code reste en place). strategie : slogan « Strategy first. Camera second. » en bas de Services (la carte Stratégie est confirmée par JD et toujours affichée). servicesCamera : section caméra « Pièce par pièce » de Services, retirée pour l'instant ; elle reviendra à la fin de la page en animation au défilement. servicesFin : bloc « Découvrez nos réalisations. » et bouton vers /portfolio, retirés pour l'instant à la demande de JD.",
+    "strategie": true,
+    "servicesCamera": false,
+    "servicesFin": false
   }
 }

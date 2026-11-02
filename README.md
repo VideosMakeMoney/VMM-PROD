@@ -34,7 +34,7 @@ Chaque client de `clients` qui a au moins une vidéo a sa page : `/portfolio/<sl
 
 Pages Services et À propos : elles suivent les PDF de JD rangés dans `docs/jd/` (hors du site publié). Dans leurs titres (`services` et `apropos` de `fr.json` / `en.json`), `*mot*` met un mot en violet et `\n` fait un retour à la ligne. Images dans `static/img/` (`.webp` + `.png`/`.jpg`). Les anciens textes de ces deux pages sont gardés sous `ancien`.
 
-Drapeau `strategie` (`site.json` → `drapeaux`) : à `false`, la carte « Stratégie vidéo et contenu publicitaire » et le slogan « Strategy first. Camera second. » disparaissent de la page Services (et de `llms.txt` / JSON-LD).
+Drapeaux (`site.json` → `drapeaux`, `true` = affiché) : `strategie` pour le slogan « Strategy first. Camera second. » de Services (la carte Stratégie est confirmée par JD), `servicesCamera` pour la section caméra « Pièce par pièce » et `servicesFin` pour « Découvrez nos réalisations. » + bouton /portfolio. Les deux derniers sont à `false` pour l'instant : le code reste en place, la caméra reviendra à la fin de la page en animation au défilement.
 
 Tout texte contenant `[À CONFIRMER ...]` ou `[TO CONFIRM ...]` s'affiche en rose pointillé sur le site jusqu'à ce qu'il soit remplacé.
 
@@ -71,12 +71,12 @@ Redirections 301 (`_redirects`) : `/work` → `/portfolio`, `/process` → `/ser
 - Liens HH Portes et Fenêtres, Paintball Mirabel (making-of et album photo).
 
 **Services et À propos (en attente de JD)**
-- Carte Stratégie et slogan « Strategy first. Camera second. » : codés comme le PDF, derrière le drapeau `strategie`.
-- Section caméra « Pièce par pièce » : gardée sous les services, à confirmer.
+- Réponses de JD (2026-11-02) : carte Stratégie gardée ; portrait de JD dans l'intro À propos (about-jd en attendant son PNG transparent : `apropos.vision.photo` / `photoFormat`) ; textes et bio de Renaud gardés comme aperçus, sans mention visible (`noteInterne`) ; section caméra et « Découvrez nos réalisations. » retirées de Services pour l'instant (drapeaux).
+- Section caméra : reviendra à la fin de Services, en animation au défilement qui suit l'utilisateur.
 - Vidéo About finale (`about-16x9` / `about-9x16`) et points focaux des bandeaux (`clips.json`).
-- Pas de portrait de JD dans l'intro À propos ; `about-jd-detoure` (faux damier) n'est pas utilisé.
+- `about-jd-detoure` (faux damier) n'est pas utilisé.
 - Textes anglais de ces deux pages : traduction fidèle, à valider.
-- Animation des nouvelles icônes : même déclencheur, durée (1,4 s) et courbe que les anciennes icônes en trait, en dévoilement progressif (les nouvelles icônes sont des images). Comparaison avant/après à faire valider (PDF, étape 06).
+- Animation des nouvelles icônes : même déclencheur, durée (1,4 s) et courbe que les anciennes icônes en trait, en dévoilement progressif. Comparaison avant/après à faire valider (PDF, étape 06).
 
 **Textes**
 - Bio de Renaud à enrichir avec ses réponses (ne pas inventer son parcours).

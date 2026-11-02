@@ -673,3 +673,6 @@ html:not(.js) .bg-toggle { display: none; }
 .person-text h2 { font-size: clamp(2.2rem, 5.5vw, 3.75rem); }
 .person-text p:not(.jd-role):not(.small) { color: var(--lavande); font-size: 1.0625rem; max-width: 34rem; }
 @media (min-width: 860px) { .person { grid-template-columns: .95fr 1.05fr; gap: 4rem; } .person-photo img { margin-inline: 0; } }
+/* À propos, intro : portrait de JD à droite (photo rectangulaire en attendant le PNG transparent) */
+.vision-portrait:not(.is-cutout) img { border-radius: 1rem; }
+@media (min-width: 900px) { .vision-portrait:not(.is-cutout) img { max-height: min(640px, calc(100svh - var(--header-h) - 4rem)); } }
