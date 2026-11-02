@@ -465,7 +465,8 @@ html:not(.js) .hero-toggle { display: none; }
 .contact-details dt { margin-bottom: .25rem; }
 .contact-details dd { margin: 0; font-size: 1.125rem; }
 .contact-info .socials { margin-bottom: 0; }
-.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
+/* section.page-contact : le <body> de la page Contact porte aussi la classe page-contact */
+section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
 .page-contact h1 { font-weight: 900; font-size: clamp(2.5rem, 7vw, 4.5rem); }
 .faq { max-width: 52rem; }
 .faq details { border-top: 1px solid var(--border); }
