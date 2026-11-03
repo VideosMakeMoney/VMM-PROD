@@ -138,8 +138,8 @@ function jpegSize(url) {
 }
 
 // Mot-clé + ville (seo.<page>.h1) : petit sous-titre gris visible sous le titre, à l'intérieur du H1.
-// Le séparateur « · » est réservé aux lecteurs d'écran ; le grand titre garde son style.
-const h1Seo = (text) => (text ? `<span class="visually-hidden"> · </span><span class="h1-sub">${esc(text)}</span>` : '');
+// Le grand titre garde son style.
+const h1Seo = (text) => (text ? `<span class="h1-sub">${esc(text)}</span>` : '');
 
 // Feuille de style en ligne dans chaque page (≈ 10 Ko compressée) : aucune requête ne bloque le premier affichage.
 // src/styles.css reste la source (et est toujours copiée dans dist/).
@@ -403,7 +403,7 @@ ${routed ? `<meta property="og:url" content="${abs(route[lang])}">\n` : ''}<meta
 <meta name="twitter:image:alt" content="${esc(ogAlt)}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <script>document.documentElement.classList.add('js')</script>
-${preload}<link rel="preload" href="/fonts/${key === 'accueil' ? 'inter-latin-800-normal' : 'cinzel-latin-900-normal'}.woff2" as="font" type="font/woff2" crossorigin>
+${preload}<link rel="preload" href="/fonts/cinzel-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>${CSS}</style>
 ${INDEXABLE.includes(key) ? structuredData(key, lang, videos, page) : ''}
 </head>

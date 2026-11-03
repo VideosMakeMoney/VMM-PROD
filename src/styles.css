@@ -287,10 +287,11 @@ ul { list-style: none; margin: 0; padding: 0; }
 .hero-content { padding-block: 16vh 12vh; color: var(--hero-text); }
 .hero-kicker { color: var(--hero-text); opacity: .85; }
 .hero-title {
-  font-family: var(--font-hero);
-  font-weight: 800;
+  /* Cinzel 900 comme les autres titres (demande de Natasha, 2026-11-03) ; avant : var(--font-hero), Inter 800, -.02em */
+  font-family: var(--font-title);
+  font-weight: 900;
   font-size: clamp(2.75rem, 11vw, 7.5rem);
-  letter-spacing: -.02em;
+  letter-spacing: -.01em;
   filter: drop-shadow(0 0 24px rgba(124, 58, 237, .35));
   line-height: 1;
   margin-bottom: .3em;
