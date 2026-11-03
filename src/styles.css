@@ -731,3 +731,7 @@ html:not(.js) .bg-toggle { display: none; }
 .bg-video-poster, .bg-video-poster img { position: absolute; inset: 0; width: 100%; height: 100%; }
 .bg-video-poster img { object-fit: cover; object-position: var(--focal-mobile, 50% 50%); }
 @media (min-width: 768px) { .bg-video-poster img { object-position: var(--focal-ordi, 50% 50%); } }
+/* Vidéo héro par-dessus le poster : invisible tant qu'elle n'a pas d'image à montrer */
+.hero-media .hero-poster { position: absolute; inset: 0; }
+.hero-media .hero-video { position: absolute; inset: 0; opacity: 0; transition: opacity .6s ease; }
+.hero-media .hero-video.is-playing { opacity: 1; }

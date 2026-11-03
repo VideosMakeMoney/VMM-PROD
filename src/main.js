@@ -25,7 +25,21 @@
       heroToggle.setAttribute('aria-label', paused ? heroToggle.dataset.play : heroToggle.dataset.pause);
       heroToggle.firstElementChild.textContent = paused ? '▶' : '❚❚';
     };
-    if (reduced) heroVideo.pause();
+    // Le poster s'affiche d'abord ; la vidéo (une seule version : mobile ou ordi) est ajoutée après le chargement
+    // de la page. Avec « réduire les animations », elle n'est jamais téléchargée et le poster reste.
+    const loadHero = () => {
+      if (reduced) { heroToggle.remove(); return; }
+      const kind = window.matchMedia('(max-width: 767px)').matches ? 'heroMobile' : 'heroOrdi';
+      let list = [];
+      try { list = JSON.parse(heroVideo.dataset[kind] || '[]'); } catch {}
+      heroVideo.replaceChildren(...list.map(({ src, type }) => Object.assign(document.createElement('source'), { src, type })));
+      heroVideo.preload = 'auto';
+      heroVideo.addEventListener('playing', () => heroVideo.classList.add('is-playing'), { once: true });
+      heroVideo.load();
+      heroVideo.play().catch(() => sync());
+    };
+    if (document.readyState === 'complete') loadHero();
+    else window.addEventListener('load', loadHero, { once: true });
     heroVideo.addEventListener('play', sync);
     heroVideo.addEventListener('pause', sync);
     heroToggle.addEventListener('click', () => (heroVideo.paused ? heroVideo.play() : heroVideo.pause()));
@@ -34,19 +48,7 @@
     sync();
   }
 
-  // Défilement fluide (Lenis) synchronisé avec GSAP ScrollTrigger
   let lenis = null;
-  if (!reduced && window.Lenis) {
-    lenis = new window.Lenis({ lerp: 0.1 });
-    if (window.gsap && window.ScrollTrigger) {
-      lenis.on('scroll', window.ScrollTrigger.update);
-      window.gsap.ticker.add((time) => lenis.raf(time * 1000));
-      window.gsap.ticker.lagSmoothing(0);
-    } else {
-      const raf = (time) => { lenis.raf(time); requestAnimationFrame(raf); };
-      requestAnimationFrame(raf);
-    }
-  }
 
   // « Nous contacter ↓ » et le lien Contact du menu défilent jusqu'au formulaire
   document.querySelectorAll('[data-scroll-contact]').forEach((link) => {
@@ -60,34 +62,6 @@
       setTimeout(() => target.querySelector('input:not([type=hidden])')?.focus({ preventScroll: true }), reduced ? 0 : 900);
     });
   });
-
-  // Apparitions au défilement : fade-in .8s cubic-bezier(.16,1,.3,1)
-  if (!reduced && window.gsap && window.ScrollTrigger) {
-    const { gsap, ScrollTrigger } = window;
-    gsap.registerPlugin(ScrollTrigger);
-    const ease = 'expo.out';
-    // Services et À propos (maquettes de JD) : 20 px, 600 ms, léger décalage entre les cartes
-    const jd = '.jd-screen [data-reveal]';
-    const other = '[data-reveal]:not(.jd-screen [data-reveal])';
-    gsap.set(other, { opacity: 0, y: 24 });
-    gsap.set(jd, { opacity: 0, y: 20 });
-    ScrollTrigger.batch(jd, {
-      start: 'top 90%',
-      once: true,
-      onEnter: (els) => {
-        els.forEach((el) => el.classList.add('is-visible'));
-        gsap.to(els, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.12, overwrite: true });
-      },
-    });
-    ScrollTrigger.batch(other, {
-      start: 'top 90%',
-      once: true,
-      onEnter: (els) => {
-        els.forEach((el) => el.classList.add('is-visible'));
-        gsap.to(els, { opacity: 1, y: 0, duration: 0.8, ease, stagger: 0.08, overwrite: true });
-      },
-    });
-  }
 
   // Formulaire Netlify : envoi sans recharger la page (sans JS, POST classique vers /merci/)
   document.querySelectorAll('form[data-netlify]').forEach((form) => {
@@ -119,7 +93,63 @@
     });
   });
 
-  if (reduced || !window.gsap) document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-visible'));
+  // Animations (GSAP, ScrollTrigger, Lenis) : chargées seulement après l'affichage de la page, pour ne pas retarder
+  // l'image principale (LCP). Ce qui est déjà à l'écran à ce moment-là reste affiché tel quel ; le reste apparaît au défilement.
+  const showAll = () => document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-visible'));
+  const loadScript = (src) => new Promise((ok, ko) => document.head.append(Object.assign(document.createElement('script'), { src, onload: ok, onerror: ko })));
+  const startMotion = () => {
+    const vendor = '/vendor/';
+    Promise.all([loadScript(`${vendor}gsap.min.js`), loadScript(`${vendor}lenis.min.js`)])
+      .then(() => loadScript(`${vendor}ScrollTrigger.min.js`))
+      .then(() => {
+        if (window.Lenis) {
+          lenis = new window.Lenis({ lerp: 0.1 });
+          if (window.gsap && window.ScrollTrigger) {
+            lenis.on('scroll', window.ScrollTrigger.update);
+            window.gsap.ticker.add((time) => lenis.raf(time * 1000));
+            window.gsap.ticker.lagSmoothing(0);
+          } else {
+            const raf = (time) => { lenis.raf(time); requestAnimationFrame(raf); };
+            requestAnimationFrame(raf);
+          }
+        }
+        if (!window.gsap || !window.ScrollTrigger) return showAll();
+        const { gsap, ScrollTrigger } = window;
+        gsap.registerPlugin(ScrollTrigger);
+        const ease = 'expo.out';
+        // Déjà à l'écran : affiché sans animation (pas de disparition puis réapparition)
+        const inView = (el) => el.getBoundingClientRect().top < window.innerHeight;
+        document.querySelectorAll('[data-reveal]').forEach((el) => { if (inView(el)) el.classList.add('is-visible'); });
+        // Services et À propos (maquettes de JD) : 20 px, 600 ms, léger décalage entre les cartes
+        const jd = gsap.utils.toArray('.jd-screen [data-reveal]').filter((el) => !el.classList.contains('is-visible'));
+        const other = gsap.utils.toArray('[data-reveal]:not(.jd-screen [data-reveal])').filter((el) => !el.classList.contains('is-visible'));
+        if (other.length) gsap.set(other, { opacity: 0, y: 24 });
+        if (jd.length) gsap.set(jd, { opacity: 0, y: 20 });
+        if (jd.length) ScrollTrigger.batch(jd, {
+          start: 'top 90%',
+          once: true,
+          onEnter: (els) => {
+            els.forEach((el) => el.classList.add('is-visible'));
+            gsap.to(els, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.12, overwrite: true });
+          },
+        });
+        if (other.length) ScrollTrigger.batch(other, {
+          start: 'top 90%',
+          once: true,
+          onEnter: (els) => {
+            els.forEach((el) => el.classList.add('is-visible'));
+            gsap.to(els, { opacity: 1, y: 0, duration: 0.8, ease, stagger: 0.08, overwrite: true });
+          },
+        });
+      })
+      .catch(showAll);
+  };
+  if (reduced) showAll();
+  else {
+    const later = () => ('requestIdleCallback' in window ? requestIdleCallback(startMotion, { timeout: 1500 }) : setTimeout(startMotion, 200));
+    if (document.readyState === 'complete') later();
+    else window.addEventListener('load', later, { once: true });
+  }
 
   // Clips de fond de JD : chaque appareil ne télécharge que sa version (mobile ou ordi), seulement quand la
   // section approche ; avec « réduire les animations », le poster reste seul et rien n'est téléchargé.

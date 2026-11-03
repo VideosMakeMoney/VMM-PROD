@@ -121,6 +121,10 @@ function jpegSize(url) {
   return null;
 }
 
+// Mot-clé + ville ajouté à la fin du H1 (seo.<page>.h1) : lu par Google et les lecteurs d'écran, invisible à l'écran,
+// pour garder le style des titres tel quel.
+const h1Seo = (text) => (text ? `<span class="visually-hidden"> · ${esc(text)}</span>` : '');
+
 // ---------- utilitaires ----------
 const PLACEHOLDER = /\[(?:À CONFIRMER|TO CONFIRM)[^\]]*\]/g;
 const isPlaceholder = (s) => !s || /\[(?:À CONFIRMER|TO CONFIRM)/.test(s);
@@ -153,7 +157,7 @@ const accentLast = (html) => html.replace(/<(h[12])\b([^>]*)>([\s\S]*?)<\/\1>/g,
   for (let i = 0, depth = 0, inTbc = 0; i < parts.length; i++) {
     const p = parts[i];
     if (p.startsWith('<')) {
-      if (/^<span\b/.test(p)) { depth++; if (inTbc || /class="tbc"/.test(p)) inTbc++; }
+      if (/^<span\b/.test(p)) { depth++; if (inTbc || /class="(?:tbc|visually-hidden)"/.test(p)) inTbc++; }
       else if (/^<\/span>/.test(p)) { depth--; if (inTbc) inTbc--; }
       skip[i] = true;
     } else skip[i] = inTbc > 0;
@@ -192,11 +196,17 @@ const categoryVideo = (cat) =>
   null;
 const featured = () => portfolio.videos.filter((v) => v.vedette);
 
-function videoObject(v, lang) {
+// Une vidéo n'entre dans le JSON-LD et le sitemap vidéo qu'avec sa vraie date de mise en ligne (dateMiseEnLigne
+// dans portfolio.json, format AAAA-MM-JJ) : Google exige uploadDate. Les autres restent en réserve, prêtes à sortir
+// dès que la date est remplie.
+const videoReady = (v) => Boolean(v?.youtubeId && v.dateMiseEnLigne);
+
+// pageUrl : la page où la vidéo est montrée ; l'@id de la vidéo est cette URL suivie de #video-<ID YouTube>.
+function videoObject(v, lang, pageUrl) {
   const name = videoName(v, lang);
   return {
     '@type': 'VideoObject',
-    '@id': `${SITE_URL}/#video-${v.youtubeId}-${lang}`,
+    '@id': `${pageUrl}#video-${v.youtubeId}`,
     name: `${name} | VMM Productions`,
     description: v.client
       ? lang === 'fr' ? `Vidéo réalisée par VMM Productions pour ${v.client}.` : `Video produced by VMM Productions for ${v.client}.`
@@ -231,7 +241,7 @@ function structuredData(key, lang, pageVideos = [], page = null) {
   });
   const a = site.adresse;
   const business = {
-    '@type': ['LocalBusiness', 'ProfessionalService'],
+    '@type': 'ProfessionalService', // sous-type de LocalBusiness, sans adresse publique tant qu'elle n'est pas fournie
     '@id': biz,
     name: site.nom,
     legalName: site.nomLegal,
@@ -285,8 +295,24 @@ function structuredData(key, lang, pageVideos = [], page = null) {
           itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: c.url })),
         }]
       : []),
-    ...[...new Map(pageVideos.filter((v) => v.youtubeId).map((v) => [v.youtubeId, v])).values()].map((v) => videoObject(v, lang)),
+    ...[...new Map(pageVideos.filter(videoReady).map((v) => [v.youtubeId, v])).values()].map((v) => ({ ...videoObject(v, lang, pageUrl), isPartOf: { '@id': pageUrl + '#page' } })),
   ];
+  // Page Services : un Service par carte affichée, sans prix
+  if (key === 'services') {
+    for (const [i, s] of L.services.items.entries()) {
+      if (!shown(s)) continue;
+      graph.push({
+        '@type': 'Service',
+        '@id': `${pageUrl}#service-${i + 1}`,
+        name: s.titre,
+        serviceType: s.titre,
+        description: s.texte,
+        provider: { '@id': biz },
+        areaServed: business.areaServed,
+        url: pageUrl,
+      });
+    }
+  }
   if (key === 'contact') {
     const faq = L.faq.items.filter((f) => !isPlaceholder(f.r) && !f.note); // réponse signalée (note) : pas dans les données structurées
     if (faq.length) {
@@ -352,8 +378,6 @@ ${routed ? `<meta property="og:url" content="${abs(route[lang])}">\n` : ''}<meta
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <script>document.documentElement.classList.add('js')</script>
 ${preload}<link rel="preload" href="/fonts/cinzel-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/fonts/jetbrains-mono-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/styles.css?v=${BUILD_ID}">
 ${INDEXABLE.includes(key) ? structuredData(key, lang, videos, page) : ''}
 </head>
@@ -407,9 +431,7 @@ ${body}
   <div class="lightbox-frame"></div>
   <p class="lightbox-missing" hidden>${t(L.lightbox.manquante)}</p>
 </dialog>
-<script src="/vendor/gsap.min.js" defer></script>
-<script src="/vendor/ScrollTrigger.min.js" defer></script>
-<script src="/vendor/lenis.min.js" defer></script>
+<!-- GSAP, ScrollTrigger et Lenis (src/vendor/) sont chargés par main.js après l'affichage de la page -->
 <script src="/main.js?v=${BUILD_ID}" defer></script>
 </body>
 </html>
@@ -432,14 +454,14 @@ const socials = ({ icons = false, suffix = '' } = {}) =>
         ${site.reseaux.map((r) => `<li><a href="${esc(r.url)}" rel="me noopener" target="_blank">${icons ? socialIcon(r.nom, suffix) : ''}${esc(r.nom)}</a></li>`).join('\n        ')}
       </ul>`;
 
-const sectionHead = (label, title, intro, id, tag = 'h2') => `<p class="label" data-reveal>${esc(label)}</p>
-    <${tag} id="${id}" data-reveal>${t(title)}</${tag}>
+const sectionHead = (label, title, intro, id, tag = 'h2', h1 = '') => `<p class="label" data-reveal>${esc(label)}</p>
+    <${tag} id="${id}" data-reveal>${t(title)}${tag === 'h1' ? h1Seo(h1) : ''}</${tag}>
     ${intro ? `<p class="intro" data-reveal>${t(intro)}</p>` : ''}`;
 
-const pageHead = (title, intro, clip = '', resume = '') => `<section class="page-hero${clip ? ` has-bg-video bg-clip-${clip}` : ''}">
+const pageHead = (title, intro, clip = '', resume = '', h1 = '') => `<section class="page-hero${clip ? ` has-bg-video bg-clip-${clip}` : ''}">
   ${clip ? bgVideo(clip) : ''}
   <div class="container">
-    <h1 data-reveal>${t(title)}</h1>
+    <h1 data-reveal>${t(title)}${h1Seo(h1)}</h1>
     <p class="intro" data-reveal>${t(intro)}</p>
     ${summary(resume)}
   </div>
@@ -473,7 +495,7 @@ function contactBlock(lang, { tag = 'h2', id = 'contact-title' } = {}) {
   const f = (n) => `${n}-${lang}-${tag}`;
   return `<div class="container contact-grid">
     <div class="contact-info">
-      ${sectionHead(L.contact.etiquette, L.contact.titre, L.contact.texte, id, tag)}
+      ${sectionHead(L.contact.etiquette, L.contact.titre, L.contact.texte, id, tag, L.seo.contact.h1)}
       ${tag === 'h1' ? summary(L.seo.contact.resume) : ''}
       <dl class="contact-details" data-reveal>
         <div><dt class="label">${esc(L.contact.courrielLabel)}</dt><dd><a href="mailto:${site.courriel}">${esc(site.courriel)}</a></dd></div>
@@ -530,17 +552,22 @@ function homePage(lang) {
   const attenteOrdi = exists(hv.posterAttenteOrdi) ? hv.posterAttenteOrdi : '';
   const attenteMobile = exists(hv.posterAttenteMobile) ? hv.posterAttenteMobile : attenteOrdi;
   const HERO_POSTER = jpegSize(poster || attenteOrdi) || { width: 1280, height: 720 };
-  const heroMedia = hasVideo
-    ? `<video class="hero-video" autoplay muted loop playsinline preload="metadata"${poster ? ` poster="${poster}"` : ''}>
-      ${sources.map(([src, type, media]) => `<source src="${src}" type="${type}"${media ? ` media="${media}"` : ''}>`).join('\n      ')}
-    </video>`
-    : poster || attenteOrdi
-      ? `<picture class="hero-poster">
+  // Le poster (image LCP) s'affiche d'abord, sans JavaScript. La vidéo héro, quand elle existera, n'a aucune
+  // source dans le HTML : main.js ajoute seulement celle de l'appareil (mobile ou ordi), après le chargement de la page.
+  const posterPicture = poster || attenteOrdi
+    ? `<picture class="hero-poster">
       ${!poster && attenteMobile ? `<source srcset="${webpOf(attenteMobile)}" media="(max-width: 767px)">` : ''}
       ${!poster && attenteOrdi ? `<source srcset="${webpOf(attenteOrdi)}" media="(min-width: 768px)">` : ''}
       <img src="${poster || attenteOrdi}" alt="" width="${HERO_POSTER.width}" height="${HERO_POSTER.height}" decoding="async" fetchpriority="high">
     </picture>`
-      : '';
+    : '';
+  const pick = (media) => sources.filter(([, , m]) => (media ? m : !m)).map(([src, type]) => ({ src, type }));
+  const heroMedia = `${posterPicture}${
+    hasVideo
+      ? `
+    <video class="hero-video" muted loop playsinline preload="none" data-hero-mobile='${esc(JSON.stringify(pick(true).length ? pick(true) : pick(false)))}' data-hero-ordi='${esc(JSON.stringify(pick(false).length ? pick(false) : pick(true)))}'></video>`
+      : ''
+  }`;
   // Préchargement de l'image du bandeau : une seule par appareil (ou le poster de la vidéo héro quand elle existera)
   const heroPreload = poster
     ? `<link rel="preload" as="image" href="${poster}" fetchpriority="high">`
@@ -563,7 +590,7 @@ function homePage(lang) {
   </div>
   <div class="container hero-content">
     <p class="label hero-kicker" data-reveal>${esc(L.hero.surtitre)}</p>
-    <h1 id="hero-title" class="hero-title" data-reveal>${t(L.hero.titre)}</h1>
+    <h1 id="hero-title" class="hero-title" data-reveal>${t(L.hero.titre)}${h1Seo(L.seo.accueil.h1)}</h1>
     <p class="hero-sub" data-reveal>${t(L.hero.sousTitre)}</p>
     <p class="hero-text" data-reveal>${t(L.hero.texte)}</p>
     <a class="btn btn-neon" href="#contact" data-scroll-contact data-reveal>${esc(L.hero.bouton)}</a>
@@ -660,15 +687,15 @@ function lucide(name, cls = 'svc-icon', size = 40) {
 
 // Bandeau vidéo plein écran (Services, À propos) : un seul titre, en bas à gauche, et un bouton pause (vidéo de plus de 5 s).
 // hero (facultatif) : titre sur deux lignes en haut à gauche, sous le menu, puis texte d'intro (Services).
-function fullHero(clipId, title, L, hero = null) {
+function fullHero(clipId, title, L, hero = null, h1 = '') {
   return `<section class="page-hero full-hero has-bg-video${hero ? ' is-top' : ''}" aria-labelledby="hero-title">
   ${bgVideo(clipId)}
   <div class="container">
     ${
       hero
-        ? `<h1 id="hero-title" class="hero-stack" data-no-accent><span class="hero-line">${esc(hero.ligne1)}</span> <span class="hero-word">${esc(hero.ligne2)}</span></h1>
+        ? `<h1 id="hero-title" class="hero-stack" data-no-accent><span class="hero-line">${esc(hero.ligne1)}</span> <span class="hero-word">${esc(hero.ligne2)}</span>${h1Seo(h1)}</h1>
     ${hero.intro ? `<p class="intro hero-intro">${t(hero.intro)}</p>` : ''}`
-        : `<h1 id="hero-title" class="hero-word" data-no-accent>${esc(title)}</h1>`
+        : `<h1 id="hero-title" class="hero-word" data-no-accent>${esc(title)}${h1Seo(h1)}</h1>`
     }
   </div>
   <button class="bg-toggle" type="button" data-bg-toggle data-pause="${esc(L.services.heroPause)}" data-play="${esc(L.services.heroLecture)}" aria-label="${esc(L.services.heroPause)}"><span aria-hidden="true">❚❚</span></button>
@@ -711,7 +738,7 @@ function servicesPage(lang) {
 </section>`;
     })
     .join('\n');
-  const body = `${fullHero('services', S.titre, L, S.hero)}
+  const body = `${fullHero('services', S.titre, L, S.hero, L.seo.services.h1)}
 ${summaryBand(L.seo.services.resume)}
 <section class="jd-screen jd-vision" aria-labelledby="vision-title">
   <div class="jd-wrap vision-grid">
@@ -756,7 +783,7 @@ function portfolioPage(lang) {
   const behind = portfolio.videos.filter((v) => v.type === 'coulisses');
   const count = (n) => `${n} ${n > 1 ? P.videos : P.video}`;
   const catVideos = portfolio.categories.map(categoryVideo);
-  const body = `${pageHead(P.titre, P.intro, 'work', L.seo.portfolio.resume)}
+  const body = `${pageHead(P.titre, P.intro, 'work', L.seo.portfolio.resume, L.seo.portfolio.h1)}
 <section class="section section-tight" aria-labelledby="clients-title">
   <div class="container">
     <h2 id="clients-title" data-reveal>${esc(P.parClientTitre)}</h2>
@@ -822,7 +849,7 @@ function clientPage(c, lang) {
   ${c.clip ? bgVideo(c.clip) : ''}
   <div class="container">
     <p class="back-row" data-reveal>${back}</p>
-    <h1 data-reveal>${esc(c.nom)}</h1>
+    <h1 data-reveal>${esc(c.nom)}${h1Seo(fill(P.clientH1))}</h1>
     <p class="intro" data-reveal>${n} ${n > 1 ? P.videos : P.video}${note(c.note)}</p>
     ${summary(P.clientResume.replace('{n}', `${n} ${n > 1 ? P.videos : P.video}`).replace('{client}', c.nom))}
   </div>
@@ -875,7 +902,7 @@ function aboutPage(lang) {
 </section>`
     )
     .join('\n');
-  const body = `${fullHero('about', A.titre, L)}
+  const body = `${fullHero('about', A.titre, L, null, L.seo.apropos.h1)}
 ${summaryBand(L.seo.apropos.resume)}
 <section class="jd-screen jd-vision" aria-labelledby="visages-title">
   <div class="jd-wrap${A.vision.photo ? ' vision-grid' : ''}">
@@ -954,18 +981,19 @@ function notFoundPage(lang) {
 function sitemap() {
   const xml = (s) => esc(s);
   // Vidéos d'une page : une liste, ou la clé d'une page (portfolio : vedettes et coulisses ; les autres sont sur les pages clients)
-  const videoEntries = (key, lang) => {
+  const videoEntries = (key, lang, pageUrl) => {
     const list = Array.isArray(key) ? key : key === 'portfolio' ? portfolio.videos.filter((v) => v.vedette || v.type === 'coulisses') : [];
     return list
-      .filter((v) => v.youtubeId)
+      .filter(videoReady)
       .map((v) => {
-        const o = videoObject(v, lang);
+        const o = videoObject(v, lang, pageUrl);
         return `
     <video:video>
       <video:thumbnail_loc>${xml(o.thumbnailUrl)}</video:thumbnail_loc>
       <video:title>${xml(o.name)}</video:title>
       <video:description>${xml(o.description)}</video:description>
       <video:player_loc>${xml(o.embedUrl)}</video:player_loc>
+      <video:publication_date>${xml(o.uploadDate)}</video:publication_date>
     </video:video>`;
       })
       .join('');
@@ -977,8 +1005,8 @@ function sitemap() {
     <xhtml:link rel="alternate" hreflang="x-default" href="${abs(route.fr)}"/>${videos}
   </url>`;
   const urls = [
-    ...INDEXABLE.flatMap((k) => ['fr', 'en'].map((lang) => entry(ROUTES[k], lang, videoEntries(k, lang)))),
-    ...CLIENTS.flatMap((c) => ['fr', 'en'].map((lang) => entry(clientRoute(c), lang, videoEntries(clientVideos(c), lang)))),
+    ...INDEXABLE.flatMap((k) => ['fr', 'en'].map((lang) => entry(ROUTES[k], lang, videoEntries(k, lang, abs(ROUTES[k][lang]))))),
+    ...CLIENTS.flatMap((c) => ['fr', 'en'].map((lang) => entry(clientRoute(c), lang, videoEntries(clientVideos(c), lang, abs(clientRoute(c)[lang]))))),
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
