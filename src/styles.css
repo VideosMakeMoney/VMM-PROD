@@ -680,6 +680,19 @@ html:not(.js) .bg-toggle { display: none; }
 .page-hero.full-hero.is-top { align-items: flex-start; padding-top: clamp(2rem, 7vh, 4.5rem); }
 .full-hero.is-top .bg-video-veil { background: linear-gradient(180deg, rgba(8, 8, 15, .78) 0%, rgba(8, 8, 15, .45) 38%, rgba(8, 8, 15, .12) 70%, rgba(8, 8, 15, .55) 100%); }
 .hero-stack { margin: 0 0 1.25rem; font-size: clamp(2.6rem, 11vw, 7rem); line-height: 1; letter-spacing: .02em; }
-.hero-stack .hero-line, .hero-stack .hero-word { display: block; font-size: inherit; }
+.hero-stack .hero-line, .hero-stack .hero-word { display: block; font-size: inherit; white-space: nowrap; }
 .hero-stack .hero-line { color: var(--title); }
 .hero-intro { color: var(--text); max-width: 34rem; text-shadow: 0 1px 12px rgba(8, 8, 15, .6); }
+/* Ordi : le bloc titre + intro tient dans la bande floue de gauche de la vidéo 16:9.
+   La partie nette occupe le tiers central de la vidéo (cover) : sa largeur dépend du format de l'écran. */
+/* Écran assez large (paysage) seulement ; en portrait (tablette), le bloc garde sa place normale. */
+@media (min-width: 768px) and (min-aspect-ratio: 5/4) {
+  .full-hero.is-top {
+    --video-w: max(100vw, (100svh - var(--header-h)) * 16 / 9);
+    --zone: calc(50vw - var(--video-w) / 6); /* largeur de la bande floue de gauche */
+    --pad: max(var(--gutter), 3vw);
+  }
+  .full-hero.is-top > .container { max-width: none; margin: 0; padding-inline: var(--pad) 0; width: calc(var(--zone) - 2vw); }
+  .full-hero.is-top .hero-stack { font-size: clamp(1.9rem, calc((var(--zone) - var(--pad) - 2vw) / 5.7), 7rem); }
+  .full-hero.is-top .hero-intro { max-width: 100%; font-size: clamp(.9rem, 1.15vw, 1.125rem); }
+}
