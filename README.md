@@ -54,10 +54,20 @@ Redirections 301 (`_redirects`) : `/work` → `/portfolio`, `/process` → `/ser
 
 ## SEO / GEO
 
-- `<title>` et meta description uniques par page, en FR et en EN ; `hreflang` fr-CA / en-CA / x-default réciproques ; `<html lang>` correct.
-- JSON-LD : LocalBusiness + ProfessionalService, Person (JD, Renaud), WebSite, WebPage, BreadcrumbList, VideoObject pour chaque vidéo qui a un ID YouTube, FAQPage sur /contact (réponses connues seulement).
-- `sitemap.xml` : 10 URL avec alternates et entrées vidéo. `robots.txt` et `llms.txt` générés à partir du contenu.
+- `<title>` (≤ 60 caractères), meta description (≤ 155) et phrase d'intro factuelle (`resume`) dans `seo` de `fr.json` / `en.json`. Les anciennes valeurs sont gardées sous `seoAncien`. La phrase d'intro s'affiche en haut de chaque page (bande sous le bandeau sur Accueil, Services et À propos ; sous le titre ailleurs) et sert aussi dans `llms.txt`.
+- Canonical, `hreflang` fr-CA / en-CA / x-default réciproques, `<html lang>` correct.
+- Open Graph + Twitter card complets. Images de partage 1200 × 630 dans `static/og/`, tirées des posters existants : `og-accueil` (logo, aussi pour Projets et Contact), `og-services`, `og-apropos`, `og-client-<slug>` (une page client sans image utilise `og-accueil`).
+- JSON-LD : LocalBusiness + ProfessionalService (zone : Grand Montréal, Montréal, Laurentides ; logo, image, langues fr-CA/en-CA), Person (JD, Renaud ; bio seulement si elle n'est pas marquée à confirmer), WebSite, WebPage, BreadcrumbList (à partir de deux niveaux, donc pas sur l'accueil), VideoObject pour chaque vidéo qui a un ID YouTube (sans doublon ; `uploadDate` seulement si `dateMiseEnLigne` est rempli dans `portfolio.json`), FAQPage sur /contact (réponses connues et non signalées seulement).
+- `sitemap.xml` : pages FR + EN avec alternates et entrées vidéo. `robots.txt` pointe vers le sitemap. `llms.txt` (FR + résumé EN) généré à partir du contenu.
+- Page 404 propre : `/404.html` en français, `/en/404.html` en anglais (règle dans `_redirects`), avec les pages principales dans les deux langues.
 - Pas d'adresse ni de téléphone dans le JSON-LD tant qu'ils ne sont pas fournis (`site.json`).
+
+### Vitesse
+
+- Polices hébergées sur le site (`static/fonts/`, licences OFL à côté), `font-display: swap`, préchargement des 3 polices les plus visibles. Plus de feuille Google Fonts bloquante.
+- Poster du bandeau préchargé (une seule image par appareil, par media query) et affiché par une `<picture>` sans attendre le JavaScript. Posters en WebP allégés à côté des `.jpg` (qui restent le repli).
+- Clips de fond : une seule version téléchargée (mobile ou ordi), après le chargement de la page et seulement à l'approche de la section. Images sous la ligne de flottaison en `loading="lazy"`, avec `width`/`height`.
+- La classe `js` est posée dès le `<head>` : le menu mobile ne fait plus sauter la page au chargement.
 
 ## Placeholders restants [À CONFIRMER]
 

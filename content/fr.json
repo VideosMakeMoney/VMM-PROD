@@ -16,13 +16,21 @@
     "filAriane": "Fil d'Ariane"
   },
   "seo": {
-    "accueil": { "title": "VMM Productions | Production vidéo, Grand Montréal et Laurentides", "description": "VMM Productions (Videos Make Money), vidéaste corporatif du Grand Montréal et des Laurentides : vidéos promotionnelles, couverture événementielle, histoires d'entreprises et coulisses." },
-    "services": { "title": "Services de production vidéo et drone | VMM Productions, Montréal et Laurentides", "description": "Stratégie vidéo et contenu publicitaire, tournage et photographie, production aérienne par drone, scénarisation, montage et animation graphique : les services de VMM Productions dans le Grand Montréal et les Laurentides." },
-    "portfolio": { "title": "Portfolio vidéo d'entreprise | VMM Productions, Montréal et Laurentides", "description": "Productions finales classées par client et coulisses de tournage : le portfolio vidéo de VMM Productions, vidéaste corporatif du Grand Montréal et des Laurentides." },
-    "apropos": { "title": "À propos | JD et Renaud, l'équipe de VMM Productions", "description": "Les visages derrière VMM Productions : JD, fondateur, et Renaud, cameraman avec près de dix ans d'expérience, dans le Grand Montréal et les Laurentides." },
-    "contact": { "title": "Contact | VMM Productions, vidéaste corporatif à Montréal et dans les Laurentides", "description": "Parlez-nous de votre projet vidéo. VMM Productions travaille dans le Grand Montréal et les Laurentides. Courriel : jeandavid@videosmakemoney.ca." },
-    "merci": { "title": "Message envoyé | VMM Productions", "description": "Votre message a bien été envoyé à VMM Productions." },
-    "introuvable": { "title": "Page introuvable | VMM Productions", "description": "Cette page n'existe pas." }
+    "_aide": "title ≤ 60 caractères, description ≤ 155, resume = phrase d'intro courte et factuelle affichée en haut de la page (facile à citer par Google et les IA). Anciennes valeurs dans seoAncien.",
+    "accueil": {"title":"Production vidéo Montréal et Laurentides | VMM Productions","description":"VMM Productions, vidéaste corporatif du Grand Montréal et des Laurentides : vidéos promotionnelles, couverture d'événements et histoires d'entreprises.","resume":"VMM Productions (Videos Make Money) est un vidéaste corporatif du Grand Montréal et des Laurentides : vidéos promotionnelles, couverture événementielle, histoires d'entreprises et coulisses."},
+    "services": {"title":"Services de production vidéo et drone | VMM Productions","description":"Stratégie vidéo, tournage et photo, drone, scénarisation, montage et animation : la production vidéo de VMM Productions à Montréal et dans les Laurentides.","resume":"VMM Productions offre six services de production vidéo dans le Grand Montréal et les Laurentides : stratégie vidéo et contenu publicitaire, tournage et photographie, production aérienne par drone, scénarisation, montage et animation graphique."},
+    "portfolio": {"title":"Projets vidéo à Montréal et Laurentides | VMM Productions","description":"Vidéos promotionnelles et d'entreprise classées par client, plus les coulisses de tournage : les projets de VMM Productions, vidéaste à Montréal.","resume":"Le portfolio de VMM Productions, vidéaste corporatif du Grand Montréal et des Laurentides, regroupe ses productions finales par client ainsi que ses coulisses de tournage."},
+    "apropos": {"title":"À propos : JD et Renaud, l'équipe de VMM Productions","description":"JD, fondateur et vidéaste, et Renaud, caméraman avec près de dix ans d'expérience : l'équipe de VMM Productions, Grand Montréal et Laurentides.","resume":"VMM Productions, c'est JD, fondateur et vidéaste, et Renaud, caméraman avec près de dix ans d'expérience derrière la caméra."},
+    "contact": {"title":"Contact | Vidéo promotionnelle à Montréal, VMM Productions","description":"Parlez-nous de votre projet vidéo, sans engagement. VMM Productions travaille dans le Grand Montréal et les Laurentides : jeandavid@videosmakemoney.ca.","resume":"Pour un projet vidéo dans le Grand Montréal ou les Laurentides, écrivez à VMM Productions à jeandavid@videosmakemoney.ca ou par le formulaire de contact."},
+    "merci": {"title":"Message envoyé | VMM Productions","description":"Votre message a bien été envoyé à VMM Productions."},
+    "introuvable": {"title":"Page introuvable | VMM Productions","description":"Cette page n'existe pas."}
+  },
+  "seoAncien": {
+    "accueil": {"title":"VMM Productions | Production vidéo, Grand Montréal et Laurentides","description":"VMM Productions (Videos Make Money), vidéaste corporatif du Grand Montréal et des Laurentides : vidéos promotionnelles, couverture événementielle, histoires d'entreprises et coulisses."},
+    "services": {"title":"Services de production vidéo et drone | VMM Productions, Montréal et Laurentides","description":"Stratégie vidéo et contenu publicitaire, tournage et photographie, production aérienne par drone, scénarisation, montage et animation graphique : les services de VMM Productions dans le Grand Montréal et les Laurentides."},
+    "portfolio": {"title":"Portfolio vidéo d'entreprise | VMM Productions, Montréal et Laurentides","description":"Productions finales classées par client et coulisses de tournage : le portfolio vidéo de VMM Productions, vidéaste corporatif du Grand Montréal et des Laurentides."},
+    "apropos": {"title":"À propos | JD et Renaud, l'équipe de VMM Productions","description":"Les visages derrière VMM Productions : JD, fondateur, et Renaud, cameraman avec près de dix ans d'expérience, dans le Grand Montréal et les Laurentides."},
+    "contact": {"title":"Contact | VMM Productions, vidéaste corporatif à Montréal et dans les Laurentides","description":"Parlez-nous de votre projet vidéo. VMM Productions travaille dans le Grand Montréal et les Laurentides. Courriel : jeandavid@videosmakemoney.ca."}
   },
   "hero": {
     "surtitre": "VMM PRODUCTIONS · CINÉMA ET RÉCIT",
@@ -241,6 +249,7 @@
     "aucuneVideo": "[À CONFIRMER : vidéos de ce client]",
     "clientSeoTitre": "Vidéos pour {client} | VMM Productions",
     "clientSeoDescription": "Les vidéos réalisées par VMM Productions pour {client}, vidéaste corporatif du Grand Montréal et des Laurentides.",
+    "clientResume": "VMM Productions a réalisé {n} pour {client}.",
     "intro": "Découvrez nos productions finales et les moments qui prennent vie derrière la caméra.",
     "vedettesTitre": "Productions vedettes",
     "parClientTitre": "Productions finales par client",
@@ -327,5 +336,5 @@
     "droits": "Tous droits réservés."
   },
   "merci": { "titre": "Merci !", "texte": "Votre message est bien parti. Nous vous répondrons sous peu.", "retour": "Retour à l'accueil" },
-  "introuvable": { "titre": "Page introuvable", "texte": "Cette page n'existe pas ou a été déplacée.", "retour": "Retour à l'accueil" }
+  "introuvable": { "titre": "Page introuvable", "texte": "Cette page n'existe pas ou a été déplacée.", "retour": "Retour à l'accueil", "pages": "Pages principales" }
 }

@@ -16,13 +16,21 @@
     "filAriane": "Breadcrumb"
   },
   "seo": {
-    "accueil": { "title": "VMM Productions | Video Production, Greater Montreal and the Laurentians", "description": "VMM Productions (Videos Make Money), corporate videographer in Greater Montreal and the Laurentians: promotional videos, event coverage, business stories and behind the scenes." },
-    "services": { "title": "Video Production and Drone Services | VMM Productions, Montreal and Laurentians", "description": "Video strategy and advertising content, filming and photography, aerial drone production, scriptwriting, editing and motion graphics: VMM Productions services in Greater Montreal and the Laurentians." },
-    "portfolio": { "title": "Business Video Portfolio | VMM Productions, Montreal and Laurentians", "description": "Final productions by client and behind-the-scenes footage: the video portfolio of VMM Productions, corporate videographer in Greater Montreal and the Laurentians." },
-    "apropos": { "title": "About | JD and Renaud, the VMM Productions team", "description": "The faces behind VMM Productions: JD, founder, and Renaud, camera operator with nearly ten years of experience, in Greater Montreal and the Laurentians." },
-    "contact": { "title": "Contact | VMM Productions, Corporate Videographer in Montreal and the Laurentians", "description": "Tell us about your video project. VMM Productions works in Greater Montreal and the Laurentians. Email: jeandavid@videosmakemoney.ca." },
-    "merci": { "title": "Message sent | VMM Productions", "description": "Your message was sent to VMM Productions." },
-    "introuvable": { "title": "Page not found | VMM Productions", "description": "This page does not exist." }
+    "_aide": "title ≤ 60 characters, description ≤ 155, resume = short factual intro sentence shown at the top of the page (easy for Google and AI to quote). Previous values in seoAncien.",
+    "accueil": {"title":"Video Production, Montreal & Laurentians | VMM Productions","description":"VMM Productions, corporate videographer in Greater Montreal and the Laurentians: promotional videos, event coverage and business stories.","resume":"VMM Productions (Videos Make Money) is a corporate videographer in Greater Montreal and the Laurentians: promotional videos, event coverage, business stories and behind the scenes."},
+    "services": {"title":"Video Production and Drone Services | VMM Productions","description":"Video strategy, filming and photo, drone, scriptwriting, editing and motion graphics: video production by VMM Productions in Montreal and the Laurentians.","resume":"VMM Productions offers six video production services in Greater Montreal and the Laurentians: video strategy and advertising content, filming and photography, aerial drone production, scriptwriting, editing and motion graphics."},
+    "portfolio": {"title":"Video Projects in Montreal & Laurentians | VMM Productions","description":"Promotional and business videos grouped by client, plus behind-the-scenes footage: the work of VMM Productions, videographer in Montreal.","resume":"The portfolio of VMM Productions, corporate videographer in Greater Montreal and the Laurentians, groups its final productions by client, along with behind-the-scenes footage."},
+    "apropos": {"title":"About: JD and Renaud, the VMM Productions team","description":"JD, founder and videographer, and Renaud, camera operator with nearly ten years of experience: the VMM Productions team, Montreal and Laurentians.","resume":"VMM Productions is JD, founder and videographer, and Renaud, camera operator with nearly ten years of experience behind the camera."},
+    "contact": {"title":"Contact | Promotional Video in Montreal, VMM Productions","description":"Tell us about your video project, no strings attached. VMM Productions works in Greater Montreal and the Laurentians: jeandavid@videosmakemoney.ca.","resume":"For a video project in Greater Montreal or the Laurentians, write to VMM Productions at jeandavid@videosmakemoney.ca or use the contact form."},
+    "merci": {"title":"Message sent | VMM Productions","description":"Your message was sent to VMM Productions."},
+    "introuvable": {"title":"Page not found | VMM Productions","description":"This page does not exist."}
+  },
+  "seoAncien": {
+    "accueil": {"title":"VMM Productions | Video Production, Greater Montreal and the Laurentians","description":"VMM Productions (Videos Make Money), corporate videographer in Greater Montreal and the Laurentians: promotional videos, event coverage, business stories and behind the scenes."},
+    "services": {"title":"Video Production and Drone Services | VMM Productions, Montreal and Laurentians","description":"Video strategy and advertising content, filming and photography, aerial drone production, scriptwriting, editing and motion graphics: VMM Productions services in Greater Montreal and the Laurentians."},
+    "portfolio": {"title":"Business Video Portfolio | VMM Productions, Montreal and Laurentians","description":"Final productions by client and behind-the-scenes footage: the video portfolio of VMM Productions, corporate videographer in Greater Montreal and the Laurentians."},
+    "apropos": {"title":"About | JD and Renaud, the VMM Productions team","description":"The faces behind VMM Productions: JD, founder, and Renaud, camera operator with nearly ten years of experience, in Greater Montreal and the Laurentians."},
+    "contact": {"title":"Contact | VMM Productions, Corporate Videographer in Montreal and the Laurentians","description":"Tell us about your video project. VMM Productions works in Greater Montreal and the Laurentians. Email: jeandavid@videosmakemoney.ca."}
   },
   "hero": {
     "surtitre": "VMM PRODUCTIONS · CINEMA AND STORYTELLING",
@@ -241,6 +249,7 @@
     "aucuneVideo": "[TO CONFIRM: videos for this client]",
     "clientSeoTitre": "Videos for {client} | VMM Productions",
     "clientSeoDescription": "Videos produced by VMM Productions for {client}, corporate videographer in Greater Montreal and the Laurentians.",
+    "clientResume": "VMM Productions produced {n} for {client}.",
     "intro": "Discover our final productions and the moments that come to life behind the camera.",
     "vedettesTitre": "Featured productions",
     "parClientTitre": "Final productions by client",
@@ -327,5 +336,5 @@
     "droits": "All rights reserved."
   },
   "merci": { "titre": "Thank you!", "texte": "Your message is on its way. We'll get back to you shortly.", "retour": "Back to home" },
-  "introuvable": { "titre": "Page not found", "texte": "This page does not exist or has moved.", "retour": "Back to home" }
+  "introuvable": { "titre": "Page not found", "texte": "This page does not exist or has moved.", "retour": "Back to home", "pages": "Main pages" }
 }

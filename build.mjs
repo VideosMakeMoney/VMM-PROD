@@ -61,7 +61,9 @@ const LOGO = {
 };
 
 // Clips de fond de JD (content/clips.json) : <nom>.mp4, <nom>.webm, <nom>-poster.jpg dans static/videos/jd/.
-const clipFiles = (name) => (name ? { mp4: `${clips.dossier}${name}.mp4`, webm: `${clips.dossier}${name}.webm`, poster: `${clips.dossier}${name}-poster.jpg` } : null);
+// Poster en WebP allégé (720 px de large pour le 9:16) quand il existe à côté du .jpg, qui reste le repli.
+const webpOf = (url) => (url && existsSync(join(ROOT, 'static', url.replace(/\.jpe?g$/, '.webp'))) ? url.replace(/\.jpe?g$/, '.webp') : url);
+const clipFiles = (name) => (name ? { mp4: `${clips.dossier}${name}.mp4`, webm: `${clips.dossier}${name}.webm`, poster: webpOf(`${clips.dossier}${name}-poster.jpg`), posterJpg: `${clips.dossier}${name}-poster.jpg` } : null);
 
 // Vidéo de fond muette en boucle. main.js ne charge que la version de l'appareil (mobile ou ordi), et seulement
 // quand la section approche ; avec « réduire les animations », le poster reste seul. Sans version ordi,
@@ -77,10 +79,46 @@ function bgVideo(id) {
   return `<div class="bg-video" data-bg-video data-clip="${id}"${ordi ? '' : ' data-portrait-ordi'}${focal} aria-hidden="true"
     data-mobile-mp4="${mobile.mp4}" data-mobile-webm="${mobile.webm}" data-mobile-poster="${mobile.poster}"
     data-ordi-mp4="${desk.mp4}" data-ordi-webm="${desk.webm}" data-ordi-poster="${desk.poster}">
-    ${ordi ? '' : `<video class="bg-video-blur" muted loop playsinline preload="none" poster="${desk.poster}"></video>`}
-    <video class="bg-video-media" muted loop playsinline preload="none" poster="${mobile.poster}"></video>
+    ${ordi ? `<picture class="bg-video-poster"><source srcset="${mobile.poster}" media="(max-width: 767px)"><source srcset="${ordi.poster}" media="(min-width: 768px)"><img src="${ordi.posterJpg}" alt="" width="${jpegSize(ordi.posterJpg)?.width || 1920}" height="${jpegSize(ordi.posterJpg)?.height || 1080}" decoding="async" fetchpriority="high"></picture>` : `<video class="bg-video-blur" muted loop playsinline preload="none" poster="${desk.poster}"></video>`}
+    <video class="bg-video-media" muted loop playsinline preload="none"${ordi ? '' : ` poster="${mobile.poster}"`}></video>
     <span class="bg-video-veil"></span>
   </div>`;
+}
+
+// Avec une version ordi, le poster est une <picture> (une seule image par appareil, affichée sans attendre le JavaScript).
+// Préchargement du poster d'un bandeau (image LCP) : une seule image par appareil, choisie par media query.
+// Avec une version ordi, le poster n'est plus dans le HTML de la vidéo (main.js le pose selon l'appareil) :
+// l'ordi ne télécharge donc plus le poster mobile en plus du sien.
+function posterPreload(id) {
+  const clip = clips.clips[id];
+  if (!clip) return '';
+  const mobile = clipFiles(clip.mobile).poster;
+  const ordi = clip.ordi ? clipFiles(clip.ordi).poster : mobile;
+  return mobile === ordi
+    ? `<link rel="preload" as="image" href="${mobile}" fetchpriority="high">`
+    : `<link rel="preload" as="image" href="${mobile}" media="(max-width: 767px)" fetchpriority="high">
+<link rel="preload" as="image" href="${ordi}" media="(min-width: 768px)" fetchpriority="high">`;
+}
+
+// Image de partage (Open Graph / Twitter), 1200 × 630, tirée des posters existants (static/og/).
+const OG = { accueil: '/og/og-accueil.jpg', services: '/og/og-services.jpg', apropos: '/og/og-apropos.jpg', portfolio: '/og/og-accueil.jpg', contact: '/og/og-accueil.jpg', defaut: '/og/og-accueil.jpg' };
+const ogFor = (key, page) => page?.og || OG[key] || OG.defaut;
+
+// Phrase d'intro courte et factuelle (seo.<page>.resume), facile à citer par Google et les IA.
+const summary = (text, cls = '') => (text ? `<p class="page-summary${cls ? ` ${cls}` : ''}" data-reveal>${t(text)}</p>` : '');
+const summaryBand = (text) => (text ? `<div class="summary-band"><div class="container">${summary(text)}</div></div>` : '');
+
+// Dimensions réelles d'un JPEG de static/ (width/height des images, sans dépendance)
+function jpegSize(url) {
+  const file = join(ROOT, 'static', url);
+  if (!existsSync(file)) return null;
+  const b = readFileSync(file);
+  for (let i = 2; i < b.length; ) {
+    const m = b[i + 1];
+    if (m >= 0xc0 && m <= 0xcf && m !== 0xc4 && m !== 0xc8 && m !== 0xcc) return { width: b.readUInt16BE(i + 7), height: b.readUInt16BE(i + 5) };
+    i += 2 + b.readUInt16BE(i + 2);
+  }
+  return null;
 }
 
 // ---------- utilitaires ----------
@@ -158,6 +196,7 @@ function videoObject(v, lang) {
   const name = videoName(v, lang);
   return {
     '@type': 'VideoObject',
+    '@id': `${SITE_URL}/#video-${v.youtubeId}-${lang}`,
     name: `${name} | VMM Productions`,
     description: v.client
       ? lang === 'fr' ? `Vidéo réalisée par VMM Productions pour ${v.client}.` : `Video produced by VMM Productions for ${v.client}.`
@@ -165,6 +204,7 @@ function videoObject(v, lang) {
     thumbnailUrl: ytThumb(v.youtubeId),
     embedUrl: ytEmbed(v.youtubeId),
     url: ytUrl(v),
+    ...(v.fichier ? { contentUrl: abs(v.fichier) } : {}), // fichier vidéo hébergé sur le site, s'il existe un jour
     ...(v.dateMiseEnLigne ? { uploadDate: v.dateMiseEnLigne } : {}),
     ...(v.langue ? { inLanguage: v.langue === 'en' ? 'en-CA' : 'fr-CA' } : {}),
     publisher: { '@id': `${SITE_URL}/#entreprise` },
@@ -199,6 +239,8 @@ function structuredData(key, lang, pageVideos = [], page = null) {
     slogan: L.hero.sousTitre,
     description: L.seo.accueil.description,
     url: SITE_URL + '/',
+    logo: abs(LOGO.png.replace(/\?.*$/, '')),
+    image: abs(OG.defaut),
     email: site.courriel,
     ...(site.telephone ? { telephone: site.telephone } : {}),
     ...(a.ville
@@ -210,6 +252,7 @@ function structuredData(key, lang, pageVideos = [], page = null) {
       { '@type': 'AdministrativeArea', name: 'Laurentides' },
     ],
     knowsAbout: L.services.items.filter(shown).map((s) => s.titre),
+    knowsLanguage: ['fr-CA', 'en-CA'],
     founder: { '@id': `${SITE_URL}/#jd` },
     employee: persons.map((p) => ({ '@id': p['@id'] })),
     sameAs: site.reseaux.map((r) => r.url),
@@ -232,17 +275,20 @@ function structuredData(key, lang, pageVideos = [], page = null) {
       inLanguage: L.lang,
       isPartOf: { '@id': `${SITE_URL}/#site` },
       about: { '@id': biz },
-      breadcrumb: { '@id': pageUrl + '#fil' },
+      ...(crumbs.length > 1 ? { breadcrumb: { '@id': pageUrl + '#fil' } } : {}),
     },
-    {
-      '@type': 'BreadcrumbList',
-      '@id': pageUrl + '#fil',
-      itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: c.url })),
-    },
-    ...pageVideos.filter((v) => v.youtubeId).map((v) => videoObject(v, lang)),
+    // Fil d'Ariane : seulement à partir de deux niveaux (pas sur l'accueil)
+    ...(crumbs.length > 1
+      ? [{
+          '@type': 'BreadcrumbList',
+          '@id': pageUrl + '#fil',
+          itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: c.url })),
+        }]
+      : []),
+    ...[...new Map(pageVideos.filter((v) => v.youtubeId).map((v) => [v.youtubeId, v])).values()].map((v) => videoObject(v, lang)),
   ];
   if (key === 'contact') {
-    const faq = L.faq.items.filter((f) => !isPlaceholder(f.r));
+    const faq = L.faq.items.filter((f) => !isPlaceholder(f.r) && !f.note); // réponse signalée (note) : pas dans les données structurées
     if (faq.length) {
       graph.push({
         '@type': 'FAQPage',
@@ -257,7 +303,8 @@ function structuredData(key, lang, pageVideos = [], page = null) {
 
 // ---------- gabarit commun ----------
 // page : pour une page sans clé propre (page client) : { route, seo, crumb }.
-function layout({ key, lang, body, videos = [], page = null }) {
+function layout({ key, lang, body, videos = [], page = null, preload = '' }) {
+  if (preload) preload += '\n';
   const L = langs[lang];
   const other = lang === 'fr' ? 'en' : 'fr';
   const routed = Boolean(page?.route || ROUTES[key]);
@@ -265,7 +312,8 @@ function layout({ key, lang, body, videos = [], page = null }) {
   const seo = page?.seo || L.seo[key];
   const indexable = INDEXABLE.includes(key) && ALLOW_INDEX;
   const navLink = (k) => `<li><a href="${ROUTES[k][lang]}"${k === key ? ' aria-current="page"' : ''}>${esc(L.nav[k])}</a></li>`;
-  const ogImage = site.heroVideo.poster ? abs(site.heroVideo.poster) : '';
+  const ogImage = abs(ogFor(key, page));
+  const ogAlt = `${site.nom} · ${L.hero.sousTitre}`;
 
   return `<!doctype html>
 <html lang="${L.lang}">
@@ -291,12 +339,21 @@ ${indexable ? '' : '<meta name="robots" content="noindex, nofollow">\n'}${
 <meta property="og:locale:alternate" content="${lang === 'fr' ? 'en_CA' : 'fr_CA'}">
 <meta property="og:title" content="${esc(seo.title)}">
 <meta property="og:description" content="${esc(seo.description)}">
-${routed ? `<meta property="og:url" content="${abs(route[lang])}">\n` : ''}${ogImage ? `<meta property="og:image" content="${ogImage}">\n` : ''}<meta name="twitter:card" content="summary_large_image">
+${routed ? `<meta property="og:url" content="${abs(route[lang])}">\n` : ''}<meta property="og:image" content="${ogImage}">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="${esc(ogAlt)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(seo.title)}">
+<meta name="twitter:description" content="${esc(seo.description)}">
+<meta name="twitter:image" content="${ogImage}">
+<meta name="twitter:image:alt" content="${esc(ogAlt)}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="/fonts/cinzel-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=JetBrains+Mono:wght@600;700&family=Space+Grotesk:wght@400;500;600&family=Syne:wght@700;800;900&display=swap">
+<script>document.documentElement.classList.add('js')</script>
+${preload}<link rel="preload" href="/fonts/cinzel-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/space-grotesk-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/jetbrains-mono-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/styles.css?v=${BUILD_ID}">
 ${INDEXABLE.includes(key) ? structuredData(key, lang, videos, page) : ''}
 </head>
@@ -379,11 +436,12 @@ const sectionHead = (label, title, intro, id, tag = 'h2') => `<p class="label" d
     <${tag} id="${id}" data-reveal>${t(title)}</${tag}>
     ${intro ? `<p class="intro" data-reveal>${t(intro)}</p>` : ''}`;
 
-const pageHead = (title, intro, clip = '') => `<section class="page-hero${clip ? ` has-bg-video bg-clip-${clip}` : ''}">
+const pageHead = (title, intro, clip = '', resume = '') => `<section class="page-hero${clip ? ` has-bg-video bg-clip-${clip}` : ''}">
   ${clip ? bgVideo(clip) : ''}
   <div class="container">
     <h1 data-reveal>${t(title)}</h1>
     <p class="intro" data-reveal>${t(intro)}</p>
+    ${summary(resume)}
   </div>
 </section>`;
 
@@ -416,6 +474,7 @@ function contactBlock(lang, { tag = 'h2', id = 'contact-title' } = {}) {
   return `<div class="container contact-grid">
     <div class="contact-info">
       ${sectionHead(L.contact.etiquette, L.contact.titre, L.contact.texte, id, tag)}
+      ${tag === 'h1' ? summary(L.seo.contact.resume) : ''}
       <dl class="contact-details" data-reveal>
         <div><dt class="label">${esc(L.contact.courrielLabel)}</dt><dd><a href="mailto:${site.courriel}">${esc(site.courriel)}</a></dd></div>
         <div><dt class="label">${esc(L.contact.zoneLabel)}</dt><dd>${esc(L.contact.zone)}</dd></div>
@@ -470,15 +529,26 @@ function homePage(lang) {
   const poster = exists(hv.poster) ? hv.poster : '';
   const attenteOrdi = exists(hv.posterAttenteOrdi) ? hv.posterAttenteOrdi : '';
   const attenteMobile = exists(hv.posterAttenteMobile) ? hv.posterAttenteMobile : attenteOrdi;
+  const HERO_POSTER = jpegSize(poster || attenteOrdi) || { width: 1280, height: 720 };
   const heroMedia = hasVideo
     ? `<video class="hero-video" autoplay muted loop playsinline preload="metadata"${poster ? ` poster="${poster}"` : ''}>
       ${sources.map(([src, type, media]) => `<source src="${src}" type="${type}"${media ? ` media="${media}"` : ''}>`).join('\n      ')}
     </video>`
     : poster || attenteOrdi
       ? `<picture class="hero-poster">
-      ${!poster && attenteMobile ? `<source srcset="${attenteMobile}" media="(max-width: 767px)">` : ''}
-      <img src="${poster || attenteOrdi}" alt="" decoding="async" fetchpriority="high">
+      ${!poster && attenteMobile ? `<source srcset="${webpOf(attenteMobile)}" media="(max-width: 767px)">` : ''}
+      ${!poster && attenteOrdi ? `<source srcset="${webpOf(attenteOrdi)}" media="(min-width: 768px)">` : ''}
+      <img src="${poster || attenteOrdi}" alt="" width="${HERO_POSTER.width}" height="${HERO_POSTER.height}" decoding="async" fetchpriority="high">
     </picture>`
+      : '';
+  // Préchargement de l'image du bandeau : une seule par appareil (ou le poster de la vidéo héro quand elle existera)
+  const heroPreload = poster
+    ? `<link rel="preload" as="image" href="${poster}" fetchpriority="high">`
+    : attenteOrdi
+      ? attenteMobile !== attenteOrdi
+        ? `<link rel="preload" as="image" href="${webpOf(attenteMobile)}" media="(max-width: 767px)" fetchpriority="high">
+<link rel="preload" as="image" href="${webpOf(attenteOrdi)}" media="(min-width: 768px)" fetchpriority="high">`
+        : `<link rel="preload" as="image" href="${webpOf(attenteOrdi)}" fetchpriority="high">`
       : '';
   const body = `
 <section class="hero" aria-labelledby="hero-title">
@@ -501,6 +571,7 @@ function homePage(lang) {
   </div>
   ${hasVideo ? `<button class="hero-toggle" type="button" aria-pressed="false" data-pause="${esc(L.hero.pause)}" data-play="${esc(L.hero.lecture)}" aria-label="${esc(L.hero.pause)}"><span aria-hidden="true">❚❚</span></button>` : ''}
 </section>
+${summaryBand(L.seo.accueil.resume)}
 
 <section class="section" id="creations" aria-labelledby="creons-title">
   <div class="container">
@@ -558,7 +629,7 @@ function homePage(lang) {
     <div class="reviews" data-reveal>${site.avisGoogle.widgetHtml || `<p>${t(L.avis.placeholder)}</p>`}</div>
   </div>
 </section>`;
-  return layout({ key: 'accueil', lang, body, videos: [...catVideos.filter(Boolean), ...vedettes] });
+  return layout({ key: 'accueil', lang, body, videos: [...catVideos.filter(Boolean), ...vedettes], preload: heroPreload });
 }
 
 function memberPhoto(m, L) {
@@ -641,6 +712,7 @@ function servicesPage(lang) {
     })
     .join('\n');
   const body = `${fullHero('services', S.titre, L, S.hero)}
+${summaryBand(L.seo.services.resume)}
 <section class="jd-screen jd-vision" aria-labelledby="vision-title">
   <div class="jd-wrap vision-grid">
     <div class="vision-text">
@@ -667,7 +739,7 @@ ${shown(S.fin) ? `<section class="jd-screen jd-end" aria-labelledby="fin-title">
   </div>
 </section>` : ''}
 ${shown(S.slogan) ? `<p class="jd-slogan">${esc(S.slogan.texte)}</p>` : ''}`;
-  return layout({ key: 'services', lang, body });
+  return layout({ key: 'services', lang, body, preload: posterPreload('services') });
 }
 
 // Image d'une carte client : poster de sa bande-annonce, sinon miniature de sa première vidéo.
@@ -684,7 +756,7 @@ function portfolioPage(lang) {
   const behind = portfolio.videos.filter((v) => v.type === 'coulisses');
   const count = (n) => `${n} ${n > 1 ? P.videos : P.video}`;
   const catVideos = portfolio.categories.map(categoryVideo);
-  const body = `${pageHead(P.titre, P.intro, 'work')}
+  const body = `${pageHead(P.titre, P.intro, 'work', L.seo.portfolio.resume)}
 <section class="section section-tight" aria-labelledby="clients-title">
   <div class="container">
     <h2 id="clients-title" data-reveal>${esc(P.parClientTitre)}</h2>
@@ -694,7 +766,7 @@ function portfolioPage(lang) {
         const img = clientImage(c);
         return `<li data-reveal>
         <a class="client-card card glass" href="${clientRoute(c)[lang]}">
-          <span class="client-card-img">${img ? `<img src="${img}" alt="" loading="lazy" decoding="async">` : '<span class="thumb-empty" aria-hidden="true"></span>'}</span>
+          <span class="client-card-img">${img ? `<img src="${img}" alt="" loading="lazy" decoding="async" width="${img.startsWith('https://i.ytimg.com') ? '480' : '1080'}" height="${img.startsWith('https://i.ytimg.com') ? '360' : '1920'}">` : '<span class="thumb-empty" aria-hidden="true"></span>'}</span>
           <span class="client-card-text"><strong>${esc(c.nom)}</strong><span class="muted">${count(clientVideos(c).length)}</span>${note(c.note)}</span>
         </a>
       </li>`;
@@ -735,7 +807,7 @@ function portfolioPage(lang) {
     <p class="cta-row"><a class="btn btn-neon" href="${ROUTES.apropos[lang]}">${esc(P.bouton)}</a></p>
   </div>
 </section>`;
-  return layout({ key: 'portfolio', lang, body, videos: portfolio.videos.filter((v) => v.vedette || v.type === 'coulisses') });
+  return layout({ key: 'portfolio', lang, body, videos: portfolio.videos.filter((v) => v.vedette || v.type === 'coulisses'), preload: posterPreload('work') });
 }
 
 // Page d'un client : bande-annonce en fond (si le client a un clip), puis toutes ses vidéos.
@@ -752,10 +824,12 @@ function clientPage(c, lang) {
     <p class="back-row" data-reveal>${back}</p>
     <h1 data-reveal>${esc(c.nom)}</h1>
     <p class="intro" data-reveal>${n} ${n > 1 ? P.videos : P.video}${note(c.note)}</p>
+    ${summary(P.clientResume.replace('{n}', `${n} ${n > 1 ? P.videos : P.video}`).replace('{client}', c.nom))}
   </div>
 </section>
-<section class="section section-tight" aria-label="${esc(c.nom)}">
+<section class="section section-tight" aria-labelledby="videos-${clientSlug(c)}">
   <div class="container">
+    <h2 id="videos-${clientSlug(c)}" class="visually-hidden">${esc(L.nav.portfolio)} · ${esc(c.nom)}</h2>
     <ul class="grid grid-5 library">
       ${list.map((v) => `<li data-reveal>${videoTile(v, lang)}</li>`).join('\n      ')}
     </ul>
@@ -767,7 +841,8 @@ function clientPage(c, lang) {
     lang,
     body,
     videos: list,
-    page: { route: clientRoute(c), seo: { title: fill(P.clientSeoTitre), description: fill(P.clientSeoDescription) }, crumb: c.nom },
+    page: { route: clientRoute(c), seo: { title: fill(P.clientSeoTitre), description: fill(P.clientSeoDescription) }, crumb: c.nom, og: existsSync(join(ROOT, 'static', 'og', `og-client-${clientSlug(c)}.jpg`)) ? `/og/og-client-${clientSlug(c)}.jpg` : '' },
+    preload: c.clip ? posterPreload(c.clip) : '',
   });
 }
 
@@ -801,6 +876,7 @@ function aboutPage(lang) {
     )
     .join('\n');
   const body = `${fullHero('about', A.titre, L)}
+${summaryBand(L.seo.apropos.resume)}
 <section class="jd-screen jd-vision" aria-labelledby="visages-title">
   <div class="jd-wrap${A.vision.photo ? ' vision-grid' : ''}">
     <div class="vision-text">
@@ -822,7 +898,7 @@ ${members}
     <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.contact[lang]}">${esc(A.fin.bouton)}</a></p>
   </div>
 </section>`;
-  return layout({ key: 'apropos', lang, body });
+  return layout({ key: 'apropos', lang, body, preload: posterPreload('about') });
 }
 
 function contactPage(lang) {
@@ -837,7 +913,7 @@ function contactPage(lang) {
     ${L.faq.items.map((f) => `<details data-reveal><summary>${t(f.q)}</summary><p>${t(f.r)}</p>${f.note && !isPlaceholder(f.note) ? `<p class="small">${t(f.note)}</p>` : ''}</details>`).join('\n    ')}
   </div>
 </section>`;
-  return layout({ key: 'contact', lang, body });
+  return layout({ key: 'contact', lang, body, preload: posterPreload('contact-logo') });
 }
 
 function messagePage(lang, key, data) {
@@ -849,6 +925,29 @@ function messagePage(lang, key, data) {
   </div>
 </section>`;
   return layout({ key, lang, body });
+}
+
+// Page 404 : dans la langue de l'adresse demandée, avec les pages principales et le lien vers l'autre langue.
+function notFoundPage(lang) {
+  const L = langs[lang];
+  const other = lang === 'fr' ? 'en' : 'fr';
+  const O = langs[other];
+  const data = L.introuvable;
+  const links = (lg) => INDEXABLE.map((k) => `<li><a href="${ROUTES[k][lg]}">${esc(langs[lg].nav[k])}</a></li>`).join('');
+  const body = `<section class="section page-simple">
+  <div class="container">
+    <h1>${t(data.titre)}</h1>
+    <p class="intro">${t(data.texte)}</p>
+    <p class="cta-row"><a class="btn btn-neon" href="${ROUTES.accueil[lang]}">${esc(data.retour)}</a></p>
+    <h2 class="label" data-no-accent>${esc(data.pages)}</h2>
+    <ul class="pills">${links(lang)}</ul>
+    <div lang="${O.lang}">
+      <h2 class="label" data-no-accent>${esc(O.introuvable.titre)} · ${esc(O.introuvable.pages)}</h2>
+      <ul class="pills">${links(other)}</ul>
+    </div>
+  </div>
+</section>`;
+  return layout({ key: 'introuvable', lang, body });
 }
 
 // ---------- fichiers SEO/GEO ----------
@@ -890,11 +989,13 @@ ${urls.join('\n')}
 
 function llmsTxt() {
   const fr = langs.fr;
+  const en = langs.en;
   const known = (s) => !isPlaceholder(s);
+  const pageLinks = (L, lang) => INDEXABLE.map((k) => `- [${L.nav[k]}](${abs(ROUTES[k][lang])}) : ${L.seo[k].resume || L.seo[k].description}`);
   const lines = [
     `# ${site.nom} (${site.marque})`,
     '',
-    `> ${fr.seo.accueil.description}`,
+    `> ${fr.seo.accueil.resume}`,
     '',
     `${site.nomLegal} est une boîte de production vidéo et un vidéaste corporatif établi dans le Grand Montréal et les Laurentides (Québec, Canada). Fondateur : JD (Jean-David). Phrase centrale : « ${fr.hero.sousTitre} »`,
     '',
@@ -905,7 +1006,7 @@ function llmsTxt() {
     ...fr.services.items.filter(shown).map((s) => `- ${s.titre} : ${s.texte}`),
     '',
     '## Équipe',
-    ...fr.equipe.membres.map((m) => `- ${m.nomComplet} (${m.nom}), ${m.role} : ${m.texte}`),
+    ...fr.equipe.membres.map((m) => `- ${m.nomComplet}${m.nom !== m.nomComplet ? ` (${m.nom})` : ''}, ${m.role} : ${m.texte}`),
     '',
     '## Clients filmés',
     ...portfolio.clients.map((c) => `- ${c.nom} (${clientVideos(c).length} vidéos)${CLIENTS.includes(c) ? ` : ${abs(clientRoute(c).fr)}` : ''}`),
@@ -913,8 +1014,8 @@ function llmsTxt() {
     '## Zones desservies',
     ...site.zonesDesservies.map((z) => `- ${z}`),
     '',
-    '## Pages',
-    ...INDEXABLE.map((k) => `- [${fr.nav[k]}](${abs(ROUTES[k].fr)}) · [EN](${abs(ROUTES[k].en)})`),
+    '## Pages (français)',
+    ...pageLinks(fr, 'fr'),
     '',
     '## Contact',
     `- Courriel : ${site.courriel}`,
@@ -923,6 +1024,22 @@ function llmsTxt() {
   ];
   const faq = fr.faq.items.filter((f) => known(f.r) && !f.note);
   if (faq.length) lines.push('', '## Questions fréquentes', ...faq.flatMap((f) => ['', `### ${f.q}`, f.r]));
+  lines.push(
+    '',
+    '## English',
+    '',
+    en.seo.accueil.resume,
+    '',
+    ...pageLinks(en, 'en'),
+    '',
+    `- Services: ${en.services.items.filter(shown).map((s) => s.titre).join('; ')}`,
+    `- Team: ${en.equipe.membres.map((m) => `${m.nom} (${m.role})`).join(', ')}`,
+    `- Areas served: ${en.contact.zone}`,
+    `- Email: ${site.courriel}`,
+    '',
+    '## Optional',
+    `- [Sitemap](${abs('/sitemap.xml')})`
+  );
   return lines.join('\n') + '\n';
 }
 
@@ -942,7 +1059,8 @@ for (const lang of ['fr', 'en']) {
   write(ROUTES.contact[lang], contactPage(lang));
   write(ROUTES.merci[lang], messagePage(lang, 'merci', L.merci));
 }
-write('/404.html', messagePage('fr', 'introuvable', langs.fr.introuvable));
+write('/404.html', notFoundPage('fr'));
+write('/en/404.html', notFoundPage('en'));
 
 write('/sitemap.xml', sitemap());
 write('/llms.txt', llmsTxt());
@@ -950,7 +1068,7 @@ write(
   '/robots.txt',
   ALLOW_INDEX
     ? `User-agent: *\nAllow: /\n\nSitemap: ${abs('/sitemap.xml')}\n`
-    : `# Démo : indexation désactivée (VMM_ALLOW_INDEX n'est pas "true")\nUser-agent: *\nDisallow: /\n`
+    : `# Démo : indexation désactivée (VMM_ALLOW_INDEX n'est pas "true")\nUser-agent: *\nDisallow: /\n\nSitemap: ${abs('/sitemap.xml')}\n`
 );
 write(
   '/_headers',
@@ -959,6 +1077,8 @@ write(
   Referrer-Policy: strict-origin-when-cross-origin
 ${ALLOW_INDEX ? '' : '  X-Robots-Tag: noindex, nofollow\n'}
 /images/*
+  Cache-Control: public, max-age=31536000, immutable
+/fonts/*
   Cache-Control: public, max-age=31536000, immutable
 `
 );
@@ -975,6 +1095,9 @@ write(
 /en/process   /en/services/    301
 /en/pricing   /en/contact/     301
 /a-propos     /about/          301
+
+# Page 404 en anglais pour les adresses /en/... (le 404.html racine est en français)
+/en/*         /en/404.html     404
 `
 );
 
