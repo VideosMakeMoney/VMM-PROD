@@ -1,0 +1,10 @@
+{
+  "_aide": "Clips muets de JD joués en fond (boucle). Fichiers dans static/videos/jd/ : <nom>.mp4, <nom>.webm et <nom>-poster.jpg. « mobile » sert sous 768 px ; « ordi » au-dessus. Tant qu'« ordi » est vide, l'ordi reçoit le clip 9:16 centré sur un fond flou : il suffira d'y mettre le nom de la future version 16:9.",
+  "dossier": "/videos/jd/",
+  "clips": {
+    "work": { "mobile": "work-9x16", "ordi": "" },
+    "services": { "mobile": "services-9x16", "ordi": "" },
+    "hors-pairs": { "mobile": "hors-pairs-9x16", "ordi": "" },
+    "contact-logo": { "mobile": "contact-logo-9x16", "ordi": "contact-logo-16x9" }
+  }
+}

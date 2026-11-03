@@ -5,7 +5,7 @@
   "nav": {
     "accueil": "Accueil",
     "services": "Services",
-    "portfolio": "Portfolio",
+    "portfolio": "Projets",
     "apropos": "À propos",
     "contact": "Contact",
     "menu": "Menu",
@@ -110,7 +110,12 @@
     "bouton": "Explorer nos réalisations →"
   },
   "portfolio": {
-    "titre": "Notre portfolio.",
+    "titre": "Projets.",
+    "retour": "← Retour aux projets",
+    "voirClient": "Voir les vidéos",
+    "aucuneVideo": "[À CONFIRMER : vidéos de ce client]",
+    "clientSeoTitre": "Vidéos pour {client} | VMM Productions",
+    "clientSeoDescription": "Les vidéos réalisées par VMM Productions pour {client}, vidéaste corporatif du Grand Montréal et des Laurentides.",
     "intro": "Découvrez nos productions finales et les moments qui prennent vie derrière la caméra.",
     "vedettesTitre": "Productions vedettes",
     "parClientTitre": "Productions finales par client",

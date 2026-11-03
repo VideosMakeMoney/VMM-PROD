@@ -4,9 +4,6 @@
   root.classList.add('js');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // « Réduire les animations » : seulement l'image fixe du logo, sans télécharger la vidéo
-  if (reduced) document.querySelector('.logo-spin')?.remove();
-
   // Menu mobile
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.getElementById('menu');
@@ -111,6 +108,62 @@
   });
 
   if (reduced || !window.gsap) document.querySelectorAll('[data-reveal]').forEach((el) => el.classList.add('is-visible'));
+
+  // Clips de fond de JD : chaque appareil ne télécharge que sa version (mobile ou ordi), seulement quand la
+  // section approche ; avec « réduire les animations », le poster reste seul et rien n'est téléchargé.
+  const bgVideos = document.querySelectorAll('[data-bg-video]');
+  const wide = window.matchMedia('(min-width: 768px)');
+  // Le bon poster pour l'appareil, même quand la vidéo n'est jamais chargée
+  const bgPosters = () => bgVideos.forEach((box) => { box.querySelector('.bg-video-media').poster = box.dataset[`${wide.matches ? 'ordi' : 'mobile'}Poster`]; });
+  bgPosters();
+  if (reduced) wide.addEventListener('change', bgPosters);
+  if (bgVideos.length && !reduced) {
+    const sourcesOf = (box, kind) => [
+      Object.assign(document.createElement('source'), { src: box.dataset[`${kind}Webm`], type: 'video/webm' }),
+      Object.assign(document.createElement('source'), { src: box.dataset[`${kind}Mp4`], type: 'video/mp4' }),
+    ];
+    // Fond flou (clip 9:16 sur ordi) : la même vidéo, chargée seulement sur ordi et calée sur le clip net
+    const blurOf = (box) => (wide.matches ? box.querySelector('.bg-video-blur') : null);
+    const setup = (box) => {
+      const video = box.querySelector('.bg-video-media');
+      const kind = wide.matches ? 'ordi' : 'mobile';
+      if (box.dataset.loaded === kind) return;
+      box.dataset.loaded = kind;
+      video.poster = box.dataset[`${kind}Poster`];
+      video.replaceChildren(...sourcesOf(box, kind));
+      video.load();
+      video.preload = 'auto';
+      const blur = blurOf(box);
+      if (blur && !blur.dataset.loaded) {
+        blur.dataset.loaded = '1';
+        blur.replaceChildren(...sourcesOf(box, kind));
+        blur.load();
+        blur.preload = 'auto';
+        const sync = () => { if (Math.abs(blur.currentTime - video.currentTime) > 0.25) blur.currentTime = video.currentTime; };
+        video.addEventListener('playing', sync);
+        video.addEventListener('seeked', sync);
+        video.addEventListener('timeupdate', sync);
+      }
+    };
+    const play = (box) => [box.querySelector('.bg-video-media'), blurOf(box)].forEach((v) => v?.play().catch(() => {}));
+    const pause = (box) => box.querySelectorAll('video').forEach((v) => v.pause());
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(({ target, isIntersecting }) => {
+        if (isIntersecting) { setup(target); play(target); }
+        else if (target.dataset.loaded) pause(target);
+      });
+    }, { rootMargin: '50% 0px' });
+    const start = () => bgVideos.forEach((box) => io.observe(box));
+    if (document.readyState === 'complete') start();
+    else window.addEventListener('load', start, { once: true });
+    // Passage mobile ↔ ordi : on recharge seulement les clips déjà commencés
+    wide.addEventListener('change', () => bgVideos.forEach((box) => {
+      if (!box.dataset.loaded) return;
+      setup(box);
+      if (!wide.matches) box.querySelector('.bg-video-blur')?.pause();
+      play(box);
+    }));
+  }
 
   // Caméra qui se démonte (Services) : sur ordi, la vidéo « scroll » suit exactement le défilement
   // (pas de lecture auto) ; sur mobile ou avec « réduire les animations », la boucle joue toute seule.

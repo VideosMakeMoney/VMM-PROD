@@ -178,15 +178,16 @@ ul { list-style: none; margin: 0; padding: 0; }
 .header-inner { display: flex; align-items: center; justify-content: space-between; min-height: var(--header-h); gap: 1rem; }
 .logo { font: 900 1.5rem/1 var(--font-logo); color: var(--text); text-decoration: none; margin: 0; }
 .logo span { color: var(--pink); }
-/* Logo 3D animé : le fond noir de la vidéo se fond dans le fond du site */
-.logo-video { display: inline-flex; align-items: center; min-height: 44px; height: var(--header-h); overflow: hidden; }
-/* Vidéo carrée avec marge noire : à 96 px, le logo visible fait environ 50 px.
-   Les marges négatives et overflow: hidden gardent l'en-tête à 64 px sans déborder. */
-.logo-spin, .logo-still { display: block; height: 96px; width: auto; margin-block: -16px; mix-blend-mode: screen; }
-.logo-still { display: none; }
+/* Logo : rotation seule sur l'axe vertical, en boucle, vitesse constante.
+   Deux faces dos à dos : le revers est la même image retournée, pour que VMM se lise à l'endroit. */
+.logo-video { display: inline-flex; align-items: center; min-height: 44px; height: var(--header-h); perspective: 600px; }
+.logo-spin { position: relative; display: block; height: 52px; aspect-ratio: 444 / 281; transform-style: preserve-3d; animation: logo-spin 6s linear infinite; }
+.logo-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.logo-face img { display: block; width: 100%; height: 100%; }
+.logo-back { transform: rotateY(180deg); }
+@keyframes logo-spin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
 @media (prefers-reduced-motion: reduce) {
-  .logo-spin { display: none; }
-  .logo-still { display: block; }
+  .logo-spin { animation: none; }
 }
 .menu-toggle {
   min-height: 44px;
@@ -246,6 +247,9 @@ ul { list-style: none; margin: 0; padding: 0; }
   background: radial-gradient(ellipse at 30% 20%, var(--surface-2), var(--bg) 70%);
 }
 .hero-media { position: absolute; inset: 0; z-index: -1; }
+/* Image d'attente tant que la vidéo héro n'est pas fournie (aucune vidéo appelée, donc aucun 404) */
+.hero-poster, .hero-poster img { display: block; width: 100%; height: 100%; }
+.hero-poster img { object-fit: cover; }
 .hero-video { width: 100%; height: 100%; object-fit: cover; filter: brightness(1.1) saturate(1.35) contrast(1.1); }
 .hero-vignette {
   position: absolute;
@@ -465,7 +469,8 @@ html:not(.js) .hero-toggle { display: none; }
 .contact-details dt { margin-bottom: .25rem; }
 .contact-details dd { margin: 0; font-size: 1.125rem; }
 .contact-info .socials { margin-bottom: 0; }
-.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
+/* section.page-contact : le <body> de la page Contact porte aussi la classe page-contact */
+section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
 .page-contact h1 { font-weight: 900; font-size: clamp(2.5rem, 7vw, 4.5rem); }
 .faq { max-width: 52rem; }
 .faq details { border-top: 1px solid var(--border); }
@@ -528,3 +533,57 @@ html:not(.js) .hero-toggle { display: none; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ---------- Clips de fond de JD (Projets, pages clients, Services, Contact) ---------- */
+.has-bg-video { position: relative; isolation: isolate; overflow: hidden; }
+.page-hero.has-bg-video { min-height: min(78svh, 760px); display: flex; align-items: flex-end; padding-bottom: clamp(2rem, 6vw, 4rem); }
+.page-hero.has-bg-video > .container { position: relative; }
+.bg-video { position: absolute; inset: 0; z-index: -1; background: var(--bg); overflow: hidden; }
+.bg-video-media { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+.bg-video-blur { display: none; }
+/* Voile : le texte, les boutons et le menu restent lisibles */
+.bg-video-veil {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(8, 8, 15, .62) 0%, rgba(8, 8, 15, .55) 40%, rgba(8, 8, 15, .9) 100%);
+}
+/* Ordi sans version 16:9 : le clip 9:16 entier au centre, sur la même vidéo en plein cadre, floue et agrandie
+   (scale 1.1 cache les bords flous). Avec « réduire les animations », elle reste sur son poster flou. */
+@media (min-width: 768px) {
+  .bg-video[data-portrait-ordi] .bg-video-media { object-fit: contain; }
+  .bg-video[data-portrait-ordi] .bg-video-blur {
+    display: block; position: absolute; inset: 0; width: 100%; height: 100%; max-width: none;
+    object-fit: cover; transform: scale(1.1);
+    filter: blur(36px) brightness(.7) saturate(1.5);
+  }
+  /* Voile surtout derrière le texte (à gauche) : les couleurs et le mouvement restent visibles des deux côtés */
+  .bg-video[data-portrait-ordi] .bg-video-veil {
+    background:
+      linear-gradient(90deg, rgba(8, 8, 15, .78) 0%, rgba(8, 8, 15, .5) 30%, rgba(8, 8, 15, .12) 55%, rgba(8, 8, 15, 0) 72%),
+      linear-gradient(180deg, rgba(8, 8, 15, .3) 0%, rgba(8, 8, 15, 0) 20%, rgba(8, 8, 15, 0) 72%, rgba(8, 8, 15, .7) 100%);
+  }
+}
+/* Projets (/portfolio) : aucun voile sombre, ordi et mobile. Le fond flou garde sa pleine luminosité
+   des deux côtés du clip ; le titre et l'intro restent lisibles grâce à une petite ombre portée. */
+.bg-clip-work .bg-video-veil { display: none; }
+@media (min-width: 768px) {
+  .bg-clip-work .bg-video[data-portrait-ordi] .bg-video-blur { filter: blur(36px) saturate(1.4); }
+}
+.bg-clip-work h1, .bg-clip-work .intro { text-shadow: 0 2px 4px rgba(0, 0, 0, .6), 0 0 16px rgba(0, 0, 0, .45); }
+/* Sans voile, le gris habituel de l'intro disparaît sur un fond clair : texte presque blanc ici */
+.bg-clip-work .intro { color: var(--text); }
+/* Le mot en dégradé : text-shadow passerait par-dessus le dégradé, on prend drop-shadow à la place */
+.bg-clip-work .accent { text-shadow: none; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .55)); }
+.page-contact.has-bg-video { padding-bottom: clamp(3rem, 8vw, 6rem); }
+
+/* Cartes clients (Projets) */
+.client-card { display: flex; flex-direction: column; height: 100%; padding: 0; overflow: hidden; color: inherit; text-decoration: none; transition: transform .4s var(--ease), box-shadow .4s var(--ease); }
+.client-card:hover, .client-card:focus-visible { transform: translateY(-3px); box-shadow: var(--card-glow); }
+.client-card-img { position: relative; display: block; aspect-ratio: 4 / 5; background: var(--surface); overflow: hidden; }
+.client-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
+.client-card:hover .client-card-img img { transform: scale(1.04); }
+.client-card-text { display: flex; flex-direction: column; gap: .2rem; padding: 1rem 1.25rem 1.25rem; }
+.client-card-text strong { font: 900 1.25rem/1.2 var(--font-title); color: var(--title); }
+
+/* Page client */
+.back-row { margin: 0 0 1.5rem; }
+.client-hero:not(.has-bg-video) { padding-bottom: 1rem; }

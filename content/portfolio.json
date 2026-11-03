@@ -51,24 +51,33 @@
     }
   ],
   "_aideCategories": "videoAccueil = ID YouTube de la vidéo ouverte par la vignette sur l'accueil. [À CONFIRMER : vidéo de chaque catégorie]",
+  "_aideClients": "Une page par client : /portfolio/<slug>/ (FR) et /en/portfolio/<slug>/ (EN). Le nombre de vidéos est calculé à partir de « videos » (champ client = nom exact). clip = nom d'un clip de content/clips.json joué en fond de la page du client (vide = poster ou fond simple). Ajouter un client ou une vidéo : seulement ce fichier.",
   "clients": [
     {
       "nom": "Tapis Rouge",
-      "url": ""
+      "slug": "tapis-rouge",
+      "url": "",
+      "clip": ""
     },
     {
       "nom": "Pur Construction",
+      "slug": "pur-construction",
       "url": "",
+      "clip": "",
       "note": "[À CONFIRMER : orthographe « Pur » ou « PUR »]"
     },
     {
       "nom": "Hors-Paire Excavation",
+      "slug": "hors-pair",
       "url": "",
+      "clip": "hors-pairs",
       "note": "[À CONFIRMER : orthographe « Hors-Paire »]"
     },
     {
       "nom": "BlueWise",
-      "url": ""
+      "slug": "bluewise",
+      "url": "",
+      "clip": ""
     }
   ],
   "clientsAVenir": [
