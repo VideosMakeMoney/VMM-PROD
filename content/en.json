@@ -1,6 +1,8 @@
 {
   "_aide": "English copy: draft translation of the French, awaiting approval. The FAQ answers must be taken from the current site's EN dictionary.",
   "lang": "en-CA",
+  "mission": "To bring value to people and their businesses through our productions.",
+  "surMesure": "Custom services, tailored to each client. Bilingual service (French and English) included.",
   "avisTraduction": "[TO CONFIRM: English copy is a draft translation awaiting approval]",
   "nav": {
     "accueil": "Home",
@@ -17,11 +19,11 @@
   },
   "seo": {
     "_aide": "title ≤ 60 characters, description ≤ 155, h1 = keyword + city shown as a small grey subtitle under the main title (inside the H1); resume = short factual intro sentence shown at the top of the page (easy for Google and AI to quote). Previous values in seoAncien.",
-    "accueil": {"title":"Video Production, Montreal & Laurentians | VMM Productions","description":"VMM Productions, corporate videographer in Greater Montreal and the Laurentians: promotional videos, event coverage and business stories.","resume":"VMM Productions (Videos Make Money) is a corporate videographer in Greater Montreal and the Laurentians: promotional videos, event coverage, business stories and behind the scenes.","h1":"Video production in Montreal and the Laurentians"},
+    "accueil": {"title":"Video Production, Montreal & Laurentians | VMM Productions","description":"VMM Productions, corporate videographer in Greater Montreal and the Laurentians: promotional videos, event coverage and business stories.","resume":"VMM Productions (Videos Make Money) is a corporate videographer in Greater Montreal and the Laurentians, serving all of Quebec: promotional videos, event coverage, business stories and behind the scenes.","h1":"Video production in Montreal and the Laurentians"},
     "services": {"title":"Video Production and Drone Services | VMM Productions","description":"Video strategy, filming and photo, drone, scriptwriting, editing and motion graphics: video production by VMM Productions in Montreal and the Laurentians.","resume":"VMM Productions offers six video production services in Greater Montreal and the Laurentians: video strategy and advertising content, filming and photography, aerial drone production, scriptwriting, editing and motion graphics.","h1":"Video production services in Montreal and the Laurentians"},
     "portfolio": {"title":"Video Projects in Montreal & Laurentians | VMM Productions","description":"Promotional and business videos grouped by client, plus behind-the-scenes footage: the work of VMM Productions, videographer in Montreal.","resume":"The portfolio of VMM Productions, corporate videographer in Greater Montreal and the Laurentians, groups its final productions by client, along with behind-the-scenes footage.","h1":"Video production projects in Montreal and the Laurentians"},
-    "apropos": {"title":"About: JD and Renaud, the VMM Productions team","description":"JD, founder and videographer, and Renaud, camera operator with nearly ten years of experience: the VMM Productions team, Montreal and Laurentians.","resume":"VMM Productions is JD, founder and videographer, and Renaud, camera operator with nearly ten years of experience behind the camera.","h1":"The VMM Productions team, corporate videographer in Montreal and the Laurentians"},
-    "contact": {"title":"Contact | Promotional Video in Montreal, VMM Productions","description":"Tell us about your video project, no strings attached. VMM Productions works in Greater Montreal and the Laurentians: jeandavid@videosmakemoney.ca.","resume":"For a video project in Greater Montreal or the Laurentians, write to VMM Productions at jeandavid@videosmakemoney.ca or use the contact form.","h1":"Contact a corporate videographer in Montreal and the Laurentians"},
+    "apropos": {"title":"About: JD and Renaud, the VMM Productions team","description":"JD, founder and videographer, and Renaud, camera operator with 10 years of experience in film: the VMM Productions team, Montreal and Laurentians.","resume":"VMM Productions is JD, founder and videographer, and Renaud, camera operator with 10 years of experience in film.","h1":"The VMM Productions team, corporate videographer in Montreal and the Laurentians"},
+    "contact": {"title":"Contact | Promotional Video in Montreal, VMM Productions","description":"Tell us about your video project, no strings attached. VMM Productions works across Quebec, mainly in Montreal and the Laurentians.","resume":"For a video project anywhere in Quebec, mainly in Greater Montreal and the Laurentians, write to VMM Productions at jeandavid@videosmakemoney.ca or use the contact form.","h1":"Contact a corporate videographer in Montreal and the Laurentians"},
     "merci": {"title":"Message sent | VMM Productions","description":"Your message was sent to VMM Productions."},
     "introuvable": {"title":"Page not found | VMM Productions","description":"This page does not exist."}
   },
@@ -54,8 +56,8 @@
     "titre": "Behind VMM",
     "intro": "Great productions start with the people behind the camera. Meet the ones who bring our work to life.",
     "membres": [
-      { "id": "jd", "nom": "JD", "nomComplet": "Jean-David", "role": "Founder", "texte": "From construction sites to film sets, JD brings a hands-on perspective to every production. For him, filming means showcasing what people build and what they are passionate about.", "photo": "" },
-      { "id": "renaud", "nom": "Renaud", "nomComplet": "Renaud", "role": "Camera operator", "texte": "With nearly ten years of experience behind the camera, Renaud brings creativity, energy and an immersive approach to capturing the action as it happens.", "photo": "" }
+      { "id": "jd", "nom": "JD", "nomComplet": "JD", "role": "Founder", "texte": "From construction sites to film sets, JD brings a hands-on perspective to every production. For him, filming means showcasing what people build and what they are passionate about.", "photo": "" },
+      { "id": "renaud", "nom": "Renaud", "nomComplet": "Renaud", "role": "Camera operator", "experience": "10 years of experience in film.", "texte": "With 10 years of experience in film, Renaud brings creativity, energy and an immersive approach to capturing the action as it happens.", "photo": "" }
     ],
     "photoManquante": "[TO CONFIRM: authentic photo to be provided]",
     "bouton": "Meet us →"
@@ -76,10 +78,11 @@
   "contact": {
     "etiquette": "Contact",
     "titre": "Let's talk about your project",
-    "texte": "Write to us, no strings attached. We work in Greater Montreal and the Laurentians. [TO CONFIRM: final copy]",
+    "texte": "Write to us, no strings attached. We work across Quebec, mainly in Greater Montreal and the Laurentians. [TO CONFIRM: final copy]",
     "courrielLabel": "Email",
     "zoneLabel": "Area",
-    "zone": "Greater Montreal and the Laurentians",
+    "zone": "All of Quebec, mainly Greater Montreal and the Laurentians",
+    "zoneAncien": "Greater Montreal and the Laurentians",
     "suivre": "Follow us",
     "champs": {
       "nom": "Name",
@@ -97,9 +100,9 @@
   "faq": {
     "titre": "Frequently asked questions",
     "items": [
-      { "q": "How long does a typical project take?", "r": "[TO CONFIRM: original EN answer from the current site's dictionary]" },
+      { "q": "How long does a typical project take?", "r": "Most projects are delivered in 1 to 2 weeks, depending on complexity. Clients in ongoing production receive their deliverables on a regular basis." },
       { "q": "What is included in the production process?", "r": "[TO CONFIRM: original EN answer from the current site's dictionary]" },
-      { "q": "Do you offer bilingual content (French & English)?", "r": "[TO CONFIRM: original EN answer from the current site's dictionary]" },
+      { "q": "Do you offer bilingual content (French & English)?", "r": "Yes. Our services are custom, tailored to each client, and bilingual service (FR + EN) is included, adapted to the Quebec market for a natural, effective message in both languages." },
       { "q": "What if I don't know what type of content my business needs?", "r": "[TO CONFIRM: original EN answer from the current site's dictionary]" }
     ]
   },
@@ -293,7 +296,7 @@
         "role": "Camera operator",
         "titre": "Meet\n*Renaud.*",
         "paragraphes": [
-          "With nearly ten years behind the camera, Renaud brings experience, originality and an instinct for capturing the action. His immersive approach turns spontaneous moments into vivid images."
+          "With 10 years of experience in film, Renaud brings originality and an instinct for capturing the action. His immersive approach turns spontaneous moments into vivid images."
         ],
         "noteInterne": "[TO CONFIRM: bio to be expanded with Renaud’s answers] Preview: not shown on the site.",
         "photo": "/img/about-renaud",
@@ -320,7 +323,7 @@
         {
           "id": "renaud",
           "titre": "Meet Renaud",
-          "texte": "With nearly ten years behind the camera, Renaud brings experience, originality and an instinct for capturing the action. His immersive approach turns spontaneous moments into vivid images.",
+          "texte": "With 10 years of experience in film, Renaud brings originality and an instinct for capturing the action. His immersive approach turns spontaneous moments into vivid images.",
           "note": "[TO CONFIRM: bio to be validated]"
         }
       ]

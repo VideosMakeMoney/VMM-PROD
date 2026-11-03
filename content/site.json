@@ -1,13 +1,14 @@
 {
   "_aide": "Infos partagées FR/EN. Tout ce qui contient [À CONFIRMER] reste visible sur le site tant que ce n'est pas remplacé.",
   "nom": "VMM Productions",
-  "nomLegal": "VMM Productions Inc.",
+  "nomLegal": "Video Montage Marketing",
+  "nomLegalAncien": "VMM Productions Inc.",
   "marque": "Videos Make Money",
   "siteUrl": "https://videosmakemoney.ca",
   "courriel": "jeandavid@videosmakemoney.ca",
-  "telephone": "",
+  "telephone": "+1-514-604-5682",
   "adresse": {
-    "_aide": "Laisser vide si aucune adresse publique. Sert au JSON-LD LocalBusiness.",
+    "_aide": "Confirmé par JD : aucune adresse de rue publique. Le JSON-LD ne publie que region (QC) et pays (CA) ; rue, ville et code postal ne sont jamais publiés.",
     "rue": "",
     "ville": "",
     "region": "QC",
@@ -15,9 +16,12 @@
     "pays": "CA"
   },
   "zonesDesservies": [
+    "Tout le Québec",
     "Grand Montréal",
     "Laurentides"
   ],
+  "zoneJsonLd": "Québec",
+  "delaiLivraison": { "fr": "1 à 2 semaines", "en": "1 to 2 weeks" },
   "reseaux": [
     {
       "nom": "Instagram",

@@ -58,10 +58,10 @@ Redirections 301 (`_redirects`) : `/work` → `/portfolio`, `/process` → `/ser
 - Canonical, `hreflang` fr-CA / en-CA / x-default réciproques, `<html lang>` correct.
 - Open Graph + Twitter card complets. Images de partage 1200 × 630 dans `static/og/`, tirées des posters existants : `og-accueil` (logo, aussi pour Projets et Contact), `og-services`, `og-apropos`, `og-client-<slug>` (une page client sans image utilise `og-accueil`).
 - H1 : un mot-clé + ville (`seo.<page>.h1`, `portfolio.clientH1`) s'affiche en petit sous-titre gris sous le grand titre, à l'intérieur du H1 (style `.h1-sub`).
-- JSON-LD : ProfessionalService seul, sans adresse tant qu'elle n'est pas fournie (zone : Grand Montréal, Montréal, Laurentides ; logo, image, langues fr-CA/en-CA), Person (JD, Renaud ; bio seulement si elle n'est pas marquée à confirmer), WebSite, WebPage, BreadcrumbList (à partir de deux niveaux, donc pas sur l'accueil), Service pour chaque carte de /services/ (sans prix), VideoObject (et entrée du sitemap vidéo) seulement pour une vidéo qui a un ID YouTube **et** une `dateMiseEnLigne` (AAAA-MM-JJ) dans `portfolio.json` : les autres sont gardées en réserve et sortent dès que la date est remplie. L'@id d'une vidéo est l'URL de sa page + `#video-<ID>`, FAQPage sur /contact (réponses connues et non signalées seulement).
+- JSON-LD : ProfessionalService seul (nom « VMM Productions », nom légal « Video Montage Marketing », courriel, téléphone, mission en description, zone `AdministrativeArea` « Québec », adresse limitée à QC / CA sans rue ni code postal, aucun prix ni forfait ; logo, image, langues fr-CA/en-CA), Person (toujours « JD », jamais le prénom complet ; Renaud : « 10 ans d'expérience en cinéma » tant que sa bio est à confirmer), WebSite, WebPage, BreadcrumbList (à partir de deux niveaux, donc pas sur l'accueil), Service pour chaque carte de /services/ (sans prix), VideoObject (et entrée du sitemap vidéo) seulement pour une vidéo qui a un ID YouTube **et** une `dateMiseEnLigne` (AAAA-MM-JJ) dans `portfolio.json` : les autres sont gardées en réserve et sortent dès que la date est remplie. L'@id d'une vidéo est l'URL de sa page + `#video-<ID>`, FAQPage sur /contact (réponses connues et non signalées seulement).
 - `sitemap.xml` : pages FR + EN avec alternates et entrées vidéo. `robots.txt` pointe vers le sitemap. `llms.txt` (FR + résumé EN) généré à partir du contenu.
 - Page 404 propre : `/404.html` en français, `/en/404.html` en anglais (règle dans `_redirects`), avec les pages principales dans les deux langues.
-- Pas d'adresse ni de téléphone dans le JSON-LD tant qu'ils ne sont pas fournis (`site.json`).
+- Infos confirmées par JD (2026-11-03) dans `site.json` et `mission` / `surMesure` de `fr.json` / `en.json` : nom légal, téléphone, zone (tout le Québec, Montréal et Laurentides en villes principales), délai de livraison 1 à 2 semaines, services sur mesure et bilingues. Aucune adresse de rue publiée. Le client s'écrit « Installations Hors-Pair » (https://hors-pair.ca/).
 
 ### Vitesse
 
@@ -79,7 +79,7 @@ Redirections 301 (`_redirects`) : `/work` → `/portfolio`, `/process` → `/ser
 **Médias**
 - Vidéos du bandeau `static/images/vmm-hero-desktop.mp4` et `vmm-hero-mobile.mp4`, image poster, versions WebM (facultatif).
 - Vidéo de chaque catégorie de « Ce que nous créons » (`videoAccueil` dans `portfolio.json`).
-- ID YouTube des vedettes « Une équipe soudée » (Tapis Rouge) et « ICI, TOUT A CHANGÉ » (Hors-Paire Excavation), et la catégorie de cette dernière (« production »).
+- ID YouTube des vedettes « Une équipe soudée » (Tapis Rouge) et « ICI, TOUT A CHANGÉ » (Installations Hors-Pair), et la catégorie de cette dernière (« production »).
 - 2 autres vidéos vedettes pour arriver à 4.
 - Photos authentiques de JD et Renaud pour l'accueil (la page À propos a maintenant les siennes).
 - Titres des 23 Shorts (pour l'instant « [À CONFIRMER : titre] » à l'écran, « Client N » pour Google), catégorie et langue de chaque Short.
@@ -100,8 +100,8 @@ Redirections 301 (`_redirects`) : `/work` → `/portfolio`, `/process` → `/ser
 - Textes finaux de Contact et texte du pied de page.
 - Fourchettes de budget du formulaire actuel.
 - Widget d'avis Google : emplacement et compte.
-- Orthographe des clients : « Pur » / « PUR », « Hors-Paire ».
-- Toute la version anglaise (traduction brouillon) et les 4 réponses FAQ en anglais (à reprendre du dictionnaire du site actuel).
+- Orthographe des clients : « Pur » / « PUR » (« Installations Hors-Pair » est confirmé).
+- Toute la version anglaise (traduction brouillon) et les réponses FAQ 2 et 4 en anglais (à reprendre du dictionnaire du site actuel ; les réponses 1 et 3 sont traduites des infos confirmées par JD).
 - FAQ 2 : la réponse originale parle de « stratégie » et de « visuels IA », ce qui contredit la règle « aucune stratégie pub ni service IA ». Gardée telle quelle et signalée.
 
 **Charte**
