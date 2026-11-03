@@ -735,3 +735,17 @@ html:not(.js) .bg-toggle { display: none; }
 .hero-media .hero-poster { position: absolute; inset: 0; }
 .hero-media .hero-video { position: absolute; inset: 0; opacity: 0; transition: opacity .6s ease; }
 .hero-media .hero-video.is-playing { opacity: 1; }
+/* Mot-clé + ville sous le titre principal (seo.<page>.h1) : discret, gris, petit */
+h1 .h1-sub {
+  display: block;
+  margin-top: .6rem;
+  font: 500 clamp(.8rem, 1.6vw, .95rem)/1.4 var(--font-text);
+  letter-spacing: .01em;
+  text-transform: none;
+  color: #b4b4cc;
+  -webkit-text-fill-color: #b4b4cc;
+  background: none;
+  filter: none;
+  text-shadow: 0 1px 10px rgba(8, 8, 15, .7);
+  white-space: normal;
+}

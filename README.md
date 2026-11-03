@@ -57,7 +57,7 @@ Redirections 301 (`_redirects`) : `/work` → `/portfolio`, `/process` → `/ser
 - `<title>` (≤ 60 caractères), meta description (≤ 155) et phrase d'intro factuelle (`resume`) dans `seo` de `fr.json` / `en.json`. Les anciennes valeurs sont gardées sous `seoAncien`. La phrase d'intro s'affiche en haut de chaque page (bande sous le bandeau sur Accueil, Services et À propos ; sous le titre ailleurs) et sert aussi dans `llms.txt`.
 - Canonical, `hreflang` fr-CA / en-CA / x-default réciproques, `<html lang>` correct.
 - Open Graph + Twitter card complets. Images de partage 1200 × 630 dans `static/og/`, tirées des posters existants : `og-accueil` (logo, aussi pour Projets et Contact), `og-services`, `og-apropos`, `og-client-<slug>` (une page client sans image utilise `og-accueil`).
-- H1 : un mot-clé + ville (`seo.<page>.h1`, `portfolio.clientH1`) est ajouté à la fin du H1 pour Google et les lecteurs d'écran, sans changer l'affichage.
+- H1 : un mot-clé + ville (`seo.<page>.h1`, `portfolio.clientH1`) s'affiche en petit sous-titre gris sous le grand titre, à l'intérieur du H1 (style `.h1-sub`).
 - JSON-LD : ProfessionalService seul, sans adresse tant qu'elle n'est pas fournie (zone : Grand Montréal, Montréal, Laurentides ; logo, image, langues fr-CA/en-CA), Person (JD, Renaud ; bio seulement si elle n'est pas marquée à confirmer), WebSite, WebPage, BreadcrumbList (à partir de deux niveaux, donc pas sur l'accueil), Service pour chaque carte de /services/ (sans prix), VideoObject (et entrée du sitemap vidéo) seulement pour une vidéo qui a un ID YouTube **et** une `dateMiseEnLigne` (AAAA-MM-JJ) dans `portfolio.json` : les autres sont gardées en réserve et sortent dès que la date est remplie. L'@id d'une vidéo est l'URL de sa page + `#video-<ID>`, FAQPage sur /contact (réponses connues et non signalées seulement).
 - `sitemap.xml` : pages FR + EN avec alternates et entrées vidéo. `robots.txt` pointe vers le sitemap. `llms.txt` (FR + résumé EN) généré à partir du contenu.
 - Page 404 propre : `/404.html` en français, `/en/404.html` en anglais (règle dans `_redirects`), avec les pages principales dans les deux langues.
@@ -65,7 +65,9 @@ Redirections 301 (`_redirects`) : `/work` → `/portfolio`, `/process` → `/ser
 
 ### Vitesse
 
-- Polices hébergées sur le site (`static/fonts/`, licences OFL à côté), `font-display: swap`, seule la police des titres (Cinzel 900) est préchargée. Plus de feuille Google Fonts bloquante.
+- CSS en ligne dans chaque page (`src/styles.css` reste la source) : aucune requête ne bloque le premier affichage. Police préchargée selon la page : Inter 800 pour le titre de l'accueil, Cinzel 900 ailleurs.
+- Logo de l'en-tête en 240 px (18 Ko au lieu de 46 Ko ; l'original reste dans `static/logo/`). Posters en AVIF (6 à 27 Ko), puis WebP, puis `.jpg`.
+- Polices hébergées sur le site (`static/fonts/`, licences OFL à côté), `font-display: swap`. Plus de feuille Google Fonts bloquante.
 - GSAP, ScrollTrigger et Lenis sont chargés par `main.js` après l'affichage de la page ; ce qui est déjà à l'écran reste affiché sans animation, le reste apparaît au défilement comme avant.
 - Vidéo héro de l'accueil (quand elle existera) : aucune source dans le HTML, `main.js` ajoute seulement celle de l'appareil après le chargement ; le poster s'affiche d'abord.
 - Poster du bandeau préchargé (une seule image par appareil, par media query) et affiché par une `<picture>` sans attendre le JavaScript. Posters en WebP allégés (540 px de large pour le 9:16, 1280 px pour le 16:9) à côté des `.jpg` (qui restent le repli).

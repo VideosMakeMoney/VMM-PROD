@@ -53,16 +53,35 @@ const CAMERA = {
 // Logo de face (image tirée de la vidéo vmm-logo-spin, recadrée, fond noir rendu transparent) :
 // la rotation se fait en CSS. Le revers montre la même face, pour que VMM se lise toujours à l'endroit.
 // Les fichiers vmm-logo-spin.* restent dans static/logo/.
+// Version 240 px de large (affichée à 52 px de haut, nette jusqu'à 3x) : 18 Ko au lieu de 46 Ko. L'original 444 px reste dans static/logo/.
 const LOGO = {
-  src: '/logo/vmm-logo-face.webp?v=4',
-  png: '/logo/vmm-logo-face.png?v=4',
-  width: 444,
-  height: 281,
+  src: '/logo/vmm-logo-face-240.webp',
+  png: '/logo/vmm-logo-face-240.png',
+  width: 240,
+  height: 152,
 };
 
 // Clips de fond de JD (content/clips.json) : <nom>.mp4, <nom>.webm, <nom>-poster.jpg dans static/videos/jd/.
 // Poster en WebP allégé (720 px de large pour le 9:16) quand il existe à côté du .jpg, qui reste le repli.
 const webpOf = (url) => (url && existsSync(join(ROOT, 'static', url.replace(/\.jpe?g$/, '.webp'))) ? url.replace(/\.jpe?g$/, '.webp') : url);
+// Poster AVIF (le plus léger, ≤ 40 Ko) quand il existe à côté du .jpg
+const avifOf = (url) => (url && existsSync(join(ROOT, 'static', url.replace(/\.jpe?g$/, '.avif'))) ? url.replace(/\.jpe?g$/, '.avif') : '');
+// <picture> d'un poster : AVIF puis WebP, version mobile sous 768 px et version ordi au-dessus, .jpg en repli.
+// Le navigateur ne télécharge qu'une seule image.
+function posterPicture(mobileJpg, ordiJpg, cls) {
+  const src = (jpg, media) => [
+    avifOf(jpg) && `<source type="image/avif" srcset="${avifOf(jpg)}" media="${media}">`,
+    webpOf(jpg) !== jpg && `<source type="image/webp" srcset="${webpOf(jpg)}" media="${media}">`,
+  ].filter(Boolean).join('');
+  const size = jpegSize(ordiJpg) || { width: 1920, height: 1080 };
+  return `<picture class="${cls}">${src(mobileJpg, '(max-width: 767px)')}${src(ordiJpg, '(min-width: 768px)')}<img src="${ordiJpg}" alt="" width="${size.width}" height="${size.height}" decoding="async" fetchpriority="high"></picture>`;
+}
+// Préchargement de la même image que la <picture> (AVIF si présent, sinon WebP)
+function picturePreload(mobileJpg, ordiJpg) {
+  const best = (jpg) => (avifOf(jpg) ? [avifOf(jpg), 'image/avif'] : [webpOf(jpg), webpOf(jpg) !== jpg ? 'image/webp' : 'image/jpeg']);
+  const link = (jpg, media) => { const [href, type] = best(jpg); return `<link rel="preload" as="image" href="${href}" type="${type}"${media ? ` media="${media}"` : ''} fetchpriority="high">`; };
+  return mobileJpg === ordiJpg ? link(ordiJpg, '') : `${link(mobileJpg, '(max-width: 767px)')}\n${link(ordiJpg, '(min-width: 768px)')}`;
+}
 const clipFiles = (name) => (name ? { mp4: `${clips.dossier}${name}.mp4`, webm: `${clips.dossier}${name}.webm`, poster: webpOf(`${clips.dossier}${name}-poster.jpg`), posterJpg: `${clips.dossier}${name}-poster.jpg` } : null);
 
 // Vidéo de fond muette en boucle. main.js ne charge que la version de l'appareil (mobile ou ordi), et seulement
@@ -79,7 +98,7 @@ function bgVideo(id) {
   return `<div class="bg-video" data-bg-video data-clip="${id}"${ordi ? '' : ' data-portrait-ordi'}${focal} aria-hidden="true"
     data-mobile-mp4="${mobile.mp4}" data-mobile-webm="${mobile.webm}" data-mobile-poster="${mobile.poster}"
     data-ordi-mp4="${desk.mp4}" data-ordi-webm="${desk.webm}" data-ordi-poster="${desk.poster}">
-    ${ordi ? `<picture class="bg-video-poster"><source srcset="${mobile.poster}" media="(max-width: 767px)"><source srcset="${ordi.poster}" media="(min-width: 768px)"><img src="${ordi.posterJpg}" alt="" width="${jpegSize(ordi.posterJpg)?.width || 1920}" height="${jpegSize(ordi.posterJpg)?.height || 1080}" decoding="async" fetchpriority="high"></picture>` : `<video class="bg-video-blur" muted loop playsinline preload="none" poster="${desk.poster}"></video>`}
+    ${ordi ? posterPicture(mobile.posterJpg, ordi.posterJpg, 'bg-video-poster') : `<video class="bg-video-blur" muted loop playsinline preload="none" poster="${desk.poster}"></video>`}
     <video class="bg-video-media" muted loop playsinline preload="none"${ordi ? '' : ` poster="${mobile.poster}"`}></video>
     <span class="bg-video-veil"></span>
   </div>`;
@@ -92,12 +111,9 @@ function bgVideo(id) {
 function posterPreload(id) {
   const clip = clips.clips[id];
   if (!clip) return '';
-  const mobile = clipFiles(clip.mobile).poster;
-  const ordi = clip.ordi ? clipFiles(clip.ordi).poster : mobile;
-  return mobile === ordi
-    ? `<link rel="preload" as="image" href="${mobile}" fetchpriority="high">`
-    : `<link rel="preload" as="image" href="${mobile}" media="(max-width: 767px)" fetchpriority="high">
-<link rel="preload" as="image" href="${ordi}" media="(min-width: 768px)" fetchpriority="high">`;
+  // Sans version ordi, le poster est l'attribut poster de la vidéo (WebP) : c'est lui qu'on précharge
+  if (!clip.ordi) return `<link rel="preload" as="image" href="${clipFiles(clip.mobile).poster}" fetchpriority="high">`;
+  return picturePreload(clipFiles(clip.mobile).posterJpg, clipFiles(clip.ordi).posterJpg);
 }
 
 // Image de partage (Open Graph / Twitter), 1200 × 630, tirée des posters existants (static/og/).
@@ -121,9 +137,19 @@ function jpegSize(url) {
   return null;
 }
 
-// Mot-clé + ville ajouté à la fin du H1 (seo.<page>.h1) : lu par Google et les lecteurs d'écran, invisible à l'écran,
-// pour garder le style des titres tel quel.
-const h1Seo = (text) => (text ? `<span class="visually-hidden"> · ${esc(text)}</span>` : '');
+// Mot-clé + ville (seo.<page>.h1) : petit sous-titre gris visible sous le titre, à l'intérieur du H1.
+// Le séparateur « · » est réservé aux lecteurs d'écran ; le grand titre garde son style.
+const h1Seo = (text) => (text ? `<span class="visually-hidden"> · </span><span class="h1-sub">${esc(text)}</span>` : '');
+
+// Feuille de style en ligne dans chaque page (≈ 10 Ko compressée) : aucune requête ne bloque le premier affichage.
+// src/styles.css reste la source (et est toujours copiée dans dist/).
+const CSS = readFileSync(join(ROOT, 'src', 'styles.css'), 'utf8')
+  .replace(/\/\*[\s\S]*?\*\//g, '')
+  .replace(/\s+/g, ' ')
+  .replace(/\s*([{};,>])\s*/g, '$1')
+  .replace(/;}/g, '}')
+  .replace(/<\//g, '<\\/')
+  .trim();
 
 // ---------- utilitaires ----------
 const PLACEHOLDER = /\[(?:À CONFIRMER|TO CONFIRM)[^\]]*\]/g;
@@ -157,7 +183,7 @@ const accentLast = (html) => html.replace(/<(h[12])\b([^>]*)>([\s\S]*?)<\/\1>/g,
   for (let i = 0, depth = 0, inTbc = 0; i < parts.length; i++) {
     const p = parts[i];
     if (p.startsWith('<')) {
-      if (/^<span\b/.test(p)) { depth++; if (inTbc || /class="(?:tbc|visually-hidden)"/.test(p)) inTbc++; }
+      if (/^<span\b/.test(p)) { depth++; if (inTbc || /class="(?:tbc|visually-hidden|h1-sub)"/.test(p)) inTbc++; }
       else if (/^<\/span>/.test(p)) { depth--; if (inTbc) inTbc--; }
       skip[i] = true;
     } else skip[i] = inTbc > 0;
@@ -377,8 +403,8 @@ ${routed ? `<meta property="og:url" content="${abs(route[lang])}">\n` : ''}<meta
 <meta name="twitter:image:alt" content="${esc(ogAlt)}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <script>document.documentElement.classList.add('js')</script>
-${preload}<link rel="preload" href="/fonts/cinzel-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/styles.css?v=${BUILD_ID}">
+${preload}<link rel="preload" href="/fonts/${key === 'accueil' ? 'inter-latin-800-normal' : 'cinzel-latin-900-normal'}.woff2" as="font" type="font/woff2" crossorigin>
+<style>${CSS}</style>
 ${INDEXABLE.includes(key) ? structuredData(key, lang, videos, page) : ''}
 </head>
 <body class="page-${key}">
@@ -551,32 +577,18 @@ function homePage(lang) {
   const poster = exists(hv.poster) ? hv.poster : '';
   const attenteOrdi = exists(hv.posterAttenteOrdi) ? hv.posterAttenteOrdi : '';
   const attenteMobile = exists(hv.posterAttenteMobile) ? hv.posterAttenteMobile : attenteOrdi;
-  const HERO_POSTER = jpegSize(poster || attenteOrdi) || { width: 1280, height: 720 };
   // Le poster (image LCP) s'affiche d'abord, sans JavaScript. La vidéo héro, quand elle existera, n'a aucune
   // source dans le HTML : main.js ajoute seulement celle de l'appareil (mobile ou ordi), après le chargement de la page.
-  const posterPicture = poster || attenteOrdi
-    ? `<picture class="hero-poster">
-      ${!poster && attenteMobile ? `<source srcset="${webpOf(attenteMobile)}" media="(max-width: 767px)">` : ''}
-      ${!poster && attenteOrdi ? `<source srcset="${webpOf(attenteOrdi)}" media="(min-width: 768px)">` : ''}
-      <img src="${poster || attenteOrdi}" alt="" width="${HERO_POSTER.width}" height="${HERO_POSTER.height}" decoding="async" fetchpriority="high">
-    </picture>`
-    : '';
+  const heroPicture = poster ? posterPicture(poster, poster, 'hero-poster') : attenteOrdi ? posterPicture(attenteMobile, attenteOrdi, 'hero-poster') : '';
   const pick = (media) => sources.filter(([, , m]) => (media ? m : !m)).map(([src, type]) => ({ src, type }));
-  const heroMedia = `${posterPicture}${
+  const heroMedia = `${heroPicture}${
     hasVideo
       ? `
     <video class="hero-video" muted loop playsinline preload="none" data-hero-mobile='${esc(JSON.stringify(pick(true).length ? pick(true) : pick(false)))}' data-hero-ordi='${esc(JSON.stringify(pick(false).length ? pick(false) : pick(true)))}'></video>`
       : ''
   }`;
   // Préchargement de l'image du bandeau : une seule par appareil (ou le poster de la vidéo héro quand elle existera)
-  const heroPreload = poster
-    ? `<link rel="preload" as="image" href="${poster}" fetchpriority="high">`
-    : attenteOrdi
-      ? attenteMobile !== attenteOrdi
-        ? `<link rel="preload" as="image" href="${webpOf(attenteMobile)}" media="(max-width: 767px)" fetchpriority="high">
-<link rel="preload" as="image" href="${webpOf(attenteOrdi)}" media="(min-width: 768px)" fetchpriority="high">`
-        : `<link rel="preload" as="image" href="${webpOf(attenteOrdi)}" fetchpriority="high">`
-      : '';
+  const heroPreload = poster ? picturePreload(poster, poster) : attenteOrdi ? picturePreload(attenteMobile, attenteOrdi) : '';
   const body = `
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero-media" aria-hidden="true">
