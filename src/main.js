@@ -66,8 +66,20 @@
     const { gsap, ScrollTrigger } = window;
     gsap.registerPlugin(ScrollTrigger);
     const ease = 'expo.out';
-    gsap.set('[data-reveal]', { opacity: 0, y: 24 });
-    ScrollTrigger.batch('[data-reveal]', {
+    // Services et À propos (maquettes de JD) : 20 px, 600 ms, léger décalage entre les cartes
+    const jd = '.jd-screen [data-reveal]';
+    const other = '[data-reveal]:not(.jd-screen [data-reveal])';
+    gsap.set(other, { opacity: 0, y: 24 });
+    gsap.set(jd, { opacity: 0, y: 20 });
+    ScrollTrigger.batch(jd, {
+      start: 'top 90%',
+      once: true,
+      onEnter: (els) => {
+        els.forEach((el) => el.classList.add('is-visible'));
+        gsap.to(els, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.12, overwrite: true });
+      },
+    });
+    ScrollTrigger.batch(other, {
       start: 'top 90%',
       once: true,
       onEnter: (els) => {
@@ -112,6 +124,25 @@
   // Clips de fond de JD : chaque appareil ne télécharge que sa version (mobile ou ordi), seulement quand la
   // section approche ; avec « réduire les animations », le poster reste seul et rien n'est téléchargé.
   const bgVideos = document.querySelectorAll('[data-bg-video]');
+  // Bouton pause des bandeaux plein écran (Services, À propos) : la vidéo reste arrêtée jusqu'au prochain clic
+  document.querySelectorAll('[data-bg-toggle]').forEach((btn) => {
+    const box = btn.parentElement.querySelector('[data-bg-video]');
+    if (!box) return btn.remove();
+    if (reduced) return btn.remove(); // poster seul : rien à mettre en pause
+    const sync = () => {
+      const paused = box.dataset.paused === '1';
+      btn.setAttribute('aria-pressed', String(paused));
+      btn.setAttribute('aria-label', paused ? btn.dataset.play : btn.dataset.pause);
+      btn.firstElementChild.textContent = paused ? '▶' : '❚❚';
+    };
+    btn.addEventListener('click', () => {
+      const paused = box.dataset.paused !== '1';
+      box.dataset.paused = paused ? '1' : '';
+      box.querySelectorAll('video').forEach((v) => (paused ? v.pause() : v.play().catch(() => {})));
+      sync();
+    });
+    sync();
+  });
   const wide = window.matchMedia('(min-width: 768px)');
   // Le bon poster pour l'appareil, même quand la vidéo n'est jamais chargée
   const bgPosters = () => bgVideos.forEach((box) => { box.querySelector('.bg-video-media').poster = box.dataset[`${wide.matches ? 'ordi' : 'mobile'}Poster`]; });
@@ -145,7 +176,7 @@
         video.addEventListener('timeupdate', sync);
       }
     };
-    const play = (box) => [box.querySelector('.bg-video-media'), blurOf(box)].forEach((v) => v?.play().catch(() => {}));
+    const play = (box) => box.dataset.paused !== '1' && [box.querySelector('.bg-video-media'), blurOf(box)].forEach((v) => v?.play().catch(() => {}));
     const pause = (box) => box.querySelectorAll('video').forEach((v) => v.pause());
     const io = new IntersectionObserver((entries) => {
       entries.forEach(({ target, isIntersecting }) => {

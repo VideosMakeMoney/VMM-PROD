@@ -25,12 +25,16 @@ Tout se trouve dans `content/`, en JSON, modifiable directement sur GitHub (cray
 | --- | --- |
 | `content/portfolio.json` | Vidéos (client, catégorie, ID YouTube, langue, titre, vedette oui/non), clients, catégories |
 | `content/fr.json` / `content/en.json` | Tous les textes FR / EN, titres et descriptions Google |
-| `content/site.json` | Courriel, réseaux sociaux, vidéo du bandeau, fourchettes de budget, widget d'avis Google |
-| `content/clips.json` | Clips muets de JD joués en fond (Projets, pages clients, Services, Contact) : version mobile 9:16 et, plus tard, version ordi 16:9. Fichiers dans `static/videos/jd/` |
+| `content/site.json` | Courriel, réseaux sociaux, vidéo du bandeau, fourchettes de budget, widget d'avis Google, `drapeaux` (contenu en attente de JD) |
+| `content/clips.json` | Clips muets de JD joués en fond (Projets, pages clients, Services, À propos, Contact) : version mobile 9:16 et version ordi 16:9, avec un point focal (`focal`) réglable. Fichiers dans `static/videos/jd/` |
 
 Ajouter une vidéo : copier une entrée de `videos` dans `portfolio.json`, coller l'ID YouTube (`youtube.com/shorts/ABC123` → `ABC123`), mettre le client. Netlify reconstruit le site tout seul après chaque modification.
 
 Chaque client de `clients` qui a au moins une vidéo a sa page : `/portfolio/<slug>/` et `/en/portfolio/<slug>/`, avec toutes ses vidéos. Le nombre de vidéos de sa carte sur « Projets » est calculé automatiquement. Ajouter un client : une entrée dans `clients` (nom, slug, clip facultatif), puis ses vidéos dans `videos` avec le même nom de client.
+
+Pages Services et À propos : elles suivent les PDF de JD rangés dans `docs/jd/` (hors du site publié). Dans leurs titres (`services` et `apropos` de `fr.json` / `en.json`), `*mot*` met un mot en violet et `\n` fait un retour à la ligne. Images dans `static/img/` (`.webp` + `.png`/`.jpg`). Les anciens textes de ces deux pages sont gardés sous `ancien`.
+
+Drapeaux (`site.json` → `drapeaux`, `true` = affiché) : `strategie` pour le slogan « Strategy first. Camera second. » de Services (la carte Stratégie est confirmée par JD), `servicesCamera` pour la section caméra « Pièce par pièce » et `servicesFin` pour « Découvrez nos réalisations. » + bouton /portfolio. Les deux derniers sont à `false` pour l'instant : le code reste en place, la caméra reviendra à la fin de la page en animation au défilement.
 
 Tout texte contenant `[À CONFIRMER ...]` ou `[TO CONFIRM ...]` s'affiche en rose pointillé sur le site jusqu'à ce qu'il soit remplacé.
 
@@ -62,13 +66,22 @@ Redirections 301 (`_redirects`) : `/work` → `/portfolio`, `/process` → `/ser
 - Vidéo de chaque catégorie de « Ce que nous créons » (`videoAccueil` dans `portfolio.json`).
 - ID YouTube des vedettes « Une équipe soudée » (Tapis Rouge) et « ICI, TOUT A CHANGÉ » (Hors-Paire Excavation), et la catégorie de cette dernière (« production »).
 - 2 autres vidéos vedettes pour arriver à 4.
-- Photos authentiques de JD et Renaud.
+- Photos authentiques de JD et Renaud pour l'accueil (la page À propos a maintenant les siennes).
 - Titres des 23 Shorts (pour l'instant « [À CONFIRMER : titre] » à l'écran, « Client N » pour Google), catégorie et langue de chaque Short.
 - Liens HH Portes et Fenêtres, Paintball Mirabel (making-of et album photo).
 
+**Services et À propos (en attente de JD)**
+- Réponses de JD (2026-11-02) : carte Stratégie gardée ; portrait de JD dans l'intro À propos (about-jd en attendant son PNG transparent : `apropos.vision.photo` / `photoFormat`) ; textes et bio de Renaud gardés comme aperçus, sans mention visible (`noteInterne`) ; section caméra et « Découvrez nos réalisations. » retirées de Services pour l'instant (drapeaux).
+- Héro Services (demande de Natasha, 2026-11-03) : « NOS / SERVICES. » en haut à gauche avec le texte d'intro de l'ancienne page (`services.hero`), au lieu du seul titre « SERVICES » en bas du PDF.
+- Section caméra : reviendra à la fin de Services, en animation au défilement qui suit l'utilisateur.
+- Vidéo About finale (`about-16x9` / `about-9x16`) et points focaux des bandeaux (`clips.json`).
+- `about-jd-detoure` (faux damier) n'est pas utilisé.
+- Textes anglais de ces deux pages : traduction fidèle, à valider.
+- Animation des nouvelles icônes : même déclencheur, durée (1,4 s) et courbe que les anciennes icônes en trait, en dévoilement progressif. Comparaison avant/après à faire valider (PDF, étape 06).
+
 **Textes**
-- Bio de Renaud à valider.
-- Paragraphe BlueWise AI sur À propos.
+- Bio de Renaud à enrichir avec ses réponses (ne pas inventer son parcours).
+- Paragraphe BlueWise AI (gardé dans `apropos.bluewise`, plus affiché : absent du PDF À propos).
 - Textes finaux de Contact et texte du pied de page.
 - Fourchettes de budget du formulaire actuel.
 - Widget d'avis Google : emplacement et compte.

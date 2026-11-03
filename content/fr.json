@@ -17,7 +17,7 @@
   },
   "seo": {
     "accueil": { "title": "VMM Productions | Production vidéo, Grand Montréal et Laurentides", "description": "VMM Productions (Videos Make Money), vidéaste corporatif du Grand Montréal et des Laurentides : vidéos promotionnelles, couverture événementielle, histoires d'entreprises et coulisses." },
-    "services": { "title": "Services de production vidéo et drone | VMM Productions, Montréal et Laurentides", "description": "Production vidéo, photographie, images aériennes par drone, scénarisation, montage et animation : les services de VMM Productions dans le Grand Montréal et les Laurentides." },
+    "services": { "title": "Services de production vidéo et drone | VMM Productions, Montréal et Laurentides", "description": "Stratégie vidéo et contenu publicitaire, tournage et photographie, production aérienne par drone, scénarisation, montage et animation graphique : les services de VMM Productions dans le Grand Montréal et les Laurentides." },
     "portfolio": { "title": "Portfolio vidéo d'entreprise | VMM Productions, Montréal et Laurentides", "description": "Productions finales classées par client et coulisses de tournage : le portfolio vidéo de VMM Productions, vidéaste corporatif du Grand Montréal et des Laurentides." },
     "apropos": { "title": "À propos | JD et Renaud, l'équipe de VMM Productions", "description": "Les visages derrière VMM Productions : JD, fondateur, et Renaud, cameraman avec près de dix ans d'expérience, dans le Grand Montréal et les Laurentides." },
     "contact": { "title": "Contact | VMM Productions, vidéaste corporatif à Montréal et dans les Laurentides", "description": "Parlez-nous de votre projet vidéo. VMM Productions travaille dans le Grand Montréal et les Laurentides. Courriel : jeandavid@videosmakemoney.ca." },
@@ -96,18 +96,143 @@
     ]
   },
   "services": {
-    "titre": "Nos services.",
-    "intro": "De la première idée au montage final, nous réunissons les compétences créatives et techniques nécessaires pour donner vie à votre vision.",
-    "camera": { "titre": "Pièce par pièce", "videoLabel": "Caméra Sony a7 IV qui se démonte en pièces puis se remonte" },
-    "items": [
-      { "titre": "Production vidéo", "texte": "Des tournages professionnels sur le terrain pour donner vie à vos idées." },
-      { "titre": "Photographie", "texte": "Des images qui immortalisent les gens, les moments et les détails importants." },
-      { "titre": "Images aériennes et drone", "texte": "Des perspectives aériennes uniques pour enrichir vos images." },
-      { "titre": "Scénarisation et narration", "texte": "Des idées transformées en récits structurés, porteurs de sens et d'émotion." },
-      { "titre": "Montage et postproduction", "texte": "L'image, le son et le récit réunis dans un montage créatif." },
-      { "titre": "Animation et habillage graphique", "texte": "Des titres, graphiques et effets animés qui donnent vie à vos images." }
+    "_aide": "Page Services (PDF de JD « VMM Service Section LAYOUT + DIRECTIONS »). Dans les titres, *mot* = mot en violet, \\n = retour à la ligne. « drapeau » renvoie à site.json → drapeaux : à false, l'élément disparaît du site.",
+    "titre": "SERVICES",
+    "hero": {
+      "ligne1": "NOS",
+      "ligne2": "SERVICES.",
+      "intro": "De la première idée au montage final, nous réunissons les compétences créatives et techniques nécessaires pour donner vie à votre vision."
+    },
+    "heroPause": "Mettre la vidéo en pause",
+    "heroLecture": "Lire la vidéo",
+    "vision": {
+      "etiquette": "Ce que nous créons",
+      "titre": "Une *vision.*\nSix *expertises.*",
+      "texte": "De la stratégie au montage final, VMM Productions réunit les compétences nécessaires pour donner vie à votre message et mettre votre entreprise en valeur.",
+      "reperes": [
+        {
+          "icone": "target",
+          "titre": "Stratégie",
+          "texte": "Une intention claire"
+        },
+        {
+          "icone": "camera",
+          "titre": "Production",
+          "texte": "Des images authentiques"
+        },
+        {
+          "icone": "layers",
+          "titre": "Finition",
+          "texte": "Une exécution soignée"
+        }
+      ],
+      "photoAlt": "JD, fondateur de VMM Productions, avec sa caméra et son drone"
+    },
+    "etiquette": "Nos services",
+    "groupes": [
+      {
+        "titre": "La *stratégie* rencontre la création.",
+        "items": [
+          0,
+          1
+        ]
+      },
+      {
+        "titre": "Des *perspectives* qui racontent.",
+        "items": [
+          2,
+          3
+        ]
+      },
+      {
+        "titre": "Chaque *détail* compte.",
+        "items": [
+          4,
+          5
+        ]
+      }
     ],
-    "bouton": "Explorer nos réalisations →"
+    "items": [
+      {
+        "titre": "Stratégie vidéo et contenu publicitaire",
+        "texte": "Du contenu pensé pour attirer les bonnes personnes, communiquer une offre claire et transformer l’attention en action.",
+        "icone": "service-01-strategie"
+      },
+      {
+        "titre": "Tournage professionnel et photographie",
+        "texte": "Des images professionnelles qui mettent en valeur vos équipes, votre savoir-faire, vos projets et les détails qui font la différence.",
+        "icone": "service-02-tournage-photo"
+      },
+      {
+        "titre": "Production aérienne et drone",
+        "texte": "Des prises de vue aériennes immersives pour révéler l’envergure de vos projets et enrichir votre histoire visuelle.",
+        "icone": "service-03-drone"
+      },
+      {
+        "titre": "Scénarisation et narration de marque",
+        "texte": "Des idées transformées en récits authentiques, structurés autour de votre identité, de vos valeurs et de votre audience.",
+        "icone": "service-04-scenarisation"
+      },
+      {
+        "titre": "Montage vidéo et postproduction",
+        "texte": "Montage, rythme, étalonnage, son et finition : chaque élément travaille ensemble pour créer une vidéo marquante.",
+        "icone": "service-05-montage"
+      },
+      {
+        "titre": "Image de marque et animation graphique",
+        "texte": "Des animations, titres, habillages et éléments visuels cohérents qui renforcent votre image de marque.",
+        "icone": "service-06-image-de-marque"
+      }
+    ],
+    "camera": {
+      "drapeau": "servicesCamera",
+      "titre": "Pièce par pièce",
+      "videoLabel": "Caméra Sony a7 IV qui se démonte en pièces puis se remonte",
+      "note": "[À CONFIRMER : garder la section caméra sous les services]"
+    },
+    "fin": {
+      "drapeau": "servicesFin",
+      "etiquette": "Poursuivez la découverte",
+      "titre": "Découvrez nos réalisations.",
+      "texte": "Explorez les projets et les histoires que nous avons créés pour nos clients.",
+      "bouton": "Explorer nos réalisations →"
+    },
+    "bouton": "Explorer nos réalisations →",
+    "slogan": {
+      "texte": "VMM Productions • Strategy first. Camera second.",
+      "drapeau": "strategie"
+    },
+    "ancien": {
+      "_aide": "Anciens textes de la page Services, gardés pour mémoire (non affichés).",
+      "titre": "Nos services.",
+      "intro": "De la première idée au montage final, nous réunissons les compétences créatives et techniques nécessaires pour donner vie à votre vision.",
+      "items": [
+        {
+          "titre": "Production vidéo",
+          "texte": "Des tournages professionnels sur le terrain pour donner vie à vos idées."
+        },
+        {
+          "titre": "Photographie",
+          "texte": "Des images qui immortalisent les gens, les moments et les détails importants."
+        },
+        {
+          "titre": "Images aériennes et drone",
+          "texte": "Des perspectives aériennes uniques pour enrichir vos images."
+        },
+        {
+          "titre": "Scénarisation et narration",
+          "texte": "Des idées transformées en récits structurés, porteurs de sens et d'émotion."
+        },
+        {
+          "titre": "Montage et postproduction",
+          "texte": "L'image, le son et le récit réunis dans un montage créatif."
+        },
+        {
+          "titre": "Animation et habillage graphique",
+          "texte": "Des titres, graphiques et effets animés qui donnent vie à vos images."
+        }
+      ]
+    }
   },
   "portfolio": {
     "titre": "Projets.",
@@ -130,14 +255,66 @@
     "bouton": "Rencontrer les gens derrière VMM →"
   },
   "apropos": {
-    "titre": "Les visages derrière VMM.",
-    "intro": "De vraies personnes. Une passion authentique. Des histoires à raconter.",
+    "_aide": "Page À propos (PDF de JD « VMM About Section LAYOUT + DIRECTIONS »). Dans les titres, *mot* = mot en violet, \\n = retour à la ligne. photo = chemin sans extension (.webp + .jpg dans static/img/).",
+    "titre": "À PROPOS",
+    "etiquette": "À propos",
+    "vision": {
+      "titre": "Les visages derrière VMM.",
+      "texte": "Des personnes passionnées qui donnent vie aux visions et révèlent la fierté derrière chaque projet.",
+      "photo": "/img/about-jd",
+      "photoAlt": "Portrait de JD, fondateur de VMM Productions",
+      "photoFormat": "jpg",
+      "photoAide": "Aperçu : about-jd en attendant le PNG transparent de JD. Mettre son chemin sans extension dans photo et « png » dans photoFormat."
+    },
     "membres": [
-      { "id": "jd", "titre": "Rencontrez JD", "texte": "Mon parcours a commencé avec une passion pour le récit visuel. J'ai étudié à la Toronto Film School avant de devoir interrompre mes études pour des raisons financières. Aujourd'hui, je travaille dans la construction tout en développant VMM Productions : deux univers qui m'ont appris la valeur du travail et des relations humaines. Chaque production est une occasion de donner vie à une vision et de montrer la fierté derrière le travail accompli." },
-      { "id": "renaud", "titre": "Rencontrez Renaud", "texte": "Avec près de dix ans derrière la caméra, Renaud apporte expérience, originalité et instinct pour saisir l'action. Son approche immersive transforme les moments spontanés en images vivantes.", "note": "[À CONFIRMER : bio à valider]" }
+      {
+        "id": "jd",
+        "role": "Fondateur / Vidéaste",
+        "titre": "Rencontrez\n*JD.*",
+        "paragraphes": [
+          "Mon parcours a commencé avec une passion pour le récit visuel. J’ai étudié à la Toronto Film School avant de devoir interrompre mes études pour des raisons financières.",
+          "Aujourd’hui, je travaille dans la construction tout en développant VMM Productions : deux univers qui m’ont appris la valeur du travail et des relations humaines."
+        ],
+        "photo": "/img/about-jd",
+        "photoAlt": "Portrait de JD, fondateur et vidéaste de VMM Productions"
+      },
+      {
+        "id": "renaud",
+        "role": "Caméraman",
+        "titre": "Rencontrez\n*Renaud.*",
+        "paragraphes": [
+          "Avec près de dix ans derrière la caméra, Renaud apporte expérience, originalité et instinct pour saisir l’action. Son approche immersive transforme les moments spontanés en images vivantes."
+        ],
+        "noteInterne": "[À CONFIRMER : biographie à enrichir avec les réponses de Renaud] Aperçu : non affiché sur le site.",
+        "photo": "/img/about-renaud",
+        "photoAlt": "Portrait de Renaud, caméraman chez VMM Productions"
+      }
     ],
+    "fin": {
+      "titre": "Derrière chaque image,\n*il y a des gens.*",
+      "texte": "Une idée à raconter? Parlons-en.",
+      "bouton": "Nous joindre →"
+    },
+    "bouton": "Nous joindre →",
     "bluewise": "[À CONFIRMER : paragraphe BlueWise AI]",
-    "bouton": "Nous joindre →"
+    "ancien": {
+      "_aide": "Anciens textes de la page À propos, gardés pour mémoire (non affichés).",
+      "titre": "Les visages derrière VMM.",
+      "intro": "De vraies personnes. Une passion authentique. Des histoires à raconter.",
+      "membres": [
+        {
+          "id": "jd",
+          "titre": "Rencontrez JD",
+          "texte": "Mon parcours a commencé avec une passion pour le récit visuel. J'ai étudié à la Toronto Film School avant de devoir interrompre mes études pour des raisons financières. Aujourd'hui, je travaille dans la construction tout en développant VMM Productions : deux univers qui m'ont appris la valeur du travail et des relations humaines. Chaque production est une occasion de donner vie à une vision et de montrer la fierté derrière le travail accompli."
+        },
+        {
+          "id": "renaud",
+          "titre": "Rencontrez Renaud",
+          "texte": "Avec près de dix ans derrière la caméra, Renaud apporte expérience, originalité et instinct pour saisir l'action. Son approche immersive transforme les moments spontanés en images vivantes.",
+          "note": "[À CONFIRMER : bio à valider]"
+        }
+      ]
+    }
   },
   "lightbox": {
     "fermer": "Fermer la vidéo",

@@ -103,14 +103,10 @@ ul { list-style: none; margin: 0; padding: 0; }
 
 /* Placeholders [À CONFIRMER] : volontairement très visibles */
 .tbc {
-  display: inline;
-  padding: .1em .4em;
-  border: 1px dashed var(--pink);
-  border-radius: 4px;
-  background: rgba(255, 45, 120, .12);
-  color: #ffb3cf;
-  font: 600 .85em/1.5 var(--font-label);
-  -webkit-text-fill-color: #ffb3cf;
+  display: none !important;
+}
+.notice:empty, .hero-missing:empty {
+  display: none !important;
 }
 .notice {
   padding: 8px var(--gutter);
@@ -587,3 +583,127 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
 /* Page client */
 .back-row { margin: 0 0 1.5rem; }
 .client-hero:not(.has-bg-video) { padding-bottom: 1rem; }
+
+/* ---------- Pages Services et À propos (maquettes de JD) ----------
+   Fond sombre uniforme, surfaces aubergine très foncées, texte blanc, descriptions gris lavande,
+   violet seulement pour les accents. Contenu 1120 px max sur ordi, une colonne sur mobile. */
+.page-services, .page-apropos { --lavande: #b8b0cf; --aubergine: #120f1d; --jd-violet: #7c3aed; }
+
+/* Bandeau vidéo plein écran : un seul titre, en bas à gauche */
+.page-hero.full-hero { min-height: calc(100svh - var(--header-h)); padding-bottom: clamp(3.5rem, 9vh, 5.5rem); }
+.full-hero::before { display: none; }
+.full-hero .bg-video-media { object-position: var(--focal-mobile, 50% 50%); }
+@media (min-width: 768px) { .full-hero .bg-video-media { object-position: var(--focal-ordi, 50% 50%); } }
+.full-hero .bg-video-veil { background: linear-gradient(180deg, rgba(8, 8, 15, .35) 0%, rgba(8, 8, 15, .05) 35%, rgba(8, 8, 15, .25) 60%, rgba(8, 8, 15, .85) 100%); }
+.hero-word {
+  margin: 0;
+  font-size: clamp(2.6rem, 11vw, 8rem);
+  line-height: 1;
+  letter-spacing: .02em;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  width: fit-content;
+  max-width: 100%;
+}
+.bg-toggle {
+  position: absolute; right: var(--gutter); bottom: var(--gutter);
+  width: 44px; height: 44px; border-radius: 50%;
+  display: grid; place-items: center;
+  border: 1px solid var(--border-strong); background: rgba(8, 8, 15, .55); color: var(--text);
+  font-size: .7rem; cursor: pointer;
+}
+html:not(.js) .bg-toggle { display: none; }
+
+/* Écrans */
+.jd-screen { position: relative; padding-block: clamp(4rem, 10vw, 7.5rem); background: var(--bg); }
+.jd-wrap { width: 100%; max-width: 1120px; margin-inline: auto; padding-inline: var(--gutter); }
+.jd-label, .jd-role { font: 700 .8125rem/1.4 var(--font-label); letter-spacing: .12em; text-transform: uppercase; color: var(--violet-light); margin: 0 0 1rem; }
+.jd-label-line { display: flex; align-items: center; gap: 1rem; }
+.jd-label-line::before { content: ""; flex: 0 0 2.5rem; height: 2px; background: var(--jd-violet); }
+.jd-screen h2 { font-size: clamp(1.9rem, 4.5vw, 3rem); }
+.jd-screen .vision-title { font-size: clamp(2.4rem, 6.5vw, 4.5rem); }
+.jd-lead { max-width: 36rem; color: var(--lavande); font-size: 1.125rem; }
+
+/* Services : « Une vision. Six expertises. » avec JD détouré */
+.vision-grid { display: grid; gap: 2.5rem; align-items: center; }
+.vision-photo img { width: 100%; max-width: 360px; height: auto; margin-inline: auto; }
+@media (min-width: 900px) {
+  .vision-grid { grid-template-columns: 1.15fr .85fr; gap: 3rem; }
+  .vision-photo img { max-width: 100%; max-height: calc(100svh - var(--header-h) - 4rem); width: auto; }
+}
+.reperes { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, .14); text-align: center; }
+.reperes li { display: flex; flex-direction: column; align-items: center; gap: .25rem; padding-inline: .5rem; }
+.reperes li + li { border-left: 1px solid rgba(255, 255, 255, .14); }
+.reperes strong { font: 800 clamp(.85rem, 2.4vw, 1.05rem)/1.2 var(--font-text); text-transform: uppercase; letter-spacing: .02em; color: var(--title); margin-top: .5rem; }
+.reperes span { font-size: .875rem; line-height: 1.35; color: var(--lavande); }
+.repere-icon { color: var(--violet-light); filter: drop-shadow(0 0 8px rgba(168, 85, 247, .55)); overflow: visible; }
+.repere-icon > * { stroke-dasharray: 300; stroke-dashoffset: 0; }
+.reperes.is-visible .repere-icon > * { animation: svc-stroke 1.4s var(--ease) both; }
+
+/* Services : grille de 2 cartes par écran */
+.svc-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 2.5rem; }
+@media (min-width: 768px) {
+  .svc-grid { grid-template-columns: repeat(2, 1fr); }
+  .svc-grid.is-single { grid-template-columns: minmax(0, 1fr); max-width: calc(50% - .75rem); }
+}
+.svc-card {
+  display: flex; flex-direction: column; align-items: center; gap: .75rem;
+  padding: clamp(2rem, 4vw, 3rem) clamp(1.25rem, 3vw, 2rem);
+  text-align: center;
+  background: var(--aubergine);
+  border: 1px solid rgba(255, 255, 255, .07);
+  border-radius: 1rem;
+}
+.svc-art img { width: clamp(128px, 14vw, 168px); height: auto; margin-bottom: 1rem; }
+.svc-card h3 { margin: 0; font-size: clamp(1.1rem, 2.2vw, 1.3rem); color: var(--title); }
+.svc-card p { margin: 0; max-width: 30rem; color: var(--lavande); font-size: .975rem; }
+/* Icônes : même déclencheur, même durée et même courbe que les anciennes icônes en trait (svc-stroke 1.4 s).
+   Les nouveaux visuels sont des images : le tracé devient un dévoilement progressif, avec une montée de luminosité. */
+@keyframes svc-draw { from { clip-path: inset(0 100% 0 0); filter: brightness(.55); } to { clip-path: inset(0 0 0 0); filter: brightness(1); } }
+.svc-card.is-visible .svc-art img { animation: svc-draw 1.4s var(--ease) both; }
+
+/* Fin de page */
+.jd-end { text-align: center; }
+.jd-end .jd-lead { margin-inline: auto; }
+.btn-solid {
+  min-height: 56px; padding: 14px 40px;
+  background: var(--jd-violet); color: #fff; border: 0;
+  font-weight: 700; box-shadow: 0 0 28px rgba(124, 58, 237, .35);
+  transition: background .3s var(--ease), box-shadow .3s var(--ease), transform .3s var(--ease);
+}
+.btn-solid:hover, .btn-solid:focus-visible { background: #8b5cf6; color: #fff; box-shadow: 0 0 36px rgba(139, 92, 246, .55); transform: translateY(-1px); }
+.jd-slogan { margin: 0; padding: 3rem var(--gutter); background: #130f22; text-align: center; font: 700 .8125rem/1.5 var(--font-label); letter-spacing: .12em; text-transform: uppercase; color: var(--text-2); }
+
+/* À propos : photo à gauche, texte à droite ; empilés sur mobile */
+.person { display: grid; gap: 2rem; align-items: center; margin-top: 1.5rem; }
+.person-photo img { width: 100%; max-width: 460px; height: auto; border-radius: 1rem; margin-inline: auto; }
+.person-text h2 { font-size: clamp(2.2rem, 5.5vw, 3.75rem); }
+.person-text p:not(.jd-role):not(.small) { color: var(--lavande); font-size: 1.0625rem; max-width: 34rem; }
+@media (min-width: 860px) { .person { grid-template-columns: .95fr 1.05fr; gap: 4rem; } .person-photo img { margin-inline: 0; } }
+/* À propos, intro : portrait de JD à droite (photo rectangulaire en attendant le PNG transparent) */
+.vision-portrait:not(.is-cutout) img { border-radius: 1rem; }
+@media (min-width: 900px) { .vision-portrait:not(.is-cutout) img { max-height: min(640px, calc(100svh - var(--header-h) - 4rem)); } }
+/* Services : titre « NOS / SERVICES. » en haut à gauche, sous le menu, puis le texte d'intro (même ordre sur mobile) */
+.page-hero.full-hero.is-top { align-items: flex-start; padding-top: clamp(2rem, 7vh, 4.5rem); }
+.full-hero.is-top .bg-video-veil { background: linear-gradient(180deg, rgba(8, 8, 15, .78) 0%, rgba(8, 8, 15, .45) 38%, rgba(8, 8, 15, .12) 70%, rgba(8, 8, 15, .55) 100%); }
+.hero-stack { margin: 0 0 1.25rem; font-size: clamp(2.6rem, 11vw, 7rem); line-height: 1; letter-spacing: .02em; }
+.hero-stack .hero-line, .hero-stack .hero-word { display: block; font-size: inherit; white-space: nowrap; }
+.hero-stack .hero-word { background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+.hero-stack .hero-line { color: var(--title); }
+.hero-intro { color: var(--text); max-width: 34rem; text-shadow: 0 1px 12px rgba(8, 8, 15, .6); }
+/* Ordi : le bloc titre + intro tient dans la bande floue de gauche de la vidéo 16:9.
+   La partie nette occupe le tiers central de la vidéo (cover) : sa largeur dépend du format de l'écran. */
+/* Écran assez large (paysage) seulement ; en portrait (tablette), le bloc garde sa place normale. */
+@media (min-width: 768px) and (min-aspect-ratio: 5/4) {
+  .full-hero.is-top {
+    --video-w: max(100vw, (100svh - var(--header-h)) * 16 / 9);
+    --zone: calc(50vw - var(--video-w) / 6); /* largeur de la bande floue de gauche */
+    --pad: max(var(--gutter), 3vw);
+  }
+  .full-hero.is-top > .container { max-width: none; margin: 0; padding-inline: var(--pad) 0; width: calc(var(--zone) - 2vw); }
+  .full-hero.is-top .hero-stack { font-size: clamp(1.9rem, calc((var(--zone) - var(--pad) - 2vw) / 5.7), 7rem); }
+  .full-hero.is-top .hero-intro { max-width: 100%; font-size: clamp(.9rem, 1.15vw, 1.125rem); }
+}
