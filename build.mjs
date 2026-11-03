@@ -74,7 +74,7 @@ function bgVideo(id) {
   const ordi = clipFiles(clip.ordi);
   const desk = ordi || mobile;
   const focal = clip.focal ? ` style="--focal-mobile: ${esc(clip.focal.mobile || '50% 50%')}; --focal-ordi: ${esc(clip.focal.ordi || '50% 50%')}"` : '';
-  return `<div class="bg-video" data-bg-video${ordi ? '' : ' data-portrait-ordi'}${focal} aria-hidden="true"
+  return `<div class="bg-video" data-bg-video data-clip="${id}"${ordi ? '' : ' data-portrait-ordi'}${focal} aria-hidden="true"
     data-mobile-mp4="${mobile.mp4}" data-mobile-webm="${mobile.webm}" data-mobile-poster="${mobile.poster}"
     data-ordi-mp4="${desk.mp4}" data-ordi-webm="${desk.webm}" data-ordi-poster="${desk.poster}">
     ${ordi ? '' : `<video class="bg-video-blur" muted loop playsinline preload="none" poster="${desk.poster}"></video>`}
@@ -309,7 +309,7 @@ ${INDEXABLE.includes(key) ? structuredData(key, lang, videos, page) : ''}
     <feMerge><feMergeNode in="glow"/><feMergeNode in="SourceGraphic"/></feMerge>
   </filter>
 </svg>
-${L.avisTraduction ? `<div class="notice">${t(L.avisTraduction)}</div>` : ''}
+${L.avisTraduction && !isPlaceholder(L.avisTraduction) ? `<div class="notice">${t(L.avisTraduction)}</div>` : ''}
 <header class="site-header">
   <div class="container header-inner">
     <a class="logo logo-video" href="${ROUTES.accueil[lang]}" aria-label="${esc(site.nom)}, ${esc(L.nav.accueil)}">
@@ -379,7 +379,7 @@ const sectionHead = (label, title, intro, id, tag = 'h2') => `<p class="label" d
     <${tag} id="${id}" data-reveal>${t(title)}</${tag}>
     ${intro ? `<p class="intro" data-reveal>${t(intro)}</p>` : ''}`;
 
-const pageHead = (title, intro, clip = '') => `<section class="page-hero${clip ? ' has-bg-video' : ''}">
+const pageHead = (title, intro, clip = '') => `<section class="page-hero${clip ? ` has-bg-video bg-clip-${clip}` : ''}">
   ${clip ? bgVideo(clip) : ''}
   <div class="container">
     <h1 data-reveal>${t(title)}</h1>
@@ -439,9 +439,9 @@ function contactBlock(lang, { tag = 'h2', id = 'contact-title' } = {}) {
       <label for="${f('budget')}">${esc(c.budget)}</label>
       <select id="${f('budget')}" name="budget">
         <option value="">${esc(c.budgetChoisir)}</option>
-        ${site.budgets.map((b) => `<option>${esc(b)}</option>`).join('\n        ')}
+        ${site.budgets.filter((b) => !isPlaceholder(b)).map((b) => `<option>${esc(b)}</option>`).join('\n        ')}
       </select>
-      ${site.budgets.some(isPlaceholder) ? `<p class="small">${t(site.budgets.find(isPlaceholder))}</p>` : ''}
+      
       <label for="${f('message')}">${esc(c.projet)}</label>
       <textarea id="${f('message')}" name="message" rows="5" required></textarea>
       <button class="btn btn-neon" type="submit">${esc(c.envoyer)}</button>
@@ -458,15 +458,32 @@ function homePage(lang) {
   const slots = [...vedettes];
   while (slots.length < L.realisations.vedettesMin) slots.push(null);
   const catVideos = portfolio.categories.map(categoryVideo);
+  // Seuls les fichiers présents dans static/ sont appelés : un fichier manquant ne donne jamais de 404.
+  const exists = (url) => Boolean(url) && existsSync(join(ROOT, 'static', url));
+  const sources = [
+    [hv.mobileWebm, 'video/webm', '(max-width: 767px)'],
+    [hv.mobile, 'video/mp4', '(max-width: 767px)'],
+    [hv.ordiWebm, 'video/webm', ''],
+    [hv.ordi, 'video/mp4', ''],
+  ].filter(([src]) => exists(src));
+  const hasVideo = sources.length > 0;
+  const poster = exists(hv.poster) ? hv.poster : '';
+  const attenteOrdi = exists(hv.posterAttenteOrdi) ? hv.posterAttenteOrdi : '';
+  const attenteMobile = exists(hv.posterAttenteMobile) ? hv.posterAttenteMobile : attenteOrdi;
+  const heroMedia = hasVideo
+    ? `<video class="hero-video" autoplay muted loop playsinline preload="metadata"${poster ? ` poster="${poster}"` : ''}>
+      ${sources.map(([src, type, media]) => `<source src="${src}" type="${type}"${media ? ` media="${media}"` : ''}>`).join('\n      ')}
+    </video>`
+    : poster || attenteOrdi
+      ? `<picture class="hero-poster">
+      ${!poster && attenteMobile ? `<source srcset="${attenteMobile}" media="(max-width: 767px)">` : ''}
+      <img src="${poster || attenteOrdi}" alt="" decoding="async" fetchpriority="high">
+    </picture>`
+      : '';
   const body = `
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero-media" aria-hidden="true">
-    <video class="hero-video" autoplay muted loop playsinline preload="metadata"${hv.poster ? ` poster="${hv.poster}"` : ''}>
-      ${hv.mobileWebm ? `<source src="${hv.mobileWebm}" type="video/webm" media="(max-width: 767px)">` : ''}
-      <source src="${hv.mobile}" type="video/mp4" media="(max-width: 767px)">
-      ${hv.ordiWebm ? `<source src="${hv.ordiWebm}" type="video/webm">` : ''}
-      <source src="${hv.ordi}" type="video/mp4">
-    </video>
+    ${heroMedia}
     <div class="hero-vignette"></div>
     <div class="halo halo-violet"></div>
     <div class="halo halo-rose"></div>
@@ -480,9 +497,9 @@ function homePage(lang) {
     <p class="hero-sub" data-reveal>${t(L.hero.sousTitre)}</p>
     <p class="hero-text" data-reveal>${t(L.hero.texte)}</p>
     <a class="btn btn-neon" href="#contact" data-scroll-contact data-reveal>${esc(L.hero.bouton)}</a>
-    ${hv.poster ? '' : `<p class="hero-missing small">${t(L.hero.posterManquant)}</p>`}
+    ${hasVideo && poster || isPlaceholder(L.hero.posterManquant) ? '' : `<p class="hero-missing small">${t(L.hero.posterManquant)}</p>`}
   </div>
-  <button class="hero-toggle" type="button" aria-pressed="false" data-pause="${esc(L.hero.pause)}" data-play="${esc(L.hero.lecture)}" aria-label="${esc(L.hero.pause)}"><span aria-hidden="true">❚❚</span></button>
+  ${hasVideo ? `<button class="hero-toggle" type="button" aria-pressed="false" data-pause="${esc(L.hero.pause)}" data-play="${esc(L.hero.lecture)}" aria-label="${esc(L.hero.pause)}"><span aria-hidden="true">❚❚</span></button>` : ''}
 </section>
 
 <section class="section" id="creations" aria-labelledby="creons-title">
@@ -817,7 +834,7 @@ function contactPage(lang) {
 <section class="section section-tight" aria-labelledby="faq-title">
   <div class="container faq">
     <h2 id="faq-title" data-reveal>${esc(L.faq.titre)}</h2>
-    ${L.faq.items.map((f) => `<details data-reveal><summary>${t(f.q)}</summary><p>${t(f.r)}</p>${f.note ? `<p class="small">${t(f.note)}</p>` : ''}</details>`).join('\n    ')}
+    ${L.faq.items.map((f) => `<details data-reveal><summary>${t(f.q)}</summary><p>${t(f.r)}</p>${f.note && !isPlaceholder(f.note) ? `<p class="small">${t(f.note)}</p>` : ''}</details>`).join('\n    ')}
   </div>
 </section>`;
   return layout({ key: 'contact', lang, body });
