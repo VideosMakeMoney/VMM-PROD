@@ -571,11 +571,17 @@ function lucide(name, cls = 'svc-icon', size = 40) {
 }
 
 // Bandeau vidéo plein écran (Services, À propos) : un seul titre, en bas à gauche, et un bouton pause (vidéo de plus de 5 s).
-function fullHero(clipId, title, L) {
-  return `<section class="page-hero full-hero has-bg-video" aria-labelledby="hero-title">
+// hero (facultatif) : titre sur deux lignes en haut à gauche, sous le menu, puis texte d'intro (Services).
+function fullHero(clipId, title, L, hero = null) {
+  return `<section class="page-hero full-hero has-bg-video${hero ? ' is-top' : ''}" aria-labelledby="hero-title">
   ${bgVideo(clipId)}
   <div class="container">
-    <h1 id="hero-title" class="hero-word" data-no-accent>${esc(title)}</h1>
+    ${
+      hero
+        ? `<h1 id="hero-title" class="hero-stack" data-no-accent><span class="hero-line">${esc(hero.ligne1)}</span> <span class="hero-word">${esc(hero.ligne2)}</span></h1>
+    ${hero.intro ? `<p class="intro hero-intro">${t(hero.intro)}</p>` : ''}`
+        : `<h1 id="hero-title" class="hero-word" data-no-accent>${esc(title)}</h1>`
+    }
   </div>
   <button class="bg-toggle" type="button" data-bg-toggle data-pause="${esc(L.services.heroPause)}" data-play="${esc(L.services.heroLecture)}" aria-label="${esc(L.services.heroPause)}"><span aria-hidden="true">❚❚</span></button>
 </section>`;
@@ -617,7 +623,7 @@ function servicesPage(lang) {
 </section>`;
     })
     .join('\n');
-  const body = `${fullHero('services', S.titre, L)}
+  const body = `${fullHero('services', S.titre, L, S.hero)}
 <section class="jd-screen jd-vision" aria-labelledby="vision-title">
   <div class="jd-wrap vision-grid">
     <div class="vision-text">

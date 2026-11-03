@@ -72,6 +72,7 @@ Redirections 301 (`_redirects`) : `/work` → `/portfolio`, `/process` → `/ser
 
 **Services et À propos (en attente de JD)**
 - Réponses de JD (2026-11-02) : carte Stratégie gardée ; portrait de JD dans l'intro À propos (about-jd en attendant son PNG transparent : `apropos.vision.photo` / `photoFormat`) ; textes et bio de Renaud gardés comme aperçus, sans mention visible (`noteInterne`) ; section caméra et « Découvrez nos réalisations. » retirées de Services pour l'instant (drapeaux).
+- Héro Services (demande de Natasha, 2026-11-03) : « NOS / SERVICES. » en haut à gauche avec le texte d'intro de l'ancienne page (`services.hero`), au lieu du seul titre « SERVICES » en bas du PDF.
 - Section caméra : reviendra à la fin de Services, en animation au défilement qui suit l'utilisateur.
 - Vidéo About finale (`about-16x9` / `about-9x16`) et points focaux des bandeaux (`clips.json`).
 - `about-jd-detoure` (faux damier) n'est pas utilisé.

@@ -98,6 +98,11 @@
   "services": {
     "_aide": "Page Services (PDF de JD « VMM Service Section LAYOUT + DIRECTIONS »). Dans les titres, *mot* = mot en violet, \\n = retour à la ligne. « drapeau » renvoie à site.json → drapeaux : à false, l'élément disparaît du site.",
     "titre": "SERVICES",
+    "hero": {
+      "ligne1": "NOS",
+      "ligne2": "SERVICES.",
+      "intro": "De la première idée au montage final, nous réunissons les compétences créatives et techniques nécessaires pour donner vie à votre vision."
+    },
     "heroPause": "Mettre la vidéo en pause",
     "heroLecture": "Lire la vidéo",
     "vision": {

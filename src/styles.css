@@ -676,3 +676,10 @@ html:not(.js) .bg-toggle { display: none; }
 /* À propos, intro : portrait de JD à droite (photo rectangulaire en attendant le PNG transparent) */
 .vision-portrait:not(.is-cutout) img { border-radius: 1rem; }
 @media (min-width: 900px) { .vision-portrait:not(.is-cutout) img { max-height: min(640px, calc(100svh - var(--header-h) - 4rem)); } }
+/* Services : titre « NOS / SERVICES. » en haut à gauche, sous le menu, puis le texte d'intro (même ordre sur mobile) */
+.page-hero.full-hero.is-top { align-items: flex-start; padding-top: clamp(2rem, 7vh, 4.5rem); }
+.full-hero.is-top .bg-video-veil { background: linear-gradient(180deg, rgba(8, 8, 15, .78) 0%, rgba(8, 8, 15, .45) 38%, rgba(8, 8, 15, .12) 70%, rgba(8, 8, 15, .55) 100%); }
+.hero-stack { margin: 0 0 1.25rem; font-size: clamp(2.6rem, 11vw, 7rem); line-height: 1; letter-spacing: .02em; }
+.hero-stack .hero-line, .hero-stack .hero-word { display: block; font-size: inherit; }
+.hero-stack .hero-line { color: var(--title); }
+.hero-intro { color: var(--text); max-width: 34rem; text-shadow: 0 1px 12px rgba(8, 8, 15, .6); }

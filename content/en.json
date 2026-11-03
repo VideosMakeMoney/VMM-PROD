@@ -98,6 +98,11 @@
   "services": {
     "_aide": "Services page (JD's PDF). In headings, *word* = violet word, \\n = line break. « drapeau » refers to site.json → drapeaux.",
     "titre": "SERVICES",
+    "hero": {
+      "ligne1": "OUR",
+      "ligne2": "SERVICES.",
+      "intro": "From the first idea to the final cut, we bring together the creative and technical skills needed to bring your vision to life."
+    },
     "heroPause": "Pause the video",
     "heroLecture": "Play the video",
     "vision": {
