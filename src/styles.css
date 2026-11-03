@@ -2,6 +2,17 @@
 /* Cinzel (SIL OFL 1.1, voir /fonts/Cinzel-OFL.txt), hébergée ici, sous-ensemble latin avec les accents français */
 @font-face { font-family: "Cinzel"; font-style: normal; font-weight: 900; font-display: swap; src: url("/fonts/cinzel-latin-900-normal.woff2") format("woff2"); }
 @font-face { font-family: "Cinzel"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/cinzel-latin-700-normal.woff2") format("woff2"); }
+/* Polices hébergées sur le site (fontsource, latin, OFL) : plus de feuille Google Fonts bloquante au rendu */
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/inter-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/inter-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 800; font-display: swap; src: url("/fonts/inter-latin-800-normal.woff2") format("woff2"); }
+@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 600; font-display: swap; src: url("/fonts/jetbrains-mono-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/jetbrains-mono-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/space-grotesk-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 500; font-display: swap; src: url("/fonts/space-grotesk-latin-500-normal.woff2") format("woff2"); }
+@font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 600; font-display: swap; src: url("/fonts/space-grotesk-latin-600-normal.woff2") format("woff2"); }
+@font-face { font-family: "Syne"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/syne-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Syne"; font-style: normal; font-weight: 800 900; font-display: swap; src: url("/fonts/syne-latin-800-normal.woff2") format("woff2"); }
 
 :root {
   --bg: #08080f;
@@ -276,10 +287,11 @@ ul { list-style: none; margin: 0; padding: 0; }
 .hero-content { padding-block: 16vh 12vh; color: var(--hero-text); }
 .hero-kicker { color: var(--hero-text); opacity: .85; }
 .hero-title {
-  font-family: var(--font-hero);
-  font-weight: 800;
+  /* Cinzel 900 comme les autres titres (demande de Natasha, 2026-11-03) ; avant : var(--font-hero), Inter 800, -.02em */
+  font-family: var(--font-title);
+  font-weight: 900;
   font-size: clamp(2.75rem, 11vw, 7.5rem);
-  letter-spacing: -.02em;
+  letter-spacing: -.01em;
   filter: drop-shadow(0 0 24px rgba(124, 58, 237, .35));
   line-height: 1;
   margin-bottom: .3em;
@@ -706,4 +718,35 @@ html:not(.js) .bg-toggle { display: none; }
   .full-hero.is-top > .container { max-width: none; margin: 0; padding-inline: var(--pad) 0; width: calc(var(--zone) - 2vw); }
   .full-hero.is-top .hero-stack { font-size: clamp(1.9rem, calc((var(--zone) - var(--pad) - 2vw) / 5.7), 7rem); }
   .full-hero.is-top .hero-intro { max-width: 100%; font-size: clamp(.9rem, 1.15vw, 1.125rem); }
+}
+
+/* SEO/GEO : phrase d'intro factuelle en haut de chaque page (seo.<page>.resume), et titre lu seulement par les lecteurs d'écran */
+.page-summary { max-width: 68ch; margin-top: 1rem; color: var(--text-2); font-size: clamp(.95rem, 1.6vw, 1.05rem); line-height: 1.6; }
+.summary-band { padding-block: clamp(1.5rem, 4vw, 2.25rem); border-bottom: 1px solid var(--border); }
+.summary-band .page-summary { margin: 0; }
+.page-simple h2.label { margin-top: 2.5rem; }
+.page-simple .pills { margin-top: .75rem; }
+.page-simple .pills a { display: inline-flex; align-items: center; min-height: 44px; padding-inline: 1rem; border: 1px solid var(--border); border-radius: 999px; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+/* Poster des bandeaux vidéo : une seule image par appareil, visible avant le chargement du clip */
+.bg-video-poster, .bg-video-poster img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.bg-video-poster img { object-fit: cover; object-position: var(--focal-mobile, 50% 50%); }
+@media (min-width: 768px) { .bg-video-poster img { object-position: var(--focal-ordi, 50% 50%); } }
+/* Vidéo héro par-dessus le poster : invisible tant qu'elle n'a pas d'image à montrer */
+.hero-media .hero-poster { position: absolute; inset: 0; }
+.hero-media .hero-video { position: absolute; inset: 0; opacity: 0; transition: opacity .6s ease; }
+.hero-media .hero-video.is-playing { opacity: 1; }
+/* Mot-clé + ville sous le titre principal (seo.<page>.h1) : discret, gris, petit */
+h1 .h1-sub {
+  display: block;
+  margin-top: .6rem;
+  font: 500 clamp(.8rem, 1.6vw, .95rem)/1.4 var(--font-text);
+  letter-spacing: .01em;
+  text-transform: none;
+  color: #b4b4cc;
+  -webkit-text-fill-color: #b4b4cc;
+  background: none;
+  filter: none;
+  text-shadow: 0 1px 10px rgba(8, 8, 15, .7);
+  white-space: normal;
 }
