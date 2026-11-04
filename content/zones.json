@@ -1,0 +1,190 @@
+{
+  "_aide": "Pages locales (zones desservies), FR + EN. Texte provisoire, JD réécrira. Seulement des faits confirmés : VMM Productions (Productions VMM), fondée par JD, Renaud cameraman (10 ans d'expérience en cinéma), services sur mesure sans forfaits, service bilingue inclus, livraison en 1 à 2 semaines, basée à Sainte-Thérèse, rayon de 50 km (frais de déplacement au-delà), 7 h à 19 h, 514-604-5682, jeandavid@videosmakemoney.ca. Aucun client n'est associé à une ville tant que sa localisation n'est pas confirmée. videos = ID YouTube tirés de portfolio.json. areaServed = zone du Service dans le JSON-LD. title ≤ 60 caractères, description ≤ 155.",
+  "noteProvisoire": "texte provisoire, JD réécrira",
+  "zones": [
+    {
+      "id": "laurentides",
+      "clip": "services",
+      "videos": ["fxGb6xSqsfw", "3T-zTO2Q30A", "HeLdEo_awQ0", "LQmzAY6qCv8"],
+      "areaServed": { "@type": "AdministrativeArea", "name": "Laurentides", "containedInPlace": { "@type": "AdministrativeArea", "name": "Québec" } },
+      "fr": {
+        "route": "/production-video-laurentides/",
+        "lien": "Laurentides",
+        "seo": {
+          "title": "Production vidéo dans les Laurentides | VMM Productions",
+          "description": "Vidéaste corporatif basé à Sainte-Thérèse : vidéos sur mesure, tournage, drone et montage pour les entreprises des Laurentides. Service bilingue inclus."
+        },
+        "h1": "Production vidéo dans les Laurentides",
+        "intro": "VMM Productions (Productions VMM) est une boîte de production vidéo fondée par JD et basée à Sainte-Thérèse, dans les Laurentides. Avec Renaud, cameraman qui compte 10 ans d'expérience en cinéma, elle réalise des vidéos sur mesure, sans forfaits, pour les entreprises de la région. Le service bilingue est inclus et la livraison se fait en 1 à 2 semaines.",
+        "angleTitre": "Une équipe des Laurentides, pour les entreprises des Laurentides",
+        "angle": [
+          "Les Laurentides couvrent un grand territoire, des villes près de Montréal jusqu'aux secteurs plus au nord. Nous partons de Sainte-Thérèse et nous nous déplaçons dans un rayon de 50 km. Plus loin, des frais de déplacement s'ajoutent au projet.",
+          "Ici, rien n'est vendu en forfait. On commence par ce que votre entreprise veut montrer, puis on choisit les bons outils : stratégie, tournage, images de drone, scénarisation, montage ou animation graphique."
+        ],
+        "faq": [
+          { "q": "Vous déplacez-vous partout dans les Laurentides ?", "r": "Oui. VMM Productions est basée à Sainte-Thérèse et se déplace dans un rayon de 50 km. Au-delà de cette distance, des frais de déplacement s'ajoutent." },
+          { "q": "Combien coûte une vidéo dans les Laurentides ?", "r": "VMM Productions n'offre pas de forfaits : chaque projet est fait sur mesure. Pour en parler, écrivez à jeandavid@videosmakemoney.ca ou appelez au 514-604-5682, de 7 h à 19 h." },
+          { "q": "Qui s'occupe du tournage ?", "r": "L'équipe de VMM Productions : JD, le fondateur, et Renaud, cameraman avec 10 ans d'expérience en cinéma." }
+        ]
+      },
+      "en": {
+        "route": "/en/video-production-laurentians/",
+        "lien": "Laurentians",
+        "seo": {
+          "title": "Video Production in the Laurentians | VMM Productions",
+          "description": "Corporate videographer based in Sainte-Thérèse: custom videos, filming, drone and editing for Laurentians businesses. Bilingual service included."
+        },
+        "h1": "Video production in the Laurentians",
+        "intro": "VMM Productions (Productions VMM) is a video production company founded by JD and based in Sainte-Thérèse, in the Laurentians. Together with Renaud, a cameraman with 10 years of film experience, it creates custom videos, with no packages, for businesses in the region. Bilingual service is included and delivery takes 1 to 2 weeks.",
+        "angleTitre": "A Laurentians team for Laurentians businesses",
+        "angle": [
+          "The Laurentians cover a wide territory, from towns close to Montréal to areas much farther north. We start from Sainte-Thérèse and travel within a 50 km radius. Beyond that, travel costs are added to the project.",
+          "Nothing here is sold as a package. We start with what your business wants to show, then pick the right tools: strategy, filming, drone footage, scriptwriting, editing or motion graphics."
+        ],
+        "faq": [
+          { "q": "Do you travel everywhere in the Laurentians?", "r": "Yes. VMM Productions is based in Sainte-Thérèse and travels within a 50 km radius. Beyond that distance, travel costs are added." },
+          { "q": "How much does a video cost in the Laurentians?", "r": "VMM Productions does not offer packages: every project is custom. To talk about yours, email jeandavid@videosmakemoney.ca or call 514-604-5682, from 7 a.m. to 7 p.m." },
+          { "q": "Who handles the shoot?", "r": "The VMM Productions team: JD, the founder, and Renaud, a cameraman with 10 years of film experience." }
+        ]
+      }
+    },
+    {
+      "id": "sainte-therese",
+      "clip": "about",
+      "videos": ["aRr26p8dQxk", "F8bCIpVoDFI", "t7zXkOFUdBs", "zga2uMl5zhk"],
+      "areaServed": { "@type": "City", "name": "Sainte-Thérèse", "containedInPlace": { "@type": "AdministrativeArea", "name": "Laurentides" } },
+      "fr": {
+        "route": "/production-video-sainte-therese/",
+        "lien": "Sainte-Thérèse",
+        "seo": {
+          "title": "Production vidéo à Sainte-Thérèse | VMM Productions",
+          "description": "VMM Productions est basée à Sainte-Thérèse : vidéos d'entreprise sur mesure, en français et en anglais, livrées en 1 à 2 semaines. 514-604-5682."
+        },
+        "h1": "Production vidéo à Sainte-Thérèse",
+        "intro": "Basée à Sainte-Thérèse, VMM Productions (Productions VMM) réalise des vidéos d'entreprise sur mesure, sans forfaits. L'équipe réunit JD, son fondateur, et Renaud, cameraman avec 10 ans d'expérience en cinéma. Nous travaillons en français et en anglais, de 7 h à 19 h, et livrons en 1 à 2 semaines.",
+        "angleTitre": "Votre vidéaste, ici même à Sainte-Thérèse",
+        "angle": [
+          "Sainte-Thérèse, c'est notre point de départ : notre rayon de 50 km se calcule à partir d'ici. Pour une entreprise de la ville, aucun frais de déplacement ne s'applique.",
+          "Être proches simplifie la planification. Nous tournons du lundi au dimanche, entre 7 h et 19 h, au moment qui dérange le moins votre équipe et vos clients."
+        ],
+        "faq": [
+          { "q": "Où est située VMM Productions ?", "r": "VMM Productions est basée à Sainte-Thérèse. Nous nous déplaçons chez nos clients dans un rayon de 50 km ; plus loin, des frais de déplacement s'ajoutent." },
+          { "q": "Quelles sont vos heures ?", "r": "De 7 h à 19 h, du lundi au dimanche. Joignez-nous au 514-604-5682 ou à jeandavid@videosmakemoney.ca." },
+          { "q": "Pouvez-vous faire ma vidéo en anglais ?", "r": "Oui. Le service bilingue est inclus : VMM Productions travaille en français et en anglais." }
+        ]
+      },
+      "en": {
+        "route": "/en/video-production-sainte-therese/",
+        "lien": "Sainte-Thérèse",
+        "seo": {
+          "title": "Video Production in Sainte-Thérèse | VMM Productions",
+          "description": "VMM Productions is based in Sainte-Thérèse: custom business videos in English and French, delivered in 1 to 2 weeks. Call 514-604-5682."
+        },
+        "h1": "Video production in Sainte-Thérèse",
+        "intro": "Based in Sainte-Thérèse, VMM Productions (Productions VMM) creates custom business videos, with no packages. The team brings together JD, its founder, and Renaud, a cameraman with 10 years of film experience. We work in English and French, from 7 a.m. to 7 p.m., and deliver in 1 to 2 weeks.",
+        "angleTitre": "Your videographer, right here in Sainte-Thérèse",
+        "angle": [
+          "Sainte-Thérèse is our starting point: our 50 km radius is measured from here. For a business in town, no travel costs apply.",
+          "Being close makes planning easier. We film Monday to Sunday, between 7 a.m. and 7 p.m., at the time that least disrupts your team and your customers."
+        ],
+        "faq": [
+          { "q": "Where is VMM Productions located?", "r": "VMM Productions is based in Sainte-Thérèse. We travel to our clients within a 50 km radius; farther away, travel costs are added." },
+          { "q": "What are your hours?", "r": "From 7 a.m. to 7 p.m., Monday to Sunday. Reach us at 514-604-5682 or jeandavid@videosmakemoney.ca." },
+          { "q": "Can you make my video in French?", "r": "Yes. Bilingual service is included: VMM Productions works in English and French." }
+        ]
+      }
+    },
+    {
+      "id": "saint-jerome",
+      "clip": "work",
+      "videos": ["duRjqB2By-0", "3ru2cIaqzeo", "fxGb6xSqsfw", "a6L9xFtDSgc"],
+      "areaServed": { "@type": "City", "name": "Saint-Jérôme", "containedInPlace": { "@type": "AdministrativeArea", "name": "Laurentides" } },
+      "fr": {
+        "route": "/production-video-saint-jerome/",
+        "lien": "Saint-Jérôme",
+        "seo": {
+          "title": "Production vidéo à Saint-Jérôme | VMM Productions",
+          "description": "Vidéos promotionnelles et d'entreprise sur mesure à Saint-Jérôme, sans forfaits, livrées en 1 à 2 semaines. VMM Productions, de Sainte-Thérèse."
+        },
+        "h1": "Production vidéo à Saint-Jérôme",
+        "intro": "VMM Productions (Productions VMM) offre la production vidéo aux entreprises de Saint-Jérôme, à partir de sa base de Sainte-Thérèse. Fondée par JD, l'équipe compte aussi Renaud, cameraman avec 10 ans d'expérience en cinéma. Chaque vidéo est faite sur mesure, en français ou en anglais, et livrée en 1 à 2 semaines.",
+        "angleTitre": "De l'idée à la vidéo finale",
+        "angle": [
+          "Saint-Jérôme est dans notre rayon de 50 km autour de Sainte-Thérèse : les frais de déplacement ne s'appliquent qu'au-delà de cette distance.",
+          "Pas de forfait à choisir dans une liste. On part de votre message, puis on bâtit le projet avec ce qu'il faut : un tournage, des images de drone, une animation graphique ou un montage soigné. Avec une livraison en 1 à 2 semaines, vous pouvez planifier la sortie de votre vidéo."
+        ],
+        "faq": [
+          { "q": "Saint-Jérôme fait-elle partie de votre zone ?", "r": "Oui. Saint-Jérôme est à l'intérieur de notre rayon de 50 km autour de Sainte-Thérèse. Les frais de déplacement ne s'appliquent qu'au-delà de 50 km." },
+          { "q": "En combien de temps ma vidéo est-elle livrée ?", "r": "La livraison se fait en 1 à 2 semaines, selon la complexité du projet." },
+          { "q": "Avez-vous des forfaits ?", "r": "Non. Tous les services de VMM Productions sont sur mesure : stratégie, tournage et photo, drone, scénarisation, montage et animation sont ajustés à votre projet." }
+        ]
+      },
+      "en": {
+        "route": "/en/video-production-saint-jerome/",
+        "lien": "Saint-Jérôme",
+        "seo": {
+          "title": "Video Production in Saint-Jérôme | VMM Productions",
+          "description": "Custom promotional and business videos in Saint-Jérôme, with no packages, delivered in 1 to 2 weeks. VMM Productions, from Sainte-Thérèse."
+        },
+        "h1": "Video production in Saint-Jérôme",
+        "intro": "VMM Productions (Productions VMM) provides video production to businesses in Saint-Jérôme from its base in Sainte-Thérèse. Founded by JD, the team also includes Renaud, a cameraman with 10 years of film experience. Every video is custom-made, in English or French, and delivered in 1 to 2 weeks.",
+        "angleTitre": "From idea to final video",
+        "angle": [
+          "Saint-Jérôme is within our 50 km radius around Sainte-Thérèse: travel costs only apply beyond that distance.",
+          "No package to pick from a list. We start from your message, then build the project with what it needs: a shoot, drone footage, motion graphics or careful editing. With delivery in 1 to 2 weeks, you can plan your video's release."
+        ],
+        "faq": [
+          { "q": "Is Saint-Jérôme in your service area?", "r": "Yes. Saint-Jérôme is within our 50 km radius around Sainte-Thérèse. Travel costs only apply beyond 50 km." },
+          { "q": "How long does it take to get my video?", "r": "Delivery takes 1 to 2 weeks, depending on the complexity of the project." },
+          { "q": "Do you have packages?", "r": "No. All VMM Productions services are custom: strategy, filming and photography, drone, scriptwriting, editing and motion graphics are adjusted to your project." }
+        ]
+      }
+    },
+    {
+      "id": "rive-nord",
+      "clip": "contact-logo",
+      "videos": ["wNGp61LUV8g", "g8pY-zSgljI", "aRr26p8dQxk", "hOUNzv6MYc8"],
+      "areaServed": { "@type": "Place", "name": { "fr": "Rive-Nord de Montréal", "en": "North Shore of Montréal" }, "containedInPlace": { "@type": "AdministrativeArea", "name": "Québec" } },
+      "fr": {
+        "route": "/production-video-rive-nord-montreal/",
+        "lien": "Rive-Nord de Montréal",
+        "seo": {
+          "title": "Production vidéo Rive-Nord de Montréal | VMM Productions",
+          "description": "Vidéos promotionnelles, d'événements et d'entreprise sur la Rive-Nord de Montréal. Équipe basée à Sainte-Thérèse, service bilingue, de 7 h à 19 h."
+        },
+        "h1": "Production vidéo sur la Rive-Nord de Montréal",
+        "intro": "Pour les entreprises de la Rive-Nord de Montréal, VMM Productions (Productions VMM) réalise des vidéos promotionnelles, d'événements et d'entreprise faites sur mesure. Basée à Sainte-Thérèse et fondée par JD, l'équipe travaille avec Renaud, cameraman avec 10 ans d'expérience en cinéma. Le service bilingue est inclus et la livraison se fait en 1 à 2 semaines.",
+        "angleTitre": "Entre Montréal et les Laurentides",
+        "angle": [
+          "Sainte-Thérèse est sur la Rive-Nord : notre rayon de 50 km couvre la couronne nord et rejoint Montréal. Au-delà de 50 km, des frais de déplacement s'ajoutent.",
+          "Que ce soit pour présenter votre entreprise, couvrir un événement ou montrer les coulisses de votre travail, chaque vidéo est pensée pour votre public, en français, en anglais ou dans les deux langues."
+        ],
+        "faq": [
+          { "q": "Vous déplacez-vous aussi à Montréal ?", "r": "Oui. Depuis Sainte-Thérèse, notre rayon de 50 km couvre la Rive-Nord et rejoint Montréal. Au-delà de 50 km, des frais de déplacement s'ajoutent." },
+          { "q": "Quels types de vidéos réalisez-vous ?", "r": "Des vidéos promotionnelles, de la couverture d'événements, des histoires d'entreprises et des coulisses. Nos six services : stratégie vidéo, tournage et photo, drone, scénarisation, montage et animation graphique." },
+          { "q": "Comment démarrer un projet ?", "r": "Écrivez à jeandavid@videosmakemoney.ca, appelez au 514-604-5682 de 7 h à 19 h, ou remplissez le formulaire de la page Contact. Le premier échange est sans engagement." }
+        ]
+      },
+      "en": {
+        "route": "/en/video-production-north-shore-montreal/",
+        "lien": "North Shore of Montréal",
+        "seo": {
+          "title": "Video Production, North Shore of Montréal | VMM Productions",
+          "description": "Promotional, event and business videos on Montréal's North Shore. Team based in Sainte-Thérèse, bilingual service, from 7 a.m. to 7 p.m."
+        },
+        "h1": "Video production on Montréal's North Shore",
+        "intro": "For businesses on Montréal's North Shore, VMM Productions (Productions VMM) creates custom promotional, event and corporate videos. Based in Sainte-Thérèse and founded by JD, the team works with Renaud, a cameraman with 10 years of film experience. Bilingual service is included and delivery takes 1 to 2 weeks.",
+        "angleTitre": "Between Montréal and the Laurentians",
+        "angle": [
+          "Sainte-Thérèse is on the North Shore: our 50 km radius covers the northern suburbs and reaches Montréal. Beyond 50 km, travel costs are added.",
+          "Whether you want to introduce your business, cover an event or show what happens behind the scenes, every video is designed for your audience, in English, French or both."
+        ],
+        "faq": [
+          { "q": "Do you also travel to Montréal?", "r": "Yes. From Sainte-Thérèse, our 50 km radius covers the North Shore and reaches Montréal. Beyond 50 km, travel costs are added." },
+          { "q": "What kinds of videos do you make?", "r": "Promotional videos, event coverage, business stories and behind-the-scenes content. Our six services: video strategy, filming and photography, drone, scriptwriting, editing and motion graphics." },
+          { "q": "How do I start a project?", "r": "Email jeandavid@videosmakemoney.ca, call 514-604-5682 from 7 a.m. to 7 p.m., or fill out the form on the Contact page. The first conversation comes with no commitment." }
+        ]
+      }
+    }
+  ]
+}

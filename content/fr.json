@@ -340,7 +340,37 @@
   },
   "pied": {
     "slogan": "[À CONFIRMER : texte du pied de page]",
-    "droits": "Tous droits réservés."
+    "droits": "Tous droits réservés.",
+    "zones": "Zones desservies"
+  },
+  "zones": {
+    "_aide": "Libellés communs des pages locales (le contenu propre à chaque page est dans content/zones.json).",
+    "etiquette": "Zones desservies",
+    "faitsTitre": "VMM Productions en bref",
+    "faits": {
+      "base": "Basés à",
+      "baseValeur": "Sainte-Thérèse (Laurentides)",
+      "rayon": "Déplacements",
+      "rayonValeur": "Rayon de 50 km autour de Sainte-Thérèse ; frais de déplacement au-delà",
+      "heures": "Heures",
+      "heuresValeur": "De 7 h à 19 h, du lundi au dimanche",
+      "livraison": "Livraison",
+      "livraisonValeur": "1 à 2 semaines",
+      "langues": "Langues",
+      "languesValeur": "Français et anglais, service bilingue inclus",
+      "equipe": "Équipe",
+      "equipeValeur": "JD, fondateur, et Renaud, cameraman (10 ans d'expérience en cinéma)"
+    },
+    "servicesTitre": "Six services, ajustés à votre projet",
+    "servicesIntro": "Des services sur mesure, sans forfaits.",
+    "servicesBouton": "Découvrir nos services →",
+    "videosTitre": "Quelques réalisations",
+    "videosIntro": "Un aperçu de vidéos tirées de notre portfolio.",
+    "videosBouton": "Explorer notre portfolio →",
+    "faqTitre": "Questions fréquentes",
+    "ctaTitre": "Parlons de votre projet",
+    "ctaTexte": "Écrivez-nous ou appelez au 514-604-5682, de 7 h à 19 h. Sans engagement.",
+    "ctaBouton": "Nous contacter"
   },
   "merci": { "titre": "Merci !", "texte": "Votre message est bien parti. Nous vous répondrons sous peu.", "retour": "Retour à l'accueil" },
   "introuvable": { "titre": "Page introuvable", "texte": "Cette page n'existe pas ou a été déplacée.", "retour": "Retour à l'accueil", "pages": "Pages principales" }

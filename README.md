@@ -26,6 +26,7 @@ Tout se trouve dans `content/`, en JSON, modifiable directement sur GitHub (cray
 | `content/portfolio.json` | Vidéos (client, catégorie, ID YouTube, langue, titre, vedette oui/non), clients, catégories |
 | `content/fr.json` / `content/en.json` | Tous les textes FR / EN, titres et descriptions Google |
 | `content/site.json` | Courriel, réseaux sociaux, vidéo du bandeau, fourchettes de budget, widget d'avis Google, `drapeaux` (contenu en attente de JD) |
+| `content/zones.json` | Pages locales (zones desservies) FR + EN : Laurentides, Sainte-Thérèse, Saint-Jérôme, Rive-Nord de Montréal. Texte provisoire, JD réécrira. Libellés communs sous `zones` de `fr.json` / `en.json` |
 | `content/clips.json` | Clips muets de JD joués en fond (Projets, pages clients, Services, À propos, Contact) : version mobile 9:16 et version ordi 16:9, avec un point focal (`focal`) réglable. Fichiers dans `static/videos/jd/` |
 
 Ajouter une vidéo : copier une entrée de `videos` dans `portfolio.json`, coller l'ID YouTube (`youtube.com/shorts/ABC123` → `ABC123`), mettre le client. Netlify reconstruit le site tout seul après chaque modification.

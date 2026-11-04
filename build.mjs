@@ -18,6 +18,10 @@ const site = readJson('site.json');
 const portfolio = readJson('portfolio.json');
 const clips = readJson('clips.json');
 const langs = { fr: readJson('fr.json'), en: readJson('en.json') };
+// Pages locales (zones desservies) : content/zones.json. Texte provisoire, JD réécrira.
+const zonesData = readJson('zones.json');
+const ZONES = zonesData.zones;
+const zoneRoute = (z) => ({ fr: z.fr.route, en: z.en.route });
 const SITE_URL = (process.env.SITE_URL || site.siteUrl).replace(/\/$/, '');
 // Indexation : seulement en contexte production Netlify (CONTEXT est fourni par Netlify ; absent en local).
 // Les deploy previews et branch deploys restent toujours en noindex, même si VMM_ALLOW_INDEX traîne dans l'interface.
@@ -257,6 +261,11 @@ function videoObject(v, lang, pageUrl) {
 }
 
 // ---------- JSON-LD ----------
+// Valeur { fr, en } → valeur de la langue (récursif), pour les zones de content/zones.json
+const localize = (v, lang) =>
+  Array.isArray(v) ? v.map((x) => localize(x, lang))
+  : v && typeof v === 'object' ? ('fr' in v && 'en' in v && Object.keys(v).length === 2 ? v[lang] : Object.fromEntries(Object.entries(v).map(([k, x]) => [k, localize(x, lang)])))
+  : v;
 function structuredData(key, lang, pageVideos = [], page = null) {
   const L = langs[lang];
   const biz = `${SITE_URL}/#entreprise`;
@@ -316,7 +325,7 @@ function structuredData(key, lang, pageVideos = [], page = null) {
   const seo = page?.seo || L.seo[key];
   const pageUrl = abs((page?.route || ROUTES[key])[lang]);
   const crumbs = [{ name: L.nav.accueil, url: abs(ROUTES.accueil[lang]) }];
-  if (key !== 'accueil') crumbs.push({ name: L.nav[key] || L[key]?.titre || '', url: abs(ROUTES[key][lang]) });
+  if (key !== 'accueil' && ROUTES[key]) crumbs.push({ name: L.nav[key] || L[key]?.titre || '', url: abs(ROUTES[key][lang]) });
   if (page?.crumb) crumbs.push({ name: page.crumb, url: pageUrl });
   const graph = [
     business,
@@ -360,6 +369,32 @@ function structuredData(key, lang, pageVideos = [], page = null) {
       });
     }
   }
+  // Page locale : un Service (fourni par l'entreprise, même @id) limité à la ville ou à la région, et sa FAQ
+  if (key === 'zone' && page?.zone) {
+    const z = page.zone;
+    const Z = z[lang];
+    graph.push({
+      '@type': 'Service',
+      '@id': pageUrl + '#service',
+      name: Z.h1,
+      serviceType: lang === 'fr' ? 'Production vidéo' : 'Video production',
+      description: Z.intro,
+      provider: { '@id': biz },
+      areaServed: localize(z.areaServed, lang),
+      url: pageUrl,
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: L.zones.servicesTitre,
+        itemListElement: L.services.items.filter(shown).map((s) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: s.titre, description: s.texte, provider: { '@id': biz } } })),
+      },
+    });
+    graph.push({
+      '@type': 'FAQPage',
+      '@id': pageUrl + '#faq',
+      inLanguage: L.lang,
+      mainEntity: Z.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.r } })),
+    });
+  }
   if (key === 'contact') {
     const faq = L.faq.items.filter((f) => !isPlaceholder(f.r) && !f.note); // réponse signalée (note) : pas dans les données structurées
     if (faq.length) {
@@ -385,7 +420,8 @@ function layout({ key, lang, body, videos = [], page = null, preload = '' }) {
   const routed = Boolean(page?.route || ROUTES[key]);
   const route = page?.route || ROUTES[key] || ROUTES.accueil;
   const seo = page?.seo || L.seo[key];
-  const indexable = INDEXABLE.includes(key) && ALLOW_INDEX;
+  const hasData = INDEXABLE.includes(key) || key === 'zone';
+  const indexable = hasData && ALLOW_INDEX; // pages locales : indexables au lancement seulement, comme les autres
   const navLink = (k) => `<li><a href="${ROUTES[k][lang]}"${k === key ? ' aria-current="page"' : ''}>${esc(L.nav[k])}</a></li>`;
   const ogImage = abs(ogFor(key, page));
   const ogAlt = `${site.nom} · ${L.hero.sousTitre}`;
@@ -428,7 +464,7 @@ ${routed ? `<meta property="og:url" content="${abs(route[lang])}">\n` : ''}<meta
 <script>document.documentElement.classList.add('js')</script>
 ${preload}<link rel="preload" href="/fonts/cinzel-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>${CSS}</style>
-${INDEXABLE.includes(key) ? structuredData(key, lang, videos, page) : ''}
+${hasData ? structuredData(key, lang, videos, page) : ''}
 </head>
 <body class="page-${key}">
 <a class="skip" href="#contenu">${esc(L.nav.allerAuContenu)}</a>
@@ -473,6 +509,12 @@ ${body}
       <p class="label">${esc(L.contact.suivre)}</p>
       ${socials()}
     </div>
+    <nav aria-label="${esc(L.pied.zones)}">
+      <p class="label">${esc(L.pied.zones)}</p>
+      <ul class="socials footer-zones">
+        ${ZONES.map((z) => `<li><a href="${z[lang].route}"${page?.zone === z ? ' aria-current="page"' : ''}>${esc(z[lang].lien)}</a></li>`).join('\n        ')}
+      </ul>
+    </nav>
   </div>
   <p class="container muted small">© ${esc(FOOTER_NAME)}. ${esc(L.pied.droits)}</p>
 </footer>
@@ -740,6 +782,18 @@ function fullHero(clipId, title, L, hero = null, h1 = '') {
 </section>`;
 }
 
+// Illustration de service : version 336 px (2x l'affichage max de 168 px) quand elle existe ; l'original 600 px reste dans static/img/
+function svcArt(name) {
+  const light = existsSync(join(ROOT, 'static', 'img', `${name}-336.webp`));
+  return picture(`/img/${name}${light ? '-336' : ''}`, '', { w: light ? 336 : 600, h: light ? 336 : 600, cls: 'svc-art', fallback: 'png' });
+}
+// Carte de service (page Services et pages locales)
+const card = (s) => `<li class="svc-card" data-reveal>
+          ${svcArt(s.icone)}
+          <h3>${t(s.titre)}</h3>
+          <p>${t(s.texte)}</p>
+        </li>`;
+
 // Page Services : maquette de JD (PDF « VMM Service Section LAYOUT + DIRECTIONS »).
 function servicesPage(lang) {
   const L = langs[lang];
@@ -757,16 +811,6 @@ function servicesPage(lang) {
     </video>
   </div>
 </section>`;
-  // Illustration de service : version 336 px (2x l'affichage max de 168 px) quand elle existe ; l'original 600 px reste dans static/img/
-  const svcArt = (name) => {
-    const light = existsSync(join(ROOT, 'static', 'img', `${name}-336.webp`));
-    return picture(`/img/${name}${light ? '-336' : ''}`, '', { w: light ? 336 : 600, h: light ? 336 : 600, cls: 'svc-art', fallback: 'png' });
-  };
-  const card = (s) => `<li class="svc-card" data-reveal>
-          ${svcArt(s.icone)}
-          <h3>${t(s.titre)}</h3>
-          <p>${t(s.texte)}</p>
-        </li>`;
   const groups = S.groupes
     .map((g, gi) => {
       const list = g.items.map((i) => items[i]).filter(shown);
@@ -917,6 +961,95 @@ function clientPage(c, lang) {
   });
 }
 
+// Page locale (zones desservies) : un H1 service + ville, une intro factuelle, les 6 services, 3-4 vidéos, 3 questions.
+function zonePage(z, lang) {
+  const L = langs[lang];
+  const Z = z[lang];
+  const ZL = L.zones;
+  const F = ZL.faits;
+  const byId = (id) => portfolio.videos.find((v) => v.youtubeId === id);
+  const vids = z.videos.map(byId).filter(Boolean);
+  const fact = (label, value) => `<div><dt class="label">${esc(label)}</dt><dd>${value}</dd></div>`;
+  const body = `<!-- ${esc(zonesData.noteProvisoire)} -->
+<section class="page-hero has-bg-video zone-hero" aria-labelledby="zone-title">
+  ${bgVideo(z.clip)}
+  <div class="container">
+    <p class="label" data-reveal>${esc(ZL.etiquette)}</p>
+    <h1 id="zone-title" data-reveal>${t(Z.h1)}</h1>
+    <p class="intro" data-reveal>${t(Z.intro)}</p>
+    <p class="cta-row" data-reveal><a class="btn btn-neon" href="${ROUTES.contact[lang]}">${esc(ZL.ctaBouton)}</a></p>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="zone-angle">
+  <div class="container zone-grid">
+    <div>
+      <h2 id="zone-angle" data-reveal>${t(Z.angleTitre)}</h2>
+      ${Z.angle.map((p) => `<p class="intro" data-reveal>${t(p)}</p>`).join('\n      ')}
+    </div>
+    <div class="card glass zone-facts" data-reveal>
+      <h3>${esc(ZL.faitsTitre)}</h3>
+      <dl class="contact-details">
+        ${fact(F.base, esc(F.baseValeur))}
+        ${fact(F.rayon, esc(F.rayonValeur))}
+        ${fact(F.heures, esc(F.heuresValeur))}
+        ${fact(F.livraison, esc(F.livraisonValeur))}
+        ${fact(F.langues, esc(F.languesValeur))}
+        ${fact(F.equipe, esc(F.equipeValeur))}
+        ${TEL ? fact(L.contact.telephoneLabel, `<a href="${TEL.href}">${esc(TEL.affiche)}</a>`) : ''}
+        ${fact(L.contact.courrielLabel, `<a href="mailto:${site.courriel}">${esc(site.courriel)}</a>`)}
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="jd-screen svc-group" aria-labelledby="zone-services">
+  <div class="jd-wrap">
+    <p class="jd-label" data-reveal>${esc(L.services.etiquette)}</p>
+    <h2 id="zone-services" data-reveal>${t(ZL.servicesTitre)}</h2>
+    <p class="jd-lead" data-reveal>${t(ZL.servicesIntro)}</p>
+    <ul class="svc-grid">
+        ${L.services.items.filter(shown).map(card).join('\n        ')}
+    </ul>
+    <p class="cta-row" data-reveal><a class="btn btn-neon" href="${ROUTES.services[lang]}">${esc(ZL.servicesBouton)}</a></p>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="zone-videos">
+  <div class="container">
+    <h2 id="zone-videos" data-reveal>${t(ZL.videosTitre)}</h2>
+    <p class="intro" data-reveal>${t(ZL.videosIntro)}</p>
+    <ul class="grid grid-4 featured">
+      ${vids.map((v) => `<li data-reveal>${videoTile(v, lang)}</li>`).join('\n      ')}
+    </ul>
+    <p class="cta-row"><a class="btn btn-neon" href="${ROUTES.portfolio[lang]}">${esc(ZL.videosBouton)}</a></p>
+  </div>
+</section>
+
+<section class="section section-tight" aria-labelledby="zone-faq">
+  <div class="container faq">
+    <h2 id="zone-faq" data-reveal>${esc(ZL.faqTitre)}</h2>
+    ${Z.faq.map((f) => `<details data-reveal><summary>${t(f.q)}</summary><p>${t(f.r)}</p></details>`).join('\n    ')}
+  </div>
+</section>
+
+<section class="section zone-cta" aria-labelledby="zone-cta">
+  <div class="container">
+    <h2 id="zone-cta" data-reveal>${t(ZL.ctaTitre)}</h2>
+    <p class="intro" data-reveal>${t(ZL.ctaTexte)}</p>
+    <p class="cta-row" data-reveal><a class="btn btn-neon" href="${ROUTES.contact[lang]}">${esc(ZL.ctaBouton)}</a></p>
+  </div>
+</section>`;
+  return layout({
+    key: 'zone',
+    lang,
+    body,
+    videos: vids,
+    page: { route: zoneRoute(z), seo: Z.seo, crumb: Z.h1, zone: z },
+    preload: posterPreload(z.clip),
+  });
+}
+
 function slug(s) {
   return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
@@ -1051,6 +1184,7 @@ function sitemap() {
   const urls = [
     ...INDEXABLE.flatMap((k) => ['fr', 'en'].map((lang) => entry(ROUTES[k], lang, videoEntries(k, lang, abs(ROUTES[k][lang]))))),
     ...CLIENTS.flatMap((c) => ['fr', 'en'].map((lang) => entry(clientRoute(c), lang, videoEntries(clientVideos(c), lang, abs(clientRoute(c)[lang]))))),
+    ...ZONES.flatMap((z) => ['fr', 'en'].map((lang) => entry(zoneRoute(z), lang, videoEntries(z.videos.map((id) => portfolio.videos.find((v) => v.youtubeId === id)).filter(Boolean), lang, abs(zoneRoute(z)[lang]))))),
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
@@ -1102,6 +1236,9 @@ function llmsTxt() {
     '## Pages (français)',
     ...pageLinks(fr, 'fr'),
     '',
+    '## Zones desservies (pages locales)',
+    ...ZONES.map((z) => `- [${z.fr.h1}](${abs(z.fr.route)}) : ${z.fr.intro}`),
+    '',
     '## Contact',
     `- Courriel : ${site.courriel}`,
     ...(site.telephone ? [`- Téléphone : ${site.telephone}`] : []),
@@ -1119,6 +1256,9 @@ function llmsTxt() {
     `Mission: ${en.mission}`,
     '',
     ...pageLinks(en, 'en'),
+    '',
+    '### Service areas',
+    ...ZONES.map((z) => `- [${z.en.h1}](${abs(z.en.route)}): ${z.en.intro}`),
     '',
     `- Services: ${en.services.items.filter(shown).map((s) => s.titre).join('; ')}`,
     `- Team: ${en.equipe.membres.map((m) => `${m.nom} (${m.role})`).join(', ')}`,
@@ -1150,6 +1290,7 @@ for (const lang of ['fr', 'en']) {
   write(ROUTES.apropos[lang], aboutPage(lang));
   write(ROUTES.contact[lang], contactPage(lang));
   write(ROUTES.merci[lang], messagePage(lang, 'merci', L.merci));
+  for (const z of ZONES) write(z[lang].route, zonePage(z, lang));
 }
 write('/404.html', notFoundPage('fr'));
 write('/en/404.html', notFoundPage('en'));
