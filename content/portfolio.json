@@ -67,11 +67,11 @@
       "note": "[À CONFIRMER : orthographe « Pur » ou « PUR »]"
     },
     {
-      "nom": "Hors-Paire Excavation",
+      "nom": "Installations Hors-Pair",
+      "nomAncien": "Hors-Paire Excavation",
       "slug": "hors-pair",
-      "url": "",
-      "clip": "hors-pairs",
-      "note": "[À CONFIRMER : orthographe « Hors-Paire »]"
+      "url": "https://hors-pair.ca/",
+      "clip": "hors-pairs"
     },
     {
       "nom": "BlueWise",
@@ -106,7 +106,7 @@
       "note": "[À CONFIRMER : ID YouTube]"
     },
     {
-      "client": "Hors-Paire Excavation",
+      "client": "Installations Hors-Pair",
       "categorie": "",
       "type": "finale",
       "youtubeId": "",
@@ -272,7 +272,7 @@
       "dateMiseEnLigne": ""
     },
     {
-      "client": "Hors-Paire Excavation",
+      "client": "Installations Hors-Pair",
       "categorie": "",
       "type": "finale",
       "youtubeId": "fxGb6xSqsfw",
@@ -283,7 +283,7 @@
       "dateMiseEnLigne": ""
     },
     {
-      "client": "Hors-Paire Excavation",
+      "client": "Installations Hors-Pair",
       "categorie": "",
       "type": "finale",
       "youtubeId": "aRr26p8dQxk",

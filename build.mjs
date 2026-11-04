@@ -257,36 +257,31 @@ function structuredData(key, lang, pageVideos = [], page = null) {
     return {
       '@type': 'Person',
       '@id': `${SITE_URL}/#${m.id}`,
-      name: m.nomComplet,
-      alternateName: m.nom,
+      name: m.nomComplet || m.nom,
+      ...(m.nomComplet && m.nomComplet !== m.nom ? { alternateName: m.nom } : {}),
       jobTitle: m.role,
       worksFor: { '@id': biz },
-      ...(bio && !isPlaceholder(bio.note || bio.noteInterne) ? { description: bio.texte } : {}),
+      ...(bio && !isPlaceholder(bio.note || bio.noteInterne) ? { description: bio.texte } : m.experience ? { description: m.experience } : {}),
       ...(m.photo ? { image: abs(m.photo) } : bio?.photo ? { image: abs(`${bio.photo}.jpg`) } : {}),
     };
   });
   const a = site.adresse;
   const business = {
-    '@type': 'ProfessionalService', // sous-type de LocalBusiness, sans adresse publique tant qu'elle n'est pas fournie
+    '@type': 'ProfessionalService', // sous-type de LocalBusiness ; aucune adresse de rue (confirmé par JD), seulement région et pays
     '@id': biz,
     name: site.nom,
     legalName: site.nomLegal,
     alternateName: site.marque,
     slogan: L.hero.sousTitre,
-    description: L.seo.accueil.description,
+    description: L.mission,
     url: SITE_URL + '/',
     logo: abs(LOGO.png.replace(/\?.*$/, '')),
     image: abs(OG.defaut),
     email: site.courriel,
     ...(site.telephone ? { telephone: site.telephone } : {}),
-    ...(a.ville
-      ? { address: { '@type': 'PostalAddress', streetAddress: a.rue, addressLocality: a.ville, addressRegion: a.region, postalCode: a.codePostal, addressCountry: a.pays } }
-      : {}),
-    areaServed: [
-      { '@type': 'AdministrativeArea', name: 'Grand Montréal' },
-      { '@type': 'City', name: 'Montréal' },
-      { '@type': 'AdministrativeArea', name: 'Laurentides' },
-    ],
+    // Pas de rue, de ville ni de code postal : seulement la région et le pays.
+    address: { '@type': 'PostalAddress', addressRegion: a.region, addressCountry: a.pays },
+    areaServed: { '@type': 'AdministrativeArea', name: site.zoneJsonLd },
     knowsAbout: L.services.items.filter(shown).map((s) => s.titre),
     knowsLanguage: ['fr-CA', 'en-CA'],
     founder: { '@id': `${SITE_URL}/#jd` },
@@ -311,6 +306,7 @@ function structuredData(key, lang, pageVideos = [], page = null) {
       inLanguage: L.lang,
       isPartOf: { '@id': `${SITE_URL}/#site` },
       about: { '@id': biz },
+      ...(page?.client ? { mentions: { '@type': 'Organization', name: page.client.nom, ...(page.client.url ? { url: page.client.url, sameAs: page.client.url } : {}) } } : {}),
       ...(crumbs.length > 1 ? { breadcrumb: { '@id': pageUrl + '#fil' } } : {}),
     },
     // Fil d'Ariane : seulement à partir de deux niveaux (pas sur l'accueil)
@@ -354,6 +350,8 @@ function structuredData(key, lang, pageVideos = [], page = null) {
 }
 
 // ---------- gabarit commun ----------
+// Pied de page (FR et EN) : nom commercial suivi du nom légal.
+const FOOTER_NAME = `${site.nom} (${site.nomLegal})`;
 // page : pour une page sans clé propre (page client) : { route, seo, crumb }.
 function layout({ key, lang, body, videos = [], page = null, preload = '' }) {
   if (preload) preload += '\n';
@@ -442,7 +440,7 @@ ${body}
     <div>
       <p class="logo">VMM<span>.</span></p>
       <p class="muted">${t(L.pied.slogan)}</p>
-      <p class="muted">${esc(site.nomLegal)} · ${esc(L.contact.zone)}</p>
+      <p class="muted">${esc(FOOTER_NAME)} · ${esc(L.contact.zone)}</p>
       <p><a href="mailto:${site.courriel}">${esc(site.courriel)}</a></p>
     </div>
     <div>
@@ -450,7 +448,7 @@ ${body}
       ${socials()}
     </div>
   </div>
-  <p class="container muted small">© ${new Date().getFullYear()} ${esc(site.nomLegal)}. ${esc(L.pied.droits)}</p>
+  <p class="container muted small">© ${esc(FOOTER_NAME)}. ${esc(L.pied.droits)}</p>
 </footer>
 <dialog class="lightbox" aria-label="${esc(L.lightbox.titre)}">
   <button class="lightbox-close" type="button" aria-label="${esc(L.lightbox.fermer)}">×</button>
@@ -855,7 +853,8 @@ function clientPage(c, lang) {
   const P = L.portfolio;
   const list = clientVideos(c);
   const n = list.length;
-  const fill = (s) => s.replaceAll('{client}', c.nom);
+  // Élision en français : « de Installations » devient « d'Installations ».
+  const fill = (s) => (lang === 'fr' && /^[aeiouyàâéèêîôûh]/i.test(c.nom) ? s.replaceAll('de {client}', 'd’{client}') : s).replaceAll('{client}', c.nom);
   const back = `<a class="btn btn-neon btn-back" href="${ROUTES.portfolio[lang]}">${esc(P.retour)}</a>`;
   const body = `<section class="page-hero client-hero${c.clip ? ' has-bg-video' : ''}">
   ${c.clip ? bgVideo(c.clip) : ''}
@@ -880,7 +879,7 @@ function clientPage(c, lang) {
     lang,
     body,
     videos: list,
-    page: { route: clientRoute(c), seo: { title: fill(P.clientSeoTitre), description: fill(P.clientSeoDescription) }, crumb: c.nom, og: existsSync(join(ROOT, 'static', 'og', `og-client-${clientSlug(c)}.jpg`)) ? `/og/og-client-${clientSlug(c)}.jpg` : '' },
+    page: { route: clientRoute(c), seo: { title: fill(P.clientSeoTitre), description: fill(P.clientSeoDescription) }, crumb: c.nom, client: c, og: existsSync(join(ROOT, 'static', 'og', `og-client-${clientSlug(c)}.jpg`)) ? `/og/og-client-${clientSlug(c)}.jpg` : '' },
     preload: c.clip ? posterPreload(c.clip) : '',
   });
 }
@@ -1037,7 +1036,13 @@ function llmsTxt() {
     '',
     `> ${fr.seo.accueil.resume}`,
     '',
-    `${site.nomLegal} est une boîte de production vidéo et un vidéaste corporatif établi dans le Grand Montréal et les Laurentides (Québec, Canada). Fondateur : JD (Jean-David). Phrase centrale : « ${fr.hero.sousTitre} »`,
+    `${site.nom} (nom légal : ${site.nomLegal}) est une boîte de production vidéo et un vidéaste corporatif établi dans le Grand Montréal et les Laurentides, au service de tout le Québec (Canada). Fondateur : JD. Phrase centrale : « ${fr.hero.sousTitre} »`,
+    '',
+    `Mission : ${fr.mission}`,
+    '',
+    '## Façon de travailler',
+    `- ${fr.surMesure}`,
+    `- Délai de livraison : ${site.delaiLivraison.fr}, selon la complexité.`,
     '',
     '## Ce que nous créons',
     ...portfolio.categories.map((c) => `- ${c.titre.fr} : ${c.texte.fr}`),
@@ -1049,7 +1054,7 @@ function llmsTxt() {
     ...fr.equipe.membres.map((m) => `- ${m.nomComplet}${m.nom !== m.nomComplet ? ` (${m.nom})` : ''}, ${m.role} : ${m.texte}`),
     '',
     '## Clients filmés',
-    ...portfolio.clients.map((c) => `- ${c.nom} (${clientVideos(c).length} vidéos)${CLIENTS.includes(c) ? ` : ${abs(clientRoute(c).fr)}` : ''}`),
+    ...portfolio.clients.map((c) => `- ${c.nom}${c.url ? ` (${c.url})` : ''} (${clientVideos(c).length} vidéos)${CLIENTS.includes(c) ? ` : ${abs(clientRoute(c).fr)}` : ''}`),
     '',
     '## Zones desservies',
     ...site.zonesDesservies.map((z) => `- ${z}`),
@@ -1059,6 +1064,7 @@ function llmsTxt() {
     '',
     '## Contact',
     `- Courriel : ${site.courriel}`,
+    ...(site.telephone ? [`- Téléphone : ${site.telephone}`] : []),
     `- Formulaire : ${abs(ROUTES.contact.fr)}`,
     ...site.reseaux.map((r) => `- ${r.nom} : ${r.url}`),
   ];
@@ -1070,12 +1076,16 @@ function llmsTxt() {
     '',
     en.seo.accueil.resume,
     '',
+    `Mission: ${en.mission}`,
+    '',
     ...pageLinks(en, 'en'),
     '',
     `- Services: ${en.services.items.filter(shown).map((s) => s.titre).join('; ')}`,
     `- Team: ${en.equipe.membres.map((m) => `${m.nom} (${m.role})`).join(', ')}`,
     `- Areas served: ${en.contact.zone}`,
+    `- How we work: ${en.surMesure} Delivery time: ${site.delaiLivraison.en}, depending on complexity.`,
     `- Email: ${site.courriel}`,
+    ...(site.telephone ? [`- Phone: ${site.telephone}`] : []),
     '',
     '## Optional',
     `- [Sitemap](${abs('/sitemap.xml')})`
