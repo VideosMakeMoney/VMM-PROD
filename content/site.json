@@ -1,7 +1,7 @@
 {
   "_aide": "Infos partagées FR/EN. Tout ce qui contient [À CONFIRMER] reste visible sur le site tant que ce n'est pas remplacé.",
   "nom": "VMM Productions",
-  "nomLegal": "Video Montage Marketing",
+  "nomLegal": "Productions VMM",
   "nomLegalAncien": "VMM Productions Inc.",
   "marque": "Videos Make Money",
   "siteUrl": "https://videosmakemoney.ca",
@@ -21,6 +21,21 @@
     "Laurentides"
   ],
   "zoneJsonLd": "Québec",
+  "zoneBase": {
+    "_aide": "Zone desservie principale (JSON-LD GeoCircle) : rayon autour de Sainte-Thérèse. Coordonnées du centre de la ville, pas une adresse. Au-delà du rayon, frais de déplacement en sus. « Québec » (zoneJsonLd) reste la zone élargie.",
+    "ville": "Sainte-Thérèse",
+    "region": "QC",
+    "latitude": 45.639,
+    "longitude": -73.834,
+    "rayonKm": 50
+  },
+  "heures": {
+    "_aide": "Heures d'ouverture (JSON-LD openingHoursSpecification), du lundi au dimanche.",
+    "jours": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    "ouverture": "07:00",
+    "fermeture": "19:00"
+  },
+  "dateFondation": "2026-04-01",
   "delaiLivraison": { "fr": "1 à 2 semaines", "en": "1 to 2 weeks" },
   "reseaux": [
     {

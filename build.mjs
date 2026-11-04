@@ -20,6 +20,10 @@ const clips = readJson('clips.json');
 const langs = { fr: readJson('fr.json'), en: readJson('en.json') };
 const SITE_URL = (process.env.SITE_URL || site.siteUrl).replace(/\/$/, '');
 const ALLOW_INDEX = process.env.VMM_ALLOW_INDEX === 'true';
+// Téléphone de JD (site.telephone, format +1-514-604-5682) : lien tel: et affichage 514-604-5682
+const TEL = site.telephone
+  ? { href: `tel:${site.telephone.replace(/[^\d+]/g, '')}`, affiche: site.telephone.replace(/^\+1-?/, '') }
+  : null;
 const BUILD_ID = Date.now().toString(36);
 
 // Chemins des pages, par langue. La clé relie les versions FR et EN (hreflang, bascule).
@@ -281,7 +285,23 @@ function structuredData(key, lang, pageVideos = [], page = null) {
     ...(site.telephone ? { telephone: site.telephone } : {}),
     // Pas de rue, de ville ni de code postal : seulement la région et le pays.
     address: { '@type': 'PostalAddress', addressRegion: a.region, addressCountry: a.pays },
-    areaServed: { '@type': 'AdministrativeArea', name: site.zoneJsonLd },
+    // Zone principale : 50 km autour de Sainte-Thérèse (centre de la ville, pas une adresse) ; « Québec » reste la zone élargie
+    areaServed: [
+      {
+        '@type': 'GeoCircle',
+        name: `${site.zoneBase.ville}, ${site.zoneBase.region} (${site.zoneBase.rayonKm} km)`,
+        geoMidpoint: { '@type': 'GeoCoordinates', latitude: site.zoneBase.latitude, longitude: site.zoneBase.longitude },
+        geoRadius: site.zoneBase.rayonKm * 1000,
+      },
+      { '@type': 'AdministrativeArea', name: site.zoneJsonLd },
+    ],
+    openingHoursSpecification: {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: site.heures.jours.map((d) => `https://schema.org/${d}`),
+      opens: site.heures.ouverture,
+      closes: site.heures.fermeture,
+    },
+    foundingDate: site.dateFondation,
     knowsAbout: L.services.items.filter(shown).map((s) => s.titre),
     knowsLanguage: ['fr-CA', 'en-CA'],
     founder: { '@id': `${SITE_URL}/#jd` },
@@ -523,8 +543,10 @@ function contactBlock(lang, { tag = 'h2', id = 'contact-title' } = {}) {
       ${tag === 'h1' ? summary(L.seo.contact.resume) : ''}
       <dl class="contact-details" data-reveal>
         <div><dt class="label">${esc(L.contact.courrielLabel)}</dt><dd><a href="mailto:${site.courriel}">${esc(site.courriel)}</a></dd></div>
+        ${tag === 'h1' && TEL ? `<div><dt class="label">${esc(L.contact.telephoneLabel)}</dt><dd><a href="${TEL.href}">${esc(TEL.affiche)}</a> <span class="muted">· ${esc(L.contact.heures)}</span></dd></div>` : ''}
         <div><dt class="label">${esc(L.contact.zoneLabel)}</dt><dd>${esc(L.contact.zone)}</dd></div>
       </dl>
+      ${tag === 'h1' ? `<p class="muted small" data-reveal>${esc(L.contact.deplacement)}</p>` : ''}
       <div data-reveal>
         <p class="label">${esc(L.contact.suivre)}</p>
         ${socials({ icons: tag === 'h1', suffix: lang })}
@@ -1058,6 +1080,13 @@ function llmsTxt() {
     '',
     '## Zones desservies',
     ...site.zonesDesservies.map((z) => `- ${z}`),
+    `- ${fr.contact.deplacement}`,
+    '',
+    '## Heures',
+    `- Du lundi au dimanche, ${fr.contact.heures}.`,
+    '',
+    '## Repères',
+    `- Date de fondation : ${site.dateFondation}`,
     '',
     '## Pages (français)',
     ...pageLinks(fr, 'fr'),
@@ -1082,7 +1111,9 @@ function llmsTxt() {
     '',
     `- Services: ${en.services.items.filter(shown).map((s) => s.titre).join('; ')}`,
     `- Team: ${en.equipe.membres.map((m) => `${m.nom} (${m.role})`).join(', ')}`,
-    `- Areas served: ${en.contact.zone}`,
+    `- Areas served: ${en.contact.zone}. ${en.contact.deplacement}`,
+    `- Hours: Monday to Sunday, ${en.contact.heures}`,
+    `- Founded: ${site.dateFondation}`,
     `- How we work: ${en.surMesure} Delivery time: ${site.delaiLivraison.en}, depending on complexity.`,
     `- Email: ${site.courriel}`,
     ...(site.telephone ? [`- Phone: ${site.telephone}`] : []),
