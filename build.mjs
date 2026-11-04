@@ -19,7 +19,10 @@ const portfolio = readJson('portfolio.json');
 const clips = readJson('clips.json');
 const langs = { fr: readJson('fr.json'), en: readJson('en.json') };
 const SITE_URL = (process.env.SITE_URL || site.siteUrl).replace(/\/$/, '');
-const ALLOW_INDEX = process.env.VMM_ALLOW_INDEX === 'true';
+// Indexation : seulement en contexte production Netlify (CONTEXT est fourni par Netlify ; absent en local).
+// Les deploy previews et branch deploys restent toujours en noindex, même si VMM_ALLOW_INDEX traîne dans l'interface.
+const CONTEXT = process.env.CONTEXT || '';
+const ALLOW_INDEX = process.env.VMM_ALLOW_INDEX === 'true' && (!CONTEXT || CONTEXT === 'production');
 // Téléphone de JD (site.telephone, format +1-514-604-5682) : lien tel: et affichage 514-604-5682
 const TEL = site.telephone
   ? { href: `tel:${site.telephone.replace(/[^\d+]/g, '')}`, affiche: site.telephone.replace(/^\+1-?/, '') }
@@ -58,11 +61,12 @@ const CAMERA = {
 // la rotation se fait en CSS. Le revers montre la même face, pour que VMM se lise toujours à l'endroit.
 // Les fichiers vmm-logo-spin.* restent dans static/logo/.
 // Version 240 px de large (affichée à 52 px de haut, nette jusqu'à 3x) : 18 Ko au lieu de 46 Ko. L'original 444 px reste dans static/logo/.
+// Version 164 px (affichée à environ 82 px de large, soit 2x) : 12 Ko en WebP. Les versions 240 px et 444 px restent dans static/logo/.
 const LOGO = {
-  src: '/logo/vmm-logo-face-240.webp',
-  png: '/logo/vmm-logo-face-240.png',
-  width: 240,
-  height: 152,
+  src: '/logo/vmm-logo-face-164.webp',
+  png: '/logo/vmm-logo-face-164.png',
+  width: 164,
+  height: 104,
 };
 
 // Clips de fond de JD (content/clips.json) : <nom>.mp4, <nom>.webm, <nom>-poster.jpg dans static/videos/jd/.
@@ -161,7 +165,8 @@ const isPlaceholder = (s) => !s || /\[(?:À CONFIRMER|TO CONFIRM)/.test(s);
 const esc = (s = '') =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 // Texte affiché : échappé, et les placeholders sont rendus bien visibles.
-const t = (s = '') => esc(s).replace(PLACEHOLDER, (m) => `<span class="tbc">${m}</span>`);
+// Les placeholders [À CONFIRMER …] restent dans content/*.json (pour suivi) mais ne sont jamais publiés dans le HTML.
+const t = (s = '') => esc(s).replace(/\s*\[(?:À CONFIRMER|TO CONFIRM)[^\]]*\]/g, '');
 const note = (s) => (s ? ` ${t(s)}` : '');
 // Titres des pages Services et À propos : *mot* = mot en violet, retour à la ligne = <br>
 const rich = (s = '') => t(s).replace(/\*([^*]+)\*/g, '<span class="accent">$1</span>').replace(/\n/g, '<br>');
@@ -447,7 +452,7 @@ ${L.avisTraduction && !isPlaceholder(L.avisTraduction) ? `<div class="notice">${
     <nav id="menu" class="site-nav" aria-label="Navigation">
       <ul>
         ${['accueil', 'services', 'portfolio', 'apropos', 'contact'].map(navLink).join('\n        ')}
-        <li><a class="lang-switch" href="${route[other]}" hreflang="${langs[other].lang}" lang="${langs[other].lang}" aria-label="${esc(L.nav.autreLangueNom)}">${esc(L.nav.autreLangue)}</a></li>
+        <li><a class="lang-switch" href="${route[other]}" hreflang="${langs[other].lang}" lang="${langs[other].lang}" aria-label="${esc(L.nav.autreLangue)} — ${esc(L.nav.autreLangueNom)}">${esc(L.nav.autreLangue)}</a></li>
       </ul>
     </nav>
   </div>
@@ -462,6 +467,7 @@ ${body}
       <p class="muted">${t(L.pied.slogan)}</p>
       <p class="muted">${esc(FOOTER_NAME)} · ${esc(L.contact.zone)}</p>
       <p><a href="mailto:${site.courriel}">${esc(site.courriel)}</a></p>
+      ${TEL ? `<p><a href="${TEL.href}">${esc(TEL.affiche)}</a></p>` : ''}
     </div>
     <div>
       <p class="label">${esc(L.contact.suivre)}</p>
@@ -751,8 +757,13 @@ function servicesPage(lang) {
     </video>
   </div>
 </section>`;
+  // Illustration de service : version 336 px (2x l'affichage max de 168 px) quand elle existe ; l'original 600 px reste dans static/img/
+  const svcArt = (name) => {
+    const light = existsSync(join(ROOT, 'static', 'img', `${name}-336.webp`));
+    return picture(`/img/${name}${light ? '-336' : ''}`, '', { w: light ? 336 : 600, h: light ? 336 : 600, cls: 'svc-art', fallback: 'png' });
+  };
   const card = (s) => `<li class="svc-card" data-reveal>
-          ${picture(`/img/${s.icone}`, '', { w: 600, h: 600, cls: 'svc-art', fallback: 'png' })}
+          ${svcArt(s.icone)}
           <h3>${t(s.titre)}</h3>
           <p>${t(s.texte)}</p>
         </li>`;
@@ -1163,19 +1174,49 @@ ${ALLOW_INDEX ? '' : '  X-Robots-Tag: noindex, nofollow\n'}
   Cache-Control: public, max-age=31536000, immutable
 `
 );
+// Redirections 301 de l'ancien site (URL sans préfixe = anglais, /fr/... = français), en UN seul saut :
+// chaque destination est l'adresse finale avec slash (pas de 2e redirection /services → /services/).
+// Netlify ignore le slash final dans les règles : « /process » couvre aussi « /process/ ».
+// /services, /about et /contact (anciennes pages EN) ne sont PAS redirigées : ce sont aussi les adresses des
+// nouvelles pages FR, et une règle forcée rendrait ces pages FR inaccessibles. Elles servent donc la page FR,
+// qui a le bouton EN et le hreflang vers /en/services/, /en/about/ et /en/contact/.
+const OLD_REDIRECTS = [
+  // ancien anglais
+  ['/work', '/en/portfolio/'],
+  ['/work/*', '/en/portfolio/'],
+  ['/process', '/en/services/'],
+  ['/pricing', '/en/contact/'],
+  // ancien français
+  ['/fr', '/'],
+  ['/fr/services', '/services/'],
+  ['/fr/about', '/about/'],
+  ['/fr/contact', '/contact/'],
+  ['/fr/work', '/portfolio/'],
+  ['/fr/work/*', '/portfolio/'],
+  ['/fr/process', '/services/'],
+  ['/fr/pricing', '/contact/'],
+  ['/fr/*', '/:splat'],
+  // anciennes variantes déjà redirigées avant cette version
+  ['/en/work', '/en/portfolio/'],
+  ['/en/process', '/en/services/'],
+  ['/en/pricing', '/en/contact/'],
+  ['/a-propos', '/about/'],
+];
+// Domaine : www et l'adresse Netlify vers videosmakemoney.ca (forcé). Seulement au lancement (indexation activée,
+// contexte production) : avant, la démo vmm-prod.netlify.app doit rester consultable. Les deploy previews
+// (deploy-preview-N--vmm-prod.netlify.app) ont un autre nom d'hôte et ne sont jamais touchés par ces règles.
+const DOMAIN_REDIRECTS = ALLOW_INDEX
+  ? ['https://www.videosmakemoney.ca/*', 'https://vmm-prod.netlify.app/*'].map((from) => [from, `${SITE_URL}/:splat`, '301!'])
+  : [];
+const col = (rows) => {
+  const w = Math.max(...rows.map((r) => r[0].length)) + 2;
+  const w2 = Math.max(...rows.map((r) => r[1].length)) + 2;
+  return rows.map(([a, b, c = '301']) => `${a.padEnd(w)}${b.padEnd(w2)}${c}`).join('\n');
+};
 write(
   '/_redirects',
-  `# Anciennes pages (301)
-/work         /portfolio/      301
-/work/*       /portfolio/      301
-/process      /services/       301
-/pricing      /contact/        301
-/fr           /                301
-/fr/*         /:splat          301
-/en/work      /en/portfolio/   301
-/en/process   /en/services/    301
-/en/pricing   /en/contact/     301
-/a-propos     /about/          301
+  `${DOMAIN_REDIRECTS.length ? `# Domaine principal (301 forcé)\n${col(DOMAIN_REDIRECTS)}\n\n` : ''}# Anciennes pages (301, un seul saut)
+${col(OLD_REDIRECTS)}
 
 # Page 404 en anglais pour les adresses /en/... (le 404.html racine est en français)
 /en/*         /en/404.html     404

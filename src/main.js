@@ -215,8 +215,17 @@
       });
     }, { rootMargin: '50% 0px' });
     const start = () => bgVideos.forEach((box) => io.observe(box));
-    if (document.readyState === 'complete') start();
-    else window.addEventListener('load', start, { once: true });
+    // Services et Portfolio : aucune vidéo (webm/mp4) n'est téléchargée au chargement de la page ; le poster
+    // s'affiche et le clip ne se charge qu'au premier défilement (ou toucher, clic, touche du clavier).
+    const onScroll = /\bpage-(services|portfolio)\b/.test(document.body.className);
+    const afterInteraction = () => {
+      const events = ['scroll', 'wheel', 'touchstart', 'pointerdown', 'keydown'];
+      const go = () => { events.forEach((e) => window.removeEventListener(e, go)); start(); };
+      events.forEach((e) => window.addEventListener(e, go, { once: true, passive: true }));
+    };
+    const begin = onScroll ? afterInteraction : start;
+    if (document.readyState === 'complete') begin();
+    else window.addEventListener('load', begin, { once: true });
     // Passage mobile ↔ ordi : on recharge seulement les clips déjà commencés
     wide.addEventListener('change', () => bgVideos.forEach((box) => {
       if (!box.dataset.loaded) return;
