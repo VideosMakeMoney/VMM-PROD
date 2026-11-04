@@ -36,7 +36,7 @@ Pages Services et À propos : elles suivent les PDF de JD rangés dans `docs/jd/
 
 Drapeaux (`site.json` → `drapeaux`, `true` = affiché) : `strategie` pour le slogan « Strategy first. Camera second. » de Services (la carte Stratégie est confirmée par JD), `servicesCamera` pour la section caméra « Pièce par pièce » et `servicesFin` pour « Découvrez nos réalisations. » + bouton /portfolio. Les deux derniers sont à `false` pour l'instant : le code reste en place, la caméra reviendra à la fin de la page en animation au défilement.
 
-Tout texte contenant `[À CONFIRMER ...]` ou `[TO CONFIRM ...]` s'affiche en rose pointillé sur le site jusqu'à ce qu'il soit remplacé.
+Les textes `[À CONFIRMER ...]` / `[TO CONFIRM ...]` restent dans `content/*.json` pour le suivi, mais ne sont jamais publiés dans le HTML : rien ne s'affiche à leur place tant qu'ils ne sont pas remplacés.
 
 ## Formulaire
 
@@ -48,9 +48,9 @@ Après le premier déploiement : Netlify → Forms → activer la détection, pu
 1. Netlify → Add new site → Import from GitHub → ce dépôt.
 2. Build : `node build.mjs`, dossier publié : `dist` (déjà dans `netlify.toml`).
 3. Laisser `VMM_ALLOW_INDEX` vide pour la démo.
-4. **Mise en ligne réelle (avec l'accord de Max seulement)** : brancher le domaine, mettre `VMM_ALLOW_INDEX=true`, redéployer, puis soumettre `https://videosmakemoney.ca/sitemap.xml` dans Google Search Console.
+4. **Mise en ligne réelle (avec l'accord de Max seulement)** : brancher le domaine, mettre `VMM_ALLOW_INDEX = "true"` dans `netlify.toml` sous `[context.production.environment]`, redéployer, puis soumettre `https://videosmakemoney.ca/sitemap.xml` dans Google Search Console. Ce réglage active aussi les redirections forcées `www.videosmakemoney.ca` et `vmm-prod.netlify.app` → `videosmakemoney.ca`. Les deploy previews et branch deploys restent toujours en `noindex` (`build.mjs` vérifie `CONTEXT`).
 
-Redirections 301 (`_redirects`) : `/work` → `/portfolio`, `/process` → `/services`, `/pricing` → `/contact`, `/fr` → `/`.
+Redirections 301 (`_redirects`, liste `OLD_REDIRECTS` dans `build.mjs`), en un seul saut vers l'adresse finale : ancien anglais `/work` → `/en/portfolio/`, `/process` → `/en/services/`, `/pricing` → `/en/contact/` ; ancien français `/fr` → `/`, `/fr/services` → `/services/`, `/fr/about` → `/about/`, `/fr/contact` → `/contact/`, `/fr/work` → `/portfolio/`, `/fr/process` → `/services/`, `/fr/pricing` → `/contact/`. Les anciennes `/services`, `/about` et `/contact` ne sont pas redirigées : ce sont les adresses des nouvelles pages FR.
 
 ## SEO / GEO
 

@@ -112,7 +112,7 @@ ul { list-style: none; margin: 0; padding: 0; }
 }
 .intro { max-width: 46rem; color: var(--text-2); font-size: 1.125rem; }
 
-/* Placeholders [À CONFIRMER] : volontairement très visibles */
+/* Placeholders : plus publiés dans le HTML (retirés au build) ; règle gardée par sécurité */
 .tbc {
   display: none !important;
 }
