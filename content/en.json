@@ -340,7 +340,37 @@
   },
   "pied": {
     "slogan": "[TO CONFIRM: footer copy]",
-    "droits": "All rights reserved."
+    "droits": "All rights reserved.",
+    "zones": "Service areas"
+  },
+  "zones": {
+    "_aide": "Shared labels for the local pages (each page's own content is in content/zones.json).",
+    "etiquette": "Service areas",
+    "faitsTitre": "VMM Productions at a glance",
+    "faits": {
+      "base": "Based in",
+      "baseValeur": "Sainte-Thérèse (Laurentians)",
+      "rayon": "Travel",
+      "rayonValeur": "50 km radius around Sainte-Thérèse; travel costs beyond",
+      "heures": "Hours",
+      "heuresValeur": "7 a.m. to 7 p.m., Monday to Sunday",
+      "livraison": "Delivery",
+      "livraisonValeur": "1 to 2 weeks",
+      "langues": "Languages",
+      "languesValeur": "English and French, bilingual service included",
+      "equipe": "Team",
+      "equipeValeur": "JD, founder, and Renaud, cameraman (10 years of film experience)"
+    },
+    "servicesTitre": "Six services, adjusted to your project",
+    "servicesIntro": "Custom services, with no packages.",
+    "servicesBouton": "Discover our services →",
+    "videosTitre": "A few of our videos",
+    "videosIntro": "A glimpse of videos from our portfolio.",
+    "videosBouton": "Explore our portfolio →",
+    "faqTitre": "Frequently asked questions",
+    "ctaTitre": "Let's talk about your project",
+    "ctaTexte": "Write to us or call 514-604-5682, from 7 a.m. to 7 p.m. No commitment.",
+    "ctaBouton": "Contact us"
   },
   "merci": { "titre": "Thank you!", "texte": "Your message is on its way. We'll get back to you shortly.", "retour": "Back to home" },
   "introuvable": { "titre": "Page not found", "texte": "This page does not exist or has moved.", "retour": "Back to home", "pages": "Main pages" }
