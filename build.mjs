@@ -350,6 +350,8 @@ function structuredData(key, lang, pageVideos = [], page = null) {
 }
 
 // ---------- gabarit commun ----------
+// Pied de page (FR et EN) : nom commercial suivi du nom légal.
+const FOOTER_NAME = `${site.nom} (${site.nomLegal})`;
 // page : pour une page sans clé propre (page client) : { route, seo, crumb }.
 function layout({ key, lang, body, videos = [], page = null, preload = '' }) {
   if (preload) preload += '\n';
@@ -438,7 +440,7 @@ ${body}
     <div>
       <p class="logo">VMM<span>.</span></p>
       <p class="muted">${t(L.pied.slogan)}</p>
-      <p class="muted">${esc(site.nomLegal)} · ${esc(L.contact.zone)}</p>
+      <p class="muted">${esc(FOOTER_NAME)} · ${esc(L.contact.zone)}</p>
       <p><a href="mailto:${site.courriel}">${esc(site.courriel)}</a></p>
     </div>
     <div>
@@ -446,7 +448,7 @@ ${body}
       ${socials()}
     </div>
   </div>
-  <p class="container muted small">© ${new Date().getFullYear()} ${esc(site.nomLegal)}. ${esc(L.pied.droits)}</p>
+  <p class="container muted small">© ${esc(FOOTER_NAME)}. ${esc(L.pied.droits)}</p>
 </footer>
 <dialog class="lightbox" aria-label="${esc(L.lightbox.titre)}">
   <button class="lightbox-close" type="button" aria-label="${esc(L.lightbox.fermer)}">×</button>
