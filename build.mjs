@@ -788,7 +788,7 @@ function fullHero(clipId, title, L, hero = null, h1 = '', opts = {}) {
         : `<h1 id="hero-title" class="hero-word" data-no-accent>${esc(title)}${h1Seo(h1)}</h1>`
     }
   </div>
-  ${opts.scroll ? `<a class="scroll-cue" href="#${opts.scroll.cible}" aria-label="${esc(opts.scroll.label)}"><span>${esc(opts.scroll.texte)}</span><i aria-hidden="true"></i></a>` : ''}
+  ${opts.scroll ? `<a class="scroll-cue" href="#${opts.scroll.cible}" aria-label="${esc(opts.scroll.label)}"><span aria-hidden="true">${esc(opts.scroll.texte)}</span></a>` : ''}
   <button class="bg-toggle" type="button" data-bg-toggle data-pause="${esc(L.services.heroPause)}" data-play="${esc(L.services.heroLecture)}" aria-label="${esc(L.services.heroPause)}"><span aria-hidden="true">❚❚</span></button>
 </section>`;
 }
@@ -878,14 +878,16 @@ function clientImage(c) {
 const countText = (n, P) => `${n} ${n > 1 ? P.videos : P.video}`;
 
 // Miniature qui ouvre directement YouTube (nouvel onglet), sans lightbox. Sans ID : vignette vide, non cliquable.
-function ytTile(v, lang, { label = '', cls = '' } = {}) {
+// img (facultatif) : visuel fourni par JD (chemin sans extension, .webp + .jpg) au lieu de la miniature YouTube.
+function ytTile(v, lang, { label = '', cls = '', img = '' } = {}) {
   const L = langs[lang];
+  const own = img && existsSync(join(ROOT, 'static', `${img}.webp`)) ? picture(img, '', { w: 460, h: 642 }) : '';
   if (!v?.youtubeId) {
-    return `<span class="yt-tile is-empty${cls ? ` ${cls}` : ''}"><span class="thumb"><span class="thumb-empty" aria-hidden="true"></span></span>${label ? `<span class="yt-tile-label">${label}</span>` : ''}</span>`;
+    return `<span class="yt-tile is-empty${cls ? ` ${cls}` : ''}"><span class="thumb">${own || '<span class="thumb-empty" aria-hidden="true"></span>'}</span>${label ? `<span class="yt-tile-label">${label}</span>` : ''}</span>`;
   }
   const name = videoName(v, lang);
   return `<a class="yt-tile${cls ? ` ${cls}` : ''}" href="${ytUrl(v)}" target="_blank" rel="noopener" aria-label="${esc(L.portfolio.biblio.youtube)} : ${esc(name)}">
-          <span class="thumb"><img src="${ytThumb(v.youtubeId)}" alt="" loading="lazy" decoding="async" width="480" height="360"><span class="play" aria-hidden="true">▶</span></span>
+          <span class="thumb">${own || `<img src="${ytThumb(v.youtubeId)}" alt="" loading="lazy" decoding="async" width="480" height="360">`}<span class="play" aria-hidden="true">▶</span></span>
           ${label ? `<span class="yt-tile-label">${label}</span>` : ''}
         </a>`;
 }
@@ -920,22 +922,26 @@ function portfolioPage(lang) {
   const P = L.portfolio;
   const catVideos = portfolio.categories.map(categoryVideo);
   const behind = coulissesVideos();
-  const photo = `/img/coulisses/${COUL.photo}`;
-  const photoSmall = existsSync(join(ROOT, 'static', `${photo}-576.webp`)) ? `${photo}-576.webp` : `${photo}.webp`;
+  // Photo du bloc Coulisses : chemin complet (/img/...) ou, ancien format, nom d'un fichier de /img/coulisses/
+  const photo = COUL.photo.startsWith('/') ? COUL.photo : `/img/coulisses/${COUL.photo}`;
   const hasPhoto = existsSync(join(ROOT, 'static', `${photo}.webp`));
+  const photoFallback = existsSync(join(ROOT, 'static', `${photo}.jpg`)) ? 'jpg' : 'webp';
   const logo = (c) => {
-    if (c.logo && existsSync(join(ROOT, 'static', `${c.logo}.webp`))) return picture(c.logo, c.nom, { w: c.logoLargeur || 400, h: c.logoHauteur || 200, cls: 'logo-btn-img', fallback: c.logoFormat || 'png' });
-    return `<span class="logo-btn-name">${esc(c.nom)}</span>`;
+    const name = c.nomBouton || c.nom;
+    if (c.logo && existsSync(join(ROOT, 'static', `${c.logo}.webp`))) return picture(c.logo, `${L.portfolio.honneur.logoAlt} ${name}`, { w: c.logoLargeur || 440, h: c.logoHauteur || 440, cls: 'logo-btn-img', fallback: c.logoFormat || 'png' });
+    return `<span class="logo-btn-name">${esc(name)}</span>`;
   };
+  const head = (label, title, intro, id) => `<p class="jd-label jd-label-line" data-reveal>${esc(label)}</p>
+    <h2 id="${id}" data-reveal data-no-accent>${t(title)}</h2>
+    ${intro ? `<p class="jd-lead" data-reveal>${t(intro)}</p>` : ''}`;
   const body = `${fullHero('portfolio', P.heroTitre, L, null, L.seo.portfolio.h1, { cls: 'pf-hero', scroll: { texte: P.scroll, label: P.scrollLabel, cible: 'realisons' } })}
 ${summaryBand(L.seo.portfolio.resume)}
 <section class="jd-screen pf-cats" id="realisons" aria-labelledby="realisons-title">
   <div class="jd-wrap">
-    <p class="jd-label" data-reveal>${esc(P.realisons.etiquette)}</p>
-    <h2 id="realisons-title" data-reveal>${t(P.realisons.titre)}</h2>
+    ${head(P.realisons.etiquette, P.realisons.titre, P.realisons.intro, 'realisons-title')}
     <ul class="pf-cat-grid" role="list">
       ${portfolio.categories
-        .map((c, i) => `<li data-reveal>${ytTile(catVideos[i], lang, { cls: 'pf-cat', label: t(c.titre[lang]) })}</li>`)
+        .map((c, i) => `<li data-reveal>${ytTile(catVideos[i], lang, { cls: 'pf-cat', label: t((c.titrePortfolio || c.titre)[lang]), img: c.miniature })}</li>`)
         .join('\n      ')}
     </ul>
   </div>
@@ -943,13 +949,12 @@ ${summaryBand(L.seo.portfolio.resume)}
 
 <section class="jd-screen pf-honneur" aria-labelledby="honneur-title">
   <div class="jd-wrap">
-    <p class="jd-label" data-reveal>${esc(P.honneur.etiquette)}</p>
-    <h2 id="honneur-title" data-reveal>${t(P.honneur.titre)}</h2>
+    ${head(P.honneur.etiquette, P.honneur.titre, P.honneur.intro, 'honneur-title')}
     <ul class="logo-grid" role="list">
       ${honourClients()
-        .map((c) => `<li data-reveal><a class="logo-btn" href="${clientRoute(c)[lang]}" aria-label="${esc(P.honneur.voir.replace('{client}', c.nom))} (${countText(clientVideos(c).length, P)})">
-        ${logo(c)}
-        <span class="logo-btn-count">${countText(clientVideos(c).length, P)}</span>
+        .map((c) => `<li data-reveal><a class="logo-btn" href="${clientRoute(c)[lang]}" aria-label="${esc(P.honneur.voir.replace('{client}', c.nomBouton || c.nom))} (${countText(clientVideos(c).length, P)})">
+        <span class="logo-btn-face">${logo(c)}</span>
+        <span class="logo-btn-text"><strong>${esc(c.nomBouton || c.nom)}</strong><span class="logo-btn-count">${countText(clientVideos(c).length, P)}</span></span>
       </a></li>`)
         .join('\n      ')}
     </ul>
@@ -958,17 +963,19 @@ ${summaryBand(L.seo.portfolio.resume)}
 
 <section class="jd-screen pf-coulisses" aria-labelledby="pf-coulisses-title">
   <div class="jd-wrap">
-    <p class="jd-label" data-reveal>${esc(P.coulissesBloc.etiquette)}</p>
-    <h2 id="pf-coulisses-title" data-reveal>${esc(P.coulissesTitre)}</h2>
-    <a class="coulisses-link" href="${coulissesRoute[lang]}" aria-label="${esc(P.coulissesBloc.voir)} (${countText(behind.length, P)})" data-reveal>
-      <span class="coulisses-photo">${hasPhoto ? `<img src="${photo}.webp" srcset="${photoSmall} 576w, ${photo}.webp 1152w" sizes="(min-width: 768px) 360px, 80vw" alt="${esc(P.coulissesBloc.photoAlt)}" width="1152" height="2048" loading="lazy" decoding="async">` : '<span class="thumb-empty" aria-hidden="true"></span>'}</span>
-      <span class="coulisses-count">${countText(behind.length, P)} <span aria-hidden="true">→</span></span>
-    </a>
+    ${head(P.coulissesBloc.etiquette, P.coulissesBloc.titre, P.coulissesBloc.intro, 'pf-coulisses-title')}
+    <p class="pf-coulisses-row"><a class="coulisses-link" href="${coulissesRoute[lang]}" aria-label="${esc(P.coulissesBloc.voir)} (${countText(behind.length, P)})" data-reveal>
+      <span class="coulisses-photo">${hasPhoto ? picture(photo, P.coulissesBloc.photoAlt, { w: COUL.photoLargeur || 1152, h: COUL.photoHauteur || 2048, fallback: photoFallback }) : '<span class="thumb-empty" aria-hidden="true"></span>'}</span>
+      <span class="coulisses-text"><strong>${esc(P.coulissesBloc.legende)}</strong><span class="coulisses-count">${countText(behind.length, P)}</span></span>
+    </a></p>
   </div>
 </section>
 
-<section class="jd-screen jd-end pf-end" aria-label="${esc(P.bouton)}">
+<section class="jd-screen jd-end pf-end" aria-labelledby="pf-fin-title">
   <div class="jd-wrap">
+    <p class="jd-label" data-reveal>${esc(P.fin.etiquette)}</p>
+    <h2 id="pf-fin-title" data-reveal data-no-accent>${t(P.fin.titre)}</h2>
+    <p class="jd-lead" data-reveal>${t(P.fin.texte)}</p>
     <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.apropos[lang]}">${esc(P.bouton)}</a></p>
   </div>
 </section>`;
