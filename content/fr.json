@@ -279,8 +279,10 @@
       "texte": "Des personnes passionnées qui donnent vie aux visions et révèlent la fierté derrière chaque projet.",
       "photo": "/img/about-jd",
       "photoAlt": "Portrait de JD, fondateur de VMM Productions",
-      "photoFormat": "jpg",
-      "photoAide": "Aperçu : about-jd en attendant le PNG transparent de JD. Mettre son chemin sans extension dans photo et « png » dans photoFormat."
+      "photoFormat": "png",
+      "photoLargeur": 944,
+      "photoHauteur": 1665,
+      "photoAide": "Portrait détouré de JD (PNG transparent reçu le 2026-11-05 ; original dans media-originaux/jd/). photoLargeur / photoHauteur = dimensions réelles. L'ancienne photo rectangulaire est gardée sous /img/about-jd-photo (section « Rencontrez JD »)."
     },
     "membres": [
       {
@@ -291,7 +293,7 @@
           "Mon parcours a commencé avec une passion pour le récit visuel. J’ai étudié à la Toronto Film School avant de devoir interrompre mes études pour des raisons financières.",
           "Aujourd’hui, je travaille dans la construction tout en développant VMM Productions : deux univers qui m’ont appris la valeur du travail et des relations humaines."
         ],
-        "photo": "/img/about-jd",
+        "photo": "/img/about-jd-photo",
         "photoAlt": "Portrait de JD, fondateur et vidéaste de VMM Productions"
       },
       {

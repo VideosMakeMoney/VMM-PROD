@@ -51,43 +51,54 @@
     }
   ],
   "_aideCategories": "videoAccueil = ID YouTube de la vidéo ouverte par la vignette sur l'accueil. [À CONFIRMER : vidéo de chaque catégorie]",
-  "_aideClients": "Une page par client : /portfolio/<slug>/ (FR) et /en/portfolio/<slug>/ (EN). Le nombre de vidéos est calculé à partir de « videos » (champ client = nom exact). clip = nom d'un clip de content/clips.json joué en fond de la page du client (vide = poster ou fond simple). Ajouter un client ou une vidéo : seulement ce fichier.",
+  "_aideClients": "Une page par client : /portfolio/<slug>/ (FR) et /en/portfolio/<slug>/ (EN). Le nombre de vidéos est calculé à partir de « videos » (champ client = nom exact). clip = nom d'un clip de content/clips.json joué en fond de la page du client (vide = poster ou fond simple). Ajouter un client ou une vidéo : seulement ce fichier. villes / region : localisation du client confirmée par Natasha le 2026-11-05. Les pages locales (zones.json → villesLocales) montrent d'abord les vidéos des clients de leur zone. Ne jamais ajouter une ville non confirmée.",
   "clients": [
     {
       "nom": "Tapis Rouge",
       "slug": "tapis-rouge",
       "url": "",
-      "clip": ""
+      "clip": "",
+      "villes": ["Saint-Jérôme", "Montréal"],
+      "region": "Laurentides"
     },
     {
-      "nom": "Pur Construction",
+      "nom": "PUR Construction",
+      "nomAncien": "Pur Construction",
       "slug": "pur-construction",
       "url": "",
       "clip": "",
-      "note": "[À CONFIRMER : orthographe « Pur » ou « PUR »]"
+      "villes": ["Saint-Colomban"],
+      "region": "Laurentides"
     },
     {
       "nom": "Installations Hors-Pair",
       "nomAncien": "Hors-Paire Excavation",
       "slug": "hors-pair",
       "url": "https://hors-pair.ca/",
-      "clip": "hors-pairs"
+      "clip": "hors-pairs",
+      "villes": ["Morin-Heights"],
+      "region": "Laurentides"
     },
     {
       "nom": "BlueWise",
       "slug": "bluewise",
       "url": "",
-      "clip": ""
+      "clip": "",
+      "villes": ["Montréal"]
     }
   ],
   "clientsAVenir": [
     {
       "nom": "HH Portes et Fenêtres",
+      "villes": ["Lorraine"],
+      "region": "Laurentides",
       "url": "",
       "note": "[À CONFIRMER : liens des vidéos]"
     },
     {
       "nom": "Paintball Mirabel",
+      "villes": ["Mirabel"],
+      "region": "Laurentides",
       "url": "",
       "note": "[À CONFIRMER : liens du making-of et de l'album photo]"
     }
@@ -195,7 +206,7 @@
       "dateMiseEnLigne": ""
     },
     {
-      "client": "Pur Construction",
+      "client": "PUR Construction",
       "categorie": "",
       "type": "finale",
       "youtubeId": "3T-zTO2Q30A",
@@ -206,7 +217,7 @@
       "dateMiseEnLigne": ""
     },
     {
-      "client": "Pur Construction",
+      "client": "PUR Construction",
       "categorie": "",
       "type": "finale",
       "youtubeId": "F8bCIpVoDFI",
@@ -217,7 +228,7 @@
       "dateMiseEnLigne": ""
     },
     {
-      "client": "Pur Construction",
+      "client": "PUR Construction",
       "categorie": "",
       "type": "finale",
       "youtubeId": "G3owwW2k1Po",
@@ -228,7 +239,7 @@
       "dateMiseEnLigne": ""
     },
     {
-      "client": "Pur Construction",
+      "client": "PUR Construction",
       "categorie": "",
       "type": "finale",
       "youtubeId": "duRjqB2By-0",
@@ -239,7 +250,7 @@
       "dateMiseEnLigne": ""
     },
     {
-      "client": "Pur Construction",
+      "client": "PUR Construction",
       "categorie": "",
       "type": "finale",
       "youtubeId": "wNGp61LUV8g",
@@ -250,7 +261,7 @@
       "dateMiseEnLigne": ""
     },
     {
-      "client": "Pur Construction",
+      "client": "PUR Construction",
       "categorie": "",
       "type": "finale",
       "youtubeId": "VaEXZ5aXcE0",
@@ -261,7 +272,7 @@
       "dateMiseEnLigne": ""
     },
     {
-      "client": "Pur Construction",
+      "client": "PUR Construction",
       "categorie": "",
       "type": "finale",
       "youtubeId": "FOeE9sB-UtY",
