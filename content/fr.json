@@ -271,6 +271,11 @@
     "bouton": "Rencontrer les gens derrière VMM →"
   },
   "apropos": {
+    "coulisses": {
+      "_aide": "Grille de photos de coulisses (static/img/coulisses/coulisses-NN.webp + -576.webp), après les bios, avant le mot de la fin. titre = libellé « Coulisses » déjà utilisé sur le site ; pas de texte d'accompagnement. Pour ajouter une photo : la déposer dans static/img/coulisses/ (même nom, même format 9:16) ; le build les prend toutes, dans l’ordre des numéros.",
+      "titre": "Coulisses",
+      "alt": "Coulisses de tournage de VMM Productions, photo {n} sur {total}"
+    },
     "_aide": "Page À propos (PDF de JD « VMM About Section LAYOUT + DIRECTIONS »). Dans les titres, *mot* = mot en violet, \\n = retour à la ligne. photo = chemin sans extension (.webp + .jpg dans static/img/).",
     "titre": "À PROPOS",
     "etiquette": "À propos",

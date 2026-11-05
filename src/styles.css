@@ -638,6 +638,12 @@ html:not(.js) .bg-toggle { display: none; }
 .jd-screen h2 { font-size: clamp(1.9rem, 4.5vw, 3rem); }
 .jd-screen .vision-title { font-size: clamp(2.4rem, 6.5vw, 4.5rem); }
 .jd-lead { max-width: 36rem; color: var(--lavande); font-size: 1.125rem; }
+/* À propos : grille des photos de coulisses (9:16, affichées entières) */
+.jd-coulisses h2.jd-label { font-size: .8125rem; }
+.coulisses-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+.coulisses-grid img { display: block; width: 100%; height: auto; aspect-ratio: 9 / 16; object-fit: cover; border-radius: var(--radius-card); background: var(--surface); }
+@media (min-width: 600px) { .coulisses-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .coulisses-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1rem; } }
 
 /* Services : « Une vision. Six expertises. » avec JD détouré */
 .vision-grid { display: grid; gap: 2.5rem; align-items: center; }
