@@ -6,7 +6,7 @@
 //   VMM_ALLOW_INDEX  "true" seulement pour la mise en ligne sur videosmakemoney.ca.
 //                    Sinon, le site est servi en noindex (démo Netlify).
 
-import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -1075,6 +1075,34 @@ function slug(s) {
 }
 
 // Page À propos : maquette de JD (PDF « VMM About Section LAYOUT + DIRECTIONS »), même identité que Services.
+// Photos de coulisses (static/img/coulisses/coulisses-NN.webp + variante -576.webp), dans l'ordre des numéros.
+// Grille simple sur /about/, entre les bios et le mot de la fin ; chargement différé.
+const COULISSES_DIR = join(ROOT, 'static', 'img', 'coulisses');
+const coulissesPhotos = existsSync(COULISSES_DIR)
+  ? readdirSync(COULISSES_DIR).filter((f) => /^coulisses-\d+\.webp$/.test(f)).sort((a, b) => parseInt(a.slice(10), 10) - parseInt(b.slice(10), 10))
+  : [];
+function coulissesGrid(C) {
+  if (!C || !coulissesPhotos.length) return '';
+  const total = coulissesPhotos.length;
+  const items = coulissesPhotos
+    .map((f, i) => {
+      const src = `/img/coulisses/${f}`;
+      const small = src.replace(/\.webp$/, '-576.webp');
+      const srcset = existsSync(join(ROOT, 'static', small)) ? ` srcset="${small} 576w, ${src} 1152w" sizes="(min-width: 1024px) 190px, (min-width: 600px) 31vw, 47vw"` : '';
+      const alt = C.alt.replace('{n}', i + 1).replace('{total}', total);
+      return `<li><img src="${src}"${srcset} alt="${esc(alt)}" width="1152" height="2048" loading="lazy" decoding="async"></li>`;
+    })
+    .join('\n      ');
+  return `<section class="jd-screen jd-coulisses" aria-labelledby="coulisses-photos-title">
+  <div class="jd-wrap">
+    <h2 id="coulisses-photos-title" class="jd-label" data-reveal data-no-accent>${esc(C.titre)}</h2>
+    <ul class="coulisses-grid" role="list">
+      ${items}
+    </ul>
+  </div>
+</section>`;
+}
+
 function aboutPage(lang) {
   const L = langs[lang];
   const A = L.apropos;
@@ -1114,6 +1142,7 @@ ${summaryBand(L.seo.apropos.resume)}
   </div>
 </section>
 ${members}
+${coulissesGrid(A.coulisses)}
 <section class="jd-screen jd-closing" aria-labelledby="gens-title">
   <div class="jd-wrap">
     ${label}
