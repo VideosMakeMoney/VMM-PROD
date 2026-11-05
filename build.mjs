@@ -587,6 +587,19 @@ function videoTile(v, lang, { shape = 'vertical', caption = true, missing } = {}
         </a>`;
 }
 
+// Vignette de catégorie de l'accueil (« Ce que nous créons ») : le visuel de JD (categories[].miniature), comme sur Portfolio.
+// Avec un ID YouTube : vignette cliquable (lightbox). Sans ID : image seule, non cliquable, sans icône de lecture.
+const hasMiniature = (c) => Boolean(c.miniature) && existsSync(join(ROOT, 'static', `${c.miniature}.webp`));
+function categoryTile(c, v, lang) {
+  if (!hasMiniature(c)) return videoTile(v, lang, { shape: 'category', caption: false });
+  const img = picture(c.miniature, '', { w: 460, h: 642 });
+  if (!v?.youtubeId) return `<span class="tile tile-category tile-static"><span class="thumb">${img}</span></span>`;
+  const L = langs[lang];
+  return `<a href="${ytUrl(v)}" target="_blank" rel="noopener" class="tile tile-category" data-video="${esc(v.youtubeId)}" data-vertical="${v.vertical ? '1' : '0'}" aria-label="${esc(L.lightbox.voir)} : ${esc(videoName(v, lang))}">
+          <span class="thumb">${img}<span class="play" aria-hidden="true">▶</span></span>
+        </a>`;
+}
+
 // ---------- composant Contact (accueil et page Contact) ----------
 function contactBlock(lang, { tag = 'h2', id = 'contact-title' } = {}) {
   const L = langs[lang];
@@ -696,10 +709,10 @@ ${summaryBand(L.seo.accueil.resume)}
       ${portfolio.categories
         .map(
           (c, i) => `<li class="card glass" data-reveal>
-        ${videoTile(catVideos[i], lang, { shape: 'category', caption: false })}
+        ${categoryTile(c, catVideos[i], lang)}
         <h3>${t(c.titre[lang])}</h3>
         <p class="muted">${t(c.texte[lang])}</p>
-        ${catVideos[i] ? '' : `<p class="small">${t(L.creons.videoManquante)}</p>`}
+        ${catVideos[i]?.youtubeId || hasMiniature(c) ? '' : `<p class="small">${t(L.creons.videoManquante)}</p>`}
       </li>`
         )
         .join('\n      ')}
