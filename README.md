@@ -78,8 +78,8 @@ Redirections 301 (`_redirects`, liste `OLD_REDIRECTS` dans `build.mjs`), en un s
 ## Placeholders restants [À CONFIRMER]
 
 **Médias**
-- Bandeau d'accueil (2026-11-05) : vidéo 9:16 de JD dans `static/videos/jd/hero-mobile.mp4` / `.webm` + poster `hero-mobile-poster.*` (image à 3 s). L'ordinateur reçoit le même fichier pour l'instant : manque la version 16:9 (`hero-ordi.mp4`, `site.json → heroVideo.ordi` / `posterOrdi`).
-- Dates de publication YouTube (`datePublication` dans `portfolio.json`) pour sortir les vidéos dans le JSON-LD VideoObject.
+- Bandeau d'accueil : `hero-mobile` (9:16 de JD) + `hero-ordi` (16:9 composée depuis le clip 9:16, fond flou). Une prise 16:9 native de JD peut remplacer `hero-ordi`.
+- Dates YouTube (`dateMiseEnLigne`) remplies pour les 23 Shorts qui ont un ID. Restent sans date (donc hors VideoObject / sitemap vidéo) : « Une équipe soudée » et « ICI, TOUT A CHANGÉ » (pas d'ID YouTube).
 - Vidéo de chaque catégorie de « Ce que nous créons » (`videoAccueil` dans `portfolio.json`).
 - ID YouTube des vedettes « Une équipe soudée » (Tapis Rouge) et « ICI, TOUT A CHANGÉ » (Installations Hors-Pair), et la catégorie de cette dernière (« production »).
 - 2 autres vidéos vedettes pour arriver à 4.
@@ -115,7 +115,7 @@ Redirections 301 (`_redirects`, liste `OLD_REDIRECTS` dans `build.mjs`), en un s
 ## Originaux des médias (hors du site publié)
 
 `media-originaux/` garde les fichiers tels que reçus (jamais copiés dans `dist/`) :
-- `coulisses/01–18` : photos de coulisses ; versions WebP allégées dans `static/img/coulisses/coulisses-NN.webp` (1152 × 2048) et `coulisses-NN-576.webp` (576 × 1024). Pas encore affichées sur le site.
+- `coulisses/01–18` : photos de coulisses ; versions WebP allégées dans `static/img/coulisses/coulisses-NN.webp` (1152 × 2048) et `coulisses-NN-576.webp` (576 × 1024). Affichées sur `/about/` et `/en/about/` (grille après les bios).
 - `jd/PNG Transparent - Section A Propos.png` → `static/img/about-jd.webp` / `.png`.
 - `jd/VMM Logo Carre.png` (fond noir, pas transparent) → `static/img/logo-carre.webp` / `.png` et `logo-carre-512.*` (logo du JSON-LD, future fiche Google Business). Le logo 3D de l'en-tête ne change pas.
 - `jd/hero-upload.mp4` → `static/videos/jd/hero-mobile.mp4` / `.webm` (réencodées 30 i/s, sans son).

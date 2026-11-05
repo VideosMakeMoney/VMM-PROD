@@ -1074,6 +1074,34 @@ function slug(s) {
   return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
+// Photos de coulisses déjà dans static/img/coulisses/ (pas les originaux de media-originaux/).
+// Titre : mot existant « Coulisses » / « Behind the scenes » (apropos.coulissesTitre).
+function coulissesPhotos(lang, A) {
+  const titre = A.coulissesTitre || (lang === 'fr' ? 'Coulisses' : 'Behind the scenes');
+  const items = [];
+  for (let i = 1; i <= 18; i++) {
+    const n = String(i).padStart(2, '0');
+    const full = `/img/coulisses/coulisses-${n}.webp`;
+    const small = `/img/coulisses/coulisses-${n}-576.webp`;
+    const onDisk = (url) => existsSync(join(ROOT, 'static', url.replace(/^\//, '')));
+    if (!onDisk(full)) continue;
+    const srcset = onDisk(small) ? `${small} 576w, ${full} 1152w` : `${full} 1152w`;
+    items.push(
+      `<li><img src="${full}" srcset="${srcset}" sizes="(max-width: 559px) 50vw, (max-width: 899px) 33vw, 180px" width="1152" height="2048" alt="${esc(titre)} ${i}" loading="lazy" decoding="async"></li>`
+    );
+  }
+  if (!items.length) return '';
+  return `<section class="jd-screen" aria-labelledby="coulisses-photos-title">
+  <div class="jd-wrap">
+    <p class="jd-label" data-reveal>${esc(A.etiquette)}</p>
+    <h2 id="coulisses-photos-title" data-reveal>${esc(titre)}</h2>
+    <ul class="coulisses-grid" data-reveal>
+      ${items.join('\n      ')}
+    </ul>
+  </div>
+</section>`;
+}
+
 // Page À propos : maquette de JD (PDF « VMM About Section LAYOUT + DIRECTIONS »), même identité que Services.
 function aboutPage(lang) {
   const L = langs[lang];
@@ -1114,6 +1142,7 @@ ${summaryBand(L.seo.apropos.resume)}
   </div>
 </section>
 ${members}
+${coulissesPhotos(lang, A)}
 <section class="jd-screen jd-closing" aria-labelledby="gens-title">
   <div class="jd-wrap">
     ${label}
