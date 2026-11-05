@@ -155,7 +155,9 @@ function jpegSize(url) {
 
 // Mot-clé + ville (seo.<page>.h1) : petit sous-titre gris visible sous le titre, à l'intérieur du H1.
 // Le grand titre garde son style.
-const h1Seo = (text) => (text ? `<span class="h1-sub">${esc(text)}</span>` : '');
+// Sous-titre SEO dans le H1 : retiré de l'affichage à la demande de JD (2026-11-05), car répétitif.
+// Les mots-clés restent dans title, meta description, JSON-LD et hreflang ; seo.<page>.h1 reste dans les JSON.
+const h1Seo = () => '';
 
 // Feuille de style en ligne dans chaque page (≈ 10 Ko compressée) : aucune requête ne bloque le premier affichage.
 // src/styles.css reste la source (et est toujours copiée dans dist/).
@@ -567,8 +569,15 @@ const pageHead = (title, intro, clip = '', resume = '', h1 = '') => `<section cl
 </section>`;
 
 // Vignette vidéo : un lien YouTube sans JavaScript, une lightbox avec.
-function videoTile(v, lang, { shape = 'vertical', caption = true, missing } = {}) {
+// img (facultatif) : visuel de JD (chemin sans extension, .webp + .jpg) à la place de la miniature YouTube ;
+// sans ID YouTube, la vignette devient une image seule, non cliquable, sans icône de lecture.
+function videoTile(v, lang, { shape = 'vertical', caption = true, missing, img = '', label = '' } = {}) {
   const L = langs[lang];
+  const own = img && existsSync(join(ROOT, 'static', `${img}.webp`)) ? picture(img, '', { w: 460, h: 642 }) : '';
+  const cap = () => `<span class="tile-caption">${v?.titre ? `<strong>${esc(v.titre)}</strong>` : label ? `<strong>${esc(label)}</strong>` : ''}${v?.client ? `<span class="muted">${esc(v.client)}</span>` : ''}</span>`;
+  if (own && !v?.youtubeId) {
+    return `<span class="tile tile-${shape} tile-static"><span class="thumb">${own}</span>${caption ? cap() : ''}</span>`;
+  }
   if (!v || !v.youtubeId) {
     const name = v?.titre || '';
     return `<button type="button" class="tile tile-${shape}" data-video="" aria-label="${esc(L.lightbox.voir)}${name ? ` : ${esc(name)}` : ''}">
@@ -578,7 +587,7 @@ function videoTile(v, lang, { shape = 'vertical', caption = true, missing } = {}
   }
   const name = videoName(v, lang);
   return `<a href="${ytUrl(v)}" target="_blank" rel="noopener" class="tile tile-${shape}" data-video="${esc(v.youtubeId)}" data-vertical="${v.vertical ? '1' : '0'}" aria-label="${esc(L.lightbox.voir)} : ${esc(name)}">
-          <span class="thumb"><img src="${ytThumb(v.youtubeId)}" alt="" loading="lazy" decoding="async" width="480" height="360"><span class="play" aria-hidden="true">▶</span></span>
+          <span class="thumb">${own || `<img src="${ytThumb(v.youtubeId)}" alt="" loading="lazy" decoding="async" width="480" height="360">`}<span class="play" aria-hidden="true">▶</span></span>
           ${
             caption
               ? `<span class="tile-caption">${v.titre ? `<strong>${esc(v.titre)}</strong>` : t(L.portfolio.titreManquant)}${v.client ? `<span class="muted">${esc(v.client)}</span>` : ''}${note(v.note)}</span>`
@@ -650,8 +659,16 @@ function homePage(lang) {
   const L = langs[lang];
   const hv = site.heroVideo;
   const vedettes = featured();
-  const slots = [...vedettes];
-  while (slots.length < L.realisations.vedettesMin) slots.push(null);
+  // Vedettes (avec leur visuel de JD, videos[].miniature), puis, s'il en manque, les catégories dont le visuel
+  // n'est pas déjà affiché. Une tuile sans ID YouTube est une image seule, non cliquable (JD, 2026-11-05).
+  const slots = vedettes.map((v) => ({ v, img: v.miniature || '' }));
+  for (const c of portfolio.categories) {
+    if (slots.length >= L.realisations.vedettesMin) break;
+    if (!c.miniature || slots.some((x) => x.img === c.miniature)) continue;
+    const v = categoryVideo(c);
+    slots.push({ v: v?.youtubeId ? v : null, img: c.miniature, label: c.titre[lang] });
+  }
+  while (slots.length < L.realisations.vedettesMin) slots.push({ v: null });
   const catVideos = portfolio.categories.map(categoryVideo);
   // Seuls les fichiers présents dans static/ sont appelés : un fichier manquant ne donne jamais de 404.
   const exists = (url) => Boolean(url) && existsSync(join(ROOT, 'static', url));
@@ -741,7 +758,7 @@ ${summaryBand(L.seo.accueil.resume)}
   <div class="container">
     ${sectionHead(L.realisations.etiquette, L.realisations.titre, L.realisations.intro, 'realisations-title')}
     <ul class="grid grid-4 featured">
-      ${slots.map((v) => `<li data-reveal>${videoTile(v, lang, { missing: L.realisations.vedetteManquante })}</li>`).join('\n      ')}
+      ${slots.map((x) => `<li data-reveal>${videoTile(x.v, lang, { missing: L.realisations.vedetteManquante, img: x.img, label: x.label })}</li>`).join('\n      ')}
     </ul>
     ${clientMarquee()}
     <p class="cta-row"><a class="btn btn-neon" href="${ROUTES.portfolio[lang]}">${esc(L.realisations.bouton)}</a></p>
@@ -791,7 +808,8 @@ function lucide(name, cls = 'svc-icon', size = 40) {
 // hero (facultatif) : titre sur deux lignes en haut à gauche, sous le menu, puis texte d'intro (Services).
 // opts.cls : classe en plus ; opts.scroll : { texte, label, cible } = repère SCROLL en bas, lien vers la section suivante.
 function fullHero(clipId, title, L, hero = null, h1 = '', opts = {}) {
-  return `<section class="page-hero full-hero has-bg-video${hero ? ' is-top' : ''}${opts.cls ? ` ${opts.cls}` : ''}" aria-labelledby="hero-title">
+  // Titre et description en bas du bandeau sur toutes les pages (JD, 2026-11-05) : la classe is-top n'est plus posée.
+  return `<section class="page-hero full-hero has-bg-video${opts.cls ? ` ${opts.cls}` : ''}" aria-labelledby="hero-title">
   ${bgVideo(clipId)}
   <div class="container">
     ${
@@ -858,7 +876,7 @@ ${summaryBand(L.seo.services.resume)}
       <h2 id="vision-title" class="vision-title" data-reveal>${rich(V.titre)}</h2>
       <p class="jd-lead" data-reveal>${t(V.texte)}</p>
       <ul class="reperes" data-reveal>
-        ${V.reperes.map((r) => `<li>${lucide(r.icone, 'repere-icon', 44)}<strong>${esc(r.titre)}</strong><span>${esc(r.texte)}</span></li>`).join('\n        ')}
+        ${V.reperes.map((r) => `<li>${r.image && existsSync(join(ROOT, 'static', `${r.image}.webp`)) ? picture(r.image, '', { w: 192, h: 192, cls: 'repere-img', fallback: 'png' }) : lucide(r.icone, 'repere-icon', 44)}<strong>${esc(r.titre)}</strong><span>${esc(r.texte)}</span></li>`).join('\n        ')}
       </ul>
     </div>
     <div class="vision-photo" data-reveal>
@@ -875,7 +893,11 @@ ${shown(S.fin) ? `<section class="jd-screen jd-end" aria-labelledby="fin-title">
     <p class="jd-lead" data-reveal>${t(S.fin.texte)}</p>
     <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.portfolio[lang]}">${esc(S.fin.bouton)}</a></p>
   </div>
-</section>` : ''}
+</section>` : `<section class="jd-screen jd-end svc-cta" aria-label="${esc(S.fin.bouton)}">
+  <div class="jd-wrap">
+    <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.portfolio[lang]}">${esc(S.fin.bouton)}</a></p>
+  </div>
+</section>`}
 ${shown(S.slogan) ? `<p class="jd-slogan">${esc(S.slogan.texte)}</p>` : ''}`;
   return layout({ key: 'services', lang, body, preload: posterPreload('services') });
 }
@@ -946,12 +968,12 @@ function portfolioPage(lang) {
   };
   const head = (label, title, intro, id) => `<p class="jd-label jd-label-line" data-reveal>${esc(label)}</p>
     <h2 id="${id}" data-reveal data-no-accent>${t(title)}</h2>
-    ${intro ? `<p class="jd-lead" data-reveal>${t(intro)}</p>` : ''}`;
+    ${[].concat(intro || []).map((x) => `<p class="jd-lead" data-reveal>${t(x)}</p>`).join('\n    ')}`;
   const body = `${fullHero('portfolio', P.heroTitre, L, null, L.seo.portfolio.h1, { cls: 'pf-hero', scroll: { texte: P.scroll, label: P.scrollLabel, cible: 'realisons' } })}
 ${summaryBand(L.seo.portfolio.resume)}
 <section class="jd-screen pf-cats" id="realisons" aria-labelledby="realisons-title">
   <div class="jd-wrap">
-    ${head(P.realisons.etiquette, P.realisons.titre, P.realisons.intro, 'realisons-title')}
+    ${head(P.realisons.etiquette, P.realisons.titre, [P.intro, P.realisons.intro], 'realisons-title')}
     <ul class="pf-cat-grid" role="list">
       ${portfolio.categories
         .map((c, i) => `<li data-reveal>${ytTile(catVideos[i], lang, { cls: 'pf-cat', label: t((c.titrePortfolio || c.titre)[lang]), img: c.miniature })}</li>`)

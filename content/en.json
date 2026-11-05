@@ -128,16 +128,19 @@
       "reperes": [
         {
           "icone": "target",
+          "image": "/img/repere-strategie",
           "titre": "Strategy",
           "texte": "A clear intention"
         },
         {
           "icone": "camera",
+          "image": "/img/repere-production",
           "titre": "Production",
           "texte": "Authentic images"
         },
         {
           "icone": "layers",
+          "image": "/img/repere-finition",
           "titre": "Finishing",
           "texte": "Careful execution"
         }

@@ -32,14 +32,18 @@
   --gradient: linear-gradient(90deg, #7C3AED 0%, #3B5BFF 45%, #FF3CAC 100%);
   --hero-violet: #7C3AED;
   --hero-blue: #3B5BFF;
+  /* Titres des bandeaux (JD, 2026-11-05) : dégradé mauve → rose → bleu */
+  --hero-gradient: linear-gradient(90deg, #8b5cf6 0%, #ff3cac 55%, #3b5bff 100%);
+  --mauve: #8b5cf6;
+  --jd-violet: #7c3aed;
   --hero-pink: #FF3CAC;
   --hero-text: #F5F5FA;
   --hero-body: #9E94B0;
   --card-glow: 0 0 30px rgba(124, 58, 237, .18);
   --halo-violet: rgba(123, 47, 255, .12);
   --halo-pink: rgba(255, 45, 120, .08);
-  --neon: 0 0 24px #ff3cac59, inset 0 0 12px #7c3aed2e;
-  --neon-hover: 0 0 36px #ff3cac8c, inset 0 0 18px #7c3aed4d;
+  --neon: 0 0 20px rgba(124, 58, 237, .3);
+  --neon-hover: 0 0 28px rgba(139, 92, 246, .45);
   --ease: cubic-bezier(.16, 1, .3, 1);
   --font-title: "Cinzel", Georgia, serif;
   /* Pied de page : le texte « VMM. » garde Syne */
@@ -72,8 +76,8 @@ body {
 }
 img, video { display: block; max-width: 100%; }
 a { color: var(--violet-light); }
-a:hover { color: var(--cyan); }
-:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+a:hover { color: var(--violet-light); }
+:focus-visible { outline: 2px solid var(--violet-light); outline-offset: 3px; }
 .nowrap { white-space: nowrap; }
 h1, h2, h3 { font-family: var(--font-title); font-weight: 900; line-height: 1.15; letter-spacing: -.01em; overflow-wrap: break-word; margin: 0 0 .5em; }
 h2 { font-weight: 900; font-size: clamp(2rem, 5vw, 3.5rem); }
@@ -99,7 +103,7 @@ ul { list-style: none; margin: 0; padding: 0; }
   font: 700 .8125rem/1.4 var(--font-label);
   letter-spacing: .12em;
   text-transform: uppercase;
-  color: var(--cyan);
+  color: var(--violet-light);
   margin-bottom: 1rem;
 }
 .gradient-text {
@@ -144,23 +148,14 @@ ul { list-style: none; margin: 0; padding: 0; }
   cursor: pointer;
 }
 .btn-neon {
-  color: var(--text);
-  background: rgba(20, 20, 43, .6);
-  border: 1px solid #ff3cac99;
-  box-shadow: var(--neon);
-  position: relative;
-  overflow: hidden;
-  transition: box-shadow .3s var(--ease), border-color .3s var(--ease), transform .3s var(--ease);
+  /* Boutons d'action (JD, 2026-11-05) : mauves et sobres, sans contour rose ni reflet */
+  color: #fff;
+  background: var(--jd-violet);
+  border: 1px solid transparent;
+  transition: background .3s var(--ease), transform .3s var(--ease);
 }
-.btn-neon:hover { color: var(--text); box-shadow: var(--neon-hover); border-color: var(--hero-pink); transform: translateY(-1px); }
-.btn-neon::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .12) 50%, transparent 70%);
-  transform: translateX(-120%);
-}
-.btn-neon:hover::after { animation: shimmer 1.2s var(--ease); }
+.btn-neon:hover { color: #fff; background: var(--mauve); transform: translateY(-1px); }
+.btn:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 .cta-row { margin-top: 2.5rem; }
 
 .glass {
@@ -177,14 +172,15 @@ ul { list-style: none; margin: 0; padding: 0; }
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(8, 8, 15, .72);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--border);
+  /* Plus discret (JD, 2026-11-05) : fond plus transparent, flou léger, filet à peine visible */
+  background: rgba(8, 8, 15, .5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, .05);
 }
 .header-inner { display: flex; align-items: center; justify-content: space-between; min-height: var(--header-h); gap: 1rem; }
 .logo { font: 900 1.5rem/1 var(--font-logo); color: var(--text); text-decoration: none; margin: 0; }
-.logo span { color: var(--pink); }
+.logo span { color: var(--violet-light); }
 /* Logo : rotation seule sur l'axe vertical, en boucle, vitesse constante.
    Deux faces dos à dos : le revers est la même image retournée, pour que VMM se lise à l'endroit. */
 .logo-video { display: inline-flex; align-items: center; min-height: 44px; height: var(--header-h); perspective: 600px; }
@@ -202,7 +198,7 @@ ul { list-style: none; margin: 0; padding: 0; }
   padding: 0 16px;
   background: transparent;
   color: var(--text);
-  border: 1px solid var(--border-strong);
+  border: 1px solid rgba(255, 255, 255, .12);
   border-radius: var(--radius-sm);
   font: 700 .8125rem var(--font-label);
   text-transform: uppercase;
@@ -221,7 +217,7 @@ ul { list-style: none; margin: 0; padding: 0; }
   font-weight: 500;
 }
 .site-nav a:hover, .site-nav a[aria-current="page"] { color: var(--violet-light); }
-.lang-switch { font-family: var(--font-label); font-weight: 700; border: 1px solid var(--border-strong); justify-content: center; min-width: 44px; }
+.lang-switch { font-family: var(--font-label); font-weight: 700; border: 1px solid rgba(255, 255, 255, .12); justify-content: center; min-width: 44px; }
 
 /* Sans JS, le menu reste visible ; avec JS il devient repliable sur mobile */
 .menu-toggle { display: none; }
@@ -268,7 +264,7 @@ ul { list-style: none; margin: 0; padding: 0; }
 .leak { position: absolute; border-radius: 50%; filter: blur(100px); mix-blend-mode: screen; opacity: .35; animation: leak-drift 14s ease-in-out infinite alternate; }
 .leak-violet { width: 40vmax; height: 30vmax; left: 10%; top: 5%; background: var(--hero-violet); }
 .leak-rose { width: 30vmax; height: 25vmax; right: 5%; top: 30%; background: var(--hero-pink); animation-delay: -5s; opacity: .22; }
-.leak-bleu { width: 35vmax; height: 25vmax; left: 35%; bottom: -5%; background: var(--hero-blue); animation-delay: -9s; opacity: .2; }
+.leak-bleu { width: 35vmax; height: 25vmax; left: 35%; bottom: -5%; background: var(--hero-violet); animation-delay: -9s; opacity: .2; }
 .halo { position: absolute; border-radius: 50%; filter: blur(110px); animation: halo-pulse 3.2s ease-in-out infinite alternate; }
 .halo-violet { width: 60vmax; height: 60vmax; left: -20vmax; top: -10vmax; background: var(--halo-violet); }
 .halo-rose { width: 50vmax; height: 50vmax; right: -15vmax; bottom: -15vmax; background: var(--halo-pink); animation-delay: -1.6s; }
@@ -471,7 +467,7 @@ html:not(.js) .hero-toggle { display: none; }
 .hp { position: absolute; left: -9999px; }
 .form-status:empty { display: none; }
 .form-status { margin-top: 1rem; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--surface-2); border: 1px solid var(--border-strong); }
-.form-status.ok { border-color: var(--cyan); }
+.form-status.ok { border-color: var(--violet-light); }
 .form-status.err { border-color: var(--pink); }
 .contact-details { margin: 1.5rem 0; display: grid; gap: 1rem; }
 .contact-details dt { margin-bottom: .25rem; }
@@ -612,7 +608,7 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
   font-size: clamp(2.6rem, 11vw, 8rem);
   line-height: 1;
   letter-spacing: .02em;
-  background: var(--accent-gradient);
+  background: var(--hero-gradient);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -689,10 +685,10 @@ html:not(.js) .bg-toggle { display: none; }
 .btn-solid {
   min-height: 56px; padding: 14px 40px;
   background: var(--jd-violet); color: #fff; border: 0;
-  font-weight: 700; box-shadow: 0 0 28px rgba(124, 58, 237, .35);
-  transition: background .3s var(--ease), box-shadow .3s var(--ease), transform .3s var(--ease);
+  font-weight: 700;
+  transition: background .3s var(--ease), transform .3s var(--ease);
 }
-.btn-solid:hover, .btn-solid:focus-visible { background: #8b5cf6; color: #fff; box-shadow: 0 0 36px rgba(139, 92, 246, .55); transform: translateY(-1px); }
+.btn-solid:hover, .btn-solid:focus-visible { background: var(--mauve); color: #fff; transform: translateY(-1px); }
 .jd-slogan { margin: 0; padding: 3rem var(--gutter); background: #130f22; text-align: center; font: 700 .8125rem/1.5 var(--font-label); letter-spacing: .12em; text-transform: uppercase; color: var(--text-2); }
 
 /* À propos : photo à gauche, texte à droite ; empilés sur mobile */
@@ -709,7 +705,7 @@ html:not(.js) .bg-toggle { display: none; }
 .full-hero.is-top .bg-video-veil { background: linear-gradient(180deg, rgba(8, 8, 15, .78) 0%, rgba(8, 8, 15, .45) 38%, rgba(8, 8, 15, .12) 70%, rgba(8, 8, 15, .55) 100%); }
 .hero-stack { margin: 0 0 1.25rem; font-size: clamp(2.6rem, 11vw, 7rem); line-height: 1; letter-spacing: .02em; }
 .hero-stack .hero-line, .hero-stack .hero-word { display: block; font-size: inherit; white-space: nowrap; }
-.hero-stack .hero-word { background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+.hero-stack .hero-word { background: var(--hero-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
 .hero-stack .hero-line { color: var(--title); }
 .hero-intro { color: var(--text); max-width: 34rem; text-shadow: 0 1px 12px rgba(8, 8, 15, .6); }
 /* Ordi : le bloc titre + intro tient dans la bande floue de gauche de la vidéo 16:9.
@@ -770,7 +766,7 @@ h1 .h1-sub {
 
 /* ---------- Page Portfolio (PDF « VMM Portfolio LAYOUT » de JD) ---------- */
 /* Héros : titre PORTFOLIO en dégradé violet → magenta, repère SCROLL en bas au centre */
-.pf-hero .hero-word { background: linear-gradient(90deg, var(--hero-violet), var(--hero-pink)); -webkit-background-clip: text; background-clip: text; }
+
 .scroll-cue {
   position: absolute; left: 50%; bottom: var(--gutter); translate: -50% 0; z-index: 2;
   display: flex; flex-direction: column; align-items: center; gap: .5rem;
@@ -865,3 +861,19 @@ html:not(.js) .library-arrow { display: none; }
 .page-accueil .tile-category .thumb:has(picture) { aspect-ratio: 460 / 642; }
 .tile-category .thumb picture, .tile-category .thumb picture img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .tile-static { cursor: default; }
+
+/* ---------- Ajustements JD du 2026-11-05 ---------- */
+/* Titre du bandeau d'accueil : même dégradé mauve → rose → bleu que les autres bandeaux */
+.hero-title { background: var(--hero-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; width: fit-content; max-width: 100%; }
+.hero-title .accent { background: none; -webkit-text-fill-color: inherit; color: inherit; }
+/* Description d'un bandeau plein écran : sous le titre, en bas */
+.full-hero .hero-intro { margin: 1rem 0 0; max-width: 40rem; color: var(--hero-text); text-shadow: 0 1px 8px rgba(8, 8, 15, .7); }
+/* Contact : seule la couche vidéo du logo animé passe à 70 % d'opacité */
+.page-contact .bg-video-media, .page-contact .bg-video-poster, .page-contact .bg-video-blur { opacity: .7; }
+/* Repères de Services : visuels de JD au lieu des icônes Lucide */
+.repere-img, .repere-img img { display: block; width: 64px; height: 64px; }
+.repere-img img { object-fit: contain; }
+/* Vignette sans vidéo : visuel seul, non cliquable */
+.tile-static { cursor: default; }
+.thumb picture, .thumb picture img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.featured .tile-vertical .thumb:has(picture) { aspect-ratio: 460 / 642; }

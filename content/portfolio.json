@@ -1,5 +1,5 @@
 {
-  "_aide": "Portfolio de VMM, éditable par JD. Une entrée par vidéo. youtubeId = l'identifiant dans l'URL (youtube.com/shorts/ABC123 → ABC123). type : \"finale\" (production finale, classée par client) ou \"coulisses\" (coulisses, bandes-annonces, making-of). categorie : promo, evenements, histoires ou coulisses. vedette : true pour l'afficher dans « Nos réalisations » et dans les vedettes par catégorie. langue : fr ou en. titre vide = « [À CONFIRMER] » affiché. dateMiseEnLigne (AAAA-MM-JJ) aide Google : vraie date de publication lue sur la page YouTube publique (2026-11-05), jamais inventée.",
+  "_aide": "Portfolio de VMM, éditable par JD. miniature (facultatif) = visuel de JD pour cette vidéo (chemin sans extension, .webp + .jpg), utilisé dans « Nos réalisations » de l'accueil. Une entrée par vidéo. youtubeId = l'identifiant dans l'URL (youtube.com/shorts/ABC123 → ABC123). type : \"finale\" (production finale, classée par client) ou \"coulisses\" (coulisses, bandes-annonces, making-of). categorie : promo, evenements, histoires ou coulisses. vedette : true pour l'afficher dans « Nos réalisations » et dans les vedettes par catégorie. langue : fr ou en. titre vide = « [À CONFIRMER] » affiché. dateMiseEnLigne (AAAA-MM-JJ) aide Google : vraie date de publication lue sur la page YouTube publique (2026-11-05), jamais inventée.",
   "categories": [
     {
       "id": "promo",
@@ -143,6 +143,7 @@
       "youtubeId": "",
       "langue": "",
       "titre": "Une équipe soudée",
+      "miniature": "/img/portfolio/cat-evenements",
       "vedette": true,
       "vertical": true,
       "dateMiseEnLigne": "",
@@ -155,6 +156,7 @@
       "youtubeId": "",
       "langue": "",
       "titre": "ICI, TOUT A CHANGÉ",
+      "miniature": "/img/portfolio/cat-promo",
       "vedette": true,
       "vertical": true,
       "dateMiseEnLigne": "",
@@ -200,6 +202,7 @@
       "youtubeId": "g8pY-zSgljI",
       "langue": "",
       "titre": "Le grind du 1er juillet",
+      "miniature": "/img/portfolio/cat-histoires",
       "titreSource": "Titre de la maquette de JD (PDF Portfolio, page 2) confirmé par Natasha le 2026-11-05 ; titre YouTube public : « 1er juillet : au cœur de la journée la plus occupée chez Tapis Rouge ».",
       "vedette": false,
       "vertical": true,
