@@ -268,7 +268,22 @@
     "video": "video",
     "titreManquant": "[TO CONFIRM: title]",
     "vedetteManquante": "[TO CONFIRM: featured video for this category]",
-    "bouton": "Meet the people behind VMM →"
+    "bouton": "Meet the people behind VMM →",
+    "_aidePage": "Portfolio page rebuilt 2026-11-05 (Natasha's description of JD's « VMM Portfolio LAYOUT » PDF). Keys above are kept.",
+    "heroTitre": "PORTFOLIO",
+    "scroll": "SCROLL",
+    "scrollLabel": "Scroll to the rest of the page",
+    "realisons": { "etiquette": "What we create", "titre": "Four ways to tell your story." },
+    "honneur": { "etiquette": "Featured businesses", "titre": "Every business. Its own world.", "voir": "See the videos for {client}" },
+    "coulissesBloc": { "etiquette": "Behind the scenes", "voir": "See all behind-the-scenes videos", "photoAlt": "VMM Productions behind the scenes" },
+    "biblio": { "precedent": "Previous videos", "suivant": "Next videos", "youtube": "Watch on YouTube" },
+    "coulissesPage": {
+      "titre": "Behind the scenes",
+      "seoTitre": "Behind the scenes, making-of and trailers | VMM Productions",
+      "seoDescription": "Behind-the-scenes footage, making-of and trailers from VMM Productions, corporate videographer in Greater Montreal and the Laurentians.",
+      "h1": "Behind the scenes at VMM Productions, video production in Montreal and the Laurentians",
+      "resume": "VMM Productions shares {n} of behind-the-scenes footage, making-of and trailers."
+    }
   },
   "apropos": {
     "coulisses": {

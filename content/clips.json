@@ -3,6 +3,7 @@
   "dossier": "/videos/jd/",
   "clips": {
     "work": { "mobile": "work-9x16", "ordi": "" },
+    "portfolio": { "mobile": "portfolio-hero-mobile", "ordi": "portfolio-hero-ordi", "focal": { "mobile": "50% 50%", "ordi": "50% 50%" }, "note": "Héros de /portfolio/ (20 s). Mobile = clip 9:16 de Max (même source que « work ») ; ordi = 16:9 composé, clip 9:16 centré sur fond flou de la même vidéo (2026-11-05). Remplacer les fichiers portfolio-hero-* si Max envoie une nouvelle version." },
     "services": { "mobile": "services-9x16", "ordi": "services-16x9", "focal": { "mobile": "50% 50%", "ordi": "50% 50%" } },
     "hors-pairs": { "mobile": "hors-pairs-9x16", "ordi": "" },
     "contact-logo": { "mobile": "contact-logo-9x16", "ordi": "contact-logo-16x9" },

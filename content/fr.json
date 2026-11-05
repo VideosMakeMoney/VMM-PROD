@@ -268,7 +268,22 @@
     "video": "vidéo",
     "titreManquant": "[À CONFIRMER : titre]",
     "vedetteManquante": "[À CONFIRMER : vidéo vedette de la catégorie]",
-    "bouton": "Rencontrer les gens derrière VMM →"
+    "bouton": "Rencontrer les gens derrière VMM →",
+    "_aidePage": "Page Portfolio refaite le 2026-11-05 (description de Natasha d'après le PDF « VMM Portfolio LAYOUT » de JD). Les clés ci-dessus sont gardées.",
+    "heroTitre": "PORTFOLIO",
+    "scroll": "SCROLL",
+    "scrollLabel": "Défiler vers la suite de la page",
+    "realisons": { "etiquette": "Ce que nous réalisons", "titre": "Quatre façons de raconter votre histoire." },
+    "honneur": { "etiquette": "Les entreprises à l’honneur", "titre": "Chaque entreprise. Son univers.", "voir": "Voir les vidéos de {client}" },
+    "coulissesBloc": { "etiquette": "Coulisses", "voir": "Voir toutes les vidéos de coulisses", "photoAlt": "Coulisses de tournage de VMM Productions" },
+    "biblio": { "precedent": "Vidéos précédentes", "suivant": "Vidéos suivantes", "youtube": "Voir sur YouTube" },
+    "coulissesPage": {
+      "titre": "Coulisses",
+      "seoTitre": "Coulisses, making-of et bandes-annonces | VMM Productions",
+      "seoDescription": "Les coulisses, making-of et bandes-annonces de VMM Productions, vidéaste corporatif du Grand Montréal et des Laurentides.",
+      "h1": "Coulisses de tournage de VMM Productions, production vidéo à Montréal et dans les Laurentides",
+      "resume": "VMM Productions partage {n} de coulisses, de making-of et de bandes-annonces."
+    }
   },
   "apropos": {
     "coulisses": {

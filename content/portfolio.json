@@ -11,7 +11,7 @@
         "fr": "Mettez en lumière votre savoir-faire, votre différence et ce qui vous anime.",
         "en": "Showcase your know-how, what sets you apart and what drives you."
       },
-      "videoAccueil": ""
+      "videoAccueil": "wNGp61LUV8g"
     },
     {
       "id": "evenements",
@@ -23,7 +23,7 @@
         "fr": "Revivez l'énergie, l'ambiance et les moments marquants de votre événement.",
         "en": "Relive the energy, the atmosphere and the standout moments of your event."
       },
-      "videoAccueil": ""
+      "videoAccueil": "g8pY-zSgljI"
     },
     {
       "id": "histoires",
@@ -35,7 +35,7 @@
         "fr": "Donnez une voix aux personnes derrière votre entreprise et à leur passion.",
         "en": "Give a voice to the people behind your business and their passion."
       },
-      "videoAccueil": ""
+      "videoAccueil": "3ru2cIaqzeo"
     },
     {
       "id": "coulisses",
@@ -47,10 +47,18 @@
         "fr": "Découvrez la créativité et le travail d'équipe derrière chaque tournage.",
         "en": "Discover the creativity and teamwork behind every shoot."
       },
-      "videoAccueil": ""
+      "videoAccueil": "a6L9xFtDSgc"
     }
   ],
-  "_aideCategories": "videoAccueil = ID YouTube de la vidéo ouverte par la vignette sur l'accueil. [À CONFIRMER : vidéo de chaque catégorie]",
+  "_aideCategories": "videoAccueil = ID YouTube de la vidéo ouverte par la vignette de la catégorie (accueil et page Portfolio). Choix provisoire du 2026-11-05, uniquement parmi les ID déjà présents dans « videos », d'après le titre public YouTube : promo = « Pub promo fenêtres et portes » (PUR Construction), evenements = « 1er juillet : au cœur de la journée la plus occupée chez Tapis Rouge », histoires = « Le cœur derrière le travail | Une équipe passionnée » (Tapis Rouge), coulisses = « Behind the Scenes at Tapis Rouge ». [À CONFIRMER : choix de JD]",
+  "_aideHonneur": "honneur = ordre des boutons logo de « Les entreprises à l'honneur » (page Portfolio), par slug. logo (dans chaque client, facultatif) = chemin d'image sans extension dans static/ (ex. /img/clients/tapis-rouge : .webp + .png). Sans logo, le bouton affiche le nom du client. [À CONFIRMER : fichiers logo des 4 clients]",
+  "honneur": ["tapis-rouge", "hors-pair", "pur-construction", "bluewise"],
+  "coulissesCollection": {
+    "_aide": "Bloc Coulisses de la page Portfolio : une photo (static/img/coulisses/<photo>.webp) qui mène à la page de toutes les vidéos de coulisses. clip = nom d'un clip de content/clips.json en fond de cette page (vide = sans vidéo).",
+    "photo": "coulisses-01",
+    "slug": { "fr": "coulisses", "en": "behind-the-scenes" },
+    "clip": ""
+  },
   "_aideClients": "Une page par client : /portfolio/<slug>/ (FR) et /en/portfolio/<slug>/ (EN). Le nombre de vidéos est calculé à partir de « videos » (champ client = nom exact). clip = nom d'un clip de content/clips.json joué en fond de la page du client (vide = poster ou fond simple). Ajouter un client ou une vidéo : seulement ce fichier. villes / region : localisation du client confirmée par Natasha le 2026-11-05. Les pages locales (zones.json → villesLocales) montrent d'abord les vidéos des clients de leur zone. Ne jamais ajouter une ville non confirmée.",
   "clients": [
     {
