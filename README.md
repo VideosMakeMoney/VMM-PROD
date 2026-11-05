@@ -78,7 +78,8 @@ Redirections 301 (`_redirects`, liste `OLD_REDIRECTS` dans `build.mjs`), en un s
 ## Placeholders restants [À CONFIRMER]
 
 **Médias**
-- Vidéos du bandeau `static/images/vmm-hero-desktop.mp4` et `vmm-hero-mobile.mp4`, image poster, versions WebM (facultatif).
+- Bandeau d'accueil (2026-11-05) : vidéo 9:16 de JD dans `static/videos/jd/hero-mobile.mp4` / `.webm` + poster `hero-mobile-poster.*` (image à 3 s). L'ordinateur reçoit le même fichier pour l'instant : manque la version 16:9 (`hero-ordi.mp4`, `site.json → heroVideo.ordi` / `posterOrdi`).
+- Dates de publication YouTube (`datePublication` dans `portfolio.json`) pour sortir les vidéos dans le JSON-LD VideoObject.
 - Vidéo de chaque catégorie de « Ce que nous créons » (`videoAccueil` dans `portfolio.json`).
 - ID YouTube des vedettes « Une équipe soudée » (Tapis Rouge) et « ICI, TOUT A CHANGÉ » (Installations Hors-Pair), et la catégorie de cette dernière (« production »).
 - 2 autres vidéos vedettes pour arriver à 4.
@@ -87,6 +88,7 @@ Redirections 301 (`_redirects`, liste `OLD_REDIRECTS` dans `build.mjs`), en un s
 - Liens HH Portes et Fenêtres, Paintball Mirabel (making-of et album photo).
 
 **Services et À propos (en attente de JD)**
+- Portrait détouré de JD (PNG transparent, 2026-11-05) dans l'intro À propos : `static/img/about-jd.webp` / `.png`. L'ancienne photo rectangulaire est gardée en `about-jd-photo` (section « Rencontrez JD »).
 - Réponses de JD (2026-11-02) : carte Stratégie gardée ; portrait de JD dans l'intro À propos (about-jd en attendant son PNG transparent : `apropos.vision.photo` / `photoFormat`) ; textes et bio de Renaud gardés comme aperçus, sans mention visible (`noteInterne`) ; section caméra et « Découvrez nos réalisations. » retirées de Services pour l'instant (drapeaux).
 - Héro Services (demande de Natasha, 2026-11-03) : « NOS / SERVICES. » en haut à gauche avec le texte d'intro de l'ancienne page (`services.hero`), au lieu du seul titre « SERVICES » en bas du PDF.
 - Section caméra : reviendra à la fin de Services, en animation au défilement qui suit l'utilisateur.
@@ -109,3 +111,11 @@ Redirections 301 (`_redirects`, liste `OLD_REDIRECTS` dans `build.mjs`), en un s
 - Bandeau de l'accueil : titre « Videos Make Money. » en Cinzel 900 (demande de Natasha, 2026-11-03) ; le sous-titre reste en Inter (`--font-hero` dans `src/styles.css`).
 - Courbes exactes des keyframes (float-in, aurora-drift, marquee, shimmer, spin-border, svc-stroke/svc-fill, leak-drift) : le fichier `identite_visuelle.md` n'a pas été fourni, elles sont reconstituées.
 - Page Contact « identique à l'actuelle » : reconstruite selon la charte, à comparer avec la page en ligne.
+
+## Originaux des médias (hors du site publié)
+
+`media-originaux/` garde les fichiers tels que reçus (jamais copiés dans `dist/`) :
+- `coulisses/01–18` : photos de coulisses ; versions WebP allégées dans `static/img/coulisses/coulisses-NN.webp` (1152 × 2048) et `coulisses-NN-576.webp` (576 × 1024). Pas encore affichées sur le site.
+- `jd/PNG Transparent - Section A Propos.png` → `static/img/about-jd.webp` / `.png`.
+- `jd/VMM Logo Carre.png` (fond noir, pas transparent) → `static/img/logo-carre.webp` / `.png` et `logo-carre-512.*` (logo du JSON-LD, future fiche Google Business). Le logo 3D de l'en-tête ne change pas.
+- `jd/hero-upload.mp4` → `static/videos/jd/hero-mobile.mp4` / `.webm` (réencodées 30 i/s, sans son).

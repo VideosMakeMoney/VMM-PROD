@@ -293,7 +293,8 @@ function structuredData(key, lang, pageVideos = [], page = null) {
     slogan: L.hero.sousTitre,
     description: L.mission,
     url: SITE_URL + '/',
-    logo: abs(LOGO.png.replace(/\?.*$/, '')),
+    // Logo carré de JD (content/site.json → logoCarre), sinon le logo de face de l'en-tête
+    logo: site.logoCarre?.png512 && existsSync(join(ROOT, 'static', site.logoCarre.png512)) ? abs(site.logoCarre.png512) : abs(LOGO.png.replace(/\?.*$/, '')),
     image: abs(OG.defaut),
     email: site.courriel,
     ...(site.telephone ? { telephone: site.telephone } : {}),
@@ -643,11 +644,13 @@ function homePage(lang) {
   ].filter(([src]) => exists(src));
   const hasVideo = sources.length > 0;
   const poster = exists(hv.poster) ? hv.poster : '';
+  // Poster ordinateur (16:9) quand il existera ; en attendant, le poster 9:16 sert partout
+  const posterOrdi = exists(hv.posterOrdi) ? hv.posterOrdi : poster;
   const attenteOrdi = exists(hv.posterAttenteOrdi) ? hv.posterAttenteOrdi : '';
   const attenteMobile = exists(hv.posterAttenteMobile) ? hv.posterAttenteMobile : attenteOrdi;
   // Le poster (image LCP) s'affiche d'abord, sans JavaScript. La vidéo héro, quand elle existera, n'a aucune
   // source dans le HTML : main.js ajoute seulement celle de l'appareil (mobile ou ordi), après le chargement de la page.
-  const heroPicture = poster ? posterPicture(poster, poster, 'hero-poster') : attenteOrdi ? posterPicture(attenteMobile, attenteOrdi, 'hero-poster') : '';
+  const heroPicture = poster ? posterPicture(poster, posterOrdi, 'hero-poster') : attenteOrdi ? posterPicture(attenteMobile, attenteOrdi, 'hero-poster') : '';
   const pick = (media) => sources.filter(([, , m]) => (media ? m : !m)).map(([src, type]) => ({ src, type }));
   const heroMedia = `${heroPicture}${
     hasVideo
@@ -656,7 +659,7 @@ function homePage(lang) {
       : ''
   }`;
   // Préchargement de l'image du bandeau : une seule par appareil (ou le poster de la vidéo héro quand elle existera)
-  const heroPreload = poster ? picturePreload(poster, poster) : attenteOrdi ? picturePreload(attenteMobile, attenteOrdi) : '';
+  const heroPreload = poster ? picturePreload(poster, posterOrdi) : attenteOrdi ? picturePreload(attenteMobile, attenteOrdi) : '';
   const body = `
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero-media" aria-hidden="true">
@@ -961,6 +964,23 @@ function clientPage(c, lang) {
   });
 }
 
+// Vidéos d'une page locale : d'abord celles des clients de la zone (portfolio.json → villes / region, comparées à
+// zones.json → villesLocales), 2 au plus par client et en priorité celles déjà choisies dans « videos », puis la sélection.
+// Le nombre de vignettes reste celui de « videos ».
+function zoneVideos(z) {
+  const byId = (id) => portfolio.videos.find((v) => v.youtubeId === id);
+  const chosen = z.videos.map(byId).filter(Boolean);
+  const places = z.villesLocales || [];
+  const local = portfolio.clients.filter((c) => [...(c.villes || []), c.region].some((p) => p && places.includes(p)));
+  const perClient = local.map((c) => {
+    const all = clientVideos(c).filter((v) => v.youtubeId); // vidéo sans ID YouTube (à confirmer) : pas sur les pages locales
+    return [...all.filter((v) => chosen.includes(v)), ...all.filter((v) => !chosen.includes(v))].slice(0, 2);
+  });
+  const first = [];
+  for (let i = 0; i < 2; i++) for (const list of perClient) if (list[i]) first.push(list[i]);
+  return [...new Set([...first, ...chosen])].slice(0, Math.max(chosen.length, 1));
+}
+
 // Page locale (zones desservies) : un H1 service + ville, une intro factuelle, les 6 services, 3-4 vidéos, 3 questions.
 function zonePage(z, lang) {
   const L = langs[lang];
@@ -968,7 +988,7 @@ function zonePage(z, lang) {
   const ZL = L.zones;
   const F = ZL.faits;
   const byId = (id) => portfolio.videos.find((v) => v.youtubeId === id);
-  const vids = z.videos.map(byId).filter(Boolean);
+  const vids = zoneVideos(z);
   const fact = (label, value) => `<div><dt class="label">${esc(label)}</dt><dd>${value}</dd></div>`;
   const body = `<!-- ${esc(zonesData.noteProvisoire)} -->
 <section class="page-hero has-bg-video zone-hero" aria-labelledby="zone-title">
@@ -1089,7 +1109,7 @@ ${summaryBand(L.seo.apropos.resume)}
       <p class="jd-lead" data-reveal>${t(A.vision.texte)}</p>
     </div>
     ${A.vision.photo ? `<div class="vision-photo vision-portrait${A.vision.photoFormat === 'png' ? ' is-cutout' : ''}" data-reveal>
-      ${picture(A.vision.photo, A.vision.photoAlt, { w: 900, h: 1200, fallback: A.vision.photoFormat || 'jpg' })}
+      ${picture(A.vision.photo, A.vision.photoAlt, { w: A.vision.photoLargeur || 900, h: A.vision.photoHauteur || 1200, fallback: A.vision.photoFormat || 'jpg' })}
     </div>` : ''}
   </div>
 </section>
@@ -1184,7 +1204,7 @@ function sitemap() {
   const urls = [
     ...INDEXABLE.flatMap((k) => ['fr', 'en'].map((lang) => entry(ROUTES[k], lang, videoEntries(k, lang, abs(ROUTES[k][lang]))))),
     ...CLIENTS.flatMap((c) => ['fr', 'en'].map((lang) => entry(clientRoute(c), lang, videoEntries(clientVideos(c), lang, abs(clientRoute(c)[lang]))))),
-    ...ZONES.flatMap((z) => ['fr', 'en'].map((lang) => entry(zoneRoute(z), lang, videoEntries(z.videos.map((id) => portfolio.videos.find((v) => v.youtubeId === id)).filter(Boolean), lang, abs(zoneRoute(z)[lang]))))),
+    ...ZONES.flatMap((z) => ['fr', 'en'].map((lang) => entry(zoneRoute(z), lang, videoEntries(zoneVideos(z), lang, abs(zoneRoute(z)[lang]))))),
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
@@ -1221,7 +1241,7 @@ function llmsTxt() {
     ...fr.equipe.membres.map((m) => `- ${m.nomComplet}${m.nom !== m.nomComplet ? ` (${m.nom})` : ''}, ${m.role} : ${m.texte}`),
     '',
     '## Clients filmés',
-    ...portfolio.clients.map((c) => `- ${c.nom}${c.url ? ` (${c.url})` : ''} (${clientVideos(c).length} vidéos)${CLIENTS.includes(c) ? ` : ${abs(clientRoute(c).fr)}` : ''}`),
+    ...portfolio.clients.map((c) => `- ${c.nom}${c.villes?.length ? `, ${c.villes.join(', ')}` : ''}${c.url ? ` (${c.url})` : ''} (${clientVideos(c).length} vidéos)${CLIENTS.includes(c) ? ` : ${abs(clientRoute(c).fr)}` : ''}`),
     '',
     '## Zones desservies',
     ...site.zonesDesservies.map((z) => `- ${z}`),

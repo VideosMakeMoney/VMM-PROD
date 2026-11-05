@@ -103,10 +103,10 @@
   "faq": {
     "titre": "Frequently asked questions",
     "items": [
-      { "q": "How long does a typical project take?", "r": "Most projects are delivered in 1 to 2 weeks, depending on complexity. Clients in ongoing production receive their deliverables on a regular basis." },
-      { "q": "What is included in the production process?", "r": "[TO CONFIRM: original EN answer from the current site's dictionary]" },
-      { "q": "Do you offer bilingual content (French & English)?", "r": "Yes. Our services are custom, tailored to each client, and bilingual service (FR + EN) is included, adapted to the Quebec market for a natural, effective message in both languages." },
-      { "q": "What if I don't know what type of content my business needs?", "r": "[TO CONFIRM: original EN answer from the current site's dictionary]" }
+      { "q": "How long does a typical project take?", "r": "Most projects are delivered within 1–2 weeks depending on complexity. Ongoing-content clients receive deliverables on a continuous schedule." },
+      { "q": "What’s included in the production process?", "r": "Every project includes strategy, scripting, professional filming, advanced editing, and creative direction — with options like drone footage, motion graphics, logo animation, AI visuals, voiceovers, and bilingual delivery (FR + EN).", "note": "[TO CONFIRM: the original answer mentions « strategy » and « AI visuals », while the rule is « no ad strategy or AI service »]" },
+      { "q": "Do you offer bilingual content (French & English)?", "r": "Yes. Our services are custom, tailored to each client, and bilingual delivery (FR + EN) is included, adapted for the Quebec market to feel natural and effective in both languages.", "original": "Yes. Every package includes bilingual delivery (FR + EN) adapted for the Quebec market to feel natural and effective in both languages." },
+      { "q": "What if I’m not sure what type of content my business needs?", "r": "No problem. We guide you toward the right strategy based on your business, goals, and audience — creating content built to attract attention, build trust, and drive action." }
     ]
   },
   "services": {
@@ -279,8 +279,10 @@
       "texte": "Passionate people who bring visions to life and reveal the pride behind every project.",
       "photo": "/img/about-jd",
       "photoAlt": "Portrait of JD, founder of VMM Productions",
-      "photoFormat": "jpg",
-      "photoAide": "Preview: about-jd until JD sends the transparent PNG."
+      "photoFormat": "png",
+      "photoLargeur": 944,
+      "photoHauteur": 1665,
+      "photoAide": "JD's cut-out portrait (transparent PNG received 2026-11-05; original in media-originaux/jd/). photoLargeur / photoHauteur = real size. The former rectangular photo is kept as /img/about-jd-photo (« Meet JD » section)."
     },
     "membres": [
       {
@@ -291,7 +293,7 @@
           "My journey began with a passion for visual storytelling. I studied at the Toronto Film School before having to put my studies on hold for financial reasons.",
           "Today, I work in construction while building VMM Productions: two worlds that taught me the value of hard work and human relationships."
         ],
-        "photo": "/img/about-jd",
+        "photo": "/img/about-jd-photo",
         "photoAlt": "Portrait of JD, founder and videographer of VMM Productions"
       },
       {

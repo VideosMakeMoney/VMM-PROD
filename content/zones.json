@@ -1,10 +1,11 @@
 {
-  "_aide": "Pages locales (zones desservies), FR + EN. Texte provisoire, JD réécrira. Seulement des faits confirmés : VMM Productions (Productions VMM), fondée par JD, Renaud cameraman (10 ans d'expérience en cinéma), services sur mesure sans forfaits, service bilingue inclus, livraison en 1 à 2 semaines, basée à Sainte-Thérèse, rayon de 50 km (frais de déplacement au-delà), 7 h à 19 h, 514-604-5682, jeandavid@videosmakemoney.ca. Aucun client n'est associé à une ville tant que sa localisation n'est pas confirmée. videos = ID YouTube tirés de portfolio.json. areaServed = zone du Service dans le JSON-LD. title ≤ 60 caractères, description ≤ 155.",
+  "_aide": "Pages locales (zones desservies), FR + EN. Texte provisoire, JD réécrira. Seulement des faits confirmés : VMM Productions (Productions VMM), fondée par JD, Renaud cameraman (10 ans d'expérience en cinéma), services sur mesure sans forfaits, service bilingue inclus, livraison en 1 à 2 semaines, basée à Sainte-Thérèse, rayon de 50 km (frais de déplacement au-delà), 7 h à 19 h, 514-604-5682, jeandavid@videosmakemoney.ca. Villes des clients : portfolio.json (villes / region), confirmées par Natasha le 2026-11-05. villesLocales = villes ou région qui rattachent un client à la page : ses vidéos passent en premier (2 au plus par client), puis la sélection « videos ». Aucune autre ville sans confirmation. videos = ID YouTube tirés de portfolio.json. areaServed = zone du Service dans le JSON-LD. title ≤ 60 caractères, description ≤ 155.",
   "noteProvisoire": "texte provisoire, JD réécrira",
   "zones": [
     {
       "id": "laurentides",
       "clip": "services",
+      "villesLocales": ["Laurentides"],
       "videos": ["fxGb6xSqsfw", "3T-zTO2Q30A", "HeLdEo_awQ0", "LQmzAY6qCv8"],
       "areaServed": { "@type": "AdministrativeArea", "name": "Laurentides", "containedInPlace": { "@type": "AdministrativeArea", "name": "Québec" } },
       "fr": {
@@ -51,6 +52,7 @@
     {
       "id": "sainte-therese",
       "clip": "about",
+      "villesLocales": ["Sainte-Thérèse"],
       "videos": ["aRr26p8dQxk", "F8bCIpVoDFI", "t7zXkOFUdBs", "zga2uMl5zhk"],
       "areaServed": { "@type": "City", "name": "Sainte-Thérèse", "containedInPlace": { "@type": "AdministrativeArea", "name": "Laurentides" } },
       "fr": {
@@ -97,6 +99,7 @@
     {
       "id": "saint-jerome",
       "clip": "work",
+      "villesLocales": ["Saint-Jérôme"],
       "videos": ["duRjqB2By-0", "3ru2cIaqzeo", "fxGb6xSqsfw", "a6L9xFtDSgc"],
       "areaServed": { "@type": "City", "name": "Saint-Jérôme", "containedInPlace": { "@type": "AdministrativeArea", "name": "Laurentides" } },
       "fr": {
@@ -143,6 +146,7 @@
     {
       "id": "rive-nord",
       "clip": "contact-logo",
+      "villesLocales": [],
       "videos": ["wNGp61LUV8g", "g8pY-zSgljI", "aRr26p8dQxk", "hOUNzv6MYc8"],
       "areaServed": { "@type": "Place", "name": { "fr": "Rive-Nord de Montréal", "en": "North Shore of Montréal" }, "containedInPlace": { "@type": "AdministrativeArea", "name": "Québec" } },
       "fr": {
