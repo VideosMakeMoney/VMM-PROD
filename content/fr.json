@@ -21,20 +21,66 @@
   },
   "seo": {
     "_aide": "title ≤ 60 caractères, description ≤ 155, h1 = mot-clé + ville affiché en petit sous-titre gris sous le grand titre (dans le H1) ; resume = phrase d'intro courte et factuelle affichée en haut de la page (facile à citer par Google et les IA). Anciennes valeurs dans seoAncien.",
-    "accueil": {"title":"Production vidéo Montréal et Laurentides | VMM Productions","description":"VMM Productions, vidéaste corporatif du Grand Montréal et des Laurentides : vidéos promotionnelles, couverture d'événements et histoires d'entreprises.","resume":"VMM Productions (Videos Make Money) est un vidéaste corporatif du Grand Montréal et des Laurentides, au service de tout le Québec : vidéos promotionnelles, couverture événementielle, histoires d'entreprises et coulisses.","h1":"Production vidéo à Montréal et dans les Laurentides"},
-    "services": {"title":"Services de production vidéo et drone | VMM Productions","description":"Stratégie vidéo, tournage et photo, drone, scénarisation, montage et animation : la production vidéo de VMM Productions à Montréal et dans les Laurentides.","resume":"VMM Productions offre six services de production vidéo dans le Grand Montréal et les Laurentides : stratégie vidéo et contenu publicitaire, tournage et photographie, production aérienne par drone, scénarisation, montage et animation graphique.","h1":"Services de production vidéo à Montréal et dans les Laurentides"},
-    "portfolio": {"title":"Projets vidéo à Montréal et Laurentides | VMM Productions","description":"Vidéos promotionnelles et d'entreprise classées par client, plus les coulisses de tournage : les projets de VMM Productions, vidéaste à Montréal.","resume":"Le portfolio de VMM Productions, vidéaste corporatif du Grand Montréal et des Laurentides, regroupe ses productions finales par client ainsi que ses coulisses de tournage.","h1":"Projets de production vidéo à Montréal et dans les Laurentides"},
-    "apropos": {"title":"À propos : JD et Renaud, l'équipe de VMM Productions","description":"JD, fondateur et vidéaste, et Renaud, caméraman avec 10 ans d'expérience en cinéma : l'équipe de VMM Productions, Grand Montréal et Laurentides.","resume":"VMM Productions, c'est JD, fondateur et vidéaste, et Renaud, caméraman avec 10 ans d'expérience en cinéma.","h1":"L'équipe de VMM Productions, vidéaste corporatif à Montréal et dans les Laurentides"},
-    "contact": {"title":"Contact | Vidéo promotionnelle à Montréal, VMM Productions","description":"Parlez-nous de votre projet vidéo, sans engagement. VMM Productions travaille partout au Québec, surtout à Montréal et dans les Laurentides.","resume":"Pour un projet vidéo partout au Québec, principalement dans le Grand Montréal et les Laurentides, écrivez à VMM Productions à jeandavid@videosmakemoney.ca ou par le formulaire de contact.","h1":"Contacter un vidéaste corporatif à Montréal et dans les Laurentides"},
-    "merci": {"title":"Message envoyé | VMM Productions","description":"Votre message a bien été envoyé à VMM Productions."},
-    "introuvable": {"title":"Page introuvable | VMM Productions","description":"Cette page n'existe pas."}
+    "accueil": {
+      "title": "Production vidéo Montréal et Laurentides | VMM Productions",
+      "description": "VMM Productions, vidéaste corporatif du Grand Montréal et des Laurentides : vidéos promotionnelles, couverture d'événements et histoires d'entreprises.",
+      "resume": "VMM Productions (Videos Make Money) est un vidéaste corporatif du Grand Montréal et des Laurentides, au service de tout le Québec : vidéos promotionnelles, couverture événementielle, histoires d'entreprises et coulisses.",
+      "h1": "Production vidéo à Montréal et dans les Laurentides"
+    },
+    "services": {
+      "title": "Services de production vidéo et drone | VMM Productions",
+      "description": "Stratégie vidéo, tournage et photo, drone, scénarisation, montage et animation : la production vidéo de VMM Productions à Montréal et dans les Laurentides.",
+      "resume": "VMM Productions offre six services de production vidéo dans le Grand Montréal et les Laurentides : stratégie vidéo et contenu publicitaire, tournage et photographie, production aérienne par drone, scénarisation, montage et animation graphique.",
+      "h1": "Services de production vidéo à Montréal et dans les Laurentides"
+    },
+    "portfolio": {
+      "title": "Projets vidéo à Montréal et Laurentides | VMM Productions",
+      "description": "Vidéos promotionnelles et d'entreprise classées par client, plus les coulisses de tournage : les projets de VMM Productions, vidéaste à Montréal.",
+      "resume": "Le portfolio de VMM Productions, vidéaste corporatif du Grand Montréal et des Laurentides, regroupe ses productions finales par client ainsi que ses coulisses de tournage.",
+      "h1": "Projets de production vidéo à Montréal et dans les Laurentides"
+    },
+    "apropos": {
+      "title": "À propos : JD et Renaud, l'équipe de VMM Productions",
+      "description": "JD, fondateur et vidéaste, et Renaud, caméraman avec 10 ans d'expérience en cinéma : l'équipe de VMM Productions, Grand Montréal et Laurentides.",
+      "resume": "VMM Productions, c'est JD, fondateur et vidéaste, et Renaud, caméraman avec 10 ans d'expérience en cinéma.",
+      "h1": "L'équipe de VMM Productions, vidéaste corporatif à Montréal et dans les Laurentides"
+    },
+    "contact": {
+      "title": "Contact | Vidéo promotionnelle à Montréal, VMM Productions",
+      "description": "Parlez-nous de votre projet vidéo, sans engagement. VMM Productions travaille partout au Québec, surtout à Montréal et dans les Laurentides.",
+      "resume": "Pour un projet vidéo partout au Québec, principalement dans le Grand Montréal et les Laurentides, écrivez à VMM Productions à jeandavid@videosmakemoney.ca ou par le formulaire de contact.",
+      "h1": "Contacter un vidéaste corporatif à Montréal et dans les Laurentides"
+    },
+    "merci": {
+      "title": "Message envoyé | VMM Productions",
+      "description": "Votre message a bien été envoyé à VMM Productions."
+    },
+    "introuvable": {
+      "title": "Page introuvable | VMM Productions",
+      "description": "Cette page n'existe pas."
+    }
   },
   "seoAncien": {
-    "accueil": {"title":"VMM Productions | Production vidéo, Grand Montréal et Laurentides","description":"VMM Productions (Videos Make Money), vidéaste corporatif du Grand Montréal et des Laurentides : vidéos promotionnelles, couverture événementielle, histoires d'entreprises et coulisses."},
-    "services": {"title":"Services de production vidéo et drone | VMM Productions, Montréal et Laurentides","description":"Stratégie vidéo et contenu publicitaire, tournage et photographie, production aérienne par drone, scénarisation, montage et animation graphique : les services de VMM Productions dans le Grand Montréal et les Laurentides."},
-    "portfolio": {"title":"Portfolio vidéo d'entreprise | VMM Productions, Montréal et Laurentides","description":"Productions finales classées par client et coulisses de tournage : le portfolio vidéo de VMM Productions, vidéaste corporatif du Grand Montréal et des Laurentides."},
-    "apropos": {"title":"À propos | JD et Renaud, l'équipe de VMM Productions","description":"Les visages derrière VMM Productions : JD, fondateur, et Renaud, cameraman avec près de dix ans d'expérience, dans le Grand Montréal et les Laurentides."},
-    "contact": {"title":"Contact | VMM Productions, vidéaste corporatif à Montréal et dans les Laurentides","description":"Parlez-nous de votre projet vidéo. VMM Productions travaille dans le Grand Montréal et les Laurentides. Courriel : jeandavid@videosmakemoney.ca."}
+    "accueil": {
+      "title": "VMM Productions | Production vidéo, Grand Montréal et Laurentides",
+      "description": "VMM Productions (Videos Make Money), vidéaste corporatif du Grand Montréal et des Laurentides : vidéos promotionnelles, couverture événementielle, histoires d'entreprises et coulisses."
+    },
+    "services": {
+      "title": "Services de production vidéo et drone | VMM Productions, Montréal et Laurentides",
+      "description": "Stratégie vidéo et contenu publicitaire, tournage et photographie, production aérienne par drone, scénarisation, montage et animation graphique : les services de VMM Productions dans le Grand Montréal et les Laurentides."
+    },
+    "portfolio": {
+      "title": "Portfolio vidéo d'entreprise | VMM Productions, Montréal et Laurentides",
+      "description": "Productions finales classées par client et coulisses de tournage : le portfolio vidéo de VMM Productions, vidéaste corporatif du Grand Montréal et des Laurentides."
+    },
+    "apropos": {
+      "title": "À propos | JD et Renaud, l'équipe de VMM Productions",
+      "description": "Les visages derrière VMM Productions : JD, fondateur, et Renaud, cameraman avec près de dix ans d'expérience, dans le Grand Montréal et les Laurentides."
+    },
+    "contact": {
+      "title": "Contact | VMM Productions, vidéaste corporatif à Montréal et dans les Laurentides",
+      "description": "Parlez-nous de votre projet vidéo. VMM Productions travaille dans le Grand Montréal et les Laurentides. Courriel : jeandavid@videosmakemoney.ca."
+    }
   },
   "hero": {
     "surtitre": "VMM PRODUCTIONS · CINÉMA ET RÉCIT",
@@ -58,8 +104,23 @@
     "titre": "Derrière VMM",
     "intro": "Les grandes productions commencent par les personnes derrière la caméra. Découvrez celles qui donnent vie à notre travail.",
     "membres": [
-      { "id": "jd", "nom": "JD", "nomComplet": "JD", "role": "Fondateur", "texte": "Des chantiers de construction aux plateaux de tournage, JD apporte une perspective concrète à chaque production. Pour lui, filmer, c'est mettre en valeur ce que les gens bâtissent et ce qui les passionne.", "photo": "" },
-      { "id": "renaud", "nom": "Renaud", "nomComplet": "Renaud", "role": "Cameraman", "experience": "10 ans d'expérience en cinéma.", "texte": "Avec 10 ans d'expérience en cinéma, Renaud apporte créativité, énergie et une approche immersive pour saisir l'action sur le vif.", "photo": "" }
+      {
+        "id": "jd",
+        "nom": "JD",
+        "nomComplet": "JD",
+        "role": "Fondateur",
+        "texte": "Des chantiers de construction aux plateaux de tournage, JD apporte une perspective concrète à chaque production. Pour lui, filmer, c'est mettre en valeur ce que les gens bâtissent et ce qui les passionne.",
+        "photo": ""
+      },
+      {
+        "id": "renaud",
+        "nom": "Renaud",
+        "nomComplet": "Renaud",
+        "role": "Cameraman",
+        "experience": "10 ans d'expérience en cinéma.",
+        "texte": "Avec 10 ans d'expérience en cinéma, Renaud apporte créativité, énergie et une approche immersive pour saisir l'action sur le vif.",
+        "photo": ""
+      }
     ],
     "photoManquante": "[À CONFIRMER : photo authentique à fournir]",
     "bouton": "Faire notre connaissance →"
@@ -105,10 +166,23 @@
   "faq": {
     "titre": "Questions fréquentes",
     "items": [
-      { "q": "Combien de temps prend un projet typique ?", "r": "La plupart des projets sont livrés en 1 à 2 semaines selon la complexité. Les clients en production continue reçoivent leurs livrables de façon régulière." },
-      { "q": "Qu'est-ce qui est inclus dans le processus de production ?", "r": "Chaque projet inclut la stratégie, le script, le tournage professionnel, le montage avancé et la direction créative — avec des options comme les prises de drone, motion graphics, animation de logo, visuels IA, voix off et livraison bilingue (FR + EN).", "note": "[À CONFIRMER : la réponse originale mentionne « stratégie » et « visuels IA », alors que la règle est « aucune stratégie pub ni service IA »]" },
-      { "q": "Offrez-vous du contenu bilingue (français & anglais) ?", "r": "Oui. Nos services sont sur mesure, adaptés à chaque client, et le service bilingue (FR + EN) est inclus, adapté au marché québécois pour un message naturel et efficace dans les deux langues." },
-      { "q": "Et si je ne sais pas quel type de contenu mon entreprise a besoin ?", "r": "Aucun problème. On vous guide vers la meilleure stratégie selon votre entreprise, vos objectifs et votre clientèle — pour créer du contenu conçu pour attirer l'attention, bâtir la confiance et générer de l'action." }
+      {
+        "q": "Combien de temps prend un projet typique ?",
+        "r": "La plupart des projets sont livrés en 1 à 2 semaines selon la complexité. Les clients en production continue reçoivent leurs livrables de façon régulière."
+      },
+      {
+        "q": "Qu'est-ce qui est inclus dans le processus de production ?",
+        "r": "Chaque projet inclut la stratégie, le script, le tournage professionnel, le montage avancé et la direction créative — avec des options comme les prises de drone, motion graphics, animation de logo, visuels IA, voix off et livraison bilingue (FR + EN).",
+        "note": "[À CONFIRMER : la réponse originale mentionne « stratégie » et « visuels IA », alors que la règle est « aucune stratégie pub ni service IA »]"
+      },
+      {
+        "q": "Offrez-vous du contenu bilingue (français & anglais) ?",
+        "r": "Oui. Nos services sont sur mesure, adaptés à chaque client, et le service bilingue (FR + EN) est inclus, adapté au marché québécois pour un message naturel et efficace dans les deux langues."
+      },
+      {
+        "q": "Et si je ne sais pas quel type de contenu mon entreprise a besoin ?",
+        "r": "Aucun problème. On vous guide vers la meilleure stratégie selon votre entreprise, vos objectifs et votre clientèle — pour créer du contenu conçu pour attirer l'attention, bâtir la confiance et générer de l'action."
+      }
     ]
   },
   "services": {
@@ -278,17 +352,44 @@
     "heroTitre": "PORTFOLIO",
     "scroll": "SCROLL ↓",
     "scrollLabel": "Défiler vers la suite de la page",
-    "realisons": { "etiquette": "Ce que nous réalisons", "titre": "Quatre façons de raconter votre histoire.", "intro": "Explorez nos productions par catégorie. Chaque miniature ouvre directement sa vidéo sur YouTube." },
-    "honneur": { "etiquette": "Les entreprises à l’honneur", "titre": "Chaque entreprise. Son univers.", "logoAlt": "Logo de", "intro": "Choisissez une entreprise pour découvrir sa bibliothèque de productions.", "voir": "Voir les vidéos de {client}" },
-    "coulissesBloc": { "etiquette": "Derrière les images", "titre": "Et derrière chaque production...", "intro": "Une collection dédiée aux moments derrière la caméra.", "legende": "Coulisses / Making-of / Bandes-annonces", "voir": "Voir toutes les vidéos de coulisses", "photoAlt": "Membre de l’équipe VMM Productions dans le studio de montage" },
-    "fin": { "etiquette": "Et après les images ?", "titre": "Rencontrez les gens derrière VMM.", "texte": "Découvrez les personnes qui donnent vie à ces productions." },
-    "biblio": { "precedent": "Vidéos précédentes", "suivant": "Vidéos suivantes", "youtube": "Voir sur YouTube" },
+    "realisons": {
+      "etiquette": "Ce que nous réalisons",
+      "titre": "Quatre façons de raconter votre histoire.",
+      "intro": "Explorez nos productions par catégorie. Chaque miniature ouvre directement sa vidéo sur YouTube."
+    },
+    "honneur": {
+      "etiquette": "Les entreprises à l’honneur",
+      "titre": "Chaque entreprise. Son univers.",
+      "logoAlt": "Logo de",
+      "intro": "Choisissez une entreprise pour découvrir sa bibliothèque de productions.",
+      "voir": "Voir les vidéos de {client}"
+    },
+    "coulissesBloc": {
+      "etiquette": "Derrière les images",
+      "titre": "Et derrière chaque production...",
+      "intro": "Une collection dédiée aux moments derrière la caméra.",
+      "legende": "Coulisses / Making-of / Bandes-annonces",
+      "voir": "Voir toutes les vidéos de coulisses",
+      "photoAlt": "Membre de l’équipe VMM Productions dans le studio de montage"
+    },
+    "fin": {
+      "etiquette": "Et après les images ?",
+      "titre": "Rencontrez les gens derrière VMM.",
+      "texte": "Découvrez les personnes qui donnent vie à ces productions."
+    },
+    "biblio": {
+      "precedent": "Vidéos précédentes",
+      "suivant": "Vidéos suivantes",
+      "youtube": "Voir sur YouTube",
+      "compteur": "Vidéo {i} sur {n}"
+    },
     "coulissesPage": {
       "titre": "Coulisses",
       "seoTitre": "Coulisses, making-of et bandes-annonces | VMM Productions",
       "seoDescription": "Les coulisses, making-of et bandes-annonces de VMM Productions, vidéaste corporatif du Grand Montréal et des Laurentides.",
       "h1": "Coulisses de tournage de VMM Productions, production vidéo à Montréal et dans les Laurentides",
-      "resume": "VMM Productions partage {n} de coulisses, de making-of et de bandes-annonces."
+      "resume": "VMM Productions partage {n} de coulisses, de making-of et de bandes-annonces.",
+      "titreHero": "VMM COULISSES / MAKING-OF / ANNONCES"
     }
   },
   "apropos": {
@@ -400,6 +501,94 @@
     "ctaTexte": "Écrivez-nous ou appelez au 514-604-5682, de 7 h à 19 h. Sans engagement.",
     "ctaBouton": "Nous contacter"
   },
-  "merci": { "titre": "Merci !", "texte": "Votre message est bien parti. Nous vous répondrons sous peu.", "retour": "Retour à l'accueil" },
-  "introuvable": { "titre": "Page introuvable", "texte": "Cette page n'existe pas ou a été déplacée.", "retour": "Retour à l'accueil", "pages": "Pages principales" }
+  "merci": {
+    "titre": "Merci !",
+    "texte": "Votre message est bien parti. Nous vous répondrons sous peu.",
+    "retour": "Retour à l'accueil"
+  },
+  "introuvable": {
+    "titre": "Page introuvable",
+    "texte": "Cette page n'existe pas ou a été déplacée.",
+    "retour": "Retour à l'accueil",
+    "pages": "Pages principales"
+  },
+  "accueilJD": {
+    "_aide": "Accueil selon le PDF « VMM-HomePage-LAYOUT-2026-11-05 » de JD (pages 1 à 5 et 11). Ordre : héros, portfolio (4 miniatures), équipe, services, contact. Les anciennes sections (creons, equipe, realisations, avis) gardent leurs textes dans ce fichier. *mot* = mot en mauve.",
+    "hero": {
+      "titre": [
+        "VIDEOS",
+        "MAKE",
+        "MONEY"
+      ],
+      "signature": "Notre *passion*, aider la vôtre à *grandir*.",
+      "_aideSignature": "Maquette p. 1 : « OUR PASSION. HELPING YOURS GROW. », PASSION et GROW en mauve. La version française garde la signature actuelle avec passion et grandir en mauve. [À CONFIRMER JD : signature en anglais aussi sur la version française ?]",
+      "bouton": "CONTACTEZ-NOUS →"
+    },
+    "portfolio": {
+      "etiquette": "Ce que nous réalisons",
+      "titre": "Quatre façons de raconter votre histoire.",
+      "intro": "Explorez nos productions par catégorie. Chaque miniature ouvre sa vidéo sur YouTube.",
+      "bouton": "EXPLORER NOTRE PORTFOLIO →",
+      "_aideTitre": "Titre visible de la maquette p. 2. La directive p. 7 demande « travail » et « lui-même » en violet, mots du titre « Le travail parle de lui-même. » (ancienne section Nos réalisations) absents du titre de la p. 2. [À CONFIRMER JD : quel titre garder ?]",
+      "titreVariante": "Le *travail* parle de *lui-même*.",
+      "sansVideo": "[À CONFIRMER JD : ID YouTube de cette miniature]"
+    },
+    "equipe": {
+      "etiquette": "Les gens derrière VMM",
+      "titre": "Une *équipe*.\nUne *vision*.\nDes *histoires*.",
+      "texte": "De la stratégie au tournage, des gens passionnés mettent leur expérience au service de vos projets.",
+      "bouton": "DÉCOUVRIR NOTRE ÉQUIPE →",
+      "photos": [
+        {
+          "src": "/img/about-jd-photo",
+          "alt": "JD, fondateur de VMM Productions"
+        },
+        {
+          "src": "/img/about-renaud",
+          "alt": "Renaud, cameraman chez VMM Productions"
+        }
+      ]
+    },
+    "services": {
+      "etiquette": "Nos services",
+      "titre": "La *stratégie* rencontre la *création*.",
+      "intro": "Six expertises réunies pour donner vie à votre vision.",
+      "libelles": [
+        [
+          "Contenu publicitaire",
+          "stratégique"
+        ],
+        [
+          "Tournage professionnel",
+          "et photographie"
+        ],
+        [
+          "Images aériennes",
+          "et drone"
+        ],
+        [
+          "Scénarisation et",
+          "narration de marque"
+        ],
+        [
+          "Montage et",
+          "postproduction créative"
+        ],
+        [
+          "Image de marque et",
+          "créations visuelles"
+        ]
+      ],
+      "portraitAlt": "JD avec sa caméra",
+      "bouton": "EXPLORER NOS SERVICES →"
+    },
+    "contact": {
+      "etiquette": "Prenons contact",
+      "titre": "Votre prochain projet *commence ici*.",
+      "texte": "Une idée en tête? Parlons de votre entreprise, de votre vision et de ce que nous pouvons créer ensemble.",
+      "bouton": "CONTACTEZ-NOUS →",
+      "photo": "",
+      "_aidePhoto": "[À CONFIRMER JD : photo exacte de JD, maquette p. 5 (maillot violet, lunettes, caméra)]. Elle n'est pas parmi les photos déjà dans static/img ; l'emplacement reste vide. Chemin sans extension (.webp + .png) une fois fournie."
+    }
+  }
 }
