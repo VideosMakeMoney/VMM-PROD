@@ -344,25 +344,40 @@
   });
 })();
 
-// Bibliothèque des pages client et Coulisses : flèches ←→ qui font défiler la rangée d'environ un écran.
+// Bibliothèque des pages client et Coulisses : flèches ‹ › qui avancent d'une miniature, compteur « 01 / N ».
 (() => {
   document.querySelectorAll('[data-library]').forEach((row) => {
     const track = row.querySelector('.library-track');
     const prev = row.querySelector('[data-library-prev]');
     const next = row.querySelector('[data-library-next]');
     if (!track || !prev || !next) return;
-    const step = () => Math.max(track.clientWidth * 0.85, 160);
+    const count = row.parentElement.querySelector('[data-library-count]');
+    const index = count?.querySelector('[data-library-index]');
+    const sr = count?.querySelector('[data-library-sr]');
+    const items = () => [...track.children];
+    const itemStep = () => {
+      const [a, b] = items();
+      return a && b ? b.offsetLeft - a.offsetLeft : Math.max(track.clientWidth, 160);
+    };
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const go = (dir) => track.scrollBy({ left: dir * itemStep(), behavior: reduced ? 'auto' : 'smooth' });
     const update = () => {
       const max = track.scrollWidth - track.clientWidth - 2;
       prev.disabled = track.scrollLeft <= 2;
       next.disabled = track.scrollLeft >= max;
       row.classList.toggle('is-static', max <= 0);
+      if (count) {
+        const total = Number(count.dataset.total) || items().length;
+        const i = Math.min(total, Math.round(track.scrollLeft / (itemStep() || 1)) + 1);
+        index.textContent = String(i).padStart(2, '0');
+        sr.textContent = count.dataset.label.replace('{i}', i).replace('{n}', total);
+      }
     };
-    prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
-    next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+    prev.addEventListener('click', () => go(-1));
+    next.addEventListener('click', () => go(1));
     track.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight') { e.preventDefault(); next.click(); }
-      if (e.key === 'ArrowLeft') { e.preventDefault(); prev.click(); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
     });
     track.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);

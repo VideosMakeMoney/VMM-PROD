@@ -21,20 +21,66 @@
   },
   "seo": {
     "_aide": "title ≤ 60 characters, description ≤ 155, h1 = keyword + city shown as a small grey subtitle under the main title (inside the H1); resume = short factual intro sentence shown at the top of the page (easy for Google and AI to quote). Previous values in seoAncien.",
-    "accueil": {"title":"Video Production, Montreal & Laurentians | VMM Productions","description":"VMM Productions, corporate videographer in Greater Montreal and the Laurentians: promotional videos, event coverage and business stories.","resume":"VMM Productions (Videos Make Money) is a corporate videographer in Greater Montreal and the Laurentians, serving all of Quebec: promotional videos, event coverage, business stories and behind the scenes.","h1":"Video production in Montreal and the Laurentians"},
-    "services": {"title":"Video Production and Drone Services | VMM Productions","description":"Video strategy, filming and photo, drone, scriptwriting, editing and motion graphics: video production by VMM Productions in Montreal and the Laurentians.","resume":"VMM Productions offers six video production services in Greater Montreal and the Laurentians: video strategy and advertising content, filming and photography, aerial drone production, scriptwriting, editing and motion graphics.","h1":"Video production services in Montreal and the Laurentians"},
-    "portfolio": {"title":"Video Projects in Montreal & Laurentians | VMM Productions","description":"Promotional and business videos grouped by client, plus behind-the-scenes footage: the work of VMM Productions, videographer in Montreal.","resume":"The portfolio of VMM Productions, corporate videographer in Greater Montreal and the Laurentians, groups its final productions by client, along with behind-the-scenes footage.","h1":"Video production projects in Montreal and the Laurentians"},
-    "apropos": {"title":"About: JD and Renaud, the VMM Productions team","description":"JD, founder and videographer, and Renaud, camera operator with 10 years of experience in film: the VMM Productions team, Montreal and Laurentians.","resume":"VMM Productions is JD, founder and videographer, and Renaud, camera operator with 10 years of experience in film.","h1":"The VMM Productions team, corporate videographer in Montreal and the Laurentians"},
-    "contact": {"title":"Contact | Promotional Video in Montreal, VMM Productions","description":"Tell us about your video project, no strings attached. VMM Productions works across Quebec, mainly in Montreal and the Laurentians.","resume":"For a video project anywhere in Quebec, mainly in Greater Montreal and the Laurentians, write to VMM Productions at jeandavid@videosmakemoney.ca or use the contact form.","h1":"Contact a corporate videographer in Montreal and the Laurentians"},
-    "merci": {"title":"Message sent | VMM Productions","description":"Your message was sent to VMM Productions."},
-    "introuvable": {"title":"Page not found | VMM Productions","description":"This page does not exist."}
+    "accueil": {
+      "title": "Video Production, Montreal & Laurentians | VMM Productions",
+      "description": "VMM Productions, corporate videographer in Greater Montreal and the Laurentians: promotional videos, event coverage and business stories.",
+      "resume": "VMM Productions (Videos Make Money) is a corporate videographer in Greater Montreal and the Laurentians, serving all of Quebec: promotional videos, event coverage, business stories and behind the scenes.",
+      "h1": "Video production in Montreal and the Laurentians"
+    },
+    "services": {
+      "title": "Video Production and Drone Services | VMM Productions",
+      "description": "Video strategy, filming and photo, drone, scriptwriting, editing and motion graphics: video production by VMM Productions in Montreal and the Laurentians.",
+      "resume": "VMM Productions offers six video production services in Greater Montreal and the Laurentians: video strategy and advertising content, filming and photography, aerial drone production, scriptwriting, editing and motion graphics.",
+      "h1": "Video production services in Montreal and the Laurentians"
+    },
+    "portfolio": {
+      "title": "Video Projects in Montreal & Laurentians | VMM Productions",
+      "description": "Promotional and business videos grouped by client, plus behind-the-scenes footage: the work of VMM Productions, videographer in Montreal.",
+      "resume": "The portfolio of VMM Productions, corporate videographer in Greater Montreal and the Laurentians, groups its final productions by client, along with behind-the-scenes footage.",
+      "h1": "Video production projects in Montreal and the Laurentians"
+    },
+    "apropos": {
+      "title": "About: JD and Renaud, the VMM Productions team",
+      "description": "JD, founder and videographer, and Renaud, camera operator with 10 years of experience in film: the VMM Productions team, Montreal and Laurentians.",
+      "resume": "VMM Productions is JD, founder and videographer, and Renaud, camera operator with 10 years of experience in film.",
+      "h1": "The VMM Productions team, corporate videographer in Montreal and the Laurentians"
+    },
+    "contact": {
+      "title": "Contact | Promotional Video in Montreal, VMM Productions",
+      "description": "Tell us about your video project, no strings attached. VMM Productions works across Quebec, mainly in Montreal and the Laurentians.",
+      "resume": "For a video project anywhere in Quebec, mainly in Greater Montreal and the Laurentians, write to VMM Productions at jeandavid@videosmakemoney.ca or use the contact form.",
+      "h1": "Contact a corporate videographer in Montreal and the Laurentians"
+    },
+    "merci": {
+      "title": "Message sent | VMM Productions",
+      "description": "Your message was sent to VMM Productions."
+    },
+    "introuvable": {
+      "title": "Page not found | VMM Productions",
+      "description": "This page does not exist."
+    }
   },
   "seoAncien": {
-    "accueil": {"title":"VMM Productions | Video Production, Greater Montreal and the Laurentians","description":"VMM Productions (Videos Make Money), corporate videographer in Greater Montreal and the Laurentians: promotional videos, event coverage, business stories and behind the scenes."},
-    "services": {"title":"Video Production and Drone Services | VMM Productions, Montreal and Laurentians","description":"Video strategy and advertising content, filming and photography, aerial drone production, scriptwriting, editing and motion graphics: VMM Productions services in Greater Montreal and the Laurentians."},
-    "portfolio": {"title":"Business Video Portfolio | VMM Productions, Montreal and Laurentians","description":"Final productions by client and behind-the-scenes footage: the video portfolio of VMM Productions, corporate videographer in Greater Montreal and the Laurentians."},
-    "apropos": {"title":"About | JD and Renaud, the VMM Productions team","description":"The faces behind VMM Productions: JD, founder, and Renaud, camera operator with nearly ten years of experience, in Greater Montreal and the Laurentians."},
-    "contact": {"title":"Contact | VMM Productions, Corporate Videographer in Montreal and the Laurentians","description":"Tell us about your video project. VMM Productions works in Greater Montreal and the Laurentians. Email: jeandavid@videosmakemoney.ca."}
+    "accueil": {
+      "title": "VMM Productions | Video Production, Greater Montreal and the Laurentians",
+      "description": "VMM Productions (Videos Make Money), corporate videographer in Greater Montreal and the Laurentians: promotional videos, event coverage, business stories and behind the scenes."
+    },
+    "services": {
+      "title": "Video Production and Drone Services | VMM Productions, Montreal and Laurentians",
+      "description": "Video strategy and advertising content, filming and photography, aerial drone production, scriptwriting, editing and motion graphics: VMM Productions services in Greater Montreal and the Laurentians."
+    },
+    "portfolio": {
+      "title": "Business Video Portfolio | VMM Productions, Montreal and Laurentians",
+      "description": "Final productions by client and behind-the-scenes footage: the video portfolio of VMM Productions, corporate videographer in Greater Montreal and the Laurentians."
+    },
+    "apropos": {
+      "title": "About | JD and Renaud, the VMM Productions team",
+      "description": "The faces behind VMM Productions: JD, founder, and Renaud, camera operator with nearly ten years of experience, in Greater Montreal and the Laurentians."
+    },
+    "contact": {
+      "title": "Contact | VMM Productions, Corporate Videographer in Montreal and the Laurentians",
+      "description": "Tell us about your video project. VMM Productions works in Greater Montreal and the Laurentians. Email: jeandavid@videosmakemoney.ca."
+    }
   },
   "hero": {
     "surtitre": "VMM PRODUCTIONS · CINEMA AND STORYTELLING",
@@ -58,8 +104,23 @@
     "titre": "Behind VMM",
     "intro": "Great productions start with the people behind the camera. Meet the ones who bring our work to life.",
     "membres": [
-      { "id": "jd", "nom": "JD", "nomComplet": "JD", "role": "Founder", "texte": "From construction sites to film sets, JD brings a hands-on perspective to every production. For him, filming means showcasing what people build and what they are passionate about.", "photo": "" },
-      { "id": "renaud", "nom": "Renaud", "nomComplet": "Renaud", "role": "Camera operator", "experience": "10 years of experience in film.", "texte": "With 10 years of experience in film, Renaud brings creativity, energy and an immersive approach to capturing the action as it happens.", "photo": "" }
+      {
+        "id": "jd",
+        "nom": "JD",
+        "nomComplet": "JD",
+        "role": "Founder",
+        "texte": "From construction sites to film sets, JD brings a hands-on perspective to every production. For him, filming means showcasing what people build and what they are passionate about.",
+        "photo": ""
+      },
+      {
+        "id": "renaud",
+        "nom": "Renaud",
+        "nomComplet": "Renaud",
+        "role": "Camera operator",
+        "experience": "10 years of experience in film.",
+        "texte": "With 10 years of experience in film, Renaud brings creativity, energy and an immersive approach to capturing the action as it happens.",
+        "photo": ""
+      }
     ],
     "photoManquante": "[TO CONFIRM: authentic photo to be provided]",
     "bouton": "Meet us →"
@@ -105,10 +166,24 @@
   "faq": {
     "titre": "Frequently asked questions",
     "items": [
-      { "q": "How long does a typical project take?", "r": "Most projects are delivered within 1–2 weeks depending on complexity. Ongoing-content clients receive deliverables on a continuous schedule." },
-      { "q": "What’s included in the production process?", "r": "Every project includes strategy, scripting, professional filming, advanced editing, and creative direction — with options like drone footage, motion graphics, logo animation, AI visuals, voiceovers, and bilingual delivery (FR + EN).", "note": "[TO CONFIRM: the original answer mentions « strategy » and « AI visuals », while the rule is « no ad strategy or AI service »]" },
-      { "q": "Do you offer bilingual content (French & English)?", "r": "Yes. Our services are custom, tailored to each client, and bilingual delivery (FR + EN) is included, adapted for the Quebec market to feel natural and effective in both languages.", "original": "Yes. Every package includes bilingual delivery (FR + EN) adapted for the Quebec market to feel natural and effective in both languages." },
-      { "q": "What if I’m not sure what type of content my business needs?", "r": "No problem. We guide you toward the right strategy based on your business, goals, and audience — creating content built to attract attention, build trust, and drive action." }
+      {
+        "q": "How long does a typical project take?",
+        "r": "Most projects are delivered within 1–2 weeks depending on complexity. Ongoing-content clients receive deliverables on a continuous schedule."
+      },
+      {
+        "q": "What’s included in the production process?",
+        "r": "Every project includes strategy, scripting, professional filming, advanced editing, and creative direction — with options like drone footage, motion graphics, logo animation, AI visuals, voiceovers, and bilingual delivery (FR + EN).",
+        "note": "[TO CONFIRM: the original answer mentions « strategy » and « AI visuals », while the rule is « no ad strategy or AI service »]"
+      },
+      {
+        "q": "Do you offer bilingual content (French & English)?",
+        "r": "Yes. Our services are custom, tailored to each client, and bilingual delivery (FR + EN) is included, adapted for the Quebec market to feel natural and effective in both languages.",
+        "original": "Yes. Every package includes bilingual delivery (FR + EN) adapted for the Quebec market to feel natural and effective in both languages."
+      },
+      {
+        "q": "What if I’m not sure what type of content my business needs?",
+        "r": "No problem. We guide you toward the right strategy based on your business, goals, and audience — creating content built to attract attention, build trust, and drive action."
+      }
     ]
   },
   "services": {
@@ -278,17 +353,45 @@
     "heroTitre": "PORTFOLIO",
     "scroll": "SCROLL ↓",
     "scrollLabel": "Scroll to the rest of the page",
-    "realisons": { "etiquette": "What we create", "titre": "Four ways to tell your story.", "intro": "Explore our productions by category. Each thumbnail opens its video directly on YouTube." },
-    "honneur": { "etiquette": "Featured businesses", "titre": "Every business. Its own world.", "logoAlt": "Logo of", "intro": "Choose a business to explore its library of productions.", "voir": "See the videos for {client}" },
-    "coulissesBloc": { "etiquette": "Behind the images", "titre": "And behind every production...", "intro": "A collection dedicated to the moments behind the camera.", "legende": "Behind the scenes / Making-of / Trailers", "voir": "See all behind-the-scenes videos", "photoAlt": "VMM Productions team member in the editing studio" },
-    "fin": { "etiquette": "And after the images?", "titre": "Meet the people behind VMM.", "texte": "Discover the people who bring these productions to life." },
-    "biblio": { "precedent": "Previous videos", "suivant": "Next videos", "youtube": "Watch on YouTube" },
+    "realisons": {
+      "etiquette": "What we create",
+      "titre": "Four ways to tell your story.",
+      "intro": "Explore our productions by category. Each thumbnail opens its video directly on YouTube."
+    },
+    "honneur": {
+      "etiquette": "Featured businesses",
+      "titre": "Every business. Its own world.",
+      "logoAlt": "Logo of",
+      "intro": "Choose a business to explore its library of productions.",
+      "voir": "See the videos for {client}"
+    },
+    "coulissesBloc": {
+      "etiquette": "Behind the images",
+      "titre": "And behind every production...",
+      "intro": "A collection dedicated to the moments behind the camera.",
+      "legende": "Behind the scenes / Making-of / Trailers",
+      "voir": "See all behind-the-scenes videos",
+      "photoAlt": "VMM Productions team member in the editing studio"
+    },
+    "fin": {
+      "etiquette": "And after the images?",
+      "titre": "Meet the people behind VMM.",
+      "texte": "Discover the people who bring these productions to life."
+    },
+    "biblio": {
+      "precedent": "Previous videos",
+      "suivant": "Next videos",
+      "youtube": "Watch on YouTube",
+      "compteur": "Video {i} of {n}"
+    },
     "coulissesPage": {
       "titre": "Behind the scenes",
       "seoTitre": "Behind the scenes, making-of and trailers | VMM Productions",
       "seoDescription": "Behind-the-scenes footage, making-of and trailers from VMM Productions, corporate videographer in Greater Montreal and the Laurentians.",
       "h1": "Behind the scenes at VMM Productions, video production in Montreal and the Laurentians",
-      "resume": "VMM Productions shares {n} of behind-the-scenes footage, making-of and trailers."
+      "resume": "VMM Productions shares {n} of behind-the-scenes footage, making-of and trailers.",
+      "titreHero": "VMM BEHIND THE SCENES / MAKING-OF / TRAILERS",
+      "_aideTitreHero": "[TO CONFIRM: English title of the behind-the-scenes hero]"
     }
   },
   "apropos": {
@@ -400,6 +503,91 @@
     "ctaTexte": "Write to us or call 514-604-5682, from 7 a.m. to 7 p.m. No commitment.",
     "ctaBouton": "Contact us"
   },
-  "merci": { "titre": "Thank you!", "texte": "Your message is on its way. We'll get back to you shortly.", "retour": "Back to home" },
-  "introuvable": { "titre": "Page not found", "texte": "This page does not exist or has moved.", "retour": "Back to home", "pages": "Main pages" }
+  "merci": {
+    "titre": "Thank you!",
+    "texte": "Your message is on its way. We'll get back to you shortly.",
+    "retour": "Back to home"
+  },
+  "introuvable": {
+    "titre": "Page not found",
+    "texte": "This page does not exist or has moved.",
+    "retour": "Back to home",
+    "pages": "Main pages"
+  },
+  "accueilJD": {
+    "_aide": "Home page per JD's « VMM-HomePage-LAYOUT-2026-11-05 » PDF. [TO CONFIRM: English copy translated from the French mockup]",
+    "hero": {
+      "titre": [
+        "VIDEOS",
+        "MAKE",
+        "MONEY"
+      ],
+      "signature": "Our *passion*. Helping yours *grow*.",
+      "bouton": "CONTACT US →"
+    },
+    "portfolio": {
+      "etiquette": "What we produce",
+      "titre": "Four ways to tell your story.",
+      "intro": "Explore our productions by category. Each thumbnail opens its video on YouTube.",
+      "bouton": "EXPLORE OUR PORTFOLIO →",
+      "titreVariante": "The *work* speaks for *itself*.",
+      "sansVideo": "[TO CONFIRM: YouTube ID for this thumbnail]"
+    },
+    "equipe": {
+      "etiquette": "The people behind VMM",
+      "titre": "One *team*.\nOne *vision*.\n*Stories*.",
+      "texte": "From strategy to filming, passionate people put their experience to work for your projects.",
+      "bouton": "MEET OUR TEAM →",
+      "photos": [
+        {
+          "src": "/img/about-jd-photo",
+          "alt": "JD, founder of VMM Productions"
+        },
+        {
+          "src": "/img/about-renaud",
+          "alt": "Renaud, camera operator at VMM Productions"
+        }
+      ]
+    },
+    "services": {
+      "etiquette": "Our services",
+      "titre": "Where *strategy* meets *creativity*.",
+      "intro": "Six areas of expertise brought together to bring your vision to life.",
+      "libelles": [
+        [
+          "Strategic",
+          "advertising content"
+        ],
+        [
+          "Professional filming",
+          "and photography"
+        ],
+        [
+          "Aerial imagery",
+          "and drone"
+        ],
+        [
+          "Scriptwriting and",
+          "brand storytelling"
+        ],
+        [
+          "Editing and creative",
+          "post-production"
+        ],
+        [
+          "Branding and",
+          "visual design"
+        ]
+      ],
+      "portraitAlt": "JD with his camera",
+      "bouton": "EXPLORE OUR SERVICES →"
+    },
+    "contact": {
+      "etiquette": "Let's talk",
+      "titre": "Your next project *starts here*.",
+      "texte": "Have an idea in mind? Let's talk about your business, your vision and what we can create together.",
+      "bouton": "CONTACT US →",
+      "photo": ""
+    }
+  }
 }

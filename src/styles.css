@@ -877,3 +877,85 @@ html:not(.js) .library-arrow { display: none; }
 .tile-static { cursor: default; }
 .thumb picture, .thumb picture img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .featured .tile-vertical .thumb:has(picture) { aspect-ratio: 460 / 642; }
+
+/* ---------- Audit JD du 2026-11-07 (PDF Accueil du 2026-11-05 et PDF client du 2026-11-04) ---------- */
+/* Accueil, héros : VIDEOS blanc, MAKE violet, MONEY rose-violet, sans rectangle ; PASSION et GROW mauves */
+.hero-title.hero-title-jd { background: none; -webkit-text-fill-color: currentColor; color: #fff; width: auto; font-family: var(--font-hero); font-weight: 800; letter-spacing: .01em; font-size: clamp(2.3rem, 6.4vw, 6rem); white-space: nowrap; }
+@media (max-width: 559px) { .hero-title.hero-title-jd { white-space: normal; font-size: clamp(2.6rem, 13vw, 3.5rem); } }
+.hero-title-jd .ht-videos { color: #fff; }
+.hero-title-jd .ht-make { color: #8b5cf6; }
+.hero-title-jd .ht-money { color: #e04fd0; }
+.hero-signature { max-width: 46rem; text-transform: uppercase; letter-spacing: .02em; text-shadow: 0 1px 10px rgba(8, 8, 15, .6); }
+.hero-signature .accent, .home-portfolio h2 .accent, .home-team .accent, .home-services h2 .accent, .home-contact h2 .accent {
+  background: none; -webkit-text-fill-color: currentColor; color: var(--violet-light);
+}
+.hero-text { color: var(--hero-text); text-shadow: 0 1px 10px rgba(8, 8, 15, .6); }
+.hero-cta { border-radius: 10px; }
+.page-accueil .hero-vignette { background: linear-gradient(180deg, rgba(8, 8, 15, .1) 0%, rgba(8, 8, 15, .25) 55%, rgba(8, 8, 15, .8) 100%); }
+.page-accueil .hero-video { filter: none; }
+.page-accueil .btn-solid, .collection-screen .btn-solid { border-radius: 10px; }
+
+/* Survol des miniatures (critère 34) : halo violet discret, 200 ms, sans déplacement ni zoom */
+a.yt-tile .thumb { transition: box-shadow .2s ease, filter .2s ease; }
+a.yt-tile:hover img, a.yt-tile:focus-visible img { transform: none; }
+a.yt-tile:hover .thumb, a.yt-tile:focus-visible .thumb { box-shadow: 0 0 0 1px rgba(191, 127, 255, .75), 0 0 26px rgba(139, 92, 246, .5); filter: brightness(1.08); }
+
+/* Accueil 02, portfolio : 4 cartes 9:16 côte à côte, images entières (contain), coins arrondis ; carrousel sur mobile */
+.home-portfolio .jd-wrap, .home-services .jd-wrap { max-width: 1200px; }
+.hp-cards { list-style: none; margin: 2rem 0 0; padding: 0 0 .75rem; display: grid; grid-auto-flow: column; grid-auto-columns: minmax(62%, 1fr); gap: 1rem; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+.hp-cards > li { scroll-snap-align: start; }
+@media (min-width: 560px) { .hp-cards { grid-auto-columns: minmax(40%, 1fr); } }
+@media (min-width: 960px) { .hp-cards { grid-auto-flow: row; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: visible; gap: 1.5rem; } }
+.hp-card .thumb { aspect-ratio: 9 / 16; border-radius: var(--radius-card-md); background: transparent; border: 0; }
+/* Visuels de JD (460 × 642) : affichés entiers à leur format d'origine, sans bandes noires */
+.hp-card .thumb:has(picture) { aspect-ratio: 460 / 642; }
+.hp-card .thumb picture, .hp-card .thumb img { width: 100%; height: 100%; object-fit: contain; }
+.hp-card .yt-tile-label { font: 600 .95rem/1.3 var(--font-text); color: var(--title); }
+.home-portfolio .cta-row { text-align: center; }
+
+/* Accueil 03 et 04 : texte à gauche, images à droite ; empilés sur mobile (texte puis images) */
+.home-split { display: grid; gap: 2.5rem; align-items: center; }
+@media (min-width: 900px) { .home-split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem; } }
+.home-team-title { font-size: clamp(2.2rem, 5.5vw, 3.6rem); line-height: 1.15; }
+.home-team-photos { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.home-team-photos img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: 50% 30%; border-radius: var(--radius-card-md); }
+
+.home-services-split { margin-top: 2rem; }
+.hp-svc-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 1.25rem 1.5rem; }
+@media (min-width: 480px) { .hp-svc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.hp-svc { display: flex; align-items: center; gap: 1rem; min-height: 64px; color: var(--title); text-decoration: none; border-radius: var(--radius-card); padding: .25rem; transition: filter .2s ease; }
+.hp-svc:hover, .hp-svc:focus-visible { filter: drop-shadow(0 0 10px rgba(139, 92, 246, .55)); color: var(--title); }
+.hp-svc-icon, .hp-svc-icon img { display: block; width: 72px; height: 72px; flex: 0 0 72px; object-fit: contain; }
+.hp-svc-text { display: flex; flex-direction: column; font-size: .95rem; line-height: 1.35; }
+.hp-svc-text strong { font-weight: 700; }
+.hp-svc-text span { color: var(--text-2); font-weight: 600; }
+.home-services-portrait { display: flex; justify-content: center; }
+.home-services-portrait img { display: block; width: auto; max-width: 100%; height: auto; max-height: min(620px, 80svh); object-fit: contain; }
+
+/* Accueil 05 : photo de JD à gauche, texte et bouton à droite (le formulaire reste sur /contact/) */
+@media (min-width: 900px) { .home-contact-split { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); } }
+.home-contact-photo img { display: block; width: 100%; height: auto; max-height: 80svh; object-fit: contain; }
+.home-contact-photo.is-empty { display: none; }
+@media (min-width: 900px) { .home-contact-photo.is-empty { display: block; min-height: 1px; } }
+.home-contact h2 { font-size: clamp(2rem, 5vw, 3.4rem); line-height: 1.15; }
+
+/* Pages client et Coulisses : un seul écran ; titre blanc seul sur le héros, miniatures et flèches posées sur la vidéo */
+.page-hero.collection-screen { min-height: calc(100svh - var(--header-h)); height: calc(100svh - var(--header-h)); padding: 0; display: flex; align-items: stretch; }
+.collection-screen::before { display: none; }
+.collection-screen .bg-video-veil { background: linear-gradient(180deg, rgba(8, 8, 15, .45) 0%, rgba(8, 8, 15, .1) 35%, rgba(8, 8, 15, .15) 65%, rgba(8, 8, 15, .55) 100%); }
+.collection-inner { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 1.5rem; padding-block: clamp(4.5rem, 16vh, 9rem) clamp(1rem, 4vh, 2.5rem); }
+.collection-title { margin: 0; color: #fff; font-family: var(--font-hero); font-weight: 800; text-transform: uppercase; letter-spacing: .01em; font-size: clamp(2.2rem, 7vw, 4.5rem); line-height: 1.05; text-shadow: 0 2px 18px rgba(8, 8, 15, .55); }
+.collection-library { width: 100%; max-width: min(760px, calc(71svh + 4rem + 88px)); margin-inline: auto; }
+.collection-screen .library-row { gap: 1rem; }
+.collection-screen .library-track { grid-auto-columns: calc((100% - 2rem) / 3); padding: .5rem .25rem; scrollbar-width: none; }
+.collection-screen .library-track::-webkit-scrollbar { display: none; }
+@media (max-width: 559px) { .collection-screen .library-track { grid-auto-columns: calc((100% - 1rem) / 2); } .collection-screen .library-arrow { display: grid; width: 44px; height: 44px; } }
+.collection-screen .yt-tile .thumb { border-radius: var(--radius-card); border: 0; }
+.collection-screen .library-arrow { background: var(--jd-violet); border: 0; color: #fff; font-size: 1.6rem; line-height: 1; }
+.collection-screen .library-arrow:hover, .collection-screen .library-arrow:focus-visible { background: var(--mauve); box-shadow: 0 0 20px rgba(124, 58, 237, .45); }
+.library-count { margin: .5rem 0 0; text-align: center; font: 600 .875rem/1.4 var(--font-label); color: #fff; text-shadow: 0 1px 8px rgba(8, 8, 15, .8); }
+html:not(.js) .library-count { display: none; }
+.collection-screen .bg-toggle { bottom: auto; top: 1rem; }
+/* Titre long (Coulisses / Making-of / Annonces) : plus petit */
+.collection-title.is-long { font-size: clamp(1.6rem, 4.2vw, 3.4rem); }
+@media (max-height: 700px) and (min-width: 768px) { .collection-inner { padding-top: 3rem; } }

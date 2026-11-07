@@ -31,18 +31,44 @@
   },
   "heures": {
     "_aide": "Heures d'ouverture (JSON-LD openingHoursSpecification), du lundi au dimanche.",
-    "jours": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+    "jours": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday"
+    ],
     "ouverture": "07:00",
     "fermeture": "19:00"
   },
   "dateFondation": "2026-04-01",
-  "delaiLivraison": { "fr": "1 à 2 semaines", "en": "1 to 2 weeks" },
+  "delaiLivraison": {
+    "fr": "1 à 2 semaines",
+    "en": "1 to 2 weeks"
+  },
   "reseaux": [
-    { "nom": "YouTube", "url": "https://www.youtube.com/@videosmakemoney" },
-    { "nom": "TikTok", "url": "https://www.tiktok.com/@videosmakemoney3" },
-    { "nom": "Facebook", "url": "https://www.facebook.com/profile.php?id=61579432510766" },
-    { "nom": "Instagram", "url": "https://www.instagram.com/videosmakemoney/" },
-    { "nom": "X", "url": "https://x.com/IncVmm47623" }
+    {
+      "nom": "YouTube",
+      "url": "https://www.youtube.com/@videosmakemoney"
+    },
+    {
+      "nom": "TikTok",
+      "url": "https://www.tiktok.com/@videosmakemoney3"
+    },
+    {
+      "nom": "Facebook",
+      "url": "https://www.facebook.com/profile.php?id=61579432510766"
+    },
+    {
+      "nom": "Instagram",
+      "url": "https://www.instagram.com/videosmakemoney/"
+    },
+    {
+      "nom": "X",
+      "url": "https://x.com/IncVmm47623"
+    }
   ],
   "reseauxAnciens": {
     "_aide": "URL remplacées le 2026-11-05 (gardées pour mémoire, non publiées).",
@@ -51,17 +77,25 @@
   },
   "heroVideo": {
     "_aide": "Vidéo du bandeau d'accueil, fichiers dans static/videos/jd/. hero-mobile = vidéo 9:16 de JD (original gardé hors du site : media-originaux/jd/hero-upload.mp4 ; réencodée 720 × 1280, 30 i/s, sans son). hero-ordi = la même vidéo en 16:9 (1920 × 1080, 30 i/s, sans son), fabriquée le 2026-11-05 : clip 9:16 centré sur un fond flou de la même vidéo. Les posters sont une image tirée de la vidéo (3 s), affichée avant la lecture. Quand JD fournira une vraie version 16:9, remplacer hero-ordi.mp4 / .webm / -poster.*.",
-    "ordi": "/videos/jd/hero-ordi.mp4",
-    "mobile": "/videos/jd/hero-mobile.mp4",
-    "ordiWebm": "/videos/jd/hero-ordi.webm",
-    "mobileWebm": "/videos/jd/hero-mobile.webm",
-    "poster": "/videos/jd/hero-mobile-poster.jpg",
-    "posterOrdi": "/videos/jd/hero-ordi-poster.jpg",
+    "ordi": "/videos/jd/hero-accueil-16x9.mp4",
+    "mobile": "/videos/jd/hero-accueil-9x16.mp4",
+    "ordiWebm": "/videos/jd/hero-accueil-16x9.webm",
+    "mobileWebm": "/videos/jd/hero-accueil-9x16.webm",
+    "poster": "/videos/jd/hero-accueil-9x16-poster.jpg",
+    "posterOrdi": "/videos/jd/hero-accueil-16x9-poster.jpg",
     "noteOrdi": "Version 16:9 provisoire (9:16 sur fond flou). [À CONFIRMER : vraie vidéo héro 16:9 de JD, si elle existe]",
-    "ancien": { "_aide": "Anciens chemins (site actuel), jamais fournis.", "ordi": "/images/vmm-hero-desktop.mp4", "mobile": "/images/vmm-hero-mobile.mp4" },
+    "ancien": {
+      "ordi": "/videos/jd/hero-ordi.mp4",
+      "mobile": "/videos/jd/hero-mobile.mp4",
+      "ordiWebm": "/videos/jd/hero-ordi.webm",
+      "mobileWebm": "/videos/jd/hero-mobile.webm",
+      "poster": "/videos/jd/hero-mobile-poster.jpg",
+      "posterOrdi": "/videos/jd/hero-ordi-poster.jpg"
+    },
     "_aideAttente": "Tant que les fichiers vidéo ci-dessus n'existent pas dans static/, le bandeau n'appelle aucune vidéo (pas de 404) et affiche ces images d'attente (logo VMM, mêmes images que le fond de Contact). Dès que JD fournit la vidéo héro, la déposer au chemin « ordi »/« mobile » et elle remplace l'image automatiquement.",
     "posterAttenteOrdi": "/videos/jd/contact-logo-16x9-poster.jpg",
-    "posterAttenteMobile": "/videos/jd/contact-logo-9x16-poster.jpg"
+    "posterAttenteMobile": "/videos/jd/contact-logo-9x16-poster.jpg",
+    "_aide2026_11_07": "Héros d'accueil = « HomePage Hero 16-9 DESKTOP.mp4 » / « HomePage Hero 9-16 MOBILE.mp4 » de JD (28,3 s, livraison du 2026-11-07). Les anciens hero-ordi / hero-mobile sont gardés (voir « ancien ») et restent dans static/videos/jd/."
   },
   "logoCarre": {
     "_aide": "Logo carré de JD (1254 × 1254, fond noir, PAS transparent ; original : media-originaux/jd/VMM Logo Carre.png). Sert au logo du JSON-LD (schema.org) et à la future fiche Google Business. Le logo 3D de l'en-tête ne change pas sans l'accord de Natasha.",

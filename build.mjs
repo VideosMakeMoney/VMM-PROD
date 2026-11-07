@@ -696,86 +696,103 @@ function homePage(lang) {
   }`;
   // Préchargement de l'image du bandeau : une seule par appareil (ou le poster de la vidéo héro quand elle existera)
   const heroPreload = poster ? picturePreload(poster, posterOrdi) : attenteOrdi ? picturePreload(attenteMobile, attenteOrdi) : '';
+  // Accueil selon le PDF « VMM-HomePage-LAYOUT-2026-11-05 » de JD (pages 1 à 5, la page 11 « AJUSTEMENTS VALIDÉS »
+  // primant sur les pages 6 à 10) : 01 héros vidéo, 02 portfolio (4 miniatures), 03 équipe, 04 services, 05 contact.
+  // Les anciennes sections (creons, equipe, realisations, avis) gardent leurs textes dans content/*.json.
+  const A = L.accueilJD;
+  const [tVideos, tMake, tMoney] = A.hero.titre;
+  const svcItems = L.services.items;
+  // Bloc Avis Google : affiché seulement avec un vrai widget (aucun titre seul, aucun avis inventé)
+  const avis = site.avisGoogle.widgetHtml
+    ? `
+<section class="section" id="avis" aria-labelledby="avis-title">
+  <div class="container">
+    ${sectionHead(L.avis.etiquette, L.avis.titre, '', 'avis-title')}
+    <div class="reviews" data-reveal>${site.avisGoogle.widgetHtml}</div>
+  </div>
+</section>`
+    : '';
+  const contactPhoto = A.contact.photo && existsSync(join(ROOT, 'static', `${A.contact.photo}.webp`));
   const body = `
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero-media" aria-hidden="true">
     ${heroMedia}
     <div class="hero-vignette"></div>
-    <div class="halo halo-violet"></div>
-    <div class="halo halo-rose"></div>
-    <div class="leak leak-violet"></div>
-    <div class="leak leak-rose"></div>
-    <div class="leak leak-bleu"></div>
   </div>
   <div class="container hero-content">
-    <p class="label hero-kicker" data-reveal>${esc(L.hero.surtitre)}</p>
-    <h1 id="hero-title" class="hero-title" data-reveal>${t(L.hero.titre)}${h1Seo(L.seo.accueil.h1)}</h1>
-    <p class="hero-sub" data-reveal>${t(L.hero.sousTitre)}</p>
+    <h1 id="hero-title" class="hero-title hero-title-jd" data-no-accent data-reveal><span class="ht-videos">${esc(tVideos)}</span> <span class="ht-make">${esc(tMake)}</span> <span class="ht-money">${esc(tMoney)}</span>${h1Seo(L.seo.accueil.h1)}</h1>
+    <p class="hero-sub hero-signature" data-reveal>${rich(A.hero.signature)}</p>
     <p class="hero-text" data-reveal>${t(L.hero.texte)}</p>
-    <a class="btn btn-neon" href="#contact" data-scroll-contact data-reveal>${esc(L.hero.bouton)}</a>
+    <a class="btn btn-solid hero-cta" href="${ROUTES.contact[lang]}" data-reveal>${esc(A.hero.bouton)}</a>
     ${hasVideo && poster || isPlaceholder(L.hero.posterManquant) ? '' : `<p class="hero-missing small">${t(L.hero.posterManquant)}</p>`}
   </div>
   ${hasVideo ? `<button class="hero-toggle" type="button" aria-pressed="false" data-pause="${esc(L.hero.pause)}" data-play="${esc(L.hero.lecture)}" aria-label="${esc(L.hero.pause)}"><span aria-hidden="true">❚❚</span></button>` : ''}
 </section>
 ${summaryBand(L.seo.accueil.resume)}
 
-<section class="section" id="creations" aria-labelledby="creons-title">
-  <div class="container">
-    ${sectionHead(L.creons.etiquette, L.creons.titre, L.creons.intro, 'creons-title')}
-    <ul class="grid grid-4 cards">
+<section class="jd-screen home-portfolio" id="portfolio-accueil" aria-labelledby="hp-portfolio-title">
+  <div class="jd-wrap">
+    <p class="jd-label jd-label-line" data-reveal>${esc(A.portfolio.etiquette)}</p>
+    <h2 id="hp-portfolio-title" data-reveal data-no-accent>${rich(A.portfolio.titre)}</h2>
+    <p class="jd-lead" data-reveal>${t(A.portfolio.intro)}</p>
+    <ul class="hp-cards" role="list">
       ${portfolio.categories
-        .map(
-          (c, i) => `<li class="card glass" data-reveal>
-        ${categoryTile(c, catVideos[i], lang)}
-        <h3>${t(c.titre[lang])}</h3>
-        <p class="muted">${t(c.texte[lang])}</p>
-        ${catVideos[i]?.youtubeId || hasMiniature(c) ? '' : `<p class="small">${t(L.creons.videoManquante)}</p>`}
-      </li>`
-        )
+        .map((c, i) => `<li data-reveal>${ytTile(catVideos[i], lang, { cls: 'hp-card', label: t(c.titre[lang]), img: c.miniature })}</li>`)
         .join('\n      ')}
     </ul>
-    <p class="cta-row"><a class="btn btn-neon" href="${ROUTES.services[lang]}">${esc(L.creons.bouton)}</a></p>
+    <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.portfolio[lang]}">${esc(A.portfolio.bouton)}</a></p>
   </div>
 </section>
 
-<section class="section" id="equipe" aria-labelledby="equipe-title">
-  <div class="container">
-    ${sectionHead(L.equipe.etiquette, L.equipe.titre, L.equipe.intro, 'equipe-title')}
-    <ul class="grid grid-2 team">
-      ${L.equipe.membres.map((m) => `<li class="card glass member" data-reveal>${memberPhoto(m, L)}
-        <div class="member-text">
-          <h3>${esc(m.nom)}</h3>
-          <p class="role">${t(m.role)}</p>
-          <p class="muted">${t(m.texte)}</p>
-        </div>
-      </li>`).join('\n      ')}
+<section class="jd-screen home-team" id="equipe" aria-labelledby="equipe-title">
+  <div class="jd-wrap home-split">
+    <div class="home-split-text">
+      <p class="jd-label jd-label-line" data-reveal>${esc(A.equipe.etiquette)}</p>
+      <h2 id="equipe-title" class="home-team-title" data-reveal data-no-accent>${rich(A.equipe.titre)}</h2>
+      <p class="jd-lead" data-reveal>${t(A.equipe.texte)}</p>
+      <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.apropos[lang]}">${esc(A.equipe.bouton)}</a></p>
+    </div>
+    <ul class="home-team-photos" role="list">
+      ${A.equipe.photos
+        .filter((p) => existsSync(join(ROOT, 'static', `${p.src}.webp`)))
+        .map((p) => `<li data-reveal>${picture(p.src, p.alt, { w: 900, h: 1200 })}</li>`)
+        .join('\n      ')}
     </ul>
-    <p class="cta-row"><a class="btn btn-neon" href="${ROUTES.apropos[lang]}">${esc(L.equipe.bouton)}</a></p>
   </div>
 </section>
 
-<section class="section" id="realisations" aria-labelledby="realisations-title">
-  <div class="container">
-    ${sectionHead(L.realisations.etiquette, L.realisations.titre, L.realisations.intro, 'realisations-title')}
-    <ul class="grid grid-4 featured">
-      ${slots.map((x) => `<li data-reveal>${videoTile(x.v, lang, { missing: L.realisations.vedetteManquante, img: x.img, label: x.label })}</li>`).join('\n      ')}
-    </ul>
-    ${clientMarquee()}
-    <p class="cta-row"><a class="btn btn-neon" href="${ROUTES.portfolio[lang]}">${esc(L.realisations.bouton)}</a></p>
+<section class="jd-screen home-services" id="services-accueil" aria-labelledby="hp-services-title">
+  <div class="jd-wrap">
+    <p class="jd-label jd-label-line" data-reveal>${esc(A.services.etiquette)}</p>
+    <h2 id="hp-services-title" data-reveal data-no-accent>${rich(A.services.titre)}</h2>
+    <p class="jd-lead" data-reveal>${t(A.services.intro)}</p>
+    <div class="home-split home-services-split">
+      <div class="home-split-text">
+        <ul class="hp-svc-grid" role="list">
+          ${A.services.libelles
+            .map((lib, i) => `<li data-reveal><a class="hp-svc" href="${ROUTES.services[lang]}">${picture(`/img/${svcItems[i].icone}-336`, '', { w: 336, h: 336, cls: 'hp-svc-icon', fallback: 'png' })}<span class="hp-svc-text"><strong>${esc(lib[0])}</strong> <span>${esc(lib[1])}</span></span></a></li>`)
+            .join('\n          ')}
+        </ul>
+        <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.services[lang]}">${esc(A.services.bouton)}</a></p>
+      </div>
+      <div class="home-services-portrait" data-reveal>${picture('/img/services-jd-detoure', A.services.portraitAlt, { w: 683, h: 1200, fallback: 'png' })}</div>
+    </div>
   </div>
 </section>
 
-<section class="section section-contact" id="contact" aria-labelledby="contact-title">
-  ${contactBlock(lang)}
-</section>
-
-<section class="section" id="avis" aria-labelledby="avis-title">
-  <div class="container">
-    ${sectionHead(L.avis.etiquette, L.avis.titre, '', 'avis-title')}
-    <div class="reviews" data-reveal>${site.avisGoogle.widgetHtml || `<p>${t(L.avis.placeholder)}</p>`}</div>
+<section class="jd-screen home-contact" id="contact" aria-labelledby="contact-title">
+  <div class="jd-wrap home-split home-contact-split">
+    <div class="home-contact-photo${contactPhoto ? '' : ' is-empty'}" data-reveal>${contactPhoto ? picture(A.contact.photo, 'JD', { w: 852, h: 1222, fallback: 'png' }) : ''}</div>
+    <div class="home-split-text">
+      <p class="jd-label jd-label-line" data-reveal>${esc(A.contact.etiquette)}</p>
+      <h2 id="contact-title" data-reveal data-no-accent>${rich(A.contact.titre)}</h2>
+      <p class="jd-lead" data-reveal>${t(A.contact.texte)}</p>
+      <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.contact[lang]}">${esc(A.contact.bouton)}</a></p>
+    </div>
   </div>
-</section>`;
-  return layout({ key: 'accueil', lang, body, videos: [...catVideos.filter(Boolean), ...vedettes], preload: heroPreload });
+</section>${avis}`;
+
+  return layout({ key: 'accueil', lang, body, videos: catVideos.filter((v) => v?.youtubeId), preload: heroPreload });
 }
 
 function memberPhoto(m, L) {
@@ -927,17 +944,20 @@ function ytTile(v, lang, { label = '', cls = '', img = '' } = {}) {
         </a>`;
 }
 
-// Bibliothèque d'une page client ou Coulisses : une rangée qui défile à l'horizontale (doigt, trackpad, flèches ←→).
-// Sans JavaScript, la rangée défile quand même ; les flèches n'apparaissent qu'avec JS.
+// Bibliothèque d'une page client ou Coulisses : une rangée qui défile à l'horizontale (doigt, trackpad, flèches ‹ ›),
+// 3 miniatures visibles au plus, compteur « 01 / N ». Sans JavaScript, la rangée défile quand même ; les flèches
+// et le compteur n'apparaissent qu'avec JS. Aucun conteneur derrière la rangée (PDF client de JD, 2026-11-04).
 function library(list, lang, id) {
   const B = langs[lang].portfolio.biblio;
+  const pad = (n) => String(n).padStart(2, '0');
   return `<div class="library-row" data-library>
-      <button class="library-arrow is-prev" type="button" data-library-prev aria-controls="${id}" aria-label="${esc(B.precedent)}"><span aria-hidden="true">←</span></button>
-      <ul class="library-track" id="${id}" role="list" tabindex="0">
+      <button class="library-arrow is-prev" type="button" data-library-prev aria-controls="${id}" aria-label="${esc(B.precedent)}"><span aria-hidden="true">‹</span></button>
+      <ul class="library-track" id="${id}" role="list" tabindex="0" aria-label="${esc(B.youtube)}">
         ${list.map((v) => `<li>${ytTile(v, lang)}</li>`).join('\n        ')}
       </ul>
-      <button class="library-arrow is-next" type="button" data-library-next aria-controls="${id}" aria-label="${esc(B.suivant)}"><span aria-hidden="true">→</span></button>
-    </div>`;
+      <button class="library-arrow is-next" type="button" data-library-next aria-controls="${id}" aria-label="${esc(B.suivant)}"><span aria-hidden="true">›</span></button>
+    </div>
+    <p class="library-count" data-library-count data-total="${list.length}" data-label="${esc(B.compteur)}"><span aria-hidden="true"><span data-library-index>01</span> / ${pad(list.length)}</span><span class="visually-hidden" data-library-sr>${esc(B.compteur.replace('{i}', '1').replace('{n}', list.length))}</span></p>`;
 }
 
 // Clients de « Les entreprises à l'honneur », dans l'ordre de portfolio.json → honneur (les autres suivent).
@@ -1017,40 +1037,32 @@ ${summaryBand(L.seo.portfolio.resume)}
   return layout({ key: 'portfolio', lang, body, videos: portfolioVideos(), preload: posterPreload('portfolio') });
 }
 
-// En-tête d'une page de collection (client ou Coulisses) : héros vidéo plein écran si un clip existe, sinon en-tête simple.
-function collectionHead(L, { clip, title, h1, n, resume }) {
-  const P = L.portfolio;
-  if (clip && clips.clips[clip]) return `${fullHero(clip, title, L, null, h1, { cls: 'collection-hero', scroll: { texte: P.scroll, label: P.scrollLabel, cible: 'videos' } })}
-${summaryBand(resume)}`;
-  return `<section class="page-hero client-hero">
-  <div class="container">
-    <h1 data-reveal>${esc(title)}${h1Seo(h1)}</h1>
-    <p class="intro" data-reveal>${countText(n, P)}</p>
-    ${summary(resume)}
+// Page de collection (client ou Coulisses), selon les PDF client de JD (2026-11-04) : un seul écran, le clip en fond,
+// le titre en blanc (seul texte du héros), puis les miniatures et les flèches posées directement sur la vidéo, en bas.
+// Les anciens éléments du héros (résumé « VMM Productions a réalisé… », nombre de vidéos, « Retour aux projets »)
+// sont retirés de la page ; leurs textes restent dans content/*.json.
+function collectionScreen(L, lang, { clip, title, h1, list }) {
+  const hasClip = clip && clips.clips[clip];
+  return `<section class="page-hero collection-screen${hasClip ? ' full-hero has-bg-video' : ''}" aria-labelledby="hero-title">
+  ${hasClip ? bgVideo(clip) : ''}
+  <div class="container collection-inner">
+    <h1 id="hero-title" class="collection-title${title.length > 22 ? ' is-long' : ''}" data-no-accent>${esc(title)}${h1Seo(h1)}</h1>
+    <div class="collection-library" id="videos">
+      ${library(list, lang, `biblio-${lang}`)}
+    </div>
   </div>
+  ${hasClip ? `<button class="bg-toggle" type="button" data-bg-toggle data-pause="${esc(L.services.heroPause)}" data-play="${esc(L.services.heroLecture)}" aria-label="${esc(L.services.heroPause)}"><span aria-hidden="true">❚❚</span></button>` : ''}
 </section>`;
 }
 
-const collectionBody = (L, lang, list, back) => `<section class="section section-tight collection" id="videos" aria-labelledby="videos-title">
-  <div class="container">
-    <p class="back-row">${back}</p>
-    <h2 id="videos-title" class="visually-hidden">${esc(L.nav.portfolio)}</h2>
-    ${library(list, lang, `biblio-${lang}`)}
-    <p class="muted small collection-count">${countText(list.length, L.portfolio)}</p>
-  </div>
-</section>`;
-
-// Page d'un client : bande-annonce en fond (si le client a un clip), puis toutes ses vidéos.
+// Page d'un client : son clip en fond (si le client en a un) et toutes ses vidéos.
 function clientPage(c, lang) {
   const L = langs[lang];
   const P = L.portfolio;
   const list = clientVideos(c);
-  const n = list.length;
   // Élision en français : « de Installations » devient « d'Installations ».
   const fill = (s) => (lang === 'fr' && /^[aeiouyàâéèêîôûh]/i.test(c.nom) ? s.replaceAll('de {client}', 'd’{client}') : s).replaceAll('{client}', c.nom);
-  const back = `<a class="btn btn-neon btn-back" href="${ROUTES.portfolio[lang]}">${esc(P.retour)}</a>`;
-  const body = `${collectionHead(L, { clip: c.clip, title: c.nom, h1: fill(P.clientH1), n, resume: P.clientResume.replace('{n}', countText(n, P)).replace('{client}', c.nom) })}
-${collectionBody(L, lang, list, back)}`;
+  const body = collectionScreen(L, lang, { clip: c.clip, title: c.nomHero || c.nom, h1: fill(P.clientH1), list });
   return layout({
     key: 'portfolio',
     lang,
@@ -1067,9 +1079,7 @@ function coulissesPage(lang) {
   const P = L.portfolio;
   const C = P.coulissesPage;
   const list = coulissesVideos();
-  const back = `<a class="btn btn-neon btn-back" href="${ROUTES.portfolio[lang]}">${esc(P.retour)}</a>`;
-  const body = `${collectionHead(L, { clip: COUL.clip, title: C.titre, h1: C.h1, n: list.length, resume: C.resume.replace('{n}', countText(list.length, P)) })}
-${collectionBody(L, lang, list, back)}`;
+  const body = collectionScreen(L, lang, { clip: COUL.clip, title: C.titreHero || C.titre, h1: C.h1, list });
   return layout({
     key: 'portfolio',
     lang,
