@@ -48,6 +48,10 @@ const INDEXABLE = ['accueil', 'services', 'portfolio', 'apropos', 'contact'];
 const clientSlug = (c) => c.slug || slug(c.nom);
 const clientVideos = (c) => portfolio.videos.filter((v) => v.type !== 'coulisses' && v.client === c.nom);
 const CLIENTS = portfolio.clients.filter((c) => clientVideos(c).length);
+// Page de la collection Coulisses (portfolio.json → coulissesCollection)
+const COUL = portfolio.coulissesCollection || { slug: { fr: 'coulisses', en: 'behind-the-scenes' }, clip: '', photo: 'coulisses-01' };
+const coulissesVideos = () => portfolio.videos.filter((v) => v.type === 'coulisses');
+const coulissesRoute = { fr: `${ROUTES.portfolio.fr}${COUL.slug.fr}/`, en: `${ROUTES.portfolio.en}${COUL.slug.en}/` };
 const clientRoute = (c) => ({ fr: `${ROUTES.portfolio.fr}${clientSlug(c)}/`, en: `${ROUTES.portfolio.en}${clientSlug(c)}/` });
 
 // Logo 3D animé de l'en-tête (fichiers dans static/logo/). width/height = dimensions réelles de la vidéo.
@@ -151,7 +155,9 @@ function jpegSize(url) {
 
 // Mot-clé + ville (seo.<page>.h1) : petit sous-titre gris visible sous le titre, à l'intérieur du H1.
 // Le grand titre garde son style.
-const h1Seo = (text) => (text ? `<span class="h1-sub">${esc(text)}</span>` : '');
+// Sous-titre SEO dans le H1 : retiré de l'affichage à la demande de JD (2026-11-05), car répétitif.
+// Les mots-clés restent dans title, meta description, JSON-LD et hreflang ; seo.<page>.h1 reste dans les JSON.
+const h1Seo = () => '';
 
 // Feuille de style en ligne dans chaque page (≈ 10 Ko compressée) : aucune requête ne bloque le premier affichage.
 // src/styles.css reste la source (et est toujours copiée dans dist/).
@@ -229,9 +235,11 @@ const groupKey = (v) => (v.type === 'coulisses' ? '_coulisses' : v.client);
 const groupName = (v, lang) => (v.type === 'coulisses' ? (lang === 'fr' ? 'Coulisses' : 'Behind the scenes') : v.client);
 // Nom utilisé pour Google et les lecteurs d'écran ; à l'écran, un titre manquant reste un placeholder.
 const videoName = (v, lang) => (v.titre ? v.titre : `${groupName(v, lang)} ${v.rang}`);
+// Vedette de la catégorie qui a un ID YouTube, sinon videoAccueil, sinon la vedette sans ID (placeholder).
 const categoryVideo = (cat) =>
-  portfolio.videos.find((v) => v.vedette && v.categorie === cat.id) ||
+  portfolio.videos.find((v) => v.vedette && v.categorie === cat.id && v.youtubeId) ||
   (cat.videoAccueil && (portfolio.videos.find((v) => v.youtubeId === cat.videoAccueil) || { youtubeId: cat.videoAccueil, vertical: true, titre: '', client: '', rang: 1 })) ||
+  portfolio.videos.find((v) => v.vedette && v.categorie === cat.id) ||
   null;
 const featured = () => portfolio.videos.filter((v) => v.vedette);
 
@@ -561,8 +569,15 @@ const pageHead = (title, intro, clip = '', resume = '', h1 = '') => `<section cl
 </section>`;
 
 // Vignette vidéo : un lien YouTube sans JavaScript, une lightbox avec.
-function videoTile(v, lang, { shape = 'vertical', caption = true, missing } = {}) {
+// img (facultatif) : visuel de JD (chemin sans extension, .webp + .jpg) à la place de la miniature YouTube ;
+// sans ID YouTube, la vignette devient une image seule, non cliquable, sans icône de lecture.
+function videoTile(v, lang, { shape = 'vertical', caption = true, missing, img = '', label = '' } = {}) {
   const L = langs[lang];
+  const own = img && existsSync(join(ROOT, 'static', `${img}.webp`)) ? picture(img, '', { w: 460, h: 642 }) : '';
+  const cap = () => `<span class="tile-caption">${v?.titre ? `<strong>${esc(v.titre)}</strong>` : label ? `<strong>${esc(label)}</strong>` : ''}${v?.client ? `<span class="muted">${esc(v.client)}</span>` : ''}</span>`;
+  if (own && !v?.youtubeId) {
+    return `<span class="tile tile-${shape} tile-static"><span class="thumb">${own}</span>${caption ? cap() : ''}</span>`;
+  }
   if (!v || !v.youtubeId) {
     const name = v?.titre || '';
     return `<button type="button" class="tile tile-${shape}" data-video="" aria-label="${esc(L.lightbox.voir)}${name ? ` : ${esc(name)}` : ''}">
@@ -572,12 +587,25 @@ function videoTile(v, lang, { shape = 'vertical', caption = true, missing } = {}
   }
   const name = videoName(v, lang);
   return `<a href="${ytUrl(v)}" target="_blank" rel="noopener" class="tile tile-${shape}" data-video="${esc(v.youtubeId)}" data-vertical="${v.vertical ? '1' : '0'}" aria-label="${esc(L.lightbox.voir)} : ${esc(name)}">
-          <span class="thumb"><img src="${ytThumb(v.youtubeId)}" alt="" loading="lazy" decoding="async" width="480" height="360"><span class="play" aria-hidden="true">▶</span></span>
+          <span class="thumb">${own || `<img src="${ytThumb(v.youtubeId)}" alt="" loading="lazy" decoding="async" width="480" height="360">`}<span class="play" aria-hidden="true">▶</span></span>
           ${
             caption
               ? `<span class="tile-caption">${v.titre ? `<strong>${esc(v.titre)}</strong>` : t(L.portfolio.titreManquant)}${v.client ? `<span class="muted">${esc(v.client)}</span>` : ''}${note(v.note)}</span>`
               : ''
           }
+        </a>`;
+}
+
+// Vignette de catégorie de l'accueil (« Ce que nous créons ») : le visuel de JD (categories[].miniature), comme sur Portfolio.
+// Avec un ID YouTube : vignette cliquable (lightbox). Sans ID : image seule, non cliquable, sans icône de lecture.
+const hasMiniature = (c) => Boolean(c.miniature) && existsSync(join(ROOT, 'static', `${c.miniature}.webp`));
+function categoryTile(c, v, lang) {
+  if (!hasMiniature(c)) return videoTile(v, lang, { shape: 'category', caption: false });
+  const img = picture(c.miniature, '', { w: 460, h: 642 });
+  if (!v?.youtubeId) return `<span class="tile tile-category tile-static"><span class="thumb">${img}</span></span>`;
+  const L = langs[lang];
+  return `<a href="${ytUrl(v)}" target="_blank" rel="noopener" class="tile tile-category" data-video="${esc(v.youtubeId)}" data-vertical="${v.vertical ? '1' : '0'}" aria-label="${esc(L.lightbox.voir)} : ${esc(videoName(v, lang))}">
+          <span class="thumb">${img}<span class="play" aria-hidden="true">▶</span></span>
         </a>`;
 }
 
@@ -631,8 +659,16 @@ function homePage(lang) {
   const L = langs[lang];
   const hv = site.heroVideo;
   const vedettes = featured();
-  const slots = [...vedettes];
-  while (slots.length < L.realisations.vedettesMin) slots.push(null);
+  // Vedettes (avec leur visuel de JD, videos[].miniature), puis, s'il en manque, les catégories dont le visuel
+  // n'est pas déjà affiché. Une tuile sans ID YouTube est une image seule, non cliquable (JD, 2026-11-05).
+  const slots = vedettes.map((v) => ({ v, img: v.miniature || '' }));
+  for (const c of portfolio.categories) {
+    if (slots.length >= L.realisations.vedettesMin) break;
+    if (!c.miniature || slots.some((x) => x.img === c.miniature)) continue;
+    const v = categoryVideo(c);
+    slots.push({ v: v?.youtubeId ? v : null, img: c.miniature, label: c.titre[lang] });
+  }
+  while (slots.length < L.realisations.vedettesMin) slots.push({ v: null });
   const catVideos = portfolio.categories.map(categoryVideo);
   // Seuls les fichiers présents dans static/ sont appelés : un fichier manquant ne donne jamais de 404.
   const exists = (url) => Boolean(url) && existsSync(join(ROOT, 'static', url));
@@ -690,10 +726,10 @@ ${summaryBand(L.seo.accueil.resume)}
       ${portfolio.categories
         .map(
           (c, i) => `<li class="card glass" data-reveal>
-        ${videoTile(catVideos[i], lang, { shape: 'category', caption: false })}
+        ${categoryTile(c, catVideos[i], lang)}
         <h3>${t(c.titre[lang])}</h3>
         <p class="muted">${t(c.texte[lang])}</p>
-        ${catVideos[i] ? '' : `<p class="small">${t(L.creons.videoManquante)}</p>`}
+        ${catVideos[i]?.youtubeId || hasMiniature(c) ? '' : `<p class="small">${t(L.creons.videoManquante)}</p>`}
       </li>`
         )
         .join('\n      ')}
@@ -722,7 +758,7 @@ ${summaryBand(L.seo.accueil.resume)}
   <div class="container">
     ${sectionHead(L.realisations.etiquette, L.realisations.titre, L.realisations.intro, 'realisations-title')}
     <ul class="grid grid-4 featured">
-      ${slots.map((v) => `<li data-reveal>${videoTile(v, lang, { missing: L.realisations.vedetteManquante })}</li>`).join('\n      ')}
+      ${slots.map((x) => `<li data-reveal>${videoTile(x.v, lang, { missing: L.realisations.vedetteManquante, img: x.img, label: x.label })}</li>`).join('\n      ')}
     </ul>
     ${clientMarquee()}
     <p class="cta-row"><a class="btn btn-neon" href="${ROUTES.portfolio[lang]}">${esc(L.realisations.bouton)}</a></p>
@@ -770,8 +806,10 @@ function lucide(name, cls = 'svc-icon', size = 40) {
 
 // Bandeau vidéo plein écran (Services, À propos) : un seul titre, en bas à gauche, et un bouton pause (vidéo de plus de 5 s).
 // hero (facultatif) : titre sur deux lignes en haut à gauche, sous le menu, puis texte d'intro (Services).
-function fullHero(clipId, title, L, hero = null, h1 = '') {
-  return `<section class="page-hero full-hero has-bg-video${hero ? ' is-top' : ''}" aria-labelledby="hero-title">
+// opts.cls : classe en plus ; opts.scroll : { texte, label, cible } = repère SCROLL en bas, lien vers la section suivante.
+function fullHero(clipId, title, L, hero = null, h1 = '', opts = {}) {
+  // Titre et description en bas du bandeau sur toutes les pages (JD, 2026-11-05) : la classe is-top n'est plus posée.
+  return `<section class="page-hero full-hero has-bg-video${opts.cls ? ` ${opts.cls}` : ''}" aria-labelledby="hero-title">
   ${bgVideo(clipId)}
   <div class="container">
     ${
@@ -781,6 +819,7 @@ function fullHero(clipId, title, L, hero = null, h1 = '') {
         : `<h1 id="hero-title" class="hero-word" data-no-accent>${esc(title)}${h1Seo(h1)}</h1>`
     }
   </div>
+  ${opts.scroll ? `<a class="scroll-cue" href="#${opts.scroll.cible}" aria-label="${esc(opts.scroll.label)}"><span aria-hidden="true">${esc(opts.scroll.texte)}</span></a>` : ''}
   <button class="bg-toggle" type="button" data-bg-toggle data-pause="${esc(L.services.heroPause)}" data-play="${esc(L.services.heroLecture)}" aria-label="${esc(L.services.heroPause)}"><span aria-hidden="true">❚❚</span></button>
 </section>`;
 }
@@ -837,7 +876,7 @@ ${summaryBand(L.seo.services.resume)}
       <h2 id="vision-title" class="vision-title" data-reveal>${rich(V.titre)}</h2>
       <p class="jd-lead" data-reveal>${t(V.texte)}</p>
       <ul class="reperes" data-reveal>
-        ${V.reperes.map((r) => `<li>${lucide(r.icone, 'repere-icon', 44)}<strong>${esc(r.titre)}</strong><span>${esc(r.texte)}</span></li>`).join('\n        ')}
+        ${V.reperes.map((r) => `<li>${r.image && existsSync(join(ROOT, 'static', `${r.image}.webp`)) ? picture(r.image, '', { w: 192, h: 192, cls: 'repere-img', fallback: 'png' }) : lucide(r.icone, 'repere-icon', 44)}<strong>${esc(r.titre)}</strong><span>${esc(r.texte)}</span></li>`).join('\n        ')}
       </ul>
     </div>
     <div class="vision-photo" data-reveal>
@@ -854,7 +893,11 @@ ${shown(S.fin) ? `<section class="jd-screen jd-end" aria-labelledby="fin-title">
     <p class="jd-lead" data-reveal>${t(S.fin.texte)}</p>
     <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.portfolio[lang]}">${esc(S.fin.bouton)}</a></p>
   </div>
-</section>` : ''}
+</section>` : `<section class="jd-screen jd-end svc-cta" aria-label="${esc(S.fin.bouton)}">
+  <div class="jd-wrap">
+    <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.portfolio[lang]}">${esc(S.fin.bouton)}</a></p>
+  </div>
+</section>`}
 ${shown(S.slogan) ? `<p class="jd-slogan">${esc(S.slogan.texte)}</p>` : ''}`;
   return layout({ key: 'services', lang, body, preload: posterPreload('services') });
 }
@@ -867,65 +910,135 @@ function clientImage(c) {
   return first ? ytThumb(first.youtubeId) : '';
 }
 
+const countText = (n, P) => `${n} ${n > 1 ? P.videos : P.video}`;
+
+// Miniature qui ouvre directement YouTube (nouvel onglet), sans lightbox. Sans ID : vignette vide, non cliquable.
+// img (facultatif) : visuel fourni par JD (chemin sans extension, .webp + .jpg) au lieu de la miniature YouTube.
+function ytTile(v, lang, { label = '', cls = '', img = '' } = {}) {
+  const L = langs[lang];
+  const own = img && existsSync(join(ROOT, 'static', `${img}.webp`)) ? picture(img, '', { w: 460, h: 642 }) : '';
+  if (!v?.youtubeId) {
+    return `<span class="yt-tile is-empty${cls ? ` ${cls}` : ''}"><span class="thumb">${own || '<span class="thumb-empty" aria-hidden="true"></span>'}</span>${label ? `<span class="yt-tile-label">${label}</span>` : ''}</span>`;
+  }
+  const name = videoName(v, lang);
+  return `<a class="yt-tile${cls ? ` ${cls}` : ''}" href="${ytUrl(v)}" target="_blank" rel="noopener" aria-label="${esc(L.portfolio.biblio.youtube)} : ${esc(name)}">
+          <span class="thumb">${own || `<img src="${ytThumb(v.youtubeId)}" alt="" loading="lazy" decoding="async" width="480" height="360">`}<span class="play" aria-hidden="true">▶</span></span>
+          ${label ? `<span class="yt-tile-label">${label}</span>` : ''}
+        </a>`;
+}
+
+// Bibliothèque d'une page client ou Coulisses : une rangée qui défile à l'horizontale (doigt, trackpad, flèches ←→).
+// Sans JavaScript, la rangée défile quand même ; les flèches n'apparaissent qu'avec JS.
+function library(list, lang, id) {
+  const B = langs[lang].portfolio.biblio;
+  return `<div class="library-row" data-library>
+      <button class="library-arrow is-prev" type="button" data-library-prev aria-controls="${id}" aria-label="${esc(B.precedent)}"><span aria-hidden="true">←</span></button>
+      <ul class="library-track" id="${id}" role="list" tabindex="0">
+        ${list.map((v) => `<li>${ytTile(v, lang)}</li>`).join('\n        ')}
+      </ul>
+      <button class="library-arrow is-next" type="button" data-library-next aria-controls="${id}" aria-label="${esc(B.suivant)}"><span aria-hidden="true">→</span></button>
+    </div>`;
+}
+
+// Clients de « Les entreprises à l'honneur », dans l'ordre de portfolio.json → honneur (les autres suivent).
+function honourClients() {
+  const order = portfolio.honneur || [];
+  const rank = (c) => (order.includes(clientSlug(c)) ? order.indexOf(clientSlug(c)) : order.length);
+  return [...CLIENTS].sort((a, b) => rank(a) - rank(b));
+}
+
+// Vidéos montrées sur /portfolio/ (JSON-LD et sitemap) : celles des 4 catégories.
+const portfolioVideos = () => [...new Set(portfolio.categories.map(categoryVideo).filter((v) => v?.youtubeId))];
+
+// Page Portfolio, dans l'ordre du PDF « VMM Portfolio LAYOUT » de JD : héros vidéo, 4 catégories,
+// entreprises à l'honneur (boutons logo), coulisses (une photo), bouton vers À propos.
 function portfolioPage(lang) {
   const L = langs[lang];
   const P = L.portfolio;
-  const behind = portfolio.videos.filter((v) => v.type === 'coulisses');
-  const count = (n) => `${n} ${n > 1 ? P.videos : P.video}`;
   const catVideos = portfolio.categories.map(categoryVideo);
-  const body = `${pageHead(P.titre, P.intro, 'work', L.seo.portfolio.resume, L.seo.portfolio.h1)}
-<section class="section section-tight" aria-labelledby="clients-title">
-  <div class="container">
-    <h2 id="clients-title" data-reveal>${esc(P.parClientTitre)}</h2>
-    <p class="intro" data-reveal>${t(P.parClientIntro)}</p>
-    <ul class="grid grid-4 client-cards">
-      ${CLIENTS.map((c) => {
-        const img = clientImage(c);
-        return `<li data-reveal>
-        <a class="client-card card glass" href="${clientRoute(c)[lang]}">
-          <span class="client-card-img">${img ? `<img src="${img}" alt="" loading="lazy" decoding="async" width="${img.startsWith('https://i.ytimg.com') ? '480' : '1080'}" height="${img.startsWith('https://i.ytimg.com') ? '360' : '1920'}">` : '<span class="thumb-empty" aria-hidden="true"></span>'}</span>
-          <span class="client-card-text"><strong>${esc(c.nom)}</strong><span class="muted">${count(clientVideos(c).length)}</span>${note(c.note)}</span>
-        </a>
-      </li>`;
-      }).join('\n      ')}
-    </ul>
-    <div class="client-group upcoming" data-reveal>
-      <h3>${esc(P.aVenirTitre)}</h3>
-      <ul class="pills">
-        ${portfolio.clientsAVenir.map((c) => `<li>${c.url ? `<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.nom)}</a>` : esc(c.nom)}${note(c.note)}</li>`).join('\n        ')}
-      </ul>
-    </div>
-  </div>
-</section>
-
-<section class="section" aria-labelledby="vedettes-title">
-  <div class="container">
-    <h2 id="vedettes-title" data-reveal>${esc(P.vedettesTitre)}</h2>
-    <ul class="grid grid-4">
+  const behind = coulissesVideos();
+  // Photo du bloc Coulisses : chemin complet (/img/...) ou, ancien format, nom d'un fichier de /img/coulisses/
+  const photo = COUL.photo.startsWith('/') ? COUL.photo : `/img/coulisses/${COUL.photo}`;
+  const hasPhoto = existsSync(join(ROOT, 'static', `${photo}.webp`));
+  const photoFallback = existsSync(join(ROOT, 'static', `${photo}.jpg`)) ? 'jpg' : 'webp';
+  const logo = (c) => {
+    const name = c.nomBouton || c.nom;
+    if (c.logo && existsSync(join(ROOT, 'static', `${c.logo}.webp`))) return picture(c.logo, `${L.portfolio.honneur.logoAlt} ${name}`, { w: c.logoLargeur || 440, h: c.logoHauteur || 440, cls: 'logo-btn-img', fallback: c.logoFormat || 'png' });
+    return `<span class="logo-btn-name">${esc(name)}</span>`;
+  };
+  const head = (label, title, intro, id) => `<p class="jd-label jd-label-line" data-reveal>${esc(label)}</p>
+    <h2 id="${id}" data-reveal data-no-accent>${t(title)}</h2>
+    ${[].concat(intro || []).map((x) => `<p class="jd-lead" data-reveal>${t(x)}</p>`).join('\n    ')}`;
+  const body = `${fullHero('portfolio', P.heroTitre, L, null, L.seo.portfolio.h1, { cls: 'pf-hero', scroll: { texte: P.scroll, label: P.scrollLabel, cible: 'realisons' } })}
+${summaryBand(L.seo.portfolio.resume)}
+<section class="jd-screen pf-cats" id="realisons" aria-labelledby="realisons-title">
+  <div class="jd-wrap">
+    ${head(P.realisons.etiquette, P.realisons.titre, [P.intro, P.realisons.intro], 'realisons-title')}
+    <ul class="pf-cat-grid" role="list">
       ${portfolio.categories
-        .map(
-          (c, i) => `<li class="card glass" data-reveal>
-        <h3>${t(c.titre[lang])}</h3>
-        ${videoTile(catVideos[i], lang, { missing: P.vedetteManquante })}
-      </li>`
-        )
+        .map((c, i) => `<li data-reveal>${ytTile(catVideos[i], lang, { cls: 'pf-cat', label: t((c.titrePortfolio || c.titre)[lang]), img: c.miniature })}</li>`)
         .join('\n      ')}
     </ul>
   </div>
 </section>
 
-<section class="section" aria-labelledby="coulisses-title">
-  <div class="container">
-    <h2 id="coulisses-title" data-reveal>${esc(P.coulissesTitre)}</h2>
-    <p class="intro" data-reveal>${t(P.coulissesIntro)}</p>
-    <ul class="grid grid-5">
-      ${behind.map((v) => `<li data-reveal>${videoTile(v, lang)}</li>`).join('\n      ')}
+<section class="jd-screen pf-honneur" aria-labelledby="honneur-title">
+  <div class="jd-wrap">
+    ${head(P.honneur.etiquette, P.honneur.titre, P.honneur.intro, 'honneur-title')}
+    <ul class="logo-grid" role="list">
+      ${honourClients()
+        .map((c) => `<li data-reveal><a class="logo-btn" href="${clientRoute(c)[lang]}" aria-label="${esc(P.honneur.voir.replace('{client}', c.nomBouton || c.nom))} (${countText(clientVideos(c).length, P)})">
+        <span class="logo-btn-face">${logo(c)}</span>
+        <span class="logo-btn-text"><strong>${esc(c.nomBouton || c.nom)}</strong><span class="logo-btn-count">${countText(clientVideos(c).length, P)}</span></span>
+      </a></li>`)
+        .join('\n      ')}
     </ul>
-    <p class="cta-row"><a class="btn btn-neon" href="${ROUTES.apropos[lang]}">${esc(P.bouton)}</a></p>
+  </div>
+</section>
+
+<section class="jd-screen pf-coulisses" aria-labelledby="pf-coulisses-title">
+  <div class="jd-wrap">
+    ${head(P.coulissesBloc.etiquette, P.coulissesBloc.titre, P.coulissesBloc.intro, 'pf-coulisses-title')}
+    <p class="pf-coulisses-row"><a class="coulisses-link" href="${coulissesRoute[lang]}" aria-label="${esc(P.coulissesBloc.voir)} (${countText(behind.length, P)})" data-reveal>
+      <span class="coulisses-photo">${hasPhoto ? picture(photo, P.coulissesBloc.photoAlt, { w: COUL.photoLargeur || 1152, h: COUL.photoHauteur || 2048, fallback: photoFallback }) : '<span class="thumb-empty" aria-hidden="true"></span>'}</span>
+      <span class="coulisses-text"><strong>${esc(P.coulissesBloc.legende)}</strong><span class="coulisses-count">${countText(behind.length, P)}</span></span>
+    </a></p>
+  </div>
+</section>
+
+<section class="jd-screen jd-end pf-end" aria-labelledby="pf-fin-title">
+  <div class="jd-wrap">
+    <p class="jd-label" data-reveal>${esc(P.fin.etiquette)}</p>
+    <h2 id="pf-fin-title" data-reveal data-no-accent>${t(P.fin.titre)}</h2>
+    <p class="jd-lead" data-reveal>${t(P.fin.texte)}</p>
+    <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.apropos[lang]}">${esc(P.bouton)}</a></p>
   </div>
 </section>`;
-  return layout({ key: 'portfolio', lang, body, videos: portfolio.videos.filter((v) => v.vedette || v.type === 'coulisses'), preload: posterPreload('work') });
+  return layout({ key: 'portfolio', lang, body, videos: portfolioVideos(), preload: posterPreload('portfolio') });
 }
+
+// En-tête d'une page de collection (client ou Coulisses) : héros vidéo plein écran si un clip existe, sinon en-tête simple.
+function collectionHead(L, { clip, title, h1, n, resume }) {
+  const P = L.portfolio;
+  if (clip && clips.clips[clip]) return `${fullHero(clip, title, L, null, h1, { cls: 'collection-hero', scroll: { texte: P.scroll, label: P.scrollLabel, cible: 'videos' } })}
+${summaryBand(resume)}`;
+  return `<section class="page-hero client-hero">
+  <div class="container">
+    <h1 data-reveal>${esc(title)}${h1Seo(h1)}</h1>
+    <p class="intro" data-reveal>${countText(n, P)}</p>
+    ${summary(resume)}
+  </div>
+</section>`;
+}
+
+const collectionBody = (L, lang, list, back) => `<section class="section section-tight collection" id="videos" aria-labelledby="videos-title">
+  <div class="container">
+    <p class="back-row">${back}</p>
+    <h2 id="videos-title" class="visually-hidden">${esc(L.nav.portfolio)}</h2>
+    ${library(list, lang, `biblio-${lang}`)}
+    <p class="muted small collection-count">${countText(list.length, L.portfolio)}</p>
+  </div>
+</section>`;
 
 // Page d'un client : bande-annonce en fond (si le client a un clip), puis toutes ses vidéos.
 function clientPage(c, lang) {
@@ -936,24 +1049,8 @@ function clientPage(c, lang) {
   // Élision en français : « de Installations » devient « d'Installations ».
   const fill = (s) => (lang === 'fr' && /^[aeiouyàâéèêîôûh]/i.test(c.nom) ? s.replaceAll('de {client}', 'd’{client}') : s).replaceAll('{client}', c.nom);
   const back = `<a class="btn btn-neon btn-back" href="${ROUTES.portfolio[lang]}">${esc(P.retour)}</a>`;
-  const body = `<section class="page-hero client-hero${c.clip ? ' has-bg-video' : ''}">
-  ${c.clip ? bgVideo(c.clip) : ''}
-  <div class="container">
-    <p class="back-row" data-reveal>${back}</p>
-    <h1 data-reveal>${esc(c.nom)}${h1Seo(fill(P.clientH1))}</h1>
-    <p class="intro" data-reveal>${n} ${n > 1 ? P.videos : P.video}${note(c.note)}</p>
-    ${summary(P.clientResume.replace('{n}', `${n} ${n > 1 ? P.videos : P.video}`).replace('{client}', c.nom))}
-  </div>
-</section>
-<section class="section section-tight" aria-labelledby="videos-${clientSlug(c)}">
-  <div class="container">
-    <h2 id="videos-${clientSlug(c)}" class="visually-hidden">${esc(L.nav.portfolio)} · ${esc(c.nom)}</h2>
-    <ul class="grid grid-5 library">
-      ${list.map((v) => `<li data-reveal>${videoTile(v, lang)}</li>`).join('\n      ')}
-    </ul>
-    <p class="cta-row">${back}</p>
-  </div>
-</section>`;
+  const body = `${collectionHead(L, { clip: c.clip, title: c.nom, h1: fill(P.clientH1), n, resume: P.clientResume.replace('{n}', countText(n, P)).replace('{client}', c.nom) })}
+${collectionBody(L, lang, list, back)}`;
   return layout({
     key: 'portfolio',
     lang,
@@ -961,6 +1058,25 @@ function clientPage(c, lang) {
     videos: list,
     page: { route: clientRoute(c), seo: { title: fill(P.clientSeoTitre), description: fill(P.clientSeoDescription) }, crumb: c.nom, client: c, og: existsSync(join(ROOT, 'static', 'og', `og-client-${clientSlug(c)}.jpg`)) ? `/og/og-client-${clientSlug(c)}.jpg` : '' },
     preload: c.clip ? posterPreload(c.clip) : '',
+  });
+}
+
+// Page Coulisses : toutes les vidéos de type « coulisses » de portfolio.json.
+function coulissesPage(lang) {
+  const L = langs[lang];
+  const P = L.portfolio;
+  const C = P.coulissesPage;
+  const list = coulissesVideos();
+  const back = `<a class="btn btn-neon btn-back" href="${ROUTES.portfolio[lang]}">${esc(P.retour)}</a>`;
+  const body = `${collectionHead(L, { clip: COUL.clip, title: C.titre, h1: C.h1, n: list.length, resume: C.resume.replace('{n}', countText(list.length, P)) })}
+${collectionBody(L, lang, list, back)}`;
+  return layout({
+    key: 'portfolio',
+    lang,
+    body,
+    videos: list,
+    page: { route: coulissesRoute, seo: { title: C.seoTitre, description: C.seoDescription }, crumb: C.titre },
+    preload: COUL.clip ? posterPreload(COUL.clip) : '',
   });
 }
 
@@ -1127,9 +1243,10 @@ function aboutPage(lang) {
 </section>`
     )
     .join('\n');
-  const body = `${fullHero('about', A.titre, L, null, L.seo.apropos.h1)}
+  // Repère « SCROLL ↓ » du PDF À propos (écran 01), même composant que Portfolio
+  const body = `${fullHero('about', A.titre, L, null, L.seo.apropos.h1, { scroll: { texte: L.portfolio.scroll, label: L.portfolio.scrollLabel, cible: 'vision' } })}
 ${summaryBand(L.seo.apropos.resume)}
-<section class="jd-screen jd-vision" aria-labelledby="visages-title">
+<section class="jd-screen jd-vision" id="vision" aria-labelledby="visages-title">
   <div class="jd-wrap${A.vision.photo ? ' vision-grid' : ''}">
     <div class="vision-text">
       ${label}
@@ -1206,9 +1323,9 @@ function notFoundPage(lang) {
 // ---------- fichiers SEO/GEO ----------
 function sitemap() {
   const xml = (s) => esc(s);
-  // Vidéos d'une page : une liste, ou la clé d'une page (portfolio : vedettes et coulisses ; les autres sont sur les pages clients)
+  // Vidéos d'une page : une liste, ou la clé d'une page (portfolio : vidéos des 4 catégories ; les autres sont sur les pages clients et Coulisses)
   const videoEntries = (key, lang, pageUrl) => {
-    const list = Array.isArray(key) ? key : key === 'portfolio' ? portfolio.videos.filter((v) => v.vedette || v.type === 'coulisses') : [];
+    const list = Array.isArray(key) ? key : key === 'portfolio' ? portfolioVideos() : [];
     return list
       .filter(videoReady)
       .map((v) => {
@@ -1233,6 +1350,7 @@ function sitemap() {
   const urls = [
     ...INDEXABLE.flatMap((k) => ['fr', 'en'].map((lang) => entry(ROUTES[k], lang, videoEntries(k, lang, abs(ROUTES[k][lang]))))),
     ...CLIENTS.flatMap((c) => ['fr', 'en'].map((lang) => entry(clientRoute(c), lang, videoEntries(clientVideos(c), lang, abs(clientRoute(c)[lang]))))),
+    ...['fr', 'en'].map((lang) => entry(coulissesRoute, lang, videoEntries(coulissesVideos(), lang, abs(coulissesRoute[lang])))),
     ...ZONES.flatMap((z) => ['fr', 'en'].map((lang) => entry(zoneRoute(z), lang, videoEntries(zoneVideos(z), lang, abs(zoneRoute(z)[lang]))))),
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -1271,6 +1389,7 @@ function llmsTxt() {
     '',
     '## Clients filmés',
     ...portfolio.clients.map((c) => `- ${c.nom}${c.villes?.length ? `, ${c.villes.join(', ')}` : ''}${c.url ? ` (${c.url})` : ''} (${clientVideos(c).length} vidéos)${CLIENTS.includes(c) ? ` : ${abs(clientRoute(c).fr)}` : ''}`),
+    `- ${fr.portfolio.coulissesPage.titre} (${coulissesVideos().length} vidéos) : ${abs(coulissesRoute.fr)}`,
     '',
     '## Zones desservies',
     ...site.zonesDesservies.map((z) => `- ${z}`),
@@ -1336,6 +1455,7 @@ for (const lang of ['fr', 'en']) {
   write(ROUTES.services[lang], servicesPage(lang));
   write(ROUTES.portfolio[lang], portfolioPage(lang));
   for (const c of CLIENTS) write(clientRoute(c)[lang], clientPage(c, lang));
+  write(coulissesRoute[lang], coulissesPage(lang));
   write(ROUTES.apropos[lang], aboutPage(lang));
   write(ROUTES.contact[lang], contactPage(lang));
   write(ROUTES.merci[lang], messagePage(lang, 'merci', L.merci));

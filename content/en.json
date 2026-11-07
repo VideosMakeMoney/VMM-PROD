@@ -7,7 +7,9 @@
   "nav": {
     "accueil": "Home",
     "services": "Services",
-    "portfolio": "Work",
+    "portfolio": "Portfolio",
+    "portfolioAncien": "Work",
+    "_aidePortfolio": "Libellé « Portfolio » comme dans la maquette de JD (PDF Portfolio, 2026-11-05) ; ancien libellé gardé dans portfolioAncien.",
     "apropos": "About",
     "contact": "Contact",
     "menu": "Menu",
@@ -126,16 +128,19 @@
       "reperes": [
         {
           "icone": "target",
+          "image": "/img/repere-strategie",
           "titre": "Strategy",
           "texte": "A clear intention"
         },
         {
           "icone": "camera",
+          "image": "/img/repere-production",
           "titre": "Production",
           "texte": "Authentic images"
         },
         {
           "icone": "layers",
+          "image": "/img/repere-finition",
           "titre": "Finishing",
           "texte": "Careful execution"
         }
@@ -268,7 +273,23 @@
     "video": "video",
     "titreManquant": "[TO CONFIRM: title]",
     "vedetteManquante": "[TO CONFIRM: featured video for this category]",
-    "bouton": "Meet the people behind VMM →"
+    "bouton": "Meet the people behind VMM →",
+    "_aidePage": "Portfolio page rebuilt 2026-11-05 (Natasha's description of JD's « VMM Portfolio LAYOUT » PDF). Keys above are kept.",
+    "heroTitre": "PORTFOLIO",
+    "scroll": "SCROLL ↓",
+    "scrollLabel": "Scroll to the rest of the page",
+    "realisons": { "etiquette": "What we create", "titre": "Four ways to tell your story.", "intro": "Explore our productions by category. Each thumbnail opens its video directly on YouTube." },
+    "honneur": { "etiquette": "Featured businesses", "titre": "Every business. Its own world.", "logoAlt": "Logo of", "intro": "Choose a business to explore its library of productions.", "voir": "See the videos for {client}" },
+    "coulissesBloc": { "etiquette": "Behind the images", "titre": "And behind every production...", "intro": "A collection dedicated to the moments behind the camera.", "legende": "Behind the scenes / Making-of / Trailers", "voir": "See all behind-the-scenes videos", "photoAlt": "VMM Productions team member in the editing studio" },
+    "fin": { "etiquette": "And after the images?", "titre": "Meet the people behind VMM.", "texte": "Discover the people who bring these productions to life." },
+    "biblio": { "precedent": "Previous videos", "suivant": "Next videos", "youtube": "Watch on YouTube" },
+    "coulissesPage": {
+      "titre": "Behind the scenes",
+      "seoTitre": "Behind the scenes, making-of and trailers | VMM Productions",
+      "seoDescription": "Behind-the-scenes footage, making-of and trailers from VMM Productions, corporate videographer in Greater Montreal and the Laurentians.",
+      "h1": "Behind the scenes at VMM Productions, video production in Montreal and the Laurentians",
+      "resume": "VMM Productions shares {n} of behind-the-scenes footage, making-of and trailers."
+    }
   },
   "apropos": {
     "coulisses": {

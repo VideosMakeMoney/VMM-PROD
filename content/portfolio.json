@@ -1,5 +1,5 @@
 {
-  "_aide": "Portfolio de VMM, éditable par JD. Une entrée par vidéo. youtubeId = l'identifiant dans l'URL (youtube.com/shorts/ABC123 → ABC123). type : \"finale\" (production finale, classée par client) ou \"coulisses\" (coulisses, bandes-annonces, making-of). categorie : promo, evenements, histoires ou coulisses. vedette : true pour l'afficher dans « Nos réalisations » et dans les vedettes par catégorie. langue : fr ou en. titre vide = « [À CONFIRMER] » affiché. dateMiseEnLigne (AAAA-MM-JJ) aide Google : vraie date de publication lue sur la page YouTube publique (2026-11-05), jamais inventée.",
+  "_aide": "Portfolio de VMM, éditable par JD. miniature (facultatif) = visuel de JD pour cette vidéo (chemin sans extension, .webp + .jpg), utilisé dans « Nos réalisations » de l'accueil. Une entrée par vidéo. youtubeId = l'identifiant dans l'URL (youtube.com/shorts/ABC123 → ABC123). type : \"finale\" (production finale, classée par client) ou \"coulisses\" (coulisses, bandes-annonces, making-of). categorie : promo, evenements, histoires ou coulisses. vedette : true pour l'afficher dans « Nos réalisations » et dans les vedettes par catégorie. langue : fr ou en. titre vide = « [À CONFIRMER] » affiché. dateMiseEnLigne (AAAA-MM-JJ) aide Google : vraie date de publication lue sur la page YouTube publique (2026-11-05), jamais inventée.",
   "categories": [
     {
       "id": "promo",
@@ -11,6 +11,9 @@
         "fr": "Mettez en lumière votre savoir-faire, votre différence et ce qui vous anime.",
         "en": "Showcase your know-how, what sets you apart and what drives you."
       },
+      "videoAccueilProvisoire": "wNGp61LUV8g",
+      "miniature": "/img/portfolio/cat-promo",
+      "titreMaquette": "ICI, TOUT A CHANGÉ (Installations Hors-Pair)",
       "videoAccueil": ""
     },
     {
@@ -23,6 +26,9 @@
         "fr": "Revivez l'énergie, l'ambiance et les moments marquants de votre événement.",
         "en": "Relive the energy, the atmosphere and the standout moments of your event."
       },
+      "videoAccueilProvisoire": "g8pY-zSgljI",
+      "miniature": "/img/portfolio/cat-evenements",
+      "titreMaquette": "Une équipe soudée (Tapis Rouge)",
       "videoAccueil": ""
     },
     {
@@ -35,7 +41,10 @@
         "fr": "Donnez une voix aux personnes derrière votre entreprise et à leur passion.",
         "en": "Give a voice to the people behind your business and their passion."
       },
-      "videoAccueil": ""
+      "videoAccueilProvisoire": "3ru2cIaqzeo",
+      "miniature": "/img/portfolio/cat-histoires",
+      "titreMaquette": "Le grind du 1er juillet (Tapis Rouge)",
+      "videoAccueil": "g8pY-zSgljI"
     },
     {
       "id": "coulisses",
@@ -43,19 +52,36 @@
         "fr": "Coulisses, making-of et bandes-annonces",
         "en": "Behind the scenes, making-of and trailers"
       },
+      "titrePortfolio": { "fr": "Coulisses et bandes-annonces", "en": "Behind the scenes and trailers" },
       "texte": {
         "fr": "Découvrez la créativité et le travail d'équipe derrière chaque tournage.",
         "en": "Discover the creativity and teamwork behind every shoot."
       },
+      "videoAccueilProvisoire": "a6L9xFtDSgc",
+      "miniature": "/img/portfolio/cat-coulisses",
+      "titreMaquette": "Caméras en première ligne : le making of",
       "videoAccueil": ""
     }
   ],
-  "_aideCategories": "videoAccueil = ID YouTube de la vidéo ouverte par la vignette sur l'accueil. [À CONFIRMER : vidéo de chaque catégorie]",
+  "_aideCategories": "videoAccueil = ID YouTube ouvert par la miniature de la catégorie (accueil et page Portfolio). Maquette de JD (PDF « VMM Portfolio LAYOUT », page 2, reçu le 2026-11-05) : titreMaquette = vidéo prévue par JD, miniature = visuel fourni par JD (static/img/portfolio/cat-<id>.webp + .jpg). videoAccueil n'est rempli que si l'ID existe déjà dans « videos » : histoires = g8pY-zSgljI (« 1er juillet », Tapis Rouge). Les 3 autres restent vides : [À CONFIRMER : ID YouTube de JD pour « ICI, TOUT A CHANGÉ », « Une équipe soudée » et « Caméras en première ligne / le making of »]. videoAccueilProvisoire = choix provisoire du 2026-11-05 (avant le PDF), gardé pour mémoire. titrePortfolio = libellé de la page Portfolio s'il diffère de titre.",
+  "_aideHonneur": "honneur = ordre des boutons logo de « Les entreprises à l'honneur » (page Portfolio), par slug. logo (dans chaque client, facultatif) = chemin d'image sans extension dans static/ (ex. /img/clients/tapis-rouge : .webp + .png ; boutons originaux de la maquette de JD, reçus le 2026-11-05). nomBouton = nom affiché sous le bouton, tel qu'écrit dans la maquette (PDF page 3) ; sans nomBouton, nom. Sans logo, le bouton affiche le nom du client. Compteurs : toujours calculés depuis « videos » (la maquette indique 10, 3, 7, 2 et 9 coulisses, cibles de JD quand les ID manquants seront fournis).",
+  "honneur": ["tapis-rouge", "hors-pair", "pur-construction", "bluewise"],
+  "coulissesCollection": {
+    "_aide": "Bloc Coulisses de la page Portfolio : une photo (photo = chemin sans extension dans static/, .webp + .jpg ; photo fournie par JD dans le PDF Portfolio, page 4) qui mène à la page de toutes les vidéos de coulisses. clip = nom d'un clip de content/clips.json en fond de cette page (vide = sans vidéo).",
+    "photo": "/img/portfolio/coulisses-portfolio",
+    "photoAncienne": "coulisses-01",
+    "photoLargeur": 693,
+    "photoHauteur": 1218,
+    "slug": { "fr": "coulisses", "en": "behind-the-scenes" },
+    "clip": ""
+  },
   "_aideClients": "Une page par client : /portfolio/<slug>/ (FR) et /en/portfolio/<slug>/ (EN). Le nombre de vidéos est calculé à partir de « videos » (champ client = nom exact). clip = nom d'un clip de content/clips.json joué en fond de la page du client (vide = poster ou fond simple). Ajouter un client ou une vidéo : seulement ce fichier. villes / region : localisation du client confirmée par Natasha le 2026-11-05. Les pages locales (zones.json → villesLocales) montrent d'abord les vidéos des clients de leur zone. Ne jamais ajouter une ville non confirmée.",
   "clients": [
     {
       "nom": "Tapis Rouge",
       "slug": "tapis-rouge",
+      "logo": "/img/clients/tapis-rouge",
+      "nomBouton": "Tapis Rouge",
       "url": "",
       "clip": "",
       "villes": ["Saint-Jérôme", "Montréal"],
@@ -65,6 +91,8 @@
       "nom": "PUR Construction",
       "nomAncien": "Pur Construction",
       "slug": "pur-construction",
+      "logo": "/img/clients/pur-construction",
+      "nomBouton": "PÜR Construction",
       "url": "",
       "clip": "",
       "villes": ["Saint-Colomban"],
@@ -74,6 +102,8 @@
       "nom": "Installations Hors-Pair",
       "nomAncien": "Hors-Paire Excavation",
       "slug": "hors-pair",
+      "logo": "/img/clients/hors-pair",
+      "nomBouton": "Hors-Pair",
       "url": "https://hors-pair.ca/",
       "clip": "hors-pairs",
       "villes": ["Morin-Heights"],
@@ -82,6 +112,8 @@
     {
       "nom": "BlueWise",
       "slug": "bluewise",
+      "logo": "/img/clients/bluewise",
+      "nomBouton": "BlueWise",
       "url": "",
       "clip": "",
       "villes": ["Montréal"]
@@ -111,6 +143,7 @@
       "youtubeId": "",
       "langue": "",
       "titre": "Une équipe soudée",
+      "miniature": "/img/portfolio/cat-evenements",
       "vedette": true,
       "vertical": true,
       "dateMiseEnLigne": "",
@@ -118,15 +151,16 @@
     },
     {
       "client": "Installations Hors-Pair",
-      "categorie": "",
+      "categorie": "promo",
       "type": "finale",
       "youtubeId": "",
       "langue": "",
       "titre": "ICI, TOUT A CHANGÉ",
+      "miniature": "/img/portfolio/cat-promo",
       "vedette": true,
       "vertical": true,
       "dateMiseEnLigne": "",
-      "note": "[À CONFIRMER : ID YouTube et catégorie (« production »)]"
+      "note": "[À CONFIRMER : ID YouTube]", "noteCategorie": "Catégorie promo d'après la maquette de JD (PDF Portfolio, page 2, 2026-11-05)."
     },
     {
       "client": "Tapis Rouge",
@@ -167,7 +201,9 @@
       "type": "finale",
       "youtubeId": "g8pY-zSgljI",
       "langue": "",
-      "titre": "",
+      "titre": "Le grind du 1er juillet",
+      "miniature": "/img/portfolio/cat-histoires",
+      "titreSource": "Titre de la maquette de JD (PDF Portfolio, page 2) confirmé par Natasha le 2026-11-05 ; titre YouTube public : « 1er juillet : au cœur de la journée la plus occupée chez Tapis Rouge ».",
       "vedette": false,
       "vertical": true,
       "dateMiseEnLigne": "2026-08-08"

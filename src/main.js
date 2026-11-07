@@ -343,3 +343,29 @@
     });
   });
 })();
+
+// Bibliothèque des pages client et Coulisses : flèches ←→ qui font défiler la rangée d'environ un écran.
+(() => {
+  document.querySelectorAll('[data-library]').forEach((row) => {
+    const track = row.querySelector('.library-track');
+    const prev = row.querySelector('[data-library-prev]');
+    const next = row.querySelector('[data-library-next]');
+    if (!track || !prev || !next) return;
+    const step = () => Math.max(track.clientWidth * 0.85, 160);
+    const update = () => {
+      const max = track.scrollWidth - track.clientWidth - 2;
+      prev.disabled = track.scrollLeft <= 2;
+      next.disabled = track.scrollLeft >= max;
+      row.classList.toggle('is-static', max <= 0);
+    };
+    prev.addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+    next.addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+    track.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); next.click(); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); prev.click(); }
+    });
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  });
+})();
