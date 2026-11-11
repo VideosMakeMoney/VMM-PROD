@@ -68,7 +68,7 @@ Redirections 301 (`_redirects`, liste `OLD_REDIRECTS` dans `build.mjs`), en un s
 
 ### Vitesse
 
-- CSS en ligne dans chaque page (`src/styles.css` reste la source) : aucune requête ne bloque le premier affichage. Police préchargée : Cinzel 900 (titres, y compris « Videos Make Money. » de l'accueil).
+- CSS en ligne dans chaque page (`src/styles.css` reste la source) : aucune requête ne bloque le premier affichage. Police préchargée : Inter 800 (titres). Depuis les ajustements de JD du 2026-11-10, une seule famille est chargée : Inter (400, 700, 800).
 - Logo de l'en-tête en 240 px (18 Ko au lieu de 46 Ko ; l'original reste dans `static/logo/`). Posters en AVIF (6 à 27 Ko), puis WebP, puis `.jpg`.
 - Polices hébergées sur le site (`static/fonts/`, licences OFL à côté), `font-display: swap`. Plus de feuille Google Fonts bloquante.
 - GSAP, ScrollTrigger et Lenis sont chargés par `main.js` après l'affichage de la page ; ce qui est déjà à l'écran reste affiché sans animation, le reste apparaît au défilement comme avant.
@@ -110,7 +110,7 @@ Redirections 301 (`_redirects`, liste `OLD_REDIRECTS` dans `build.mjs`), en un s
 - FAQ 2 : la réponse originale parle de « stratégie » et de « visuels IA », ce qui contredit la règle « aucune stratégie pub ni service IA ». Gardée telle quelle et signalée.
 
 **Charte**
-- Bandeau de l'accueil : titre « Videos Make Money. » en Cinzel 900 (demande de Natasha, 2026-11-03) ; le sous-titre reste en Inter (`--font-hero` dans `src/styles.css`).
+- Bandeau de l'accueil : titre « Videos Make Money. » en Inter 800 avec le dégradé des titres (JD, 2026-11-10 ; avant : Cinzel 900, demande de Natasha du 2026-11-03).
 - Courbes exactes des keyframes (float-in, aurora-drift, marquee, shimmer, spin-border, svc-stroke/svc-fill, leak-drift) : le fichier `identite_visuelle.md` n'a pas été fourni, elles sont reconstituées.
 - Page Contact « identique à l'actuelle » : reconstruite selon la charte, à comparer avec la page en ligne.
 

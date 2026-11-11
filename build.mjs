@@ -450,7 +450,7 @@ ${indexable ? '' : '<meta name="robots" content="noindex, nofollow">\n'}${
 <link rel="alternate" hreflang="x-default" href="${abs(route.fr)}">
 `
       : ''
-  }<meta name="theme-color" content="#08080f">
+  }<meta name="theme-color" content="#0d0917">
 <meta name="geo.region" content="CA-QC">
 <meta name="geo.placename" content="Montréal">
 <meta property="og:type" content="website">
@@ -471,7 +471,7 @@ ${routed ? `<meta property="og:url" content="${abs(route[lang])}">\n` : ''}<meta
 <meta name="twitter:image:alt" content="${esc(ogAlt)}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <script>document.documentElement.classList.add('js')</script>
-${preload}<link rel="preload" href="/fonts/cinzel-latin-900-normal.woff2" as="font" type="font/woff2" crossorigin>
+${preload}<link rel="preload" href="/fonts/inter-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>${CSS}</style>
 ${hasData ? structuredData(key, lang, videos, page) : ''}
 </head>
@@ -498,6 +498,7 @@ ${L.avisTraduction && !isPlaceholder(L.avisTraduction) ? `<div class="notice">${
       <ul>
         ${['accueil', 'services', 'portfolio', 'apropos', 'contact'].map(navLink).join('\n        ')}
         <li><a class="lang-switch" href="${route[other]}" hreflang="${langs[other].lang}" lang="${langs[other].lang}" aria-label="${esc(L.nav.autreLangue)} — ${esc(L.nav.autreLangueNom)}">${esc(L.nav.autreLangue)}</a></li>
+        <li class="nav-cta"><a class="btn-header-cta" href="${ROUTES.contact[lang]}">${esc(L.nav.rdv)}</a></li>
       </ul>
     </nav>
   </div>
@@ -508,20 +509,20 @@ ${body}
 <footer class="site-footer">
   <div class="container footer-inner">
     <div>
-      <p class="logo">VMM<span>.</span></p>
-      <p class="muted">${t(L.pied.slogan)}</p>
+      <a class="footer-logo" href="${ROUTES.accueil[lang]}">${picture('/img/logo-pied-de-page', site.nom, { w: 112, h: 72, fallback: 'png' })}</a>
+      ${t(L.pied.slogan) ? `<p class="muted">${t(L.pied.slogan)}</p>` : ''}
       <p class="muted">${esc(FOOTER_NAME)} · ${esc(L.contact.zone)}</p>
       <p><a href="mailto:${site.courriel}">${esc(site.courriel)}</a></p>
       ${TEL ? `<p><a href="${TEL.href}">${esc(TEL.affiche)}</a></p>` : ''}
     </div>
     <div>
       <p class="label">${esc(L.contact.suivre)}</p>
-      ${socials()}
+      ${socials({ icons: true, iconsOnly: true, suffix: `pied-${lang}` })}
     </div>
     <nav aria-label="${esc(L.pied.zones)}">
       <p class="label">${esc(L.pied.zones)}</p>
       <ul class="socials footer-zones">
-        ${ZONES.map((z) => `<li><a href="${z[lang].route}"${page?.zone === z ? ' aria-current="page"' : ''}>${esc(z[lang].lien)}</a></li>`).join('\n        ')}
+        ${footerZones(L, lang, page)}
       </ul>
     </nav>
   </div>
@@ -550,10 +551,27 @@ function socialIcon(nom, suffix) {
   return `<svg class="social-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><defs><linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="24" y2="0"><stop offset="0" stop-color="#7C3AED"/><stop offset=".45" stop-color="#3B5BFF"/><stop offset="1" stop-color="#FF3CAC"/></linearGradient></defs><path d="${d}" style="--icon-hover: url(#${id})"/></svg>`;
 }
 
-const socials = ({ icons = false, suffix = '' } = {}) =>
-  `<ul class="socials">
-        ${site.reseaux.map((r) => `<li><a href="${esc(r.url)}" rel="me noopener" target="_blank">${icons ? socialIcon(r.nom, suffix) : ''}${esc(r.nom)}</a></li>`).join('\n        ')}
+// iconsOnly (pied de page, JD 2026-11-10) : le logo seul, le nom reste lu par les lecteurs d'écran (aria-label)
+const socials = ({ icons = false, iconsOnly = false, suffix = '' } = {}) =>
+  `<ul class="socials${iconsOnly ? ' icons-only' : ''}">
+        ${site.reseaux.map((r) => `<li><a href="${esc(r.url)}" rel="me noopener" target="_blank"${iconsOnly ? ` aria-label="${esc(r.nom)}"` : ''}>${icons ? socialIcon(r.nom, suffix) : ''}${iconsOnly ? '' : esc(r.nom)}</a></li>`).join('\n        ')}
       </ul>`;
+
+// Zones desservies du pied de page : la liste exacte de JD (pied.zonesListe, capture du 2026-11-10).
+// Une zone qui a déjà sa page (content/zones.json) garde son lien ; les autres sont du texte simple.
+// Les pages locales absentes de la liste (Rive-Nord) restent en ligne et dans le sitemap.
+function footerZones(L, lang, page) {
+  const norm = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const pageOf = (nom) => ZONES.find((z) => norm(z.fr.lien) === norm(nom) || norm(z.en.lien) === norm(nom));
+  return (L.pied.zonesListe || [])
+    .map((nom) => {
+      const z = pageOf(nom);
+      return z
+        ? `<li><a href="${z[lang].route}"${page?.zone === z ? ' aria-current="page"' : ''}>${esc(nom)}</a></li>`
+        : `<li><span>${esc(nom)}</span></li>`;
+    })
+    .join('\n        ');
+}
 
 const sectionHead = (label, title, intro, id, tag = 'h2', h1 = '') => `<p class="label" data-reveal>${esc(label)}</p>
     <${tag} id="${id}" data-reveal>${t(title)}${tag === 'h1' ? h1Seo(h1) : ''}</${tag}>
@@ -610,6 +628,8 @@ function categoryTile(c, v, lang) {
 }
 
 // ---------- composant Contact (accueil et page Contact) ----------
+// Icônes de JD (PNG transparents, 2026-11-10) : décoratives, alt vide
+const contactIcon = (name) => picture(`/img/icons/${name}`, '', { w: 24, h: 24, cls: 'contact-icon', fallback: 'png' });
 function contactBlock(lang, { tag = 'h2', id = 'contact-title' } = {}) {
   const L = langs[lang];
   const c = L.contact.champs;
@@ -619,9 +639,9 @@ function contactBlock(lang, { tag = 'h2', id = 'contact-title' } = {}) {
       ${sectionHead(L.contact.etiquette, L.contact.titre, L.contact.texte, id, tag, L.seo.contact.h1)}
       ${tag === 'h1' ? summary(L.seo.contact.resume) : ''}
       <dl class="contact-details" data-reveal>
-        <div><dt class="label">${esc(L.contact.courrielLabel)}</dt><dd><a href="mailto:${site.courriel}">${esc(site.courriel)}</a></dd></div>
+        <div><dt class="label">${esc(L.contact.courrielLabel)}</dt><dd class="has-icon">${contactIcon('contact-courriel')}<a href="mailto:${site.courriel}">${esc(site.courriel)}</a></dd></div>
         ${tag === 'h1' && TEL ? `<div><dt class="label">${esc(L.contact.telephoneLabel)}</dt><dd><a href="${TEL.href}">${esc(TEL.affiche)}</a> <span class="muted">· ${esc(L.contact.heures)}</span></dd></div>` : ''}
-        <div><dt class="label">${esc(L.contact.zoneLabel)}</dt><dd>${esc(L.contact.zone)}</dd></div>
+        <div><dt class="label">${esc(L.contact.zoneLabel)}</dt><dd class="has-icon">${contactIcon('contact-localisation')}<span>${esc(L.contact.zone)}</span></dd></div>
       </dl>
       ${tag === 'h1' ? `<p class="muted small" data-reveal>${esc(L.contact.deplacement)}</p>` : ''}
       <div data-reveal>
@@ -713,6 +733,8 @@ function homePage(lang) {
 </section>`
     : '';
   const contactPhoto = A.contact.photo && existsSync(join(ROOT, 'static', `${A.contact.photo}.webp`));
+  // Écran 4 (JD, 2026-11-10) : photo du studio ; l'ancien portrait détouré revient si la photo manque
+  const studio = A.services.photoStudio && existsSync(join(ROOT, 'static', `${A.services.photoStudio}.webp`));
   const body = `
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero-media" aria-hidden="true">
@@ -723,7 +745,10 @@ function homePage(lang) {
     <h1 id="hero-title" class="hero-title hero-title-jd" data-no-accent data-reveal><span class="ht-videos">${esc(tVideos)}</span> <span class="ht-make">${esc(tMake)}</span> <span class="ht-money">${esc(tMoney)}</span>${h1Seo(L.seo.accueil.h1)}</h1>
     <p class="hero-sub hero-signature" data-reveal>${rich(A.hero.signature)}</p>
     <p class="hero-text" data-reveal>${t(L.hero.texte)}</p>
-    <a class="btn btn-solid hero-cta" href="${ROUTES.contact[lang]}" data-reveal>${esc(A.hero.bouton)}</a>
+    <p class="hero-ctas" data-reveal>
+      <a class="btn btn-solid hero-cta" href="${ROUTES.contact[lang]}">${esc(A.hero.bouton)}</a>
+      <a class="btn btn-ghost hero-cta-ghost" href="${ROUTES.portfolio[lang]}">${esc(A.hero.boutonTravail)}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+    </p>
     ${hasVideo && poster || isPlaceholder(L.hero.posterManquant) ? '' : `<p class="hero-missing small">${t(L.hero.posterManquant)}</p>`}
   </div>
   ${hasVideo ? `<button class="hero-toggle" type="button" aria-pressed="false" data-pause="${esc(L.hero.pause)}" data-play="${esc(L.hero.lecture)}" aria-label="${esc(L.hero.pause)}"><span aria-hidden="true">❚❚</span></button>` : ''}
@@ -763,10 +788,11 @@ ${summaryBand(L.seo.accueil.resume)}
 
 <section class="jd-screen home-services" id="services-accueil" aria-labelledby="hp-services-title">
   <div class="jd-wrap">
+    <div class="home-services-text">
     <p class="jd-label jd-label-line" data-reveal>${esc(A.services.etiquette)}</p>
     <h2 id="hp-services-title" data-reveal data-no-accent>${rich(A.services.titre)}</h2>
     <p class="jd-lead" data-reveal>${t(A.services.intro)}</p>
-    <div class="home-split home-services-split">
+    <div class="home-services-split">
       <div class="home-split-text">
         <ul class="hp-svc-grid" role="list">
           ${A.services.libelles
@@ -775,14 +801,15 @@ ${summaryBand(L.seo.accueil.resume)}
         </ul>
         <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.services[lang]}">${esc(A.services.bouton)}</a></p>
       </div>
-      <div class="home-services-portrait" data-reveal>${picture('/img/services-jd-detoure', A.services.portraitAlt, { w: 683, h: 1200, fallback: 'png' })}</div>
+    </div>
     </div>
   </div>
+  ${studio ? `<div class="home-services-studio" data-reveal>${picture(A.services.photoStudio, A.services.photoStudioAlt, { w: 1200, h: 1600 })}</div>` : `<div class="home-services-portrait" data-reveal>${picture('/img/services-jd-detoure', A.services.portraitAlt, { w: 683, h: 1200, fallback: 'png' })}</div>`}
 </section>
 
 <section class="jd-screen home-contact" id="contact" aria-labelledby="contact-title">
   <div class="jd-wrap home-split home-contact-split">
-    <div class="home-contact-photo${contactPhoto ? '' : ' is-empty'}" data-reveal>${contactPhoto ? picture(A.contact.photo, 'JD', { w: 852, h: 1222, fallback: 'png' }) : ''}</div>
+    <div class="home-contact-photo${contactPhoto ? '' : ' is-empty'}" data-reveal>${contactPhoto ? picture(A.contact.photo, 'JD', { w: A.contact.photoLargeur || 852, h: A.contact.photoHauteur || 1222, fallback: 'png' }) : ''}</div>
     <div class="home-split-text">
       <p class="jd-label jd-label-line" data-reveal>${esc(A.contact.etiquette)}</p>
       <h2 id="contact-title" data-reveal data-no-accent>${rich(A.contact.titre)}</h2>
@@ -1009,7 +1036,7 @@ ${summaryBand(L.seo.portfolio.resume)}
       ${honourClients()
         .map((c) => `<li data-reveal><a class="logo-btn" href="${clientRoute(c)[lang]}" aria-label="${esc(P.honneur.voir.replace('{client}', c.nomBouton || c.nom))} (${countText(clientVideos(c).length, P)})">
         <span class="logo-btn-face">${logo(c)}</span>
-        <span class="logo-btn-text"><strong>${esc(c.nomBouton || c.nom)}</strong><span class="logo-btn-count">${countText(clientVideos(c).length, P)}</span></span>
+        <span class="logo-btn-text"><strong>${esc(c.nomBouton || c.nom)}</strong><span class="logo-btn-count">${countText(clientVideos(c).length, P)}</span><span class="logo-btn-cta">${esc(P.cliquer)}</span></span>
       </a></li>`)
         .join('\n      ')}
     </ul>
@@ -1018,11 +1045,15 @@ ${summaryBand(L.seo.portfolio.resume)}
 
 <section class="jd-screen pf-coulisses" aria-labelledby="pf-coulisses-title">
   <div class="jd-wrap">
+    <div class="pf-coulisses-grid">
+    <div class="pf-coulisses-text">
     ${head(P.coulissesBloc.etiquette, P.coulissesBloc.titre, P.coulissesBloc.intro, 'pf-coulisses-title')}
+    </div>
     <p class="pf-coulisses-row"><a class="coulisses-link" href="${coulissesRoute[lang]}" aria-label="${esc(P.coulissesBloc.voir)} (${countText(behind.length, P)})" data-reveal>
       <span class="coulisses-photo">${hasPhoto ? picture(photo, P.coulissesBloc.photoAlt, { w: COUL.photoLargeur || 1152, h: COUL.photoHauteur || 2048, fallback: photoFallback }) : '<span class="thumb-empty" aria-hidden="true"></span>'}</span>
-      <span class="coulisses-text"><strong>${esc(P.coulissesBloc.legende)}</strong><span class="coulisses-count">${countText(behind.length, P)}</span></span>
+      <span class="coulisses-text"><strong>${esc(P.coulissesBloc.legende)}</strong><span class="coulisses-count">${countText(behind.length, P)}</span><span class="logo-btn-cta">${esc(P.cliquer)}</span></span>
     </a></p>
+    </div>
   </div>
 </section>
 
@@ -1216,7 +1247,8 @@ function coulissesGrid(C) {
       const small = src.replace(/\.webp$/, '-576.webp');
       const srcset = existsSync(join(ROOT, 'static', small)) ? ` srcset="${small} 576w, ${src} 1152w" sizes="(min-width: 1024px) 190px, (min-width: 600px) 31vw, 47vw"` : '';
       const alt = C.alt.replace('{n}', i + 1).replace('{total}', total);
-      return `<li><img src="${src}"${srcset} alt="${esc(alt)}" width="1152" height="2048" loading="lazy" decoding="async"></li>`;
+      // Chaque photo ouvre l'original (1152 × 2048) : en plein écran avec JS (visionneuse), dans un nouvel onglet sans JS
+      return `<li><a class="coulisses-zoom" href="${src}" target="_blank" rel="noopener" data-zoom="${i}" aria-label="${esc(C.agrandir.replace('{n}', i + 1))}"><img src="${src}"${srcset} alt="${esc(alt)}" width="1152" height="2048" loading="lazy" decoding="async"></a></li>`;
     })
     .join('\n      ');
   return `<section class="jd-screen jd-coulisses" aria-labelledby="coulisses-photos-title">
@@ -1226,6 +1258,13 @@ function coulissesGrid(C) {
       ${items}
     </ul>
   </div>
+  <dialog class="lightbox photo-viewer" aria-label="${esc(C.visionneuse)}" data-photo-viewer data-total="${total}">
+    <button class="lightbox-close" type="button" data-viewer-close aria-label="${esc(C.fermer)}">×</button>
+    <p class="photo-viewer-count" aria-live="polite"></p>
+    <button class="photo-viewer-nav is-prev" type="button" data-viewer-prev aria-label="${esc(C.precedente)}"><span aria-hidden="true">‹</span></button>
+    <img alt="" width="1152" height="2048" decoding="async">
+    <button class="photo-viewer-nav is-next" type="button" data-viewer-next aria-label="${esc(C.suivante)}"><span aria-hidden="true">›</span></button>
+  </dialog>
 </section>`;
 }
 
@@ -1492,6 +1531,8 @@ ${ALLOW_INDEX ? '' : '  X-Robots-Tag: noindex, nofollow\n'}
   Cache-Control: public, max-age=31536000, immutable
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable
+/videos/*
+  Cache-Control: public, max-age=604800
 `
 );
 // Redirections 301 de l'ancien site (URL sans préfixe = anglais, /fr/... = français), en UN seul saut :

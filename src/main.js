@@ -174,8 +174,10 @@
     sync();
   });
   const wide = window.matchMedia('(min-width: 768px)');
-  // Le bon poster pour l'appareil, même quand la vidéo n'est jamais chargée
-  const bgPosters = () => bgVideos.forEach((box) => { box.querySelector('.bg-video-media').poster = box.dataset[`${wide.matches ? 'ordi' : 'mobile'}Poster`]; });
+  // Le bon poster pour l'appareil, même quand la vidéo n'est jamais chargée. Quand le poster est déjà une <picture>
+  // (.bg-video-poster), la vidéo n'en reçoit pas un second : une seule couche visible (Contact à 70 %, JD 2026-11-10).
+  const hasPicture = (box) => Boolean(box.querySelector('.bg-video-poster'));
+  const bgPosters = () => bgVideos.forEach((box) => { if (!hasPicture(box)) box.querySelector('.bg-video-media').poster = box.dataset[`${wide.matches ? 'ordi' : 'mobile'}Poster`]; });
   bgPosters();
   if (reduced) wide.addEventListener('change', bgPosters);
   if (bgVideos.length && !reduced) {
@@ -190,10 +192,16 @@
       const kind = wide.matches ? 'ordi' : 'mobile';
       if (box.dataset.loaded === kind) return;
       box.dataset.loaded = kind;
-      video.poster = box.dataset[`${kind}Poster`];
+      if (!hasPicture(box)) video.poster = box.dataset[`${kind}Poster`];
+      // Le poster reste affiché jusqu'à la première image de la vidéo ; ensuite il s'efface (une seule couche)
+      if (!video.dataset.watch) {
+        video.dataset.watch = '1';
+        video.addEventListener('playing', () => { box.dataset.playing = '1'; });
+      }
+      // preload posé avant load() : le téléchargement commence tout de suite
+      video.preload = 'auto';
       video.replaceChildren(...sourcesOf(box, kind));
       video.load();
-      video.preload = 'auto';
       const blur = blurOf(box);
       if (blur && !blur.dataset.loaded) {
         blur.dataset.loaded = '1';
@@ -214,8 +222,13 @@
         else if (target.dataset.loaded) pause(target);
       });
     }, { rootMargin: '50% 0px' });
-    const start = () => bgVideos.forEach((box) => io.observe(box));
-    // Services et Portfolio : aucune vidéo (webm/mp4) n'est téléchargée au chargement de la page ; le poster
+    // Vidéo héro des pages clients, de Coulisses et de /portfolio/ (JD, 2026-11-10) : elle démarre dès l'ouverture
+    // de la page, sans attendre le défilement ni l'événement load (seulement la version de l'appareil).
+    const immediate = [...bgVideos].filter((box) => box.closest('.collection-screen, .pf-hero'));
+    immediate.forEach((box) => { setup(box); play(box); io.observe(box); });
+    const rest = [...bgVideos].filter((box) => !immediate.includes(box));
+    const start = () => rest.forEach((box) => io.observe(box));
+    // Services : aucune vidéo (webm/mp4) n'est téléchargée au chargement de la page ; le poster
     // s'affiche et le clip ne se charge qu'au premier défilement (ou toucher, clic, touche du clavier).
     const onScroll = /\bpage-(services|portfolio)\b/.test(document.body.className);
     const afterInteraction = () => {
@@ -224,8 +237,10 @@
       events.forEach((e) => window.addEventListener(e, go, { once: true, passive: true }));
     };
     const begin = onScroll ? afterInteraction : start;
-    if (document.readyState === 'complete') begin();
-    else window.addEventListener('load', begin, { once: true });
+    if (rest.length) {
+      if (document.readyState === 'complete') begin();
+      else window.addEventListener('load', begin, { once: true });
+    }
     // Passage mobile ↔ ordi : on recharge seulement les clips déjà commencés
     wide.addEventListener('change', () => bgVideos.forEach((box) => {
       if (!box.dataset.loaded) return;
@@ -307,7 +322,7 @@
   }
 
   // Lightbox vidéo (l'iframe YouTube n'est chargé qu'à l'ouverture)
-  const dialog = document.querySelector('.lightbox');
+  const dialog = document.querySelector('.lightbox:not(.photo-viewer)');
   if (!dialog || typeof dialog.showModal !== 'function') return;
   const frame = dialog.querySelector('.lightbox-frame');
   const missing = dialog.querySelector('.lightbox-missing');
@@ -382,5 +397,48 @@
     track.addEventListener('scroll', update, { passive: true });
     window.addEventListener('resize', update);
     update();
+  });
+})();
+
+// À propos, photos Coulisses : visionneuse plein écran (<dialog>). L'original (1152 × 2048) n'est chargé qu'à l'ouverture.
+// Clavier : Entrée ouvre, Échap ferme, ← → changent de photo ; glissement sur mobile ; clic sur le fond pour fermer.
+// Sans JavaScript, chaque photo s'ouvre dans un nouvel onglet (lien vers le fichier).
+(() => {
+  const viewer = document.querySelector('[data-photo-viewer]');
+  if (!viewer || typeof viewer.showModal !== 'function') return;
+  const links = [...document.querySelectorAll('.coulisses-zoom')];
+  const img = viewer.querySelector('img');
+  const count = viewer.querySelector('.photo-viewer-count');
+  let current = 0;
+  let opener = null;
+  const show = (i) => {
+    current = (i + links.length) % links.length;
+    const link = links[current];
+    img.src = link.getAttribute('href');
+    img.alt = link.querySelector('img')?.alt || '';
+    count.textContent = `${current + 1} / ${links.length}`;
+  };
+  links.forEach((link, i) => link.addEventListener('click', (e) => {
+    e.preventDefault();
+    opener = link;
+    show(i);
+    viewer.showModal();
+  }));
+  viewer.querySelector('[data-viewer-close]').addEventListener('click', () => viewer.close());
+  viewer.querySelector('[data-viewer-prev]').addEventListener('click', () => show(current - 1));
+  viewer.querySelector('[data-viewer-next]').addEventListener('click', () => show(current + 1));
+  viewer.addEventListener('click', (e) => { if (e.target === viewer) viewer.close(); });
+  viewer.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); show(current + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); show(current - 1); }
+  });
+  viewer.addEventListener('close', () => { img.removeAttribute('src'); opener?.focus(); });
+  let x0 = null;
+  viewer.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+  viewer.addEventListener('touchend', (e) => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0;
+    x0 = null;
+    if (Math.abs(dx) > 40) show(current + (dx < 0 ? 1 : -1));
   });
 })();

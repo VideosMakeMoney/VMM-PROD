@@ -17,6 +17,7 @@
     "allerAuContenu": "Aller au contenu",
     "autreLangue": "EN",
     "autreLangueNom": "English",
+    "rdv": "Prendre rendez-vous",
     "filAriane": "Fil d'Ariane"
   },
   "seo": {
@@ -147,7 +148,8 @@
     "heures": "7 h à 19 h",
     "deplacement": "Basés à Sainte-Thérèse, on se déplace dans un rayon de 50 km (Laurentides, Rive-Nord, Grand Montréal). Plus loin ? Les frais de déplacement s'ajoutent.",
     "zoneLabel": "Zone",
-    "zone": "Tout le Québec, surtout Grand Montréal et Laurentides",
+    "zone": "Laval, Mirabel, Brossard, Longueuil, Montréal, Blainville, Boisbriand, Repentigny, Terrebonne, Lanaudière, Laurentides, Saint-Eustache, Saint-Jérôme, Sainte-Thérèse",
+    "zoneAncienne": "Tout le Québec, surtout Grand Montréal et Laurentides",
     "zoneAncien": "Grand Montréal et Laurentides",
     "suivre": "Suivez-nous",
     "champs": {
@@ -345,6 +347,7 @@
     "aVenirTitre": "Bientôt au portfolio",
     "videos": "vidéos",
     "video": "vidéo",
+    "cliquer": "Cliquez pour visionner",
     "titreManquant": "[À CONFIRMER : titre]",
     "vedetteManquante": "[À CONFIRMER : vidéo vedette de la catégorie]",
     "bouton": "Rencontrer les gens derrière VMM →",
@@ -396,7 +399,12 @@
     "coulisses": {
       "_aide": "Grille de photos de coulisses (static/img/coulisses/coulisses-NN.webp + -576.webp), après les bios, avant le mot de la fin. titre = libellé « Coulisses » déjà utilisé sur le site ; pas de texte d'accompagnement. Pour ajouter une photo : la déposer dans static/img/coulisses/ (même nom, même format 9:16) ; le build les prend toutes, dans l’ordre des numéros.",
       "titre": "Coulisses",
-      "alt": "Coulisses de tournage de VMM Productions, photo {n} sur {total}"
+      "alt": "Coulisses de tournage de VMM Productions, photo {n} sur {total}",
+      "agrandir": "Agrandir la photo {n}",
+      "visionneuse": "Photos des coulisses",
+      "fermer": "Fermer la photo",
+      "precedente": "Photo précédente",
+      "suivante": "Photo suivante"
     },
     "_aide": "Page À propos (PDF de JD « VMM About Section LAYOUT + DIRECTIONS »). Dans les titres, *mot* = mot en violet, \\n = retour à la ligne. photo = chemin sans extension (.webp + .jpg dans static/img/).",
     "titre": "À PROPOS",
@@ -470,7 +478,24 @@
   "pied": {
     "slogan": "[À CONFIRMER : texte du pied de page]",
     "droits": "Tous droits réservés.",
-    "zones": "Zones desservies"
+    "zones": "Zones desservies",
+    "zonesListe": [
+      "Laval",
+      "Mirabel",
+      "Brossard",
+      "Longueuil",
+      "Montréal",
+      "Blainville",
+      "Boisbriand",
+      "Repentigny",
+      "Terrebonne",
+      "Lanaudière",
+      "Laurentides",
+      "Saint-Eustache",
+      "Saint-Jérôme",
+      "Sainte-Thérèse"
+    ],
+    "_aideZones": "Liste exacte de la capture de JD du 2026-11-10 (docs/jd/2026-11-10/image(26).png), même ordre et même orthographe. Une zone qui a une page dans zones.json garde son lien ; les autres sont du texte simple. Les pages Rive-Nord restent en ligne et dans le sitemap."
   },
   "zones": {
     "_aide": "Libellés communs des pages locales (le contenu propre à chaque page est dans content/zones.json).",
@@ -522,7 +547,8 @@
       ],
       "signature": "Notre *passion*, aider la vôtre à *grandir*.",
       "_aideSignature": "Maquette p. 1 : « OUR PASSION. HELPING YOURS GROW. », PASSION et GROW en mauve. La version française garde la signature actuelle avec passion et grandir en mauve. [À CONFIRMER JD : signature en anglais aussi sur la version française ?]",
-      "bouton": "CONTACTEZ-NOUS →"
+      "bouton": "CONTACTEZ-NOUS →",
+      "boutonTravail": "Voir notre travail"
     },
     "portfolio": {
       "etiquette": "Ce que nous réalisons",
@@ -580,15 +606,20 @@
         ]
       ],
       "portraitAlt": "JD avec sa caméra",
-      "bouton": "EXPLORER NOS SERVICES →"
+      "photoStudio": "/img/accueil-services-jd",
+      "photoStudioAlt": "Studio de montage de VMM Productions",
+      "bouton": "EXPLORER NOS SERVICES →",
+      "_aidePhotoStudio": "Écran 4 refait selon la maquette de JD du 2026-11-10 (docs/jd/2026-11-10/image(14).png) : photo du studio à droite. L’ancien portrait services-jd-detoure reste dans static/img/ (portraitAlt gardé)."
     },
     "contact": {
       "etiquette": "Prenons contact",
       "titre": "Votre prochain projet *commence ici*.",
       "texte": "Une idée en tête? Parlons de votre entreprise, de votre vision et de ce que nous pouvons créer ensemble.",
       "bouton": "CONTACTEZ-NOUS →",
-      "photo": "",
-      "_aidePhoto": "[À CONFIRMER JD : photo exacte de JD, maquette p. 5 (maillot violet, lunettes, caméra)]. Elle n'est pas parmi les photos déjà dans static/img ; l'emplacement reste vide. Chemin sans extension (.webp + .png) une fois fournie."
+      "photo": "/img/accueil-contact-jd",
+      "photoLargeur": 791,
+      "photoHauteur": 1400,
+      "_aidePhotoAncienne": "Résolu le 2026-11-10 (PNG transparent joint au courriel de JD, maillot violet, lunettes, caméra). Ancienne note : [À CONFIRMER JD : photo exacte de JD, maquette p. 5 (maillot violet, lunettes, caméra)]. Elle n'est pas parmi les photos déjà dans static/img ; l'emplacement reste vide. Chemin sans extension (.webp + .png) une fois fournie."
     }
   }
 }

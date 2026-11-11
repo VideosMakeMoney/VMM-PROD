@@ -17,6 +17,7 @@
     "allerAuContenu": "Skip to content",
     "autreLangue": "FR",
     "autreLangueNom": "Français",
+    "rdv": "Book a Call",
     "filAriane": "Breadcrumb"
   },
   "seo": {
@@ -147,7 +148,8 @@
     "heures": "7 a.m. to 7 p.m.",
     "deplacement": "Based in Sainte-Thérèse, we travel within a 50 km radius (Laurentians, North Shore, Greater Montreal). Farther away? Travel costs are added.",
     "zoneLabel": "Area",
-    "zone": "All of Quebec, mainly Greater Montreal and the Laurentians",
+    "zone": "Laval, Mirabel, Brossard, Longueuil, Montréal, Blainville, Boisbriand, Repentigny, Terrebonne, Lanaudière, Laurentides, Saint-Eustache, Saint-Jérôme, Sainte-Thérèse",
+    "zoneAncienne": "All of Quebec, mainly Greater Montreal and the Laurentians",
     "zoneAncien": "Greater Montreal and the Laurentians",
     "suivre": "Follow us",
     "champs": {
@@ -346,6 +348,7 @@
     "aVenirTitre": "Coming soon to the portfolio",
     "videos": "videos",
     "video": "video",
+    "cliquer": "Click to watch",
     "titreManquant": "[TO CONFIRM: title]",
     "vedetteManquante": "[TO CONFIRM: featured video for this category]",
     "bouton": "Meet the people behind VMM →",
@@ -398,7 +401,12 @@
     "coulisses": {
       "_aide": "Grille de photos de coulisses (static/img/coulisses/coulisses-NN.webp + -576.webp), après les bios, avant le mot de la fin. titre = libellé « Behind the scenes » déjà utilisé sur le site ; pas de texte d'accompagnement. Pour ajouter une photo : la déposer dans static/img/coulisses/ (même nom, même format 9:16) ; le build les prend toutes, dans l’ordre des numéros.",
       "titre": "Behind the scenes",
-      "alt": "VMM Productions behind the scenes, photo {n} of {total}"
+      "alt": "VMM Productions behind the scenes, photo {n} of {total}",
+      "agrandir": "Enlarge photo {n}",
+      "visionneuse": "Behind-the-scenes photos",
+      "fermer": "Close photo",
+      "precedente": "Previous photo",
+      "suivante": "Next photo"
     },
     "_aide": "About page (JD's PDF). In headings, *word* = violet word, \\n = line break.",
     "titre": "ABOUT",
@@ -472,7 +480,24 @@
   "pied": {
     "slogan": "[TO CONFIRM: footer copy]",
     "droits": "All rights reserved.",
-    "zones": "Service areas"
+    "zones": "Service areas",
+    "zonesListe": [
+      "Laval",
+      "Mirabel",
+      "Brossard",
+      "Longueuil",
+      "Montréal",
+      "Blainville",
+      "Boisbriand",
+      "Repentigny",
+      "Terrebonne",
+      "Lanaudière",
+      "Laurentides",
+      "Saint-Eustache",
+      "Saint-Jérôme",
+      "Sainte-Thérèse"
+    ],
+    "_aideZones": "Liste exacte de la capture de JD du 2026-11-10 (docs/jd/2026-11-10/image(26).png), même ordre et même orthographe. Une zone qui a une page dans zones.json garde son lien ; les autres sont du texte simple. Les pages Rive-Nord restent en ligne et dans le sitemap."
   },
   "zones": {
     "_aide": "Shared labels for the local pages (each page's own content is in content/zones.json).",
@@ -523,7 +548,8 @@
         "MONEY"
       ],
       "signature": "Our *passion*. Helping yours *grow*.",
-      "bouton": "CONTACT US →"
+      "bouton": "CONTACT US →",
+      "boutonTravail": "See Our Work"
     },
     "portfolio": {
       "etiquette": "What we produce",
@@ -580,14 +606,19 @@
         ]
       ],
       "portraitAlt": "JD with his camera",
-      "bouton": "EXPLORE OUR SERVICES →"
+      "photoStudio": "/img/accueil-services-jd",
+      "photoStudioAlt": "VMM Productions editing studio",
+      "bouton": "EXPLORE OUR SERVICES →",
+      "_aidePhotoStudio": "Écran 4 refait selon la maquette de JD du 2026-11-10 (docs/jd/2026-11-10/image(14).png) : photo du studio à droite. L’ancien portrait services-jd-detoure reste dans static/img/ (portraitAlt gardé)."
     },
     "contact": {
       "etiquette": "Let's talk",
       "titre": "Your next project *starts here*.",
       "texte": "Have an idea in mind? Let's talk about your business, your vision and what we can create together.",
       "bouton": "CONTACT US →",
-      "photo": ""
+      "photo": "/img/accueil-contact-jd",
+      "photoLargeur": 791,
+      "photoHauteur": 1400
     }
   }
 }
