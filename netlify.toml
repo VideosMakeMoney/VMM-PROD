@@ -1,5 +1,5 @@
-# Démo Netlify. L'indexation reste coupée tant que VMM_ALLOW_INDEX n'est pas "true" en contexte production.
-# Ne pas brancher le domaine videosmakemoney.ca sans l'accord de Max.
+# Domaine final : https://videosmakemoney.ca (sans www). Indexé seulement en contexte production.
+# Deploy previews et branch deploys : toujours noindex.
 [build]
   command = "node build.mjs"
   publish = "dist"
@@ -7,10 +7,10 @@
 [build.environment]
   NODE_VERSION = "22"
 
-# Lancement : passer VMM_ALLOW_INDEX à "true" ICI seulement, avec l'accord de Max.
-# Cela active l'indexation ET les redirections forcées www / vmm-prod.netlify.app → videosmakemoney.ca.
+# Lancement (fusion par Max après le changement DNS de JD) : indexation activée en production,
+# avec les redirections forcées www / vmm-prod.netlify.app → videosmakemoney.ca.
 [context.production.environment]
-  VMM_ALLOW_INDEX = "false"
+  VMM_ALLOW_INDEX = "true"
 
 # Deploy previews et branch deploys : toujours noindex (build.mjs l'impose aussi via CONTEXT).
 [context.deploy-preview.environment]
