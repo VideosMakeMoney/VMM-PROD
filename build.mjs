@@ -51,6 +51,9 @@ const CLIENTS = portfolio.clients.filter((c) => clientVideos(c).length);
 // Page de la collection Coulisses (portfolio.json → coulissesCollection)
 const COUL = portfolio.coulissesCollection || { slug: { fr: 'coulisses', en: 'behind-the-scenes' }, clip: '', photo: 'coulisses-01' };
 const coulissesVideos = () => portfolio.videos.filter((v) => v.type === 'coulisses');
+// Vidéos affichées dans les bibliothèques et comptées (« 01 / N », « N vidéos ») : seulement celles qui ont un ID YouTube.
+// Les autres restent dans portfolio.json et réapparaissent dès qu'un ID est ajouté (Natasha, 2026-11-12).
+const visibleVideos = (list) => list.filter((v) => v.youtubeId);
 const coulissesRoute = { fr: `${ROUTES.portfolio.fr}${COUL.slug.fr}/`, en: `${ROUTES.portfolio.en}${COUL.slug.en}/` };
 const clientRoute = (c) => ({ fr: `${ROUTES.portfolio.fr}${clientSlug(c)}/`, en: `${ROUTES.portfolio.en}${clientSlug(c)}/` });
 
@@ -471,7 +474,7 @@ ${routed ? `<meta property="og:url" content="${abs(route[lang])}">\n` : ''}<meta
 <meta name="twitter:image:alt" content="${esc(ogAlt)}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <script>document.documentElement.classList.add('js')</script>
-${preload}<link rel="preload" href="/fonts/inter-latin-800-normal.woff2" as="font" type="font/woff2" crossorigin>
+${preload}<link rel="preload" href="/fonts/syne-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <style>${CSS}</style>
 ${hasData ? structuredData(key, lang, videos, page) : ''}
 </head>
@@ -511,7 +514,7 @@ ${body}
     <div>
       <a class="footer-logo" href="${ROUTES.accueil[lang]}">${picture('/img/logo-pied-de-page', site.nom, { w: 112, h: 72, fallback: 'png' })}</a>
       ${t(L.pied.slogan) ? `<p class="muted">${t(L.pied.slogan)}</p>` : ''}
-      <p class="muted">${esc(FOOTER_NAME)} · ${esc(L.contact.zone)}</p>
+      <p class="muted">${esc(FOOTER_NAME)}</p>
       <p><a href="mailto:${site.courriel}">${esc(site.courriel)}</a></p>
       ${TEL ? `<p><a href="${TEL.href}">${esc(TEL.affiche)}</a></p>` : ''}
     </div>
@@ -1003,7 +1006,7 @@ function portfolioPage(lang) {
   const L = langs[lang];
   const P = L.portfolio;
   const catVideos = portfolio.categories.map(categoryVideo);
-  const behind = coulissesVideos();
+  const behind = visibleVideos(coulissesVideos());
   // Photo du bloc Coulisses : chemin complet (/img/...) ou, ancien format, nom d'un fichier de /img/coulisses/
   const photo = COUL.photo.startsWith('/') ? COUL.photo : `/img/coulisses/${COUL.photo}`;
   const hasPhoto = existsSync(join(ROOT, 'static', `${photo}.webp`));
@@ -1034,9 +1037,9 @@ ${summaryBand(L.seo.portfolio.resume)}
     ${head(P.honneur.etiquette, P.honneur.titre, P.honneur.intro, 'honneur-title')}
     <ul class="logo-grid" role="list">
       ${honourClients()
-        .map((c) => `<li data-reveal><a class="logo-btn" href="${clientRoute(c)[lang]}" aria-label="${esc(P.honneur.voir.replace('{client}', c.nomBouton || c.nom))} (${countText(clientVideos(c).length, P)})">
+        .map((c) => `<li data-reveal><a class="logo-btn" href="${clientRoute(c)[lang]}" aria-label="${esc(P.honneur.voir.replace('{client}', c.nomBouton || c.nom))} (${countText(visibleVideos(clientVideos(c)).length, P)})">
         <span class="logo-btn-face">${logo(c)}</span>
-        <span class="logo-btn-text"><strong>${esc(c.nomBouton || c.nom)}</strong><span class="logo-btn-count">${countText(clientVideos(c).length, P)}</span><span class="logo-btn-cta">${esc(P.cliquer)}</span></span>
+        <span class="logo-btn-text"><strong>${esc(c.nomBouton || c.nom)}</strong><span class="logo-btn-count">${countText(visibleVideos(clientVideos(c)).length, P)}</span><span class="logo-btn-cta">${esc(P.cliquer)}</span></span>
       </a></li>`)
         .join('\n      ')}
     </ul>
@@ -1090,7 +1093,7 @@ function collectionScreen(L, lang, { clip, title, h1, list }) {
 function clientPage(c, lang) {
   const L = langs[lang];
   const P = L.portfolio;
-  const list = clientVideos(c);
+  const list = visibleVideos(clientVideos(c));
   // Élision en français : « de Installations » devient « d'Installations ».
   const fill = (s) => (lang === 'fr' && /^[aeiouyàâéèêîôûh]/i.test(c.nom) ? s.replaceAll('de {client}', 'd’{client}') : s).replaceAll('{client}', c.nom);
   const body = collectionScreen(L, lang, { clip: c.clip, title: c.nomHero || c.nom, h1: fill(P.clientH1), list });
@@ -1109,7 +1112,7 @@ function coulissesPage(lang) {
   const L = langs[lang];
   const P = L.portfolio;
   const C = P.coulissesPage;
-  const list = coulissesVideos();
+  const list = visibleVideos(coulissesVideos());
   const body = collectionScreen(L, lang, { clip: COUL.clip, title: C.titreHero || C.titre, h1: C.h1, list });
   return layout({
     key: 'portfolio',
@@ -1437,8 +1440,8 @@ function llmsTxt() {
     ...fr.equipe.membres.map((m) => `- ${m.nomComplet}${m.nom !== m.nomComplet ? ` (${m.nom})` : ''}, ${m.role} : ${m.texte}`),
     '',
     '## Clients filmés',
-    ...portfolio.clients.map((c) => `- ${c.nom}${c.villes?.length ? `, ${c.villes.join(', ')}` : ''}${c.url ? ` (${c.url})` : ''} (${clientVideos(c).length} vidéos)${CLIENTS.includes(c) ? ` : ${abs(clientRoute(c).fr)}` : ''}`),
-    `- ${fr.portfolio.coulissesPage.titre} (${coulissesVideos().length} vidéos) : ${abs(coulissesRoute.fr)}`,
+    ...portfolio.clients.map((c) => `- ${c.nom}${c.villes?.length ? `, ${c.villes.join(', ')}` : ''}${c.url ? ` (${c.url})` : ''} (${visibleVideos(clientVideos(c)).length} vidéos)${CLIENTS.includes(c) ? ` : ${abs(clientRoute(c).fr)}` : ''}`),
+    `- ${fr.portfolio.coulissesPage.titre} (${visibleVideos(coulissesVideos()).length} vidéos) : ${abs(coulissesRoute.fr)}`,
     '',
     '## Zones desservies',
     ...site.zonesDesservies.map((z) => `- ${z}`),

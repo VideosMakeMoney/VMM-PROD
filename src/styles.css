@@ -993,7 +993,9 @@ h1 .ht-videos, h1 .ht-make, h1 .ht-money, h1 .hero-line, h1 .hero-word {
 #contact-page-title .accent { background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
 
 /* 4. Contact : icônes de JD (enveloppe, repère) à gauche du courriel et de la zone */
-.contact-details .has-icon { display: flex; align-items: center; gap: .6rem; }
+.contact-details .has-icon { display: flex; align-items: flex-start; gap: .6rem; }
+/* L'icône s'aligne sur la première ligne du texte (la zone tient sur plusieurs lignes) */
+.contact-details .has-icon .contact-icon { margin-top: .15em; }
 .contact-icon, .contact-icon img { display: block; flex: 0 0 24px; width: 24px; height: 24px; object-fit: contain; }
 
 /* 5. Contact : une seule couche visible à 70 %. Le poster s'efface dès que la vidéo joue (data-playing posé par main.js). */
@@ -1052,16 +1054,22 @@ h1 .ht-videos, h1 .ht-make, h1 .ht-money, h1 .hero-line, h1 .hero-word {
 .btn-ghost:hover, .btn-ghost:focus-visible { border-color: rgba(123, 47, 255, .5); color: #fff; }
 @media (max-width: 559px) { .hero-ctas { flex-direction: column; align-items: stretch; } }
 
-/* 12. Accueil seulement : étiquettes, titres, textes et boutons centrés (comme videosmakemoney.ca).
-   Écrans 3 et 4 : alignés à gauche, comme les maquettes de JD (image(19) et image(14)). */
+/* 12. Accueil seulement (corrigé le 2026-11-12, maquettes image(7), image(14), image(19)) :
+   ordi : écrans pleine largeur (héros, écran 2) centrés ; écrans à 2 colonnes (3, 4, 5) alignés à gauche dans leur colonne.
+   mobile (une colonne) : tous les écrans centrés. */
 .page-accueil .hero-content { text-align: center; }
 .page-accueil .hero-content > * { margin-inline: auto; }
 .page-accueil .hero-ctas { justify-content: center; }
-.page-accueil .jd-screen:not(.home-team):not(.home-services) { text-align: center; }
-.page-accueil .jd-screen:not(.home-team):not(.home-services) .jd-label-line { justify-content: center; }
-.page-accueil .jd-screen:not(.home-team):not(.home-services) h2,
-.page-accueil .jd-screen:not(.home-team):not(.home-services) .jd-lead { margin-inline: auto; }
 .page-accueil .summary-band .page-summary { margin-inline: auto; text-align: center; }
+.page-accueil .home-portfolio { text-align: center; }
+.page-accueil .home-portfolio .jd-label-line { justify-content: center; }
+.page-accueil .home-portfolio h2, .page-accueil .home-portfolio .jd-lead { margin-inline: auto; }
+@media (max-width: 899px) {
+  .page-accueil .jd-screen { text-align: center; }
+  .page-accueil .jd-screen .jd-label-line { justify-content: center; }
+  .page-accueil .jd-screen h2, .page-accueil .jd-screen .jd-lead { margin-inline: auto; }
+  .page-accueil .hp-svc { text-align: left; }
+}
 
 /* 13. En-tête : bouton « Prendre rendez-vous » / « Book a Call » à l'extrême droite */
 .site-nav a.btn-header-cta {
@@ -1099,3 +1107,24 @@ h1 .ht-videos, h1 .ht-make, h1 .ht-money, h1 .hero-line, h1 .hero-word {
 /* Titres centrés (fins de page, pages locales) : le titre en dégradé (fit-content) reste centré */
 .jd-end h2, .pf-end h2, .zone-cta h2 { margin-inline: auto; }
 @media (max-width: 899px) { .home-contact-photo img { max-height: 62svh; width: auto; margin-inline: auto; } }
+
+/* ---------- Corrections PR #22 (Natasha, 2026-11-12) ---------- */
+/* 1. Titres principaux en Syne 700, comme le H1 de videosmakemoney.ca/services (docs/jd/2026-11-10/image.png, image(9).png) :
+   majuscules, interlettrage -0.025em, interligne .95 pour les H1 des héros. Textes, boutons, menu et étiquettes restent en Inter. */
+@font-face { font-family: "Syne"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/syne-latin-700-normal.woff2") format("woff2"); }
+h1, h2, .hero-word, .hero-title, .collection-title, .vision-title, .home-team-title, .hero-stack {
+  font-family: "Syne", "Inter", system-ui, sans-serif; font-weight: 700; letter-spacing: -.025em;
+}
+h1.jd-label, h2.jd-label, h2.label { font-family: var(--font-label); letter-spacing: .12em; }
+.hero-title, .hero-word, .hero-stack, .collection-title { text-transform: uppercase; line-height: .95; }
+
+/* 2. Dégradé de JD (--gradient : #7C3AED → #3B5BFF → #FF3CAC) aussi sur les H1 Portfolio / À propos (.hero-word).
+   Ancien dégradé (refusé par JD, image(11).png) : linear-gradient(90deg, #8b5cf6 0%, #ff3cac 55%, #3b5bff 100%) */
+:root { --hero-gradient: var(--gradient); }
+.hero-word, h1 .hero-word, .hero-stack .hero-word {
+  background: var(--gradient); -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 22px rgba(124, 58, 237, .35));
+}
+/* Bandeau d'accueil « VIDEOS MAKE MONEY » : même police que les autres H1 (la règle .hero-title-jd plus haut imposait Inter 800) */
+.hero-title.hero-title-jd { font-family: "Syne", "Inter", system-ui, sans-serif; font-weight: 700; letter-spacing: -.025em; }
