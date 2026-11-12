@@ -72,8 +72,9 @@ a { color: var(--violet-light); }
 a:hover { color: var(--violet-light); }
 :focus-visible { outline: 2px solid var(--violet-light); outline-offset: 3px; }
 .nowrap { white-space: nowrap; }
-h1, h2, h3 { font-family: var(--font-title); font-weight: 800; line-height: 1.15; letter-spacing: -.01em; overflow-wrap: break-word; margin: 0 0 .5em; }
-h2 { font-weight: 800; font-size: clamp(2rem, 5vw, 3.5rem); }
+h1, h2, h3 { font-family: var(--font-title); font-weight: 700; line-height: 1.15; letter-spacing: -.01em; overflow-wrap: break-word; margin: 0 0 .5em; }
+h3 { font-weight: 800; } /* h3 reste en Inter 800 ; h1 et h2 sont en Syne 700 (2026-11-12) */
+h2 { font-weight: 700; font-size: clamp(2rem, 5vw, 3.5rem); }
 /* Titres : texte blanc, dernier mot en dégradé violet (span .accent ajouté au build) */
 h1, h2 { color: var(--title); }
 .accent {
@@ -278,7 +279,7 @@ ul { list-style: none; margin: 0; padding: 0; }
 .hero-title {
   /* Cinzel 900 comme les autres titres (demande de Natasha, 2026-11-03) ; avant : var(--font-hero), Inter 800, -.02em */
   font-family: var(--font-title);
-  font-weight: 800;
+  font-weight: 700;
   font-size: clamp(2.75rem, 11vw, 7.5rem);
   letter-spacing: -.01em;
   filter: drop-shadow(0 0 24px rgba(124, 58, 237, .35));
@@ -327,7 +328,7 @@ html:not(.js) .hero-toggle { display: none; }
   z-index: -1;
   animation: halo-pulse 3.2s ease-in-out infinite alternate;
 }
-.page-hero h1 { font-weight: 800; font-size: clamp(2.5rem, 8vw, 5rem); }
+.page-hero h1 { font-weight: 700; font-size: clamp(2.5rem, 8vw, 5rem); }
 .section-tight { padding-top: 2rem; }
 
 /* Services : numéros en contour qui se remplissent */
@@ -468,14 +469,14 @@ html:not(.js) .hero-toggle { display: none; }
 .contact-info .socials { margin-bottom: 0; }
 /* section.page-contact : le <body> de la page Contact porte aussi la classe page-contact */
 section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
-.page-contact h1 { font-weight: 800; font-size: clamp(2.5rem, 7vw, 4.5rem); }
+.page-contact h1 { font-weight: 700; font-size: clamp(2.5rem, 7vw, 4.5rem); }
 .faq { max-width: 52rem; }
 .faq details { border-top: 1px solid var(--border); }
 .faq summary { min-height: 48px; display: flex; align-items: center; cursor: pointer; font-weight: 600; padding-block: 10px; }
 .faq details p { color: var(--text-2); }
 
 .page-simple { min-height: 60vh; }
-.page-simple h1 { font-weight: 800; font-size: clamp(2.5rem, 7vw, 4.5rem); }
+.page-simple h1 { font-weight: 700; font-size: clamp(2.5rem, 7vw, 4.5rem); }
 
 /* Pied de page */
 .site-footer { border-top: 1px solid var(--border); padding-block: 3rem 2rem; background: var(--surface); }
@@ -873,7 +874,7 @@ html:not(.js) .library-arrow { display: none; }
 
 /* ---------- Audit JD du 2026-11-07 (PDF Accueil du 2026-11-05 et PDF client du 2026-11-04) ---------- */
 /* Accueil, héros : VIDEOS blanc, MAKE violet, MONEY rose-violet, sans rectangle ; PASSION et GROW mauves */
-.hero-title.hero-title-jd { background: none; -webkit-text-fill-color: currentColor; color: #fff; width: auto; font-family: var(--font-hero); font-weight: 800; letter-spacing: .01em; font-size: clamp(2.3rem, 6.4vw, 6rem); white-space: nowrap; }
+.hero-title.hero-title-jd { background: none; -webkit-text-fill-color: currentColor; color: #fff; width: auto; font-family: var(--font-hero); font-weight: 700; letter-spacing: .01em; font-size: clamp(2.3rem, 6.4vw, 6rem); white-space: nowrap; }
 @media (max-width: 559px) { .hero-title.hero-title-jd { white-space: normal; font-size: clamp(2.6rem, 13vw, 3.5rem); } }
 .hero-title-jd .ht-videos { color: #fff; }
 .hero-title-jd .ht-make { color: #8b5cf6; }
@@ -937,7 +938,7 @@ a.yt-tile:hover .thumb, a.yt-tile:focus-visible .thumb { box-shadow: 0 0 0 1px r
 .collection-screen::before { display: none; }
 .collection-screen .bg-video-veil { background: linear-gradient(180deg, rgba(13, 9, 23, .45) 0%, rgba(13, 9, 23, .1) 35%, rgba(13, 9, 23, .15) 65%, rgba(13, 9, 23, .55) 100%); }
 .collection-inner { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 1.5rem; padding-block: clamp(4.5rem, 16vh, 9rem) clamp(1rem, 4vh, 2.5rem); }
-.collection-title { margin: 0; color: #fff; font-family: var(--font-hero); font-weight: 800; text-transform: uppercase; letter-spacing: .01em; font-size: clamp(2.2rem, 7vw, 4.5rem); line-height: 1.05; text-shadow: 0 2px 18px rgba(13, 9, 23, .55); }
+.collection-title { margin: 0; color: #fff; font-family: var(--font-hero); font-weight: 700; text-transform: uppercase; letter-spacing: .01em; font-size: clamp(2.2rem, 7vw, 4.5rem); line-height: 1.05; text-shadow: 0 2px 18px rgba(13, 9, 23, .55); }
 .collection-library { width: 100%; max-width: min(760px, calc(71svh + 4rem + 88px)); margin-inline: auto; }
 .collection-screen .library-row { gap: 1rem; }
 .collection-screen .library-track { grid-auto-columns: calc((100% - 2rem) / 3); padding: .5rem .25rem; scrollbar-width: none; }
@@ -956,7 +957,8 @@ html:not(.js) .library-count { display: none; }
 /* ---------- Ajustements JD du 2026-11-10 (captures dans docs/jd/2026-11-10/) ---------- */
 /* 1. Typographie uniforme, comme videosmakemoney.ca : Inter 800 pour les titres, 400 pour les textes, 700 pour les boutons et étiquettes */
 body { line-height: 1.55; }
-h1, h2, .hero-word, .hero-title, .collection-title, .vision-title, .home-team-title, .hero-stack, .logo-btn-name { font-family: "Inter", system-ui, sans-serif; font-weight: 800; letter-spacing: -.02em; }
+h1, h2, .hero-word, .hero-title, .collection-title, .vision-title, .home-team-title, .hero-stack { font-family: "Inter", system-ui, sans-serif; font-weight: 700; letter-spacing: -.02em; }
+.logo-btn-name { font-family: "Inter", system-ui, sans-serif; font-weight: 800; letter-spacing: -.02em; }
 h3 { font-family: "Inter", system-ui, sans-serif; letter-spacing: -.01em; }
 p, .jd-lead, .intro, .hero-text, dd, .contact-form input, .contact-form select, .contact-form textarea { font-weight: 400; line-height: 1.55; }
 .btn, .btn-solid, .site-nav a, .menu-toggle, .label, .jd-label, .jd-role, .lang-switch, .contact-form label, .scroll-cue, .library-count { font-weight: 700; }
