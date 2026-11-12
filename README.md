@@ -7,7 +7,7 @@ Nouveau site de VMM Productions, vidéaste corporatif du Grand Montréal et des 
 Spécifications : `docs/objectif-vmm.txt`, `docs/contexte-vmm.txt` et `docs/prompt_landing.md`.
 
 > **Aucune mise en ligne sur videosmakemoney.ca sans l'accord explicite de Max.**
-> La démo Netlify est servie en `noindex` tant que `VMM_ALLOW_INDEX` n'est pas `true`.
+> Domaine final : `https://videosmakemoney.ca` (sans www). Le contexte production a `VMM_ALLOW_INDEX = "true"` (indexé) ; les deploy previews et branch deploys restent en `noindex`.
 
 ## Comment ça marche
 
@@ -51,7 +51,7 @@ Après le premier déploiement : Netlify → Forms → activer la détection, pu
 1. Netlify → Add new site → Import from GitHub → ce dépôt.
 2. Build : `node build.mjs`, dossier publié : `dist` (déjà dans `netlify.toml`).
 3. Laisser `VMM_ALLOW_INDEX` vide pour la démo.
-4. **Mise en ligne réelle (avec l'accord de Max seulement)** : brancher le domaine, mettre `VMM_ALLOW_INDEX = "true"` dans `netlify.toml` sous `[context.production.environment]`, redéployer, puis soumettre `https://videosmakemoney.ca/sitemap.xml` dans Google Search Console. Ce réglage active aussi les redirections forcées `www.videosmakemoney.ca` et `vmm-prod.netlify.app` → `videosmakemoney.ca`. Les deploy previews et branch deploys restent toujours en `noindex` (`build.mjs` vérifie `CONTEXT`).
+4. **Mise en ligne réelle** : `VMM_ALLOW_INDEX = "true"` est déjà dans `netlify.toml` sous `[context.production.environment]` (branche `lancement-domaine-final`, fusionnée par Max après le changement DNS de JD : A @ → 75.2.60.5, CNAME www → vmm-prod.netlify.app). Après le déploiement, puis soumettre `https://videosmakemoney.ca/sitemap.xml` dans Google Search Console. Ce réglage active aussi les redirections forcées `www.videosmakemoney.ca` et `vmm-prod.netlify.app` → `videosmakemoney.ca`. Les deploy previews et branch deploys restent toujours en `noindex` (`build.mjs` vérifie `CONTEXT`).
 
 Redirections 301 (`_redirects`, liste `OLD_REDIRECTS` dans `build.mjs`), en un seul saut vers l'adresse finale : ancien anglais `/work` → `/en/portfolio/`, `/process` → `/en/services/`, `/pricing` → `/en/contact/` ; ancien français `/fr` → `/`, `/fr/services` → `/services/`, `/fr/about` → `/about/`, `/fr/contact` → `/contact/`, `/fr/work` → `/portfolio/`, `/fr/process` → `/services/`, `/fr/pricing` → `/contact/`. Les anciennes `/services`, `/about` et `/contact` ne sont pas redirigées : ce sont les adresses des nouvelles pages FR.
 

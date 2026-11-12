@@ -536,8 +536,7 @@ ${body}
   <div class="lightbox-frame"></div>
   <p class="lightbox-missing" hidden>${t(L.lightbox.manquante)}</p>
 </dialog>
-<!-- GSAP, ScrollTrigger et Lenis (src/vendor/) sont chargés par main.js après l'affichage de la page -->
-<script src="/main.js?v=${BUILD_ID}" defer></script>
+${/* GSAP, ScrollTrigger et Lenis (src/vendor/) sont chargés par main.js après l'affichage de la page (commentaire gardé hors du HTML publié) */ ''}<script src="/main.js?v=${BUILD_ID}" defer></script>
 </body>
 </html>
 `;
@@ -1150,8 +1149,8 @@ function zonePage(z, lang) {
   const byId = (id) => portfolio.videos.find((v) => v.youtubeId === id);
   const vids = zoneVideos(z);
   const fact = (label, value) => `<div><dt class="label">${esc(label)}</dt><dd>${value}</dd></div>`;
-  const body = `<!-- ${esc(zonesData.noteProvisoire)} -->
-<section class="page-hero has-bg-video zone-hero" aria-labelledby="zone-title">
+  // zonesData.noteProvisoire (« texte provisoire, JD réécrira ») reste dans content/zones.json, plus dans le HTML publié.
+  const body = `<section class="page-hero has-bg-video zone-hero" aria-labelledby="zone-title">
   ${bgVideo(z.clip)}
   <div class="container">
     <p class="label" data-reveal>${esc(ZL.etiquette)}</p>
@@ -1538,7 +1537,7 @@ ${ALLOW_INDEX ? '' : '  X-Robots-Tag: noindex, nofollow\n'}
   Cache-Control: public, max-age=604800
 `
 );
-// Redirections 301 de l'ancien site (URL sans préfixe = anglais, /fr/... = français), en UN seul saut :
+// Redirections 301 forcées (301!) de l'ancien site (URL sans préfixe = anglais, /fr/... = français), en UN seul saut :
 // chaque destination est l'adresse finale avec slash (pas de 2e redirection /services → /services/).
 // Netlify ignore le slash final dans les règles : « /process » couvre aussi « /process/ ».
 // /services, /about et /contact (anciennes pages EN) ne sont PAS redirigées : ce sont aussi les adresses des
@@ -1575,11 +1574,11 @@ const DOMAIN_REDIRECTS = ALLOW_INDEX
 const col = (rows) => {
   const w = Math.max(...rows.map((r) => r[0].length)) + 2;
   const w2 = Math.max(...rows.map((r) => r[1].length)) + 2;
-  return rows.map(([a, b, c = '301']) => `${a.padEnd(w)}${b.padEnd(w2)}${c}`).join('\n');
+  return rows.map(([a, b, c = '301!']) => `${a.padEnd(w)}${b.padEnd(w2)}${c}`).join('\n');
 };
 write(
   '/_redirects',
-  `${DOMAIN_REDIRECTS.length ? `# Domaine principal (301 forcé)\n${col(DOMAIN_REDIRECTS)}\n\n` : ''}# Anciennes pages (301, un seul saut)
+  `${DOMAIN_REDIRECTS.length ? `# Domaine principal (301 forcé)\n${col(DOMAIN_REDIRECTS)}\n\n` : ''}# Anciennes pages (301 forcé, un seul saut)
 ${col(OLD_REDIRECTS)}
 
 # Page 404 en anglais pour les adresses /en/... (le 404.html racine est en français)
