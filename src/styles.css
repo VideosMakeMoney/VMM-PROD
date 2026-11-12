@@ -1,22 +1,15 @@
 /* VMM Productions : charte graphique reprise de videosmakemoney.ca */
-/* Cinzel (SIL OFL 1.1, voir /fonts/Cinzel-OFL.txt), hébergée ici, sous-ensemble latin avec les accents français */
-@font-face { font-family: "Cinzel"; font-style: normal; font-weight: 900; font-display: swap; src: url("/fonts/cinzel-latin-900-normal.woff2") format("woff2"); }
-@font-face { font-family: "Cinzel"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/cinzel-latin-700-normal.woff2") format("woff2"); }
-/* Polices hébergées sur le site (fontsource, latin, OFL) : plus de feuille Google Fonts bloquante au rendu */
+/* Une seule famille, Inter (fontsource, latin, OFL), comme videosmakemoney.ca (JD, 2026-11-10).
+   Les fichiers Cinzel, Syne, Space Grotesk et JetBrains Mono restent dans static/fonts/ mais ne sont plus chargés. */
 @font-face { font-family: "Inter"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/inter-latin-400-normal.woff2") format("woff2"); }
 @font-face { font-family: "Inter"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/inter-latin-700-normal.woff2") format("woff2"); }
 @font-face { font-family: "Inter"; font-style: normal; font-weight: 800; font-display: swap; src: url("/fonts/inter-latin-800-normal.woff2") format("woff2"); }
-@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 600; font-display: swap; src: url("/fonts/jetbrains-mono-latin-600-normal.woff2") format("woff2"); }
-@font-face { font-family: "JetBrains Mono"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/jetbrains-mono-latin-700-normal.woff2") format("woff2"); }
-@font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/space-grotesk-latin-400-normal.woff2") format("woff2"); }
-@font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 500; font-display: swap; src: url("/fonts/space-grotesk-latin-500-normal.woff2") format("woff2"); }
-@font-face { font-family: "Space Grotesk"; font-style: normal; font-weight: 600; font-display: swap; src: url("/fonts/space-grotesk-latin-600-normal.woff2") format("woff2"); }
-@font-face { font-family: "Syne"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/syne-latin-700-normal.woff2") format("woff2"); }
-@font-face { font-family: "Syne"; font-style: normal; font-weight: 800 900; font-display: swap; src: url("/fonts/syne-latin-800-normal.woff2") format("woff2"); }
 
 :root {
-  --bg: #08080f;
-  --surface: #0f0f1a;
+  /* Fond (JD, 2026-11-10) : teinte exacte de l'échantillon « couleur souhaitée » (docs/jd/2026-11-10/image(2).png). Avant : #08080f */
+  --bg: #0d0917;
+  /* Avant : #0f0f1a (presque égal au nouveau fond) ; un cran plus clair pour garder le pied de page et les cartes distincts */
+  --surface: #130e21;
   --surface-2: #14142b;
   --violet: #7b2fff;
   --violet-light: #bf7fff;
@@ -45,12 +38,12 @@
   --neon: 0 0 20px rgba(124, 58, 237, .3);
   --neon-hover: 0 0 28px rgba(139, 92, 246, .45);
   --ease: cubic-bezier(.16, 1, .3, 1);
-  --font-title: "Cinzel", Georgia, serif;
-  /* Pied de page : le texte « VMM. » garde Syne */
-  --font-logo: "Syne", system-ui, sans-serif;
-  --font-text: "Space Grotesk", system-ui, sans-serif;
-  --font-label: "JetBrains Mono", ui-monospace, monospace;
-  /* [À CONFIRMER avec JD] Le bandeau actuel est en Inter. Remplacer par var(--font-title) pour mettre la police des titres (Cinzel) partout. */
+  /* Typographie uniforme (JD, 2026-11-10) : Inter partout. Avant : Cinzel (titres), Syne (logo),
+     Space Grotesk (textes), JetBrains Mono (étiquettes), Inter (bandeau). */
+  --font-title: "Inter", system-ui, sans-serif;
+  --font-logo: "Inter", system-ui, sans-serif;
+  --font-text: "Inter", system-ui, sans-serif;
+  --font-label: "Inter", system-ui, sans-serif;
   --font-hero: "Inter", system-ui, sans-serif;
   --radius-sm: 8px;
   --radius-card-sm: .5rem;
@@ -79,8 +72,9 @@ a { color: var(--violet-light); }
 a:hover { color: var(--violet-light); }
 :focus-visible { outline: 2px solid var(--violet-light); outline-offset: 3px; }
 .nowrap { white-space: nowrap; }
-h1, h2, h3 { font-family: var(--font-title); font-weight: 900; line-height: 1.15; letter-spacing: -.01em; overflow-wrap: break-word; margin: 0 0 .5em; }
-h2 { font-weight: 900; font-size: clamp(2rem, 5vw, 3.5rem); }
+h1, h2, h3 { font-family: var(--font-title); font-weight: 700; line-height: 1.15; letter-spacing: -.01em; overflow-wrap: break-word; margin: 0 0 .5em; }
+h3 { font-weight: 800; } /* h3 reste en Inter 800 ; h1 et h2 sont en Syne 700 (2026-11-12) */
+h2 { font-weight: 700; font-size: clamp(2rem, 5vw, 3.5rem); }
 /* Titres : texte blanc, dernier mot en dégradé violet (span .accent ajouté au build) */
 h1, h2 { color: var(--title); }
 .accent {
@@ -159,7 +153,7 @@ ul { list-style: none; margin: 0; padding: 0; }
 .cta-row { margin-top: 2.5rem; }
 
 .glass {
-  background: rgba(15, 15, 26, .6);
+  background: rgba(19, 14, 33, .6);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   box-shadow: var(--card-glow);
@@ -173,13 +167,13 @@ ul { list-style: none; margin: 0; padding: 0; }
   top: 0;
   z-index: 50;
   /* Plus discret (JD, 2026-11-05) : fond plus transparent, flou léger, filet à peine visible */
-  background: rgba(8, 8, 15, .5);
+  background: rgba(13, 9, 23, .5);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(255, 255, 255, .05);
 }
 .header-inner { display: flex; align-items: center; justify-content: space-between; min-height: var(--header-h); gap: 1rem; }
-.logo { font: 900 1.5rem/1 var(--font-logo); color: var(--text); text-decoration: none; margin: 0; }
+.logo { font: 800 1.5rem/1 var(--font-logo); color: var(--text); text-decoration: none; margin: 0; }
 .logo span { color: var(--violet-light); }
 /* Logo : rotation seule sur l'axe vertical, en boucle, vitesse constante.
    Deux faces dos à dos : le revers est la même image retournée, pour que VMM se lise à l'endroit. */
@@ -227,7 +221,7 @@ ul { list-style: none; margin: 0; padding: 0; }
     position: absolute;
     inset: var(--header-h) 0 auto 0;
     padding: 8px var(--gutter) 16px;
-    background: rgba(8, 8, 15, .97);
+    background: rgba(13, 9, 23, .97);
     border-bottom: 1px solid var(--border);
     display: none;
   }
@@ -258,8 +252,8 @@ ul { list-style: none; margin: 0; padding: 0; }
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at center, transparent 35%, rgba(11, 11, 18, .85) 100%),
-    linear-gradient(180deg, rgba(8, 8, 15, .2) 0%, rgba(8, 8, 15, .45) 60%, var(--bg) 100%);
+    radial-gradient(ellipse at center, transparent 35%, rgba(13, 9, 23, .85) 100%),
+    linear-gradient(180deg, rgba(13, 9, 23, .2) 0%, rgba(13, 9, 23, .45) 60%, var(--bg) 100%);
 }
 .leak { position: absolute; border-radius: 50%; filter: blur(100px); mix-blend-mode: screen; opacity: .35; animation: leak-drift 14s ease-in-out infinite alternate; }
 .leak-violet { width: 40vmax; height: 30vmax; left: 10%; top: 5%; background: var(--hero-violet); }
@@ -285,7 +279,7 @@ ul { list-style: none; margin: 0; padding: 0; }
 .hero-title {
   /* Cinzel 900 comme les autres titres (demande de Natasha, 2026-11-03) ; avant : var(--font-hero), Inter 800, -.02em */
   font-family: var(--font-title);
-  font-weight: 900;
+  font-weight: 700;
   font-size: clamp(2.75rem, 11vw, 7.5rem);
   letter-spacing: -.01em;
   filter: drop-shadow(0 0 24px rgba(124, 58, 237, .35));
@@ -303,7 +297,7 @@ ul { list-style: none; margin: 0; padding: 0; }
   height: 44px;
   border-radius: 50%;
   border: 1px solid var(--border-strong);
-  background: rgba(8, 8, 15, .6);
+  background: rgba(13, 9, 23, .6);
   color: var(--text);
   font-size: .75rem;
   cursor: pointer;
@@ -334,7 +328,7 @@ html:not(.js) .hero-toggle { display: none; }
   z-index: -1;
   animation: halo-pulse 3.2s ease-in-out infinite alternate;
 }
-.page-hero h1 { font-weight: 900; font-size: clamp(2.5rem, 8vw, 5rem); }
+.page-hero h1 { font-weight: 700; font-size: clamp(2.5rem, 8vw, 5rem); }
 .section-tight { padding-top: 2rem; }
 
 /* Services : numéros en contour qui se remplissent */
@@ -417,7 +411,7 @@ html:not(.js) .hero-toggle { display: none; }
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: rgba(8, 8, 15, .65);
+  background: rgba(13, 9, 23, .65);
   border: 1px solid var(--border-strong);
   box-shadow: var(--neon);
   font-size: 1.1rem;
@@ -475,14 +469,14 @@ html:not(.js) .hero-toggle { display: none; }
 .contact-info .socials { margin-bottom: 0; }
 /* section.page-contact : le <body> de la page Contact porte aussi la classe page-contact */
 section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
-.page-contact h1 { font-weight: 900; font-size: clamp(2.5rem, 7vw, 4.5rem); }
+.page-contact h1 { font-weight: 700; font-size: clamp(2.5rem, 7vw, 4.5rem); }
 .faq { max-width: 52rem; }
 .faq details { border-top: 1px solid var(--border); }
 .faq summary { min-height: 48px; display: flex; align-items: center; cursor: pointer; font-weight: 600; padding-block: 10px; }
 .faq details p { color: var(--text-2); }
 
 .page-simple { min-height: 60vh; }
-.page-simple h1 { font-weight: 900; font-size: clamp(2.5rem, 7vw, 4.5rem); }
+.page-simple h1 { font-weight: 700; font-size: clamp(2.5rem, 7vw, 4.5rem); }
 
 /* Pied de page */
 .site-footer { border-top: 1px solid var(--border); padding-block: 3rem 2rem; background: var(--surface); }
@@ -513,7 +507,7 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
   color: var(--text);
 }
 .lightbox[open] { display: grid; place-items: center; }
-.lightbox::backdrop { background: rgba(8, 8, 15, .92); backdrop-filter: blur(8px); }
+.lightbox::backdrop { background: rgba(13, 9, 23, .92); backdrop-filter: blur(8px); }
 .lightbox-frame { aspect-ratio: 16 / 9; width: min(100%, calc((100svh - 80px) * 16 / 9)); border-radius: var(--radius-sm); overflow: hidden; background: #000; }
 .lightbox-frame.vertical { aspect-ratio: 9 / 16; width: min(100%, calc((100svh - 80px) * 9 / 16)); }
 .lightbox-frame:empty { display: none; }
@@ -548,7 +542,7 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
 /* Voile : le texte, les boutons et le menu restent lisibles */
 .bg-video-veil {
   position: absolute; inset: 0;
-  background: linear-gradient(180deg, rgba(8, 8, 15, .62) 0%, rgba(8, 8, 15, .55) 40%, rgba(8, 8, 15, .9) 100%);
+  background: linear-gradient(180deg, rgba(13, 9, 23, .62) 0%, rgba(13, 9, 23, .55) 40%, rgba(13, 9, 23, .9) 100%);
 }
 /* Ordi sans version 16:9 : le clip 9:16 entier au centre, sur la même vidéo en plein cadre, floue et agrandie
    (scale 1.1 cache les bords flous). Avec « réduire les animations », elle reste sur son poster flou. */
@@ -562,8 +556,8 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
   /* Voile surtout derrière le texte (à gauche) : les couleurs et le mouvement restent visibles des deux côtés */
   .bg-video[data-portrait-ordi] .bg-video-veil {
     background:
-      linear-gradient(90deg, rgba(8, 8, 15, .78) 0%, rgba(8, 8, 15, .5) 30%, rgba(8, 8, 15, .12) 55%, rgba(8, 8, 15, 0) 72%),
-      linear-gradient(180deg, rgba(8, 8, 15, .3) 0%, rgba(8, 8, 15, 0) 20%, rgba(8, 8, 15, 0) 72%, rgba(8, 8, 15, .7) 100%);
+      linear-gradient(90deg, rgba(13, 9, 23, .78) 0%, rgba(13, 9, 23, .5) 30%, rgba(13, 9, 23, .12) 55%, rgba(13, 9, 23, 0) 72%),
+      linear-gradient(180deg, rgba(13, 9, 23, .3) 0%, rgba(13, 9, 23, 0) 20%, rgba(13, 9, 23, 0) 72%, rgba(13, 9, 23, .7) 100%);
   }
 }
 /* Projets (/portfolio) : aucun voile sombre, ordi et mobile. Le fond flou garde sa pleine luminosité
@@ -586,7 +580,7 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
 .client-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
 .client-card:hover .client-card-img img { transform: scale(1.04); }
 .client-card-text { display: flex; flex-direction: column; gap: .2rem; padding: 1rem 1.25rem 1.25rem; }
-.client-card-text strong { font: 900 1.25rem/1.2 var(--font-title); color: var(--title); }
+.client-card-text strong { font: 800 1.25rem/1.2 var(--font-title); color: var(--title); }
 
 /* Page client */
 .back-row { margin: 0 0 1.5rem; }
@@ -602,7 +596,7 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
 .full-hero::before { display: none; }
 .full-hero .bg-video-media { object-position: var(--focal-mobile, 50% 50%); }
 @media (min-width: 768px) { .full-hero .bg-video-media { object-position: var(--focal-ordi, 50% 50%); } }
-.full-hero .bg-video-veil { background: linear-gradient(180deg, rgba(8, 8, 15, .35) 0%, rgba(8, 8, 15, .05) 35%, rgba(8, 8, 15, .25) 60%, rgba(8, 8, 15, .85) 100%); }
+.full-hero .bg-video-veil { background: linear-gradient(180deg, rgba(13, 9, 23, .35) 0%, rgba(13, 9, 23, .05) 35%, rgba(13, 9, 23, .25) 60%, rgba(13, 9, 23, .85) 100%); }
 .hero-word {
   margin: 0;
   font-size: clamp(2.6rem, 11vw, 8rem);
@@ -620,7 +614,7 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
   position: absolute; right: var(--gutter); bottom: var(--gutter);
   width: 44px; height: 44px; border-radius: 50%;
   display: grid; place-items: center;
-  border: 1px solid var(--border-strong); background: rgba(8, 8, 15, .55); color: var(--text);
+  border: 1px solid var(--border-strong); background: rgba(13, 9, 23, .55); color: var(--text);
   font-size: .7rem; cursor: pointer;
 }
 html:not(.js) .bg-toggle { display: none; }
@@ -702,12 +696,12 @@ html:not(.js) .bg-toggle { display: none; }
 @media (min-width: 900px) { .vision-portrait:not(.is-cutout) img { max-height: min(640px, calc(100svh - var(--header-h) - 4rem)); } }
 /* Services : titre « NOS / SERVICES. » en haut à gauche, sous le menu, puis le texte d'intro (même ordre sur mobile) */
 .page-hero.full-hero.is-top { align-items: flex-start; padding-top: clamp(2rem, 7vh, 4.5rem); }
-.full-hero.is-top .bg-video-veil { background: linear-gradient(180deg, rgba(8, 8, 15, .78) 0%, rgba(8, 8, 15, .45) 38%, rgba(8, 8, 15, .12) 70%, rgba(8, 8, 15, .55) 100%); }
+.full-hero.is-top .bg-video-veil { background: linear-gradient(180deg, rgba(13, 9, 23, .78) 0%, rgba(13, 9, 23, .45) 38%, rgba(13, 9, 23, .12) 70%, rgba(13, 9, 23, .55) 100%); }
 .hero-stack { margin: 0 0 1.25rem; font-size: clamp(2.6rem, 11vw, 7rem); line-height: 1; letter-spacing: .02em; }
 .hero-stack .hero-line, .hero-stack .hero-word { display: block; font-size: inherit; white-space: nowrap; }
 .hero-stack .hero-word { background: var(--hero-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
 .hero-stack .hero-line { color: var(--title); }
-.hero-intro { color: var(--text); max-width: 34rem; text-shadow: 0 1px 12px rgba(8, 8, 15, .6); }
+.hero-intro { color: var(--text); max-width: 34rem; text-shadow: 0 1px 12px rgba(13, 9, 23, .6); }
 /* Ordi : le bloc titre + intro tient dans la bande floue de gauche de la vidéo 16:9.
    La partie nette occupe le tiers central de la vidéo (cover) : sa largeur dépend du format de l'écran. */
 /* Écran assez large (paysage) seulement ; en portrait (tablette), le bloc garde sa place normale. */
@@ -749,7 +743,7 @@ h1 .h1-sub {
   -webkit-text-fill-color: #b4b4cc;
   background: none;
   filter: none;
-  text-shadow: 0 1px 10px rgba(8, 8, 15, .7);
+  text-shadow: 0 1px 10px rgba(13, 9, 23, .7);
   white-space: normal;
 }
 
@@ -810,7 +804,7 @@ h1 .h1-sub {
 .logo-btn:hover .logo-btn-face, .logo-btn:focus-visible .logo-btn-face { box-shadow: 0 0 0 2px var(--hero-violet), 0 0 24px rgba(124, 58, 237, .35); transform: translateY(-2px); }
 .logo-btn-img, .logo-btn-img img { display: block; width: 100%; height: 100%; border-radius: inherit; }
 .logo-btn-img img { object-fit: contain; }
-.logo-btn-name { font: 900 clamp(1.25rem, 2.2vw, 1.6rem)/1.15 var(--font-title); letter-spacing: .02em; }
+.logo-btn-name { font: 800 clamp(1.25rem, 2.2vw, 1.6rem)/1.15 var(--font-title); letter-spacing: .02em; }
 .logo-btn-text { display: flex; flex-direction: column; gap: .35rem; }
 .logo-btn-text strong { font-weight: 700; font-size: 1.05rem; }
 .logo-btn-count { font-size: .9rem; color: var(--lavande); }
@@ -845,7 +839,7 @@ h1 .h1-sub {
 .library-arrow {
   flex: 0 0 auto; width: 44px; height: 44px; border-radius: 50%;
   display: grid; place-items: center; cursor: pointer;
-  border: 1px solid var(--border-strong); background: rgba(8, 8, 15, .7); color: var(--text); font-size: 1.1rem;
+  border: 1px solid var(--border-strong); background: rgba(13, 9, 23, .7); color: var(--text); font-size: 1.1rem;
   transition: border-color .3s var(--ease), box-shadow .3s var(--ease), opacity .3s;
 }
 .library-arrow:hover, .library-arrow:focus-visible { border-color: var(--hero-violet); box-shadow: 0 0 20px rgba(124, 58, 237, .4); }
@@ -867,7 +861,7 @@ html:not(.js) .library-arrow { display: none; }
 .hero-title { background: var(--hero-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; width: fit-content; max-width: 100%; }
 .hero-title .accent { background: none; -webkit-text-fill-color: inherit; color: inherit; }
 /* Description d'un bandeau plein écran : sous le titre, en bas */
-.full-hero .hero-intro { margin: 1rem 0 0; max-width: 40rem; color: var(--hero-text); text-shadow: 0 1px 8px rgba(8, 8, 15, .7); }
+.full-hero .hero-intro { margin: 1rem 0 0; max-width: 40rem; color: var(--hero-text); text-shadow: 0 1px 8px rgba(13, 9, 23, .7); }
 /* Contact : seule la couche vidéo du logo animé passe à 70 % d'opacité */
 .page-contact .bg-video-media, .page-contact .bg-video-poster, .page-contact .bg-video-blur { opacity: .7; }
 /* Repères de Services : visuels de JD au lieu des icônes Lucide */
@@ -880,18 +874,18 @@ html:not(.js) .library-arrow { display: none; }
 
 /* ---------- Audit JD du 2026-11-07 (PDF Accueil du 2026-11-05 et PDF client du 2026-11-04) ---------- */
 /* Accueil, héros : VIDEOS blanc, MAKE violet, MONEY rose-violet, sans rectangle ; PASSION et GROW mauves */
-.hero-title.hero-title-jd { background: none; -webkit-text-fill-color: currentColor; color: #fff; width: auto; font-family: var(--font-hero); font-weight: 800; letter-spacing: .01em; font-size: clamp(2.3rem, 6.4vw, 6rem); white-space: nowrap; }
+.hero-title.hero-title-jd { background: none; -webkit-text-fill-color: currentColor; color: #fff; width: auto; font-family: var(--font-hero); font-weight: 700; letter-spacing: .01em; font-size: clamp(2.3rem, 6.4vw, 6rem); white-space: nowrap; }
 @media (max-width: 559px) { .hero-title.hero-title-jd { white-space: normal; font-size: clamp(2.6rem, 13vw, 3.5rem); } }
 .hero-title-jd .ht-videos { color: #fff; }
 .hero-title-jd .ht-make { color: #8b5cf6; }
 .hero-title-jd .ht-money { color: #e04fd0; }
-.hero-signature { max-width: 46rem; text-transform: uppercase; letter-spacing: .02em; text-shadow: 0 1px 10px rgba(8, 8, 15, .6); }
+.hero-signature { max-width: 46rem; text-transform: uppercase; letter-spacing: .02em; text-shadow: 0 1px 10px rgba(13, 9, 23, .6); }
 .hero-signature .accent, .home-portfolio h2 .accent, .home-team .accent, .home-services h2 .accent, .home-contact h2 .accent {
   background: none; -webkit-text-fill-color: currentColor; color: var(--violet-light);
 }
-.hero-text { color: var(--hero-text); text-shadow: 0 1px 10px rgba(8, 8, 15, .6); }
+.hero-text { color: var(--hero-text); text-shadow: 0 1px 10px rgba(13, 9, 23, .6); }
 .hero-cta { border-radius: 10px; }
-.page-accueil .hero-vignette { background: linear-gradient(180deg, rgba(8, 8, 15, .1) 0%, rgba(8, 8, 15, .25) 55%, rgba(8, 8, 15, .8) 100%); }
+.page-accueil .hero-vignette { background: linear-gradient(180deg, rgba(13, 9, 23, .1) 0%, rgba(13, 9, 23, .25) 55%, rgba(13, 9, 23, .8) 100%); }
 .page-accueil .hero-video { filter: none; }
 .page-accueil .btn-solid, .collection-screen .btn-solid { border-radius: 10px; }
 
@@ -942,9 +936,9 @@ a.yt-tile:hover .thumb, a.yt-tile:focus-visible .thumb { box-shadow: 0 0 0 1px r
 /* Pages client et Coulisses : un seul écran ; titre blanc seul sur le héros, miniatures et flèches posées sur la vidéo */
 .page-hero.collection-screen { min-height: calc(100svh - var(--header-h)); height: calc(100svh - var(--header-h)); padding: 0; display: flex; align-items: stretch; }
 .collection-screen::before { display: none; }
-.collection-screen .bg-video-veil { background: linear-gradient(180deg, rgba(8, 8, 15, .45) 0%, rgba(8, 8, 15, .1) 35%, rgba(8, 8, 15, .15) 65%, rgba(8, 8, 15, .55) 100%); }
+.collection-screen .bg-video-veil { background: linear-gradient(180deg, rgba(13, 9, 23, .45) 0%, rgba(13, 9, 23, .1) 35%, rgba(13, 9, 23, .15) 65%, rgba(13, 9, 23, .55) 100%); }
 .collection-inner { position: relative; display: flex; flex-direction: column; justify-content: space-between; gap: 1.5rem; padding-block: clamp(4.5rem, 16vh, 9rem) clamp(1rem, 4vh, 2.5rem); }
-.collection-title { margin: 0; color: #fff; font-family: var(--font-hero); font-weight: 800; text-transform: uppercase; letter-spacing: .01em; font-size: clamp(2.2rem, 7vw, 4.5rem); line-height: 1.05; text-shadow: 0 2px 18px rgba(8, 8, 15, .55); }
+.collection-title { margin: 0; color: #fff; font-family: var(--font-hero); font-weight: 700; text-transform: uppercase; letter-spacing: .01em; font-size: clamp(2.2rem, 7vw, 4.5rem); line-height: 1.05; text-shadow: 0 2px 18px rgba(13, 9, 23, .55); }
 .collection-library { width: 100%; max-width: min(760px, calc(71svh + 4rem + 88px)); margin-inline: auto; }
 .collection-screen .library-row { gap: 1rem; }
 .collection-screen .library-track { grid-auto-columns: calc((100% - 2rem) / 3); padding: .5rem .25rem; scrollbar-width: none; }
@@ -953,9 +947,186 @@ a.yt-tile:hover .thumb, a.yt-tile:focus-visible .thumb { box-shadow: 0 0 0 1px r
 .collection-screen .yt-tile .thumb { border-radius: var(--radius-card); border: 0; }
 .collection-screen .library-arrow { background: var(--jd-violet); border: 0; color: #fff; font-size: 1.6rem; line-height: 1; }
 .collection-screen .library-arrow:hover, .collection-screen .library-arrow:focus-visible { background: var(--mauve); box-shadow: 0 0 20px rgba(124, 58, 237, .45); }
-.library-count { margin: .5rem 0 0; text-align: center; font: 600 .875rem/1.4 var(--font-label); color: #fff; text-shadow: 0 1px 8px rgba(8, 8, 15, .8); }
+.library-count { margin: .5rem 0 0; text-align: center; font: 600 .875rem/1.4 var(--font-label); color: #fff; text-shadow: 0 1px 8px rgba(13, 9, 23, .8); }
 html:not(.js) .library-count { display: none; }
 .collection-screen .bg-toggle { bottom: auto; top: 1rem; }
 /* Titre long (Coulisses / Making-of / Annonces) : plus petit */
 .collection-title.is-long { font-size: clamp(1.6rem, 4.2vw, 3.4rem); }
 @media (max-height: 700px) and (min-width: 768px) { .collection-inner { padding-top: 3rem; } }
+
+/* ---------- Ajustements JD du 2026-11-10 (captures dans docs/jd/2026-11-10/) ---------- */
+/* 1. Typographie uniforme, comme videosmakemoney.ca : Inter 800 pour les titres, 400 pour les textes, 700 pour les boutons et étiquettes */
+body { line-height: 1.55; }
+h1, h2, .hero-word, .hero-title, .collection-title, .vision-title, .home-team-title, .hero-stack { font-family: "Inter", system-ui, sans-serif; font-weight: 700; letter-spacing: -.02em; }
+.logo-btn-name { font-family: "Inter", system-ui, sans-serif; font-weight: 800; letter-spacing: -.02em; }
+h3 { font-family: "Inter", system-ui, sans-serif; letter-spacing: -.01em; }
+p, .jd-lead, .intro, .hero-text, dd, .contact-form input, .contact-form select, .contact-form textarea { font-weight: 400; line-height: 1.55; }
+.btn, .btn-solid, .site-nav a, .menu-toggle, .label, .jd-label, .jd-role, .lang-switch, .contact-form label, .scroll-cue, .library-count { font-weight: 700; }
+.label, .jd-label, .jd-role { letter-spacing: .08em; }
+
+/* 2. Dégradé des titres principaux seulement (H1 des bandeaux, H2 de chaque écran) : rendu .v4-jd-title-grad du site actuel.
+   Tout le titre porte le dégradé ; les mots *…* (.accent) n'ont plus de couleur à part dans ces titres. */
+h1, .jd-screen h2:not(.jd-label), .section h2:not(.label):not(.jd-label) {
+  background-image: var(--gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  width: fit-content;
+  max-width: 100%;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  text-shadow: none;
+}
+h1 .accent, .jd-screen h2 .accent, .section h2 .accent,
+h1 .ht-videos, h1 .ht-make, h1 .ht-money, h1 .hero-line, h1 .hero-word {
+  background: none;
+  color: inherit;
+  -webkit-text-fill-color: inherit;
+  filter: none;
+  text-shadow: none;
+}
+/* Le bandeau d'accueil (VIDEOS MAKE MONEY) : un seul dégradé sur toute la ligne */
+.hero-title.hero-title-jd { background-image: var(--gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; width: fit-content; }
+/* Les titres sur vidéo gardent leur lisibilité : ombre portée (text-shadow passerait par-dessus le dégradé) */
+.collection-title, .bg-clip-work h1 { filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .55)); }
+/* Exception unique : « Parlons de votre projet » (page Contact) garde ses couleurs (blanc + mot en violet) */
+#contact-page-title { background: none; color: var(--title); -webkit-text-fill-color: currentColor; width: auto; }
+#contact-page-title .accent { background: var(--accent-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+
+/* 4. Contact : icônes de JD (enveloppe, repère) à gauche du courriel et de la zone */
+.contact-details .has-icon { display: flex; align-items: flex-start; gap: .6rem; }
+/* L'icône s'aligne sur la première ligne du texte (la zone tient sur plusieurs lignes) */
+.contact-details .has-icon .contact-icon { margin-top: .15em; }
+.contact-icon, .contact-icon img { display: block; flex: 0 0 24px; width: 24px; height: 24px; object-fit: contain; }
+
+/* 5. Contact : une seule couche visible à 70 %. Le poster s'efface dès que la vidéo joue (data-playing posé par main.js). */
+.bg-video[data-playing] .bg-video-poster, .bg-video[data-playing] .bg-video-blur { visibility: hidden; }
+
+/* 7. Accueil, écran 4 : photo du studio à droite, fondue vers la gauche ; 6 services en 2 colonnes (icône | filet | texte) */
+.home-services { overflow: hidden; isolation: isolate; }
+.home-services-studio { margin: 2rem 0 0; }
+.home-services-studio img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; object-position: 50% 60%; border-radius: var(--radius-card-md); }
+.hp-svc-text { padding-left: 1rem; border-left: 1px solid rgba(255, 255, 255, .22); }
+.hp-svc-text strong { font-size: 1.05rem; }
+.hp-svc-text span { color: var(--hero-body); font-weight: 400; }
+@media (min-width: 900px) {
+  .home-services { display: flex; align-items: center; min-height: calc(100svh - var(--header-h)); }
+  .home-services .jd-wrap { position: relative; z-index: 1; }
+  .home-services-text { max-width: 54%; }
+  .home-services-studio { position: absolute; inset: 0 0 0 auto; width: 58%; margin: 0; z-index: 0; }
+  .home-services-studio picture, .home-services-studio img { height: 100%; }
+  .home-services-studio img { aspect-ratio: auto; border-radius: 0; object-position: 50% 70%;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 38%); mask-image: linear-gradient(90deg, transparent 0%, #000 38%); }
+  .home-services .hp-svc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 2rem; }
+}
+
+/* 8 et 9. « Cliquez pour visionner » sous le nombre de vidéos et sous la photo Coulisses */
+.logo-btn-cta { font-size: .8125rem; font-weight: 400; color: var(--text-2); }
+.pf-coulisses-grid { display: grid; gap: 2rem; justify-items: center; text-align: center; }
+.pf-coulisses-grid .coulisses-link { margin-top: 0; }
+.pf-coulisses .pf-coulisses-grid .jd-label-line { justify-content: center; }
+.pf-coulisses-grid h2 { margin-inline: auto; }
+.pf-coulisses-grid .jd-lead { margin-inline: auto; }
+@media (min-width: 900px) {
+  .pf-coulisses-grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); align-items: center; justify-items: stretch; text-align: left; gap: 3rem; }
+  .pf-coulisses .pf-coulisses-grid .jd-label-line { justify-content: flex-start; }
+  .pf-coulisses-grid h2, .pf-coulisses-grid .jd-lead { margin-inline: 0; }
+  .pf-coulisses-grid h2 { font-size: clamp(2.4rem, 4.6vw, 4rem); }
+  .pf-coulisses-grid .pf-coulisses-row { justify-self: center; }
+  .pf-coulisses-grid .coulisses-photo { width: min(360px, 100%); max-height: calc(100svh - var(--header-h) - 9rem); }
+}
+
+/* 10. Accueil, écran 3 : titre et photos plus grands, l'écran visible est rempli */
+.home-team .home-team-title { font-size: clamp(2.6rem, 5vw, 4.25rem); line-height: 1.1; }
+@media (min-width: 900px) {
+  .home-team { display: flex; align-items: center; min-height: calc(100svh - var(--header-h)); padding-block: 3rem; }
+  .home-team .home-split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .home-team-photos img { aspect-ratio: auto; height: min(calc(100svh - var(--header-h) - 6rem), 760px); object-position: 50% 25%; }
+}
+
+/* 11. Bouton transparent « Voir notre travail » (style exact du site actuel), à droite du bouton plein */
+.hero-ctas { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.btn-ghost {
+  background: transparent; border: 1px solid #1e1e3a; color: #8b8ba8; border-radius: 8px;
+  padding: 16px 32px; font: 700 16px/1.2 "Inter", system-ui, sans-serif;
+  transition: border-color .3s, color .3s;
+}
+.btn-ghost svg { flex: none; width: 16px; height: 16px; }
+.btn-ghost:hover, .btn-ghost:focus-visible { border-color: rgba(123, 47, 255, .5); color: #fff; }
+@media (max-width: 559px) { .hero-ctas { flex-direction: column; align-items: stretch; } }
+
+/* 12. Accueil seulement (corrigé le 2026-11-12, maquettes image(7), image(14), image(19)) :
+   ordi : écrans pleine largeur (héros, écran 2) centrés ; écrans à 2 colonnes (3, 4, 5) alignés à gauche dans leur colonne.
+   mobile (une colonne) : tous les écrans centrés. */
+.page-accueil .hero-content { text-align: center; }
+.page-accueil .hero-content > * { margin-inline: auto; }
+.page-accueil .hero-ctas { justify-content: center; }
+.page-accueil .summary-band .page-summary { margin-inline: auto; text-align: center; }
+.page-accueil .home-portfolio { text-align: center; }
+.page-accueil .home-portfolio .jd-label-line { justify-content: center; }
+.page-accueil .home-portfolio h2, .page-accueil .home-portfolio .jd-lead { margin-inline: auto; }
+@media (max-width: 899px) {
+  .page-accueil .jd-screen { text-align: center; }
+  .page-accueil .jd-screen .jd-label-line { justify-content: center; }
+  .page-accueil .jd-screen h2, .page-accueil .jd-screen .jd-lead { margin-inline: auto; }
+  .page-accueil .hp-svc { text-align: left; }
+}
+
+/* 13. En-tête : bouton « Prendre rendez-vous » / « Book a Call » à l'extrême droite */
+.site-nav a.btn-header-cta {
+  justify-content: center; background: #7b2fff; color: #fff; font-size: 14px; font-weight: 600;
+  padding: 10px 20px; border-radius: 8px; box-shadow: 0 0 20px rgba(123, 47, 255, .3); transition: box-shadow .3s;
+}
+.site-nav a.btn-header-cta:hover, .site-nav a.btn-header-cta:focus-visible { color: #fff; box-shadow: 0 0 30px rgba(123, 47, 255, .5); }
+@media (min-width: 900px) { .site-nav li.nav-cta { margin-left: .5rem; } }
+@media (max-width: 899px) { .site-nav li.nav-cta { margin-top: .5rem; } .site-nav a.btn-header-cta { width: 100%; } }
+
+/* 14. À propos : photos Coulisses agrandissables (visionneuse plein écran) */
+.coulisses-zoom { display: block; border-radius: var(--radius-card); cursor: zoom-in; }
+.coulisses-zoom:focus-visible { outline: 2px solid var(--violet-light); outline-offset: 3px; }
+.photo-viewer[open] { display: grid; place-items: center; padding: 56px 0 16px; }
+.photo-viewer img { display: block; width: 100%; height: 100%; max-width: 100vw; max-height: calc(100dvh - 72px); object-fit: contain; touch-action: pan-y; }
+.photo-viewer-nav {
+  position: fixed; top: 50%; translate: 0 -50%; width: 48px; height: 48px; border-radius: 50%;
+  display: grid; place-items: center; border: 1px solid var(--border-strong); background: rgba(13, 9, 23, .7);
+  color: var(--text); font-size: 1.6rem; line-height: 1; cursor: pointer;
+}
+.photo-viewer-nav.is-prev { left: 8px; }
+.photo-viewer-nav.is-next { right: 8px; }
+.photo-viewer-count { position: fixed; top: 20px; left: 50%; translate: -50% 0; margin: 0; font-size: .875rem; color: var(--text-2); }
+
+/* 15. Pied de page : zones desservies (liste de JD) ; celles qui ont une page gardent leur lien */
+.footer-zones li > span { display: inline-flex; align-items: center; min-height: 44px; padding: 0 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); }
+
+/* 16. Pied de page : logo de JD (image, sans filtre ni étirement) */
+.footer-logo { display: inline-block; margin: 0 0 1rem; }
+.footer-logo img { display: block; width: auto; height: 64px; }
+
+/* 17. Pied de page : réseaux sociaux en logos seulement (nom accessible gardé) */
+.socials.icons-only a { justify-content: center; min-width: 44px; padding: 0 12px; }
+.socials.icons-only .social-icon { width: 22px; height: 22px; }
+/* Titres centrés (fins de page, pages locales) : le titre en dégradé (fit-content) reste centré */
+.jd-end h2, .pf-end h2, .zone-cta h2 { margin-inline: auto; }
+@media (max-width: 899px) { .home-contact-photo img { max-height: 62svh; width: auto; margin-inline: auto; } }
+
+/* ---------- Corrections PR #22 (Natasha, 2026-11-12) ---------- */
+/* 1. Titres principaux en Syne 700, comme le H1 de videosmakemoney.ca/services (docs/jd/2026-11-10/image.png, image(9).png) :
+   majuscules, interlettrage -0.025em, interligne .95 pour les H1 des héros. Textes, boutons, menu et étiquettes restent en Inter. */
+@font-face { font-family: "Syne"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/syne-latin-700-normal.woff2") format("woff2"); }
+h1, h2, .hero-word, .hero-title, .collection-title, .vision-title, .home-team-title, .hero-stack {
+  font-family: "Syne", "Inter", system-ui, sans-serif; font-weight: 700; letter-spacing: -.025em;
+}
+h1.jd-label, h2.jd-label, h2.label { font-family: var(--font-label); letter-spacing: .12em; }
+.hero-title, .hero-word, .hero-stack, .collection-title { text-transform: uppercase; line-height: .95; }
+
+/* 2. Dégradé de JD (--gradient : #7C3AED → #3B5BFF → #FF3CAC) aussi sur les H1 Portfolio / À propos (.hero-word).
+   Ancien dégradé (refusé par JD, image(11).png) : linear-gradient(90deg, #8b5cf6 0%, #ff3cac 55%, #3b5bff 100%) */
+:root { --hero-gradient: var(--gradient); }
+.hero-word, h1 .hero-word, .hero-stack .hero-word {
+  background: var(--gradient); -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 22px rgba(124, 58, 237, .35));
+}
+/* Bandeau d'accueil « VIDEOS MAKE MONEY » : même police que les autres H1 (la règle .hero-title-jd plus haut imposait Inter 800) */
+.hero-title.hero-title-jd { font-family: "Syne", "Inter", system-ui, sans-serif; font-weight: 700; letter-spacing: -.025em; }
