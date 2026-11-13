@@ -9,11 +9,33 @@
   const nav = document.getElementById('menu');
   const setMenu = (open) => {
     nav.classList.toggle('open', open);
+    // Menu ouvert : la page ne défile plus derrière (CSS html.menu-open, mobile seulement)
+    root.classList.toggle('menu-open', open);
     toggle.setAttribute('aria-expanded', String(open));
     toggle.textContent = open ? toggle.dataset.close : toggle.dataset.open;
   };
   toggle?.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
   nav?.addEventListener('click', (e) => { if (e.target.closest('a')) setMenu(false); });
+  if (toggle && nav) {
+    // Échap ferme le menu (le focus revient au bouton s'il était dans le menu) ; un toucher hors du menu le ferme
+    // sans activer ce qui est dessous.
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape' || !nav.classList.contains('open')) return;
+      const inside = nav.contains(document.activeElement);
+      setMenu(false);
+      if (inside) toggle.focus();
+    });
+    document.addEventListener('click', (e) => {
+      if (!nav.classList.contains('open') || nav.contains(e.target) || toggle.contains(e.target)) return;
+      e.preventDefault();
+      e.stopPropagation();
+      setMenu(false);
+    }, true);
+    // Défilement tactile bloqué derrière le menu ouvert (complète overflow: hidden là où il ne suffit pas)
+    document.addEventListener('touchmove', (e) => {
+      if (nav.classList.contains('open') && !nav.contains(e.target)) e.preventDefault();
+    }, { passive: false });
+  }
 
   // Vidéo du bandeau : pause/lecture, et pas de lecture auto si « réduire les animations »
   const heroVideo = document.querySelector('.hero-video');
@@ -128,14 +150,27 @@
         const other = gsap.utils.toArray('[data-reveal]:not(.jd-screen [data-reveal])').filter((el) => !el.classList.contains('is-visible'));
         if (other.length) gsap.set(other, { opacity: 0, y: 24 });
         if (jd.length) gsap.set(jd, { opacity: 0, y: 20 });
-        if (jd.length) ScrollTrigger.batch(jd, {
-          start: 'top 90%',
-          once: true,
-          onEnter: (els) => {
-            els.forEach((el) => el.classList.add('is-visible'));
-            gsap.to(els, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.12, overwrite: true });
-          },
-        });
+        // Révélés par écran : les éléments d'une section apparaissent ensemble quand la moitié de la section (ou de
+        // l'écran) est visible, y compris ceux qui touchent le bas de l'écran (avant, ils pouvaient rester invisibles).
+        if (jd.length) {
+          const groups = new Map();
+          jd.forEach((el) => {
+            const screen = el.closest('.jd-screen');
+            if (!groups.has(screen)) groups.set(screen, []);
+            groups.get(screen).push(el);
+          });
+          const reveal = new IntersectionObserver((entries) => {
+            entries.forEach(({ target, isIntersecting, intersectionRatio, intersectionRect, rootBounds }) => {
+              const half = intersectionRatio >= 0.5 || (rootBounds && intersectionRect.height >= rootBounds.height * 0.5);
+              if (!isIntersecting || !half) return;
+              reveal.unobserve(target);
+              const els = groups.get(target);
+              els.forEach((el) => el.classList.add('is-visible'));
+              gsap.to(els, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.12, overwrite: true });
+            });
+          }, { threshold: [0, 0.25, 0.5, 0.75, 1] });
+          groups.forEach((_, screen) => reveal.observe(screen));
+        }
         if (other.length) ScrollTrigger.batch(other, {
           start: 'top 90%',
           once: true,

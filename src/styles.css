@@ -1456,7 +1456,47 @@ main > .summary-band-end { scroll-snap-align: start; }
 }
 
 /* === MOBILE A — défilement === */
-
+/* A1 — Contact : la section ne doit pas devenir un conteneur de défilement (overflow: hidden), sinon les arrêts
+   « Coordonnées » et « Formulaire » appartiennent à la section et non à la page, et le geste saute à la FAQ.
+   Le clip de fond reste rogné à la section par clip-path (overflow: clip ne suffit pas au toucher). */
+@media (max-width: 959px) {
+  .page-contact.has-bg-video { overflow: visible; }
+  .page-contact .bg-video { clip-path: inset(0); }
+}
+/* A2 — Un geste = un écran : chaque arrêt retient le défilement (pas sur les pages en aimantation douce) */
+@media (max-width: 899px) {
+  main > section, main > .summary-band-end, .end-screen { scroll-snap-stop: always; }
+}
+@media (max-width: 959px) {
+  .page-contact .contact-info, .page-contact .contact-form { scroll-snap-stop: always; }
+}
+/* A3 — Fin de page (pages FR) : bande de description (accueil) + pied de page = un écran entier, aligné en haut
+   sous l'en-tête et calé en bas, sans laisser voir la section précédente. Sur ordi, l'enveloppe est neutre. */
+@media (max-width: 899px) {
+  .end-screen { scroll-snap-align: start; min-height: calc(100svh - var(--header-h)); display: flex; flex-direction: column; justify-content: flex-end; }
+  .end-screen > .summary-band-end { scroll-snap-align: none; }
+  /* Écran trop bas pour bande + pied (accueil à 360 × 740 et 390 × 664) : 2e arrêt au bas du pied, qui reste atteignable.
+     Quand tout tient, cet arrêt se confond avec celui de l'enveloppe. */
+  .end-screen > .site-footer { scroll-snap-align: end; }
+  /* Le pied remplit le reste de l'écran ; ses blocs se répartissent (pas de grand vide au-dessus du logo) */
+  .end-screen > .site-footer { flex: 1 0 auto; display: flex; flex-direction: column; }
+  .end-screen > .site-footer > .footer-inner { flex: 1 0 auto; align-content: space-evenly; }
+  /* Pages locales et techniques (aimantation douce) : pied de page comme avant, sans écran plein */
+  html:has(.zone-hero) .end-screen, html:has(.page-simple) .end-screen { display: block; min-height: 0; scroll-snap-align: none; scroll-snap-stop: normal; }
+  html:has(.zone-hero) .end-screen > .site-footer, html:has(.page-simple) .end-screen > .site-footer { scroll-snap-align: end; display: block; }
+}
+@media (min-width: 900px) {
+  .end-screen > .summary-band-end { scroll-snap-align: start; }
+}
+/* A4 — En-tête = exactement --header-h : le filet du bas devient une ombre de 1 px juste dessous (même couleur, même place) */
+@media (max-width: 899px) {
+  .site-header { border-bottom: 0; box-shadow: 0 1px 0 rgba(255, 255, 255, .05); }
+}
+/* A5 — Menu ouvert : la page ne défile plus derrière (position et aimantation gardées à la fermeture) */
+@media (max-width: 899px) {
+  html.menu-open { overscroll-behavior: none; }
+  html.menu-open body { overflow: hidden; }
+}
 /* === FIN A === */
 
 /* === MOBILE B — tout tient dans l'écran === */
