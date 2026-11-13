@@ -1424,3 +1424,33 @@ main > section.jd-screen { display: flex; flex-direction: column; justify-conten
 /* Pages locales (texte provisoire, beaucoup de contenu) et pages techniques : aimantation douce, le contenu long défile librement */
 html:has(.zone-hero), html:has(.page-simple) { scroll-snap-type: y proximity; }
 @media (max-width: 899px) and (max-height: 760px) { .jd-vision:not(.has-premiere) .vision-photo img { max-height: 24svh; } }
+
+/* Corrections PR #24 (Natasha, 2026-11-13) */
+/* Fin de page : la bande de description (accueil) est son propre arrêt ; le pied de page, compacté sur mobile,
+   tient dans l'écran et s'aligne par le bas : rien n'est coupé, aucun contenu retiré */
+main > .summary-band-end { scroll-snap-align: start; }
+@media (max-width: 719px) {
+  .site-footer { padding-block: 1.25rem .75rem; }
+  .site-footer .footer-inner { gap: .9rem; margin-bottom: .6rem; }
+  .site-footer .footer-inner p { margin-block: 0 .3rem; }
+  .site-footer .label { margin-bottom: .35rem; }
+  .footer-logo { margin-bottom: .4rem; }
+  .footer-logo img { height: 44px; }
+  .site-footer .socials { gap: .35rem; }
+  .footer-zones { gap: .3rem; }
+  .footer-zones li > span, .footer-zones li > a { min-height: 32px; padding: 0 9px; font-size: .8rem; }
+  .footer-zones li > a { min-height: 44px; }
+  .site-footer > p.small { margin: 0; font-size: .75rem; }
+}
+/* Accueil écran 4, écrans bas (360 × 740) : icônes et photo du studio plus compactes, aucun chevauchement */
+@media (max-width: 899px) and (max-height: 760px) {
+  .home-services h2 { font-size: clamp(1.45rem, 7vw, 1.9rem); }
+  .home-services .jd-lead { font-size: .84rem; line-height: 1.4; }
+  .home-services-split { margin-top: .6rem; }
+  .home-services .hp-svc-grid { gap: .35rem .6rem; }
+  .home-services .hp-svc { min-height: 44px; }
+  .home-services .hp-svc-icon, .home-services .hp-svc-icon img { width: 36px; height: 36px; flex-basis: 36px; }
+  .home-services .hp-svc-text { font-size: .72rem; line-height: 1.2; }
+  .home-services .hp-svc-text strong { font-size: .78rem; }
+  .home-services-studio { height: 34%; }
+}
