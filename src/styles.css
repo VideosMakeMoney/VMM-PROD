@@ -1488,6 +1488,23 @@ main > .summary-band-end { scroll-snap-align: start; }
 @media (min-width: 900px) {
   .end-screen > .summary-band-end { scroll-snap-align: start; }
 }
+/* Pastilles des zones du pied : toutes de la même hauteur (32 px) ; celles qui sont des liens gardent une cible
+   tactile de 44 px par un pseudo-élément (rangées espacées de 12 px : les cibles de deux liens superposés ne se chevauchent pas) */
+@media (max-width: 719px) {
+  .site-footer .footer-zones { row-gap: .75rem; }
+  .footer-zones li > a { min-height: 32px; position: relative; }
+  .footer-zones li > a::after { content: ''; position: absolute; inset: -6px 0; }
+}
+/* Accueil, écrans bas (360 × 740, 390 × 664) : bande de description + pied tiennent dans un écran.
+   Seuls les espacements sont resserrés ; tailles de texte et du logo inchangées. */
+@media (max-width: 899px) and (max-height: 760px) {
+  .page-accueil .end-screen > .summary-band-end { padding-block: .4rem; }
+  .page-accueil .end-screen > .site-footer { padding-block: .5rem .4rem; }
+  .page-accueil .end-screen .footer-inner { gap: .45rem; margin-bottom: .3rem; }
+  .page-accueil .end-screen .footer-inner p { margin-block: 0 .1rem; }
+  .page-accueil .end-screen .label { margin-bottom: .2rem; }
+  .page-accueil .end-screen .footer-logo { margin-bottom: .15rem; }
+}
 /* A4 — En-tête = exactement --header-h : le filet du bas devient une ombre de 1 px juste dessous (même couleur, même place) */
 @media (max-width: 899px) {
   .site-header { border-bottom: 0; box-shadow: 0 1px 0 rgba(255, 255, 255, .05); }

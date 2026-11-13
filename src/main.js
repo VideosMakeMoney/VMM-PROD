@@ -7,15 +7,21 @@
   // Menu mobile
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.getElementById('menu');
-  const setMenu = (open) => {
+  // Position de la page à l'ouverture du menu : rétablie telle quelle à la fermeture (Échap, bouton, toucher dehors),
+  // pour que l'aimantation ne saute pas vers un autre écran. Pas après un lien du menu (il défile lui-même).
+  let menuY = null;
+  const setMenu = (open, restore = true) => {
+    if (open && !nav.classList.contains('open')) menuY = window.scrollY;
     nav.classList.toggle('open', open);
     // Menu ouvert : la page ne défile plus derrière (CSS html.menu-open, mobile seulement)
     root.classList.toggle('menu-open', open);
     toggle.setAttribute('aria-expanded', String(open));
     toggle.textContent = open ? toggle.dataset.close : toggle.dataset.open;
+    if (!open && restore && menuY !== null && Math.abs(window.scrollY - menuY) > 1) window.scrollTo({ top: menuY, behavior: 'instant' });
+    if (!open) menuY = null;
   };
   toggle?.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
-  nav?.addEventListener('click', (e) => { if (e.target.closest('a')) setMenu(false); });
+  nav?.addEventListener('click', (e) => { if (e.target.closest('a')) setMenu(false, false); });
   if (toggle && nav) {
     // Échap ferme le menu (le focus revient au bouton s'il était dans le menu) ; un toucher hors du menu le ferme
     // sans activer ce qui est dessous.
@@ -25,10 +31,16 @@
       setMenu(false);
       if (inside) toggle.focus();
     });
+    const outside = (e) => nav.classList.contains('open') && !nav.contains(e.target) && !toggle.contains(e.target);
+    // Le toucher hors du menu ne donne pas le focus à ce qui est dessous : un élément focalisé dans un autre écran
+    // ferait sauter l'aimantation vers cet écran à la fermeture.
+    document.addEventListener('mousedown', (e) => { if (outside(e)) e.preventDefault(); }, true);
     document.addEventListener('click', (e) => {
-      if (!nav.classList.contains('open') || nav.contains(e.target) || toggle.contains(e.target)) return;
+      if (!outside(e)) return;
       e.preventDefault();
       e.stopPropagation();
+      const focused = document.activeElement;
+      if (focused && focused !== document.body && !nav.contains(focused) && !toggle.contains(focused)) focused.blur();
       setMenu(false);
     }, true);
     // Défilement tactile bloqué derrière le menu ouvert (complète overflow: hidden là où il ne suffit pas)
