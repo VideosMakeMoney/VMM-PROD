@@ -428,8 +428,12 @@ function structuredData(key, lang, pageVideos = [], page = null) {
 // Pied de page (FR et EN) : nom commercial suivi du nom légal.
 const FOOTER_NAME = `${site.nom} (${site.nomLegal})`;
 // page : pour une page sans clé propre (page client) : { route, seo, crumb }.
-function layout({ key, lang, body, videos = [], page = null, preload = '' }) {
+// endBand : bande placée avec le pied de page dans le dernier écran (accueil FR).
+function layout({ key, lang, body, videos = [], page = null, preload = '', endBand = '' }) {
   if (preload) preload += '\n';
+  // Pages FR : le pied de page (et la bande de fin de l'accueil) forment le dernier écran sur mobile (.end-screen,
+  // neutre sur ordi). Les pages EN gardent leur HTML tel quel.
+  const endScreen = lang === 'fr';
   const L = langs[lang];
   const other = lang === 'fr' ? 'en' : 'fr';
   const routed = Boolean(page?.route || ROUTES[key]);
@@ -512,7 +516,7 @@ ${L.avisTraduction && !isPlaceholder(L.avisTraduction) ? `<div class="notice">${
 <main id="contenu">
 ${body}
 </main>
-<footer class="site-footer">
+${endScreen ? `<div class="end-screen">\n${endBand ? `${endBand}\n` : ''}` : ''}<footer class="site-footer">
   <div class="container footer-inner">
     <div>
       <a class="footer-logo" href="${ROUTES.accueil[lang]}">${picture('/img/logo-pied-de-page', site.nom, { w: 112, h: 72, fallback: 'png' })}</a>
@@ -533,7 +537,7 @@ ${body}
     </nav>
   </div>
   <p class="container muted small">© ${esc(FOOTER_NAME)}. ${esc(L.pied.droits)}</p>
-</footer>
+</footer>${endScreen ? '\n</div>' : ''}
 <dialog class="lightbox" aria-label="${esc(L.lightbox.titre)}">
   <button class="lightbox-close" type="button" aria-label="${esc(L.lightbox.fermer)}">×</button>
   <div class="lightbox-frame"></div>
@@ -822,9 +826,10 @@ ${L.heroResume ? '' : summaryBand(L.seo.accueil.resume)}
       <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.contact[lang]}">${esc(A.contact.bouton)}</a></p>
     </div>
   </div>
-</section>${avis}${L.heroResume ? `\n${summaryBand(L.seo.accueil.resume).replace('class="summary-band"', 'class="summary-band summary-band-end"')}` : ''}`;
+</section>${avis}`;
+  const endBand = L.heroResume ? summaryBand(L.seo.accueil.resume).replace('class="summary-band"', 'class="summary-band summary-band-end"') : '';
 
-  return layout({ key: 'accueil', lang, body, videos: catVideos.filter((v) => v?.youtubeId), preload: heroPreload });
+  return layout({ key: 'accueil', lang, body: lang === 'fr' ? body : `${body}${endBand ? `\n${endBand}` : ''}`, endBand: lang === 'fr' ? endBand : '', videos: catVideos.filter((v) => v?.youtubeId), preload: heroPreload });
 }
 
 function memberPhoto(m, L) {
