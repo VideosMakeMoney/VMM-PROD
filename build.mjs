@@ -141,6 +141,9 @@ const ogFor = (key, page) => page?.og || OG[key] || OG.defaut;
 
 // Phrase d'intro courte et factuelle (seo.<page>.resume), facile à citer par Google et les IA.
 const summary = (text, cls = '') => (text ? `<p class="page-summary${cls ? ` ${cls}` : ''}" data-reveal>${t(text)}</p>` : '');
+// Description SEO dans le héros des pages autres que l'accueil (JD, 2026-11-12) : seulement si la langue a heroResume
+// (fr.json) ; sinon la bande sous le héros reste comme avant (pages anglaises inchangées).
+const heroResume = (L, key) => (L.heroResume ? (L.heroResume.source === 'services' ? L.seo.services.resume : L.seo[key].resume) : '');
 const summaryBand = (text) => (text ? `<div class="summary-band"><div class="container">${summary(text)}</div></div>` : '');
 
 // Dimensions réelles d'un JPEG de static/ (width/height des images, sans dépendance)
@@ -639,7 +642,7 @@ function contactBlock(lang, { tag = 'h2', id = 'contact-title' } = {}) {
   return `<div class="container contact-grid">
     <div class="contact-info">
       ${sectionHead(L.contact.etiquette, L.contact.titre, L.contact.texte, id, tag, L.seo.contact.h1)}
-      ${tag === 'h1' ? summary(L.seo.contact.resume) : ''}
+      ${tag === 'h1' ? summary(heroResume(L, 'contact') || L.seo.contact.resume) : ''}
       <dl class="contact-details" data-reveal>
         <div><dt class="label">${esc(L.contact.courrielLabel)}</dt><dd class="has-icon">${contactIcon('contact-courriel')}<a href="mailto:${site.courriel}">${esc(site.courriel)}</a></dd></div>
         ${tag === 'h1' && TEL ? `<div><dt class="label">${esc(L.contact.telephoneLabel)}</dt><dd><a href="${TEL.href}">${esc(TEL.affiche)}</a> <span class="muted">· ${esc(L.contact.heures)}</span></dd></div>` : ''}
@@ -755,7 +758,7 @@ function homePage(lang) {
   </div>
   ${hasVideo ? `<button class="hero-toggle" type="button" aria-pressed="false" data-pause="${esc(L.hero.pause)}" data-play="${esc(L.hero.lecture)}" aria-label="${esc(L.hero.pause)}"><span aria-hidden="true">❚❚</span></button>` : ''}
 </section>
-${summaryBand(L.seo.accueil.resume)}
+${L.heroResume ? '' : summaryBand(L.seo.accueil.resume)}
 
 <section class="jd-screen home-portfolio" id="portfolio-accueil" aria-labelledby="hp-portfolio-title">
   <div class="jd-wrap">
@@ -819,7 +822,7 @@ ${summaryBand(L.seo.accueil.resume)}
       <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.contact[lang]}">${esc(A.contact.bouton)}</a></p>
     </div>
   </div>
-</section>${avis}`;
+</section>${avis}${L.heroResume ? `\n${summaryBand(L.seo.accueil.resume).replace('class="summary-band"', 'class="summary-band summary-band-end"')}` : ''}`;
 
   return layout({ key: 'accueil', lang, body, videos: catVideos.filter((v) => v?.youtubeId), preload: heroPreload });
 }
@@ -863,7 +866,8 @@ function fullHero(clipId, title, L, hero = null, h1 = '', opts = {}) {
         ? `<h1 id="hero-title" class="hero-stack" data-no-accent><span class="hero-line">${esc(hero.ligne1)}</span> <span class="hero-word">${esc(hero.ligne2)}</span>${h1Seo(h1)}</h1>
     ${hero.intro ? `<p class="intro hero-intro">${t(hero.intro)}</p>` : ''}`
         : `<h1 id="hero-title" class="hero-word" data-no-accent>${esc(title)}${h1Seo(h1)}</h1>`
-    }
+    }${opts.resume ? `
+    <p class="page-summary hero-resume">${t(opts.resume)}</p>` : ''}
   </div>
   ${opts.scroll ? `<a class="scroll-cue" href="#${opts.scroll.cible}" aria-label="${esc(opts.scroll.label)}"><span aria-hidden="true">${esc(opts.scroll.texte)}</span></a>` : ''}
   <button class="bg-toggle" type="button" data-bg-toggle data-pause="${esc(L.services.heroPause)}" data-play="${esc(L.services.heroLecture)}" aria-label="${esc(L.services.heroPause)}"><span aria-hidden="true">❚❚</span></button>
@@ -902,7 +906,7 @@ function servicesPage(lang) {
   const groups = S.groupes
     .map((g, gi) => {
       const list = g.items.map((i) => items[i]).filter(shown);
-      return `<section class="jd-screen svc-group" aria-labelledby="svc-${gi + 1}">
+      return `<section class="jd-screen svc-group"${gi === 0 && V.bouton ? ' id="svc-liste"' : ''} aria-labelledby="svc-${gi + 1}">
   <div class="jd-wrap">
     <p class="jd-label" data-reveal>${esc(S.etiquette)}</p>
     <h2 id="svc-${gi + 1}" data-reveal>${rich(g.titre)}</h2>
@@ -913,26 +917,44 @@ function servicesPage(lang) {
 </section>`;
     })
     .join('\n');
-  const body = `${fullHero('services', S.titre, L, S.hero, L.seo.services.h1)}
-${summaryBand(L.seo.services.resume)}
-<section class="jd-screen jd-vision" aria-labelledby="vision-title">
-  <div class="jd-wrap vision-grid">
+  const resumeHero = heroResume(L, 'services');
+  // Image de l'écran 2 (JD, 2026-11-12) : capture Premiere Pro, version 16:9 sur ordi et 9:16 sur mobile, fondue dans le fond
+  const visionImg = V.image && existsSync(join(ROOT, 'static', `${V.image.ordi}.webp`))
+    ? `<div class="vision-premiere" aria-hidden="false"><picture><source media="(max-width: 899px)" srcset="${V.image.mobile}.webp" type="image/webp"><source media="(max-width: 899px)" srcset="${V.image.mobile}.jpg"><source srcset="${V.image.ordi}.webp" type="image/webp"><img src="${V.image.ordi}.jpg" alt="${esc(V.image.alt)}" width="836" height="940" loading="lazy" decoding="async"></picture></div>`
+    : '';
+  const F = S.finPortfolio;
+  const finPortfolio = F
+    ? `<section class="jd-screen svc-to-portfolio" aria-labelledby="fin-title">
+  <div class="stp-photo" data-reveal>${picture(F.photo, F.photoAlt, { w: COUL.photoLargeur || 693, h: COUL.photoHauteur || 1218 })}</div>
+  <div class="jd-wrap stp-text">
+    <h2 id="fin-title" data-reveal data-no-accent>${rich(F.titre)}</h2>
+    <p class="jd-lead" data-reveal>${t(F.texte)}</p>
+    <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.portfolio[lang]}">${esc(F.bouton)}</a></p>
+  </div>
+</section>`
+    : '';
+  const body = `${fullHero('services', S.titre, L, S.hero, L.seo.services.h1, { resume: resumeHero })}
+${resumeHero ? '' : summaryBand(L.seo.services.resume)}
+<section class="jd-screen jd-vision${visionImg ? ' has-premiere' : ''}" aria-labelledby="vision-title">
+${visionImg ? `  ${visionImg}
+` : ''}  <div class="jd-wrap vision-grid">
     <div class="vision-text">
       <p class="jd-label jd-label-line" data-reveal>${esc(V.etiquette)}</p>
       <h2 id="vision-title" class="vision-title" data-reveal>${rich(V.titre)}</h2>
       <p class="jd-lead" data-reveal>${t(V.texte)}</p>
       <ul class="reperes" data-reveal>
         ${V.reperes.map((r) => `<li>${r.image && existsSync(join(ROOT, 'static', `${r.image}.webp`)) ? picture(r.image, '', { w: 192, h: 192, cls: 'repere-img', fallback: 'png' }) : lucide(r.icone, 'repere-icon', 44)}<strong>${esc(r.titre)}</strong><span>${esc(r.texte)}</span></li>`).join('\n        ')}
-      </ul>
+      </ul>${V.bouton ? `
+      <p class="cta-row" data-reveal><a class="btn btn-solid" href="#svc-liste">${esc(V.bouton)}</a></p>` : ''}
     </div>
-    <div class="vision-photo" data-reveal>
+    ${visionImg ? '' : `<div class="vision-photo" data-reveal>
       ${picture('/img/services-jd-detoure', V.photoAlt, { w: 683, h: 1200, fallback: 'png' })}
-    </div>
+    </div>`}
   </div>
 </section>
 ${groups}
 ${shown(S.camera) ? camera : ''}
-${shown(S.fin) ? `<section class="jd-screen jd-end" aria-labelledby="fin-title">
+${finPortfolio || (shown(S.fin) ? `<section class="jd-screen jd-end" aria-labelledby="fin-title">
   <div class="jd-wrap">
     <p class="jd-label" data-reveal>${esc(S.fin.etiquette)}</p>
     <h2 id="fin-title" data-reveal data-no-accent>${t(S.fin.titre)}</h2>
@@ -943,7 +965,7 @@ ${shown(S.fin) ? `<section class="jd-screen jd-end" aria-labelledby="fin-title">
   <div class="jd-wrap">
     <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.portfolio[lang]}">${esc(S.fin.bouton)}</a></p>
   </div>
-</section>`}
+</section>`)}
 ${shown(S.slogan) ? `<p class="jd-slogan">${esc(S.slogan.texte)}</p>` : ''}`;
   return layout({ key: 'services', lang, body, preload: posterPreload('services') });
 }
@@ -1018,8 +1040,8 @@ function portfolioPage(lang) {
   const head = (label, title, intro, id) => `<p class="jd-label jd-label-line" data-reveal>${esc(label)}</p>
     <h2 id="${id}" data-reveal data-no-accent>${t(title)}</h2>
     ${[].concat(intro || []).map((x) => `<p class="jd-lead" data-reveal>${t(x)}</p>`).join('\n    ')}`;
-  const body = `${fullHero('portfolio', P.heroTitre, L, null, L.seo.portfolio.h1, { cls: 'pf-hero', scroll: { texte: P.scroll, label: P.scrollLabel, cible: 'realisons' } })}
-${summaryBand(L.seo.portfolio.resume)}
+  const body = `${fullHero('portfolio', P.heroTitre, L, null, L.seo.portfolio.h1, { cls: 'pf-hero', scroll: { texte: P.scroll, label: P.scrollLabel, cible: 'realisons' }, resume: heroResume(L, 'portfolio') })}
+${heroResume(L, 'portfolio') ? '' : summaryBand(L.seo.portfolio.resume)}
 <section class="jd-screen pf-cats" id="realisons" aria-labelledby="realisons-title">
   <div class="jd-wrap">
     ${head(P.realisons.etiquette, P.realisons.titre, [P.intro, P.realisons.intro], 'realisons-title')}
@@ -1295,8 +1317,8 @@ function aboutPage(lang) {
     )
     .join('\n');
   // Repère « SCROLL ↓ » du PDF À propos (écran 01), même composant que Portfolio
-  const body = `${fullHero('about', A.titre, L, null, L.seo.apropos.h1, { scroll: { texte: L.portfolio.scroll, label: L.portfolio.scrollLabel, cible: 'vision' } })}
-${summaryBand(L.seo.apropos.resume)}
+  const body = `${fullHero('about', A.titre, L, null, L.seo.apropos.h1, { scroll: { texte: L.portfolio.scroll, label: L.portfolio.scrollLabel, cible: 'vision' }, resume: heroResume(L, 'apropos') })}
+${heroResume(L, 'apropos') ? '' : summaryBand(L.seo.apropos.resume)}
 <section class="jd-screen jd-vision" id="vision" aria-labelledby="visages-title">
   <div class="jd-wrap${A.vision.photo ? ' vision-grid' : ''}">
     <div class="vision-text">
