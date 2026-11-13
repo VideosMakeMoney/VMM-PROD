@@ -61,6 +61,10 @@
       "description": "Cette page n'existe pas."
     }
   },
+  "heroResume": {
+    "_aide": "Description SEO (seo.<page>.resume) lisible dans le héros des pages autres que l’accueil, pendant que le clip joue (JD, courriels du 2026-11-12 (docs/jd/2026-11-12/)). source = \"page\" : chaque page montre sa propre description ; \"services\" : la description de Services partout. Absent de en.json : les pages anglaises gardent la bande sous le héros.",
+    "source": "page"
+  },
   "seoAncien": {
     "accueil": {
       "title": "VMM Productions | Production vidéo, Grand Montréal et Laurentides",
@@ -87,11 +91,12 @@
     "surtitre": "VMM PRODUCTIONS · CINÉMA ET RÉCIT",
     "titre": "Videos Make Money.",
     "sousTitre": "Notre passion, aider la vôtre à grandir.",
-    "texte": "Donner vie à la vision de quelqu'un a quelque chose d'unique. Chez VMM, nous réunissons récit, image et son pour capter ce qui rend votre entreprise différente : les gens, la passion et la fierté derrière chaque projet.",
+    "texte": "Derrière chaque entreprise, il y a des gens, une passion et une histoire qui mérite d’être racontée. Chez VMM, nous allons sur le terrain pour capter cette réalité et lui donner vie à travers des images, des sons et des émotions. Parce qu’une belle production ne se contente pas d’être vue : elle doit aussi être ressentie.",
     "bouton": "Nous contacter ↓",
     "posterManquant": "[À CONFIRMER : vidéo et image poster à fournir]",
     "pause": "Mettre la vidéo en pause",
-    "lecture": "Lire la vidéo"
+    "lecture": "Lire la vidéo",
+    "texteAncien": "Donner vie à la vision de quelqu'un a quelque chose d'unique. Chez VMM, nous réunissons récit, image et son pour capter ce qui rend votre entreprise différente : les gens, la passion et la fierté derrière chaque projet."
   },
   "creons": {
     "etiquette": "Ce que nous créons",
@@ -193,14 +198,16 @@
     "hero": {
       "ligne1": "NOS",
       "ligne2": "SERVICES.",
-      "intro": "De la première idée au montage final, nous réunissons les compétences créatives et techniques nécessaires pour donner vie à votre vision."
+      "intro": "",
+      "introAncienne": "De la première idée au montage final, nous réunissons les compétences créatives et techniques nécessaires pour donner vie à votre vision.",
+      "_aideIntro": "Description retirée du héros à la demande de JD (JD, courriels du 2026-11-12 (docs/jd/2026-11-12/)) ; ancienne phrase dans introAncienne. La description SEO (seo.<page>.resume) s’affiche maintenant dans le héros (voir heroResume à la racine)."
     },
     "heroPause": "Mettre la vidéo en pause",
     "heroLecture": "Lire la vidéo",
     "vision": {
       "etiquette": "Ce que nous créons",
       "titre": "Une *vision.*\nSix *expertises.*",
-      "texte": "De la stratégie au montage final, VMM Productions réunit les compétences nécessaires pour donner vie à votre message et mettre votre entreprise en valeur.",
+      "texte": "De la stratégie au montage final, nous mettons notre expérience, notre créativité et notre passion au service de votre vision pour produire des contenus qui inspirent confiance et mettent votre entreprise en valeur.",
       "reperes": [
         {
           "icone": "target",
@@ -221,7 +228,16 @@
           "texte": "Une exécution soignée"
         }
       ],
-      "photoAlt": "JD, fondateur de VMM Productions, avec sa caméra et son drone"
+      "photoAlt": "JD, fondateur de VMM Productions, avec sa caméra et son drone",
+      "texteAncien": "De la stratégie au montage final, VMM Productions réunit les compétences nécessaires pour donner vie à votre message et mettre votre entreprise en valeur.",
+      "image": {
+        "ordi": "/img/services-premiere-ordi",
+        "mobile": "/img/services-premiere-mobile",
+        "alt": "Montage d’une vidéo dans Adobe Premiere Pro chez VMM Productions",
+        "_aide": "Image Premiere Pro découpée dans les maquettes 16:9 et 9:16 de JD (2026-11-12), faute du PNG original. [À CONFIRMER JD : envoyer le PNG Premiere Pro original pour remplacer ces extraits.] L’ancien portrait services-jd-detoure reste dans static/img/."
+      },
+      "bouton": "EXPLORER NOS SERVICES →",
+      "_aideBouton": "Bouton de la maquette de JD (2026-11-12, écran 2 de Services, 16:9 et 9:16) ; il mène à la liste des six services, plus bas sur la page."
     },
     "etiquette": "Nos services",
     "groupes": [
@@ -327,6 +343,15 @@
           "texte": "Des titres, graphiques et effets animés qui donnent vie à vos images."
         }
       ]
+    },
+    "finPortfolio": {
+      "_aide": "Dernière section de Services = transition vers le Portfolio (JD, courriels du 2026-11-12 (docs/jd/2026-11-12/)). Titre de la maquette mobile de JD ; \\n = retour à la ligne, *mot* = dégradé. Photo = celle de l’écran 4 du Portfolio, fondue dans le fond. Aucune flèche (celles de la maquette sont ignorées, demande de JD). L’ancienne section reste dans « fin ».",
+      "titre": "Découvrez ce que\n*nous offrons.*",
+      "texte": "Vous connaissez maintenant nos expertises. Derrière chaque production, il y a une idée, une vision et une histoire à raconter. Découvrez comment nous leur donnons vie à travers nos réalisations.",
+      "texteMaquette": "Production, tournage et montage de contenu sur mesure pour mettre en valeur votre entreprise et vos projets.",
+      "bouton": "Voir nos réalisations →",
+      "photo": "/img/portfolio/coulisses-portfolio",
+      "photoAlt": "JD dans le studio de montage de VMM Productions"
     }
   },
   "portfolio": {
@@ -553,16 +578,17 @@
     "portfolio": {
       "etiquette": "Ce que nous réalisons",
       "titre": "Quatre façons de raconter votre histoire.",
-      "intro": "Explorez nos productions par catégorie. Chaque miniature ouvre sa vidéo sur YouTube.",
+      "intro": "Chaque histoire mérite d’être racontée à sa façon. Découvrez comment nous donnons vie aux entreprises, aux événements et aux gens qui les rendent uniques, à travers des productions authentiques et captivantes.",
       "bouton": "EXPLORER NOTRE PORTFOLIO →",
       "_aideTitre": "Titre visible de la maquette p. 2. La directive p. 7 demande « travail » et « lui-même » en violet, mots du titre « Le travail parle de lui-même. » (ancienne section Nos réalisations) absents du titre de la p. 2. [À CONFIRMER JD : quel titre garder ?]",
       "titreVariante": "Le *travail* parle de *lui-même*.",
-      "sansVideo": "[À CONFIRMER JD : ID YouTube de cette miniature]"
+      "sansVideo": "[À CONFIRMER JD : ID YouTube de cette miniature]",
+      "introAncienne": "Explorez nos productions par catégorie. Chaque miniature ouvre sa vidéo sur YouTube."
     },
     "equipe": {
       "etiquette": "Les gens derrière VMM",
       "titre": "Une *équipe*.\nUne *vision*.\nDes *histoires*.",
-      "texte": "De la stratégie au tournage, des gens passionnés mettent leur expérience au service de vos projets.",
+      "texte": "Animés par la même passion, nous réunissons créativité, savoir-faire et engagement pour raconter vos histoires avec authenticité. Chaque projet est une occasion de mettre notre expérience au service de votre vision.",
       "bouton": "DÉCOUVRIR NOTRE ÉQUIPE →",
       "photos": [
         {
@@ -573,12 +599,13 @@
           "src": "/img/about-renaud",
           "alt": "Renaud, cameraman chez VMM Productions"
         }
-      ]
+      ],
+      "texteAncien": "De la stratégie au tournage, des gens passionnés mettent leur expérience au service de vos projets."
     },
     "services": {
       "etiquette": "Nos services",
       "titre": "La *stratégie* rencontre la *création*.",
-      "intro": "Six expertises réunies pour donner vie à votre vision.",
+      "intro": "Six expertises complémentaires, une même ambition : transformer vos idées en productions réfléchies, authentiques et captivantes.",
       "libelles": [
         [
           "Contenu publicitaire",
@@ -609,7 +636,8 @@
       "photoStudio": "/img/accueil-services-jd",
       "photoStudioAlt": "Studio de montage de VMM Productions",
       "bouton": "EXPLORER NOS SERVICES →",
-      "_aidePhotoStudio": "Écran 4 refait selon la maquette de JD du 2026-11-10 (docs/jd/2026-11-10/image(14).png) : photo du studio à droite. L’ancien portrait services-jd-detoure reste dans static/img/ (portraitAlt gardé)."
+      "_aidePhotoStudio": "Écran 4 refait selon la maquette de JD du 2026-11-10 (docs/jd/2026-11-10/image(14).png) : photo du studio à droite. L’ancien portrait services-jd-detoure reste dans static/img/ (portraitAlt gardé).",
+      "introAncienne": "Six expertises réunies pour donner vie à votre vision."
     },
     "contact": {
       "etiquette": "Prenons contact",
@@ -620,6 +648,7 @@
       "photoLargeur": 791,
       "photoHauteur": 1400,
       "_aidePhotoAncienne": "Résolu le 2026-11-10 (PNG transparent joint au courriel de JD, maillot violet, lunettes, caméra). Ancienne note : [À CONFIRMER JD : photo exacte de JD, maquette p. 5 (maillot violet, lunettes, caméra)]. Elle n'est pas parmi les photos déjà dans static/img ; l'emplacement reste vide. Chemin sans extension (.webp + .png) une fois fournie."
-    }
+    },
+    "_aide2026_11_12": "Textes des écrans 1 à 4 remplacés selon JD, courriels du 2026-11-12 (docs/jd/2026-11-12/) ; anciens textes gardés dans texteAncien / introAncienne (hero.texteAncien pour l’écran 1)."
   }
 }

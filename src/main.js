@@ -102,7 +102,10 @@
     Promise.all([loadScript(`${vendor}gsap.min.js`), loadScript(`${vendor}lenis.min.js`)])
       .then(() => loadScript(`${vendor}ScrollTrigger.min.js`))
       .then(() => {
-        if (window.Lenis) {
+        // Défilement par écran (scroll-snap CSS, JD 2026-11-12) : Lenis détourne la molette et empêche l'aimantation,
+        // il reste chargé mais n'est démarré que si la page n'utilise pas scroll-snap.
+        const snap = getComputedStyle(document.documentElement).scrollSnapType;
+        if (window.Lenis && (!snap || snap === 'none')) {
           lenis = new window.Lenis({ lerp: 0.1 });
           if (window.gsap && window.ScrollTrigger) {
             lenis.on('scroll', window.ScrollTrigger.update);
