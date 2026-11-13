@@ -1500,6 +1500,67 @@ main > .summary-band-end { scroll-snap-align: start; }
 /* === FIN A === */
 
 /* === MOBILE B — tout tient dans l'écran === */
+/* B1. Écrans bas (360 × 740, 390 × 664) : le bouton en fin d'écran ne garde pas la marge basse d'un paragraphe
+   (17 px qui comptaient dans la hauteur de l'écran) ; logos du Portfolio 14svh. Aucune taille de texte changée. */
+@media (max-width: 899px) and (max-height: 760px) {
+  .jd-screen .cta-row:last-child { margin-bottom: 0; }
+  .logo-btn-face { width: min(100%, 14svh); }
+}
+/* B1. 390 × 664 (iPhone, barre Safari visible) : chaque écran ≤ 590 px sur 600 disponibles.
+   Marges et visuels resserrés en svh ; textes, ordre et contenu inchangés. */
+@media (max-width: 899px) and (max-height: 700px) {
+  main > section.jd-screen { padding-block: clamp(.75rem, 2.5svh, 1.5rem); }
+  /* Accueil, écran 2 : miniatures 27svh (≈ 128 px de large) */
+  .hp-cards { grid-auto-columns: calc(27svh * 460 / 642); }
+  .hp-card .thumb:has(picture) { max-height: 27svh; }
+  /* Accueil, écran 3 : photos de JD et Renaud entières dans l'écran */
+  .home-team-photos img { max-height: 25svh; }
+  /* Portfolio, écran 2 : vignettes 18.5svh (≈ 88 px de large), colonnes assez larges pour les libellés */
+  .pf-cat-grid { max-width: 300px; }
+  .pf-cat .thumb { width: calc(18.5svh * 460 / 642); margin-inline: auto; }
+  /* Portfolio, écran 3 : logos 13svh (≈ 86 px) */
+  .logo-grid { margin-top: .75rem; }
+  .logo-btn-face { width: min(100%, 13svh); }
+  /* Portfolio, écran 4 : photo Coulisses 35svh */
+  .coulisses-photo { height: 35svh; }
+  /* À propos, écrans JD et Renaud : photo 27svh */
+  .person-photo img { max-height: 27svh; }
+}
+/* B1. Contact, écran 1 (coordonnées) : espacements et interlignes resserrés, réseaux sur 2 rangées de boutons 44 px.
+   Aussi à 360 × 740 pour garder une marge. Tailles de texte inchangées. */
+@media (max-width: 959px) and (max-height: 760px) {
+  .page-contact .contact-info { padding-block: 0; }
+  .page-contact .contact-info > .label { margin-bottom: 0; }
+  .page-contact h1 { line-height: 1; margin-bottom: .15rem; }
+  .page-contact .contact-info .intro, .page-contact .contact-info .page-summary { margin-top: .2rem; line-height: 1.35; }
+  .page-contact .contact-details { margin: .4rem 0 .3rem; gap: .2rem; }
+  .page-contact .contact-info .contact-details dt { margin-bottom: 0; }
+  .page-contact .contact-details dd { line-height: 1.3; }
+  .page-contact .contact-info p.small { margin-bottom: .4rem; line-height: 1.3; }
+  .page-contact .contact-info .socials { gap: .25rem .3rem; }
+  .page-contact .contact-info .socials + *, .page-contact .contact-info div > .label { margin-bottom: 0; }
+}
+/* B2. Pages client et Coulisses (mobile) : la piste prend toute la largeur (2 miniatures ≈ 2 × plus grandes),
+   titre en haut (sous le bouton pause), carrousel centré dans l'espace restant. Les flèches 44 × 44 passent
+   sur les bords, sur la ligne du compteur « 01 / 07 » : aucune flèche ne recouvre une miniature.
+   Glissement tactile inchangé (même piste, même aimantation). */
+@media (max-width: 559px) {
+  .collection-inner { justify-content: flex-start; gap: 1rem; padding-block: 4.5rem clamp(.75rem, 3svh, 1.5rem); }
+  .collection-library { position: relative; max-width: none; margin-block: auto; }
+  .collection-screen .library-row { position: static; display: block; }
+  .collection-screen .library-arrow { position: absolute; bottom: 0; z-index: 1; }
+  .collection-screen .library-arrow.is-prev { left: 0; }
+  .collection-screen .library-arrow.is-next { right: 0; }
+  .collection-screen .library-count { display: flex; align-items: center; justify-content: center; min-height: 44px; margin-top: .25rem; padding-inline: 52px; }
+  /* Sans flèches (piste statique ou sans JavaScript), rien ne change autour du compteur */
+  .collection-screen .library-row.is-static + .library-count { padding-inline: 0; }
+}
+/* B3. Boutons pleins (mobile) : marge intérieure réduite pour tenir sur une ligne quand c'est possible,
+   lignes équilibrées sinon : la flèche ne reste jamais seule sur la 2e ligne. Texte inchangé. */
+@media (max-width: 559px) {
+  main .btn-solid { padding-inline: 1.5rem; }
+  main .btn { text-wrap: balance; }
+}
 
 /* === FIN B === */
 
