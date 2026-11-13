@@ -642,7 +642,7 @@ function contactBlock(lang, { tag = 'h2', id = 'contact-title' } = {}) {
   return `<div class="container contact-grid">
     <div class="contact-info">
       ${sectionHead(L.contact.etiquette, L.contact.titre, L.contact.texte, id, tag, L.seo.contact.h1)}
-      ${tag === 'h1' ? summary(L.seo.contact.resume) : ''}
+      ${tag === 'h1' ? summary(heroResume(L, 'contact') || L.seo.contact.resume) : ''}
       <dl class="contact-details" data-reveal>
         <div><dt class="label">${esc(L.contact.courrielLabel)}</dt><dd class="has-icon">${contactIcon('contact-courriel')}<a href="mailto:${site.courriel}">${esc(site.courriel)}</a></dd></div>
         ${tag === 'h1' && TEL ? `<div><dt class="label">${esc(L.contact.telephoneLabel)}</dt><dd><a href="${TEL.href}">${esc(TEL.affiche)}</a> <span class="muted">· ${esc(L.contact.heures)}</span></dd></div>` : ''}
