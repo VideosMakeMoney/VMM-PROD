@@ -1641,7 +1641,18 @@ main > .summary-band-end { scroll-snap-align: start; }
 @media (max-width: 767px) {
   .page-contact .contact-details a { position: relative; }
   .page-contact .contact-details a::after { content: ""; position: absolute; left: -8px; right: -8px; top: -14px; bottom: -14px; }
-  .page-contact .contact-details a[href^="mailto:"]::after { top: -18px; bottom: -7px; }
+  /* hauteur fixe de 44 px (quelle que soit la hauteur du lien, 18-19 px selon l'écran) : le courriel déborde vers
+     le haut, le téléphone vers le bas, pour garder un écart entre les deux zones */
+  .page-contact .contact-details a[href^="mailto:"]::after { top: auto; bottom: -7px; height: 44px; }
+  .page-contact .contact-details a[href^="tel:"]::after { top: -11px; bottom: auto; height: 44px; }
+  /* Pied de page : courriel et téléphone (paragraphes consécutifs), même technique ; le courriel déborde vers le
+     haut (nom de l'entreprise, pas un lien), le téléphone vers le bas (vers « Suivez-nous », pas un lien) */
+  .site-footer .footer-inner p > a[href^="mailto:"],
+  .site-footer .footer-inner p > a[href^="tel:"] { position: relative; }
+  .site-footer .footer-inner p > a[href^="mailto:"]::after,
+  .site-footer .footer-inner p > a[href^="tel:"]::after { content: ""; position: absolute; left: -8px; right: -8px; height: 44px; }
+  .site-footer .footer-inner p > a[href^="mailto:"]::after { bottom: -4px; }
+  .site-footer .footer-inner p > a[href^="tel:"]::after { top: -4px; }
 }
 /* Orchestrateur, après fusion avec B : plancher 12 px aussi quand l'écran fait 700 px de haut ou moins. */
 @media (max-width: 767px) and (max-height: 700px) {
