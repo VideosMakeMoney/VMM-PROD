@@ -1493,7 +1493,7 @@ main > .summary-band-end { scroll-snap-align: start; }
 @media (max-width: 719px) {
   .site-footer .footer-zones { row-gap: .75rem; }
   .footer-zones li > a { min-height: 32px; position: relative; }
-  .footer-zones li > a::after { content: ''; position: absolute; inset: -6px 0; }
+  .footer-zones li > a::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 44px; transform: translateY(-50%); }
 }
 /* Accueil, écrans bas (360 × 740, 390 × 664) : bande de description + pied tiennent dans un écran.
    Seuls les espacements sont resserrés ; tailles de texte et du logo inchangées. */
