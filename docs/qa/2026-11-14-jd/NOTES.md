@@ -7,8 +7,17 @@ Build local (`node build.mjs`, `python3 -m http.server`), Playwright Chromium. L
 - `desktop-avant/` (main 5b44069) et `desktop-apres/` (cette branche) : 1440×900 ; quelques écrans à 1920×1080 dans `desktop-apres/`.
 - `titrage/` : animation du titre détourée, images 0, 30, 100 et 150 sur fond sombre #0d0917, sur fond clair et sur une image vidéo (`composite_all`), raccord de boucle (`loopframes`), zooms des bords (`zoom_*`), poster (`poster_compare`). Sur la vidéo du héros : `desktop-apres/1440x900-accueil-ecran1.webp`.
 
+## Contrôle visuel contre les maquettes « souhaitées » de JD (15 nov.)
+Chaque écran touché a été comparé à la maquette de JD, pas au site actuel :
+- Accueil 2 (ordi), Accueil 5 (ordi et mobile), Portfolio 4 et 5 (ordi et mobile), À propos 5 (ordi et mobile) : textes, boutons et photos agrandis pour suivre les proportions des maquettes (titre d'Accueil 5 sur trois lignes, photo d'À propos 5 plus grande et recadrée par le bas comme la maquette, étiquette « Et après les images ? » avec espace insécable avant « ? »).
+- Accueil 4 mobile (C7) : même disposition que la maquette (icônes 2 × 3, photo studio en bas, bouton « Explorer nos services → »). Les textes et la typographie du site restent ceux de la prod : la maquette montre un titre en capitales sérif et un autre sous-titre.
+- Portfolio 2 mobile (A2) : 4 vignettes 9:16 en 2 colonnes ; le texte est celui de A4 (plus long que celui de la maquette), donc les vignettes sont un peu plus petites que sur la maquette pour que tout tienne dans l'écran.
+- Contact mobile (C11) : le 9:16 est servi sous 768 px (contact-logo-9x16), le 16:9 au-dessus. La boîte du fond fait un écran (390 × 780) ; le 9:16 y est recadré d'environ 5 % de chaque côté (object-fit: cover). Dans la vidéo elle-même, le logo touche les bords à certains moments.
+- C6 : SVG animés avec l'effet Services (balayage + éclat, 1,4 s) : icônes sociales (Contact, pied de page), flèche « Voir notre travail », icône lecture de la tuile Coulisses ; PNG d'icônes (Accueil 4, coordonnées) avec le même effet. Mouvement réduit : aucune animation.
+- C2 : les sources seraient HEVC alpha d'abord, WebM ensuite ; aucun HEVC alpha n'a pu être produit ici, Safari garde le poster.
+
 ## tools/mesure-mobile.mjs (4 formats, 6 pages)
-- Hauteur : toutes les sections tiennent dans l'écran (360×740, 390×844, 430×932, 390×664). Corrigés pendant la QA : Portfolio écrans 2, 3 et 4, À propos écran JD (bio plus longue), Accueil écrans 2 et 3 à 390×664.
+- Hauteur : toutes les sections tiennent dans l'écran (360×740, 390×844, 430×932, 390×664). Corrigés pendant la QA : Portfolio écrans 2, 3 et 4, À propos écrans JD et 5, Accueil écrans 2 et 3 à 390×664, Contact écran 1.
 - 390×844 et 430×932 : OK complet (hauteur et snap).
 - Snap tactile : des « sautées » sortent par moments à 360×740 et toujours à 390×664. Même résultat sur main : à 360×740 le test est instable (même page OK puis KO d'une exécution à l'autre, sur main comme sur la branche), et à 390×664 le balayage de 650 px du script dépasse l'écran de 600 px (artefact déjà noté le 13 nov.).
 

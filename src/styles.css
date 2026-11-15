@@ -1740,8 +1740,12 @@ html[lang^="fr"] .hp-svc-grid > li:nth-child(6).is-visible .hp-svc-icon img { an
 @keyframes svc-draw-svg { from { clip-path: inset(0 100% 0 0); opacity: .55; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
 html[lang^="fr"] .socials.is-visible .social-icon { animation: svc-draw-svg 1.4s var(--ease) both; }
 html[lang^="fr"] .is-visible .contact-icon img { animation: svc-draw 1.4s var(--ease) both; }
+/* Autres SVG du site (flèche « Voir notre travail », icône lecture de la tuile Coulisses) : même effet */
+html[lang^="fr"] .hero-cta-ghost svg { animation: svc-draw-svg 1.4s var(--ease) .6s both; }
+html[lang^="fr"] .cta-play.is-visible { animation: svc-draw-svg 1.4s var(--ease) both; }
 @media (prefers-reduced-motion: reduce) {
-  html[lang^="fr"] .hp-svc-icon img, html[lang^="fr"] .social-icon, html[lang^="fr"] .contact-icon img { animation: none !important; }
+  html[lang^="fr"] .hp-svc-icon img, html[lang^="fr"] .social-icon, html[lang^="fr"] .contact-icon img,
+  html[lang^="fr"] .hero-cta-ghost svg, html[lang^="fr"] .cta-play { animation: none !important; }
 }
 
 /* C12 — Icône Google : même style que les autres réseaux ; non cliquable tant que l'URL de la fiche manque (TODO) */
@@ -1965,6 +1969,52 @@ html[lang^="fr"] .page-contact .contact-info::before {
       rgba(13, 9, 23, var(--rect-a)) calc(100% - 1.5rem), rgba(13, 9, 23, 0) 100%);
   }
 }
+
+/* Contrôle visuel contre les maquettes « souhaitées » de JD (15 nov.) : textes, boutons et photos agrandis
+   pour suivre les proportions des maquettes 16:9 et 9:16 */
+@media (min-width: 900px) {
+  /* Portfolio p5, À propos p5 */
+  .jd-photo-split h2 { font-size: clamp(2.6rem, 4.6vw, 5rem); }
+  .jd-photo-split .jd-lead { font-size: clamp(1.05rem, 1.5vw, 1.45rem); line-height: 1.5; max-width: 38rem; }
+  .jd-photo-split .cta-row .btn { font-size: clamp(1rem, 1.25vw, 1.25rem); min-height: 56px; padding-inline: 1.6rem; }
+  .jd-photo-split.is-photo-right .jd-wrap { grid-template-columns: minmax(0, 1.3fr) minmax(0, .9fr); }
+  .jd-photo-split.is-photo-right h2 { max-width: 10.5em; font-size: clamp(2.4rem, 3.9vw, 4.4rem); }
+  .jd-photo-split.is-photo-right .jd-split-photo { align-self: end; height: calc(100svh - var(--header-h) - .5rem); }
+  /* Portfolio p4 (étagère) */
+  .pf-shelf-grid .pf-coulisses-text h2 { font-size: clamp(2.6rem, 4.6vw, 5rem); }
+  .pf-shelf-grid .pf-coulisses-text .jd-lead { font-size: clamp(1.05rem, 1.5vw, 1.45rem); line-height: 1.45; max-width: 30rem; }
+  .pf-shelf-img { width: min(100%, 340px, 40svh); }
+  .pf-shelf-tile .coulisses-text strong { font-size: clamp(1.15rem, 1.45vw, 1.4rem); }
+  .pf-shelf-tile .coulisses-text { font-size: clamp(1rem, 1.15vw, 1.15rem); }
+}
+@media (min-width: 960px) {
+  /* Accueil p2 : texte plus grand, vignettes plus hautes (maquette « positionnement optimisé ») */
+  html[lang^="fr"] .home-portfolio .jd-lead { font-size: clamp(1.05rem, 1.4vw, 1.4rem); max-width: 60rem; }
+  html[lang^="fr"] .home-portfolio .hp-cards { --hp-h: calc(100svh - var(--header-h) - 20rem); }
+  html[lang^="fr"] .home-portfolio .hp-card .yt-tile-label { font-size: clamp(.95rem, 1.1vw, 1.15rem); }
+  html[lang^="fr"] .home-portfolio .cta-row .btn { font-size: clamp(1rem, 1.25vw, 1.2rem); min-height: 54px; padding-inline: 1.6rem; }
+}
+@media (min-width: 900px) {
+  /* Accueil p5 : titre sur trois lignes comme la maquette, texte et bouton plus grands */
+  html[lang^="fr"] .home-contact h2 { font-size: clamp(2.6rem, 4.4vw, 5rem); max-width: 9.5em; }
+  html[lang^="fr"] .home-contact .jd-lead { font-size: clamp(1.05rem, 1.5vw, 1.45rem); max-width: 36rem; }
+  html[lang^="fr"] .home-contact .cta-row .btn { font-size: clamp(1rem, 1.25vw, 1.25rem); min-height: 56px; padding-inline: 1.6rem; }
+}
+@media (max-width: 899px) {
+  /* Accueil p5 et Portfolio p5 mobiles : titre plus grand (maquettes 9:16), colonne de texte un peu plus large */
+  html[lang^="fr"] .home-contact .home-split-text { margin-left: 46%; padding-right: 12px; }
+  html[lang^="fr"] .home-contact h2 { font-size: clamp(1.5rem, 6.9vw, 2.6rem); }
+  html[lang^="fr"] .home-contact-photo { height: 82%; }
+  .jd-photo-split:not(.is-photo-right) .jd-split-text { margin-left: 46%; padding-right: 12px; }
+  .jd-photo-split:not(.is-photo-right) .jd-split-text h2 { font-size: clamp(1.5rem, 6.9vw, 2.6rem); }
+  .jd-photo-split:not(.is-photo-right) .jd-lead { font-size: clamp(.9rem, 4.2vw, 1.1rem); }
+  .jd-photo-split:not(.is-photo-right) .jd-split-photo { height: 84%; }
+  /* À propos p5 mobile : photo plus grande, coupée par le bas de l'écran comme la maquette */
+  .jd-photo-split.is-photo-right .jd-split-photo { margin-top: .25rem; }
+}
+/* À propos p5 : photo plus grande, recadrée par le bas (comme les maquettes) sans dépasser de l'écran :
+   la boîte de l'image garde la hauteur disponible, l'image remplit une boîte moins haute que la photo entière */
+.jd-photo-split.is-photo-right .jd-split-photo img { aspect-ratio: 944 / 1250; object-fit: cover; object-position: 50% 0; }
 
 /* C10 — Pages des entreprises : titre centré à l'horizontale, même hauteur et même couleur */
 .collection-title.is-centered { text-align: center; margin-inline: auto; width: 100%; }
