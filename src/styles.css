@@ -1596,8 +1596,8 @@ main > .summary-band-end { scroll-snap-align: start; }
     --c-fade-t: 2.5rem; --c-fade-b: 2rem; --c-pad: .5rem; --c-h: 2.375rem;
     margin-top: calc(-1 * (var(--c-fade-t) + var(--c-pad)));
     height: calc(var(--c-fade-t) + var(--c-pad) + var(--c-h) + var(--c-pad) + var(--c-fade-b));
-    background: linear-gradient(180deg, rgba(13, 9, 23, 0) 0, rgba(13, 9, 23, .88) var(--c-fade-t),
-      rgba(13, 9, 23, .88) calc(100% - var(--c-fade-b)), rgba(13, 9, 23, 0) 100%);
+    background: linear-gradient(180deg, rgba(13, 9, 23, 0) 0, rgba(13, 9, 23, var(--rect-a, .88)) var(--c-fade-t),
+      rgba(13, 9, 23, var(--rect-a, .88)) calc(100% - var(--c-fade-b)), rgba(13, 9, 23, 0) 100%);
   }
   /* Services, Portfolio, À propos : la bande descend du titre jusqu'au bas du héros pour couvrir aussi le résumé,
      plafonnée à 45 % de la hauteur du héros (elle se fond alors avant le bas, où le voile existant prend le relais) */
@@ -1611,8 +1611,8 @@ main > .summary-band-end { scroll-snap-align: start; }
   /* Page client : hauteur d'une ligne du titre (1,05 em), deux pour les titres longs */
   .collection-screen .collection-inner::before { font-size: clamp(2.2rem, 7vw, 4.5rem); --c-h: 1.05em;
     /* ciel très clair derrière ce titre : opacité au plafond permis (.9) */
-    background: linear-gradient(180deg, rgba(13, 9, 23, 0) 0, rgba(13, 9, 23, .9) var(--c-fade-t),
-      rgba(13, 9, 23, .9) calc(100% - var(--c-fade-b)), rgba(13, 9, 23, 0) 100%); }
+    background: linear-gradient(180deg, rgba(13, 9, 23, 0) 0, rgba(13, 9, 23, var(--rect-a-max, .9)) var(--c-fade-t),
+      rgba(13, 9, 23, var(--rect-a-max, .9)) calc(100% - var(--c-fade-b)), rgba(13, 9, 23, 0) 100%); }
   .collection-screen .collection-inner:has(> .collection-title.is-long)::before { font-size: clamp(1.6rem, 4.2vw, 3.4rem); --c-h: 2.1em; }
   /* Accueil : « VIDEOS MAKE MONEY » ; bande plus courte pour garder la vidéo visible */
   .page-accueil .hero-content::before { --c-fade-t: 1.75rem; --c-fade-b: 1.5rem; font-size: clamp(2.3rem, 6.4vw, 6rem); --c-h: .95em; }
@@ -1679,3 +1679,409 @@ main > .summary-band-end { scroll-snap-align: start; }
   .home-services .hp-svc-text { font-size: .75rem; }
 }
 /* === FIN C === */
+
+/* ==========================================================================
+   === JD 2026-11-14 === Ajustements de JD du 14 novembre (courriels 14 h 55, 14 h 58, 16 h 47, 17 h 48).
+   Version française seulement (html[lang^="fr"]) : les pages /en/ restent telles quelles.
+   ========================================================================== */
+
+/* A1 — Rectangle noir semi-transparent des héros : opacité réduite de moitié (.88 → .44, .9 → .45),
+   sur mobile ET sur ordi, derrière les textes des héros de toutes les pages. Un seul système (celui de la PR #25). */
+html[lang^="fr"] { --rect-a: .44; --rect-a-max: .45; }
+@media (min-width: 768px) {
+  html[lang^="fr"] .page-hero.full-hero:not(.collection-screen) > .container::before,
+  html[lang^="fr"] .collection-screen .collection-inner::before,
+  html[lang^="fr"] .page-accueil .hero-content::before {
+    content: ""; position: absolute; z-index: -1; pointer-events: none;
+    left: calc(50% - 50vw); width: 100vw;
+    --c-fade-t: 3rem; --c-fade-b: 2.5rem; --c-pad: .75rem; --c-h: 2.375rem;
+    margin-top: calc(-1 * (var(--c-fade-t) + var(--c-pad)));
+    height: calc(var(--c-fade-t) + var(--c-pad) + var(--c-h) + var(--c-pad) + var(--c-fade-b));
+    background: linear-gradient(180deg, rgba(13, 9, 23, 0) 0, rgba(13, 9, 23, var(--rect-a)) var(--c-fade-t),
+      rgba(13, 9, 23, var(--rect-a)) calc(100% - var(--c-fade-b)), rgba(13, 9, 23, 0) 100%);
+  }
+  /* Services, Portfolio, À propos : du titre jusqu'au bas du héros (titre + description) */
+  html[lang^="fr"] .page-hero.full-hero:not(.collection-screen) > .container::before {
+    --c-pb: clamp(3.5rem, 9vh, 5.5rem);
+    height: calc(var(--c-fade-t) + var(--c-pad) + 100% + var(--c-pb));
+  }
+  /* Pages des entreprises et Coulisses : le titre seul */
+  html[lang^="fr"] .collection-screen .collection-inner::before { font-size: clamp(2.2rem, 7vw, 4.5rem); --c-h: 1.05em;
+    background: linear-gradient(180deg, rgba(13, 9, 23, 0) 0, rgba(13, 9, 23, var(--rect-a-max)) var(--c-fade-t),
+      rgba(13, 9, 23, var(--rect-a-max)) calc(100% - var(--c-fade-b)), rgba(13, 9, 23, 0) 100%); }
+  html[lang^="fr"] .collection-screen .collection-inner:has(> .collection-title.is-long)::before { font-size: clamp(1.6rem, 4.2vw, 3.4rem); }
+}
+/* Accueil : le rectangle couvre tout le bloc du bas (titre animé, signature, paragraphe, boutons), mobile et ordi */
+html[lang^="fr"] .page-accueil .hero-content { position: relative; }
+html[lang^="fr"] .page-accueil .hero-content::before {
+  --c-fade-t: 2rem; --c-fade-b: 0rem; --c-pad: 0rem;
+  height: calc(var(--c-fade-t) + 100% + var(--c-fade-b)); margin-top: calc(-1 * var(--c-fade-t)); top: 0;
+}
+html[lang^="fr"] .page-accueil .hero-ctas::after { content: none; }
+
+/* C1-C2 — Accueil, écran 1 : titre animé (WebM transparent) centré en bas, entièrement visible, plus petit */
+html[lang^="fr"] .page-accueil .hero { align-items: end; }
+html[lang^="fr"] .page-accueil .hero-content { padding-block: clamp(.75rem, 4svh, 2.5rem) clamp(1rem, 4svh, 2.5rem); }
+.hero-titrage { position: relative; width: min(100%, 860px, calc((100svh - var(--header-h)) * .95)); aspect-ratio: 1152 / 360; margin: 0 auto clamp(.25rem, 1.5svh, 1rem); }
+.hero-titrage picture, .hero-titrage img, .hero-titrage-video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; }
+.hero-titrage-video { opacity: 0; transition: opacity .2s linear; }
+.hero-titrage.is-playing .hero-titrage-video { opacity: 1; }
+.hero-titrage.is-playing picture { visibility: hidden; }
+@media (min-width: 900px) { .hero-titrage { width: min(100%, 62vw, 860px); } }
+@media (max-width: 559px) { .hero-titrage { margin-bottom: 0; } }
+/* Le cadre du titre animé reste dans le conteneur (marges égales) : pas de débordement de 94vw */
+html[lang^="fr"] .page-accueil .hero-content { box-sizing: border-box; }
+.hero-titrage { max-width: 100%; margin-inline: auto; }
+
+/* C6 — Animation des icônes : même effet que les illustrations de Services (svc-draw : balayage + éclat, 1,4 s) */
+html[lang^="fr"] .hp-svc-grid > li.is-visible .hp-svc-icon img { animation: svc-draw 1.4s var(--ease) both; }
+html[lang^="fr"] .hp-svc-grid > li:nth-child(2).is-visible .hp-svc-icon img { animation-delay: .12s; }
+html[lang^="fr"] .hp-svc-grid > li:nth-child(3).is-visible .hp-svc-icon img { animation-delay: .24s; }
+html[lang^="fr"] .hp-svc-grid > li:nth-child(4).is-visible .hp-svc-icon img { animation-delay: .36s; }
+html[lang^="fr"] .hp-svc-grid > li:nth-child(5).is-visible .hp-svc-icon img { animation-delay: .48s; }
+html[lang^="fr"] .hp-svc-grid > li:nth-child(6).is-visible .hp-svc-icon img { animation-delay: .6s; }
+@keyframes svc-draw-svg { from { clip-path: inset(0 100% 0 0); opacity: .55; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
+html[lang^="fr"] .socials.is-visible .social-icon { animation: svc-draw-svg 1.4s var(--ease) both; }
+html[lang^="fr"] .is-visible .contact-icon img { animation: svc-draw 1.4s var(--ease) both; }
+/* Autres SVG du site (flèche « Voir notre travail », icône lecture de la tuile Coulisses) : même effet */
+html[lang^="fr"] .hero-cta-ghost svg { animation: svc-draw-svg 1.4s var(--ease) .6s both; }
+html[lang^="fr"] .cta-play.is-visible { animation: svc-draw-svg 1.4s var(--ease) both; }
+@media (prefers-reduced-motion: reduce) {
+  html[lang^="fr"] .hp-svc-icon img, html[lang^="fr"] .social-icon, html[lang^="fr"] .contact-icon img,
+  html[lang^="fr"] .hero-cta-ghost svg, html[lang^="fr"] .cta-play { animation: none !important; }
+}
+
+/* C12 — Icône Google : même style que les autres réseaux ; non cliquable tant que l'URL de la fiche manque (TODO) */
+.socials a.is-pending { cursor: default; }
+
+/* C3 — Accueil, écran 2 (ordi, maquette « positionnement optimisé ») : texte plus large et plus court,
+   miniatures agrandies ; mobile : les 4 miniatures 9:16 en 2 colonnes, tout tient dans l'écran (règles d'or) */
+@media (min-width: 960px) {
+  html[lang^="fr"] .home-portfolio .jd-wrap { max-width: 1320px; }
+  html[lang^="fr"] .home-portfolio h2 { font-size: clamp(2.2rem, 3.6vw, 3.6rem); white-space: nowrap; }
+  html[lang^="fr"] .home-portfolio .jd-lead { max-width: 64rem; font-size: clamp(1rem, 1.25vw, 1.2rem); line-height: 1.45; }
+  html[lang^="fr"] .home-portfolio .jd-label { margin-bottom: .5rem; }
+  html[lang^="fr"] .home-portfolio .hp-cards { margin-top: clamp(.75rem, 2svh, 1.5rem); max-width: calc(4 * var(--hp-h) * 460 / 642 + 4.5rem); --hp-h: calc(100svh - var(--header-h) - 22rem); }
+  html[lang^="fr"] .home-portfolio .hp-card .thumb:has(picture) { max-height: var(--hp-h); }
+  html[lang^="fr"] .home-portfolio .cta-row { margin-top: clamp(.75rem, 2svh, 1.75rem); }
+}
+@media (max-width: 959px) {
+  html[lang^="fr"] .home-portfolio { --hp-h: calc((100svh - var(--header-h)) * .22); }
+  html[lang^="fr"] main > section.jd-screen.home-portfolio { padding-block: clamp(.75rem, 3svh, 2rem); }
+  html[lang^="fr"] .home-portfolio .hp-cards { grid-auto-flow: row; grid-template-columns: repeat(2, max(calc(var(--hp-h) * 460 / 642), 8.5rem)); grid-auto-columns: auto; justify-items: center; justify-content: center; overflow: visible; gap: .5rem 1rem; margin-top: .75rem; padding: 0; }
+  html[lang^="fr"] .home-portfolio .hp-card .thumb:has(picture) { max-height: var(--hp-h); width: 100%; }
+  html[lang^="fr"] .home-portfolio .yt-tile { gap: .25rem; }
+  html[lang^="fr"] .home-portfolio .hp-card .yt-tile-label { font-size: .8rem; line-height: 1.2; }
+  html[lang^="fr"] .home-portfolio .jd-lead { font-size: .84rem; line-height: 1.4; }
+  html[lang^="fr"] .home-portfolio h2 { font-size: clamp(1.45rem, 6.6vw, 1.9rem); }
+  html[lang^="fr"] .home-portfolio .cta-row { margin-top: .75rem; }
+}
+@media (max-width: 959px) and (max-height: 760px) {
+  html[lang^="fr"] .home-portfolio { --hp-h: calc((100svh - var(--header-h)) * .165); }
+  html[lang^="fr"] main > section.jd-screen.home-portfolio { padding-block: .6rem; }
+  html[lang^="fr"] .home-portfolio .jd-lead { font-size: .78rem; }
+}
+
+/* C4 — Accueil, écran 3 (sans maquette ; confirmé par JD le 14 nov. au soir) : photos agrandies, zone d'affichage
+   élargie pour révéler tout leur contenu ; format 3:4 d'origine, ni étirées ni recadrées */
+@media (min-width: 900px) {
+  html[lang^="fr"] .home-team { padding-block: 1rem; }
+  html[lang^="fr"] .home-team .jd-wrap { max-width: 1440px; padding-inline: clamp(1rem, 4vw, 4rem); }
+  html[lang^="fr"] .home-team .home-split { grid-template-columns: minmax(0, .62fr) minmax(0, 1.38fr); gap: clamp(2rem, 3vw, 3.5rem); align-items: center; }
+  html[lang^="fr"] .home-team-photos img { width: 100%; height: auto; aspect-ratio: 3 / 4; max-height: calc(100svh - var(--header-h) - 2rem); object-fit: cover; object-position: 50% 30%; }
+}
+@media (max-width: 899px) {
+  html[lang^="fr"] .home-team-photos img { width: 100%; height: auto; max-height: none; aspect-ratio: 3 / 4; }
+  html[lang^="fr"] .home-team .home-split { gap: 1rem; }
+}
+@media (max-width: 899px) and (max-height: 760px) {
+  html[lang^="fr"] .home-team-photos img { width: auto; height: 26svh; margin-inline: auto; }
+}
+
+/* C7 — Accueil, écran 4 mobile (maquette 9:16) : icônes plus grosses en 2 × 3, photo du studio pleine largeur en bas.
+   Textes et police du site gardés (la maquette montre d'autres textes). Ordi inchangé (C5). */
+@media (max-width: 899px) {
+  html[lang^="fr"] .home-services .hp-svc-grid { gap: 1rem .75rem; }
+  html[lang^="fr"] .home-services .hp-svc-icon, html[lang^="fr"] .home-services .hp-svc-icon img { width: 62px; height: 62px; flex-basis: 62px; }
+  html[lang^="fr"] .home-services .hp-svc-text { font-size: .8rem; }
+  html[lang^="fr"] .home-services .hp-svc-text strong { font-size: .9rem; }
+  html[lang^="fr"] .home-services-studio { height: 40%; }
+}
+@media (max-width: 899px) and (max-height: 760px) {
+  html[lang^="fr"] .home-services .hp-svc-grid { gap: .55rem .6rem; }
+  html[lang^="fr"] .home-services .hp-svc-icon, html[lang^="fr"] .home-services .hp-svc-icon img { width: 50px; height: 50px; flex-basis: 50px; }
+  html[lang^="fr"] .home-services .hp-svc-text { font-size: .75rem; }
+  html[lang^="fr"] .home-services .hp-svc-text strong { font-size: .8rem; }
+  html[lang^="fr"] .home-services-studio { height: 33%; }
+}
+
+/* C8 — Accueil, écran 5 : photo de JD plus grande (à gauche), texte et bouton à droite */
+@media (min-width: 900px) {
+  html[lang^="fr"] .home-contact .jd-wrap { max-width: 1440px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(1rem, 3vw, 3rem); }
+  html[lang^="fr"] .home-contact-photo { height: calc(100svh - var(--header-h)); justify-content: flex-end; }
+  html[lang^="fr"] .home-contact h2 { font-size: clamp(2.2rem, 3.6vw, 4.2rem); max-width: 11em; }
+  html[lang^="fr"] .home-contact .jd-lead { font-size: clamp(1rem, 1.3vw, 1.25rem); max-width: 34rem; }
+}
+@media (max-width: 899px) {
+  html[lang^="fr"] .home-contact-photo { height: 90%; }
+  html[lang^="fr"] .home-contact-photo picture { margin-left: calc(-.16 * .565 * .9 * (100svh - var(--header-h))); }
+  html[lang^="fr"] .home-contact .home-split-text { margin-left: 49%; padding-top: clamp(1.25rem, 5svh, 3rem); }
+  html[lang^="fr"] .home-contact h2 { font-size: clamp(1.25rem, 6.1vw, 2.4rem); overflow-wrap: normal; word-break: normal; hyphens: none; }
+}
+
+/* Écrans « photo détourée + texte » (Portfolio écran 5, À propos écran 5) : photo fondue dans le fond, sans IA */
+.jd-photo-split { position: relative; overflow: hidden; isolation: isolate; }
+.jd-split-photo img {
+  display: block; width: auto; height: 100%; max-width: none; object-fit: contain;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 62%, transparent 97%), linear-gradient(90deg, transparent 0%, #000 9%, #000 91%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(180deg, #000 0%, #000 62%, transparent 97%), linear-gradient(90deg, transparent 0%, #000 9%, #000 91%, transparent 100%);
+  mask-composite: intersect;
+}
+.jd-split-photo picture { display: block; height: 100%; }
+.jd-photo-split { background: radial-gradient(ellipse 55% 45% at 92% 92%, rgba(124, 58, 237, .28), transparent 70%), var(--bg); }
+@media (min-width: 900px) {
+  main > section.jd-screen.jd-photo-split { padding-block: 0; justify-content: stretch; }
+  .jd-photo-split .jd-wrap { max-width: 1440px; width: 100%; padding-inline: clamp(1rem, 4vw, 4rem); flex: 1 1 auto; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); align-items: center; gap: clamp(1.5rem, 4vw, 4rem); }
+  .jd-photo-split .jd-split-photo { align-self: end; height: calc(100svh - var(--header-h) - 1.5rem); display: flex; justify-content: center; }
+  .jd-photo-split .jd-split-text, .jd-photo-split .jd-split-text h2, .jd-photo-split .jd-split-text p { text-align: left; }
+  .jd-photo-split .jd-split-text .jd-label-line { justify-content: flex-start; }
+  .jd-photo-split .jd-split-text h2, .jd-photo-split .jd-split-text .jd-lead { margin-inline: 0; }
+  .jd-photo-split h2 { font-size: clamp(2.4rem, 4.4vw, 4.6rem); line-height: 1.08; }
+  .jd-photo-split .jd-lead { font-size: clamp(1rem, 1.25vw, 1.2rem); max-width: 36rem; }
+  /* photo à droite (À propos) */
+  .jd-photo-split.is-photo-right .jd-wrap { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); }
+}
+@media (max-width: 899px) {
+  main > section.jd-screen.jd-photo-split { padding: 0; justify-content: flex-start; }
+  .jd-photo-split .jd-wrap { position: relative; flex: 1 1 auto; min-height: calc(100svh - var(--header-h)); padding: 0; }
+  /* Portfolio : photo à gauche, texte à droite par-dessus (maquette 9:16) */
+  .jd-photo-split:not(.is-photo-right) .jd-split-photo { position: absolute; left: 0; bottom: 0; height: 88%; z-index: 0; }
+  .jd-photo-split:not(.is-photo-right) .jd-split-photo picture { margin-left: calc(-.14 * .569 * .88 * (100svh - var(--header-h))); }
+  .jd-photo-split:not(.is-photo-right) .jd-split-text { position: relative; z-index: 1; margin-left: 48%; padding: clamp(1.5rem, 8svh, 4.5rem) var(--gutter, 16px) 0 0; text-align: left; }
+  .jd-photo-split:not(.is-photo-right) .jd-label-line { justify-content: flex-start; gap: .5rem; font-size: .75rem; letter-spacing: .06em; }
+  .jd-photo-split:not(.is-photo-right) .jd-label-line::before { flex-basis: 1.5rem; }
+  .jd-photo-split:not(.is-photo-right) h2 { font-size: clamp(1.25rem, 6.1vw, 2.4rem); line-height: 1.1; margin-inline: 0; overflow-wrap: normal; word-break: normal; hyphens: none; }
+  .jd-photo-split:not(.is-photo-right) .jd-lead { margin-inline: 0; font-size: clamp(.85rem, 4vw, 1rem); text-shadow: 0 1px 8px rgba(13, 9, 23, .85); }
+  .jd-photo-split:not(.is-photo-right) .cta-row .btn { padding-inline: .9rem; min-height: 48px; font-size: .85rem; white-space: normal; text-align: center; }
+  /* À propos : texte en haut, photo en bas (maquette 9:16) */
+  .jd-photo-split.is-photo-right .jd-wrap { display: flex; flex-direction: column; }
+  .jd-photo-split.is-photo-right .jd-split-text { position: relative; z-index: 1; padding: clamp(1rem, 4svh, 2rem) var(--gutter, 16px) 0; text-align: left; }
+  .jd-photo-split.is-photo-right .jd-split-text h2, .jd-photo-split.is-photo-right .jd-lead { margin-inline: 0; }
+  .jd-photo-split.is-photo-right h2 { font-size: clamp(1.6rem, 8vw, 2.4rem); line-height: 1.08; }
+  .jd-photo-split.is-photo-right .jd-lead { font-size: .9rem; line-height: 1.45; }
+  .jd-photo-split.is-photo-right .cta-row { margin-top: .9rem; }
+  .jd-photo-split.is-photo-right .jd-split-photo { flex: 1 1 0; min-height: 0; display: flex; justify-content: center; margin-top: .75rem; }
+}
+
+/* A2/A4 — Portfolio, écran 2 mobile (maquette « format désiré ») : 4 miniatures 9:16 en 2 colonnes, agrandies */
+@media (max-width: 1023px) {
+  html[lang^="fr"] .pf-cats { --pf-h: calc((100svh - var(--header-h)) * .25); }
+  html[lang^="fr"] .pf-cat-grid { max-width: none; grid-template-columns: repeat(2, max(calc(var(--pf-h) * 460 / 642), 8.5rem)); justify-content: center; justify-items: center; gap: .5rem 1.25rem; margin-top: .75rem; }
+  html[lang^="fr"] .pf-cat .thumb:has(picture), html[lang^="fr"] .pf-cat .thumb { max-height: var(--pf-h); }
+  html[lang^="fr"] .pf-cats .jd-lead { font-size: .86rem; line-height: 1.4; }
+}
+@media (max-width: 1023px) and (max-height: 760px) {
+  html[lang^="fr"] .pf-cats { --pf-h: calc((100svh - var(--header-h)) * .21); }
+  html[lang^="fr"] .pf-cats .jd-lead { font-size: .8rem; }
+}
+
+/* A6 — Portfolio, écran 4 : fond étagère + tuile VMM (maquettes 9:16 et 16:9) */
+.pf-shelf { position: relative; overflow: hidden; isolation: isolate; }
+.pf-shelf-bg { position: absolute; z-index: -1; pointer-events: none; }
+.pf-shelf-bg picture, .pf-shelf-bg img { display: block; width: 100%; height: 100%; }
+.pf-shelf-bg img { object-fit: cover; }
+.pf-shelf-row { margin: 0; }
+.pf-shelf-tile { display: flex; flex-direction: column; align-items: center; gap: .6rem; text-align: center; color: var(--title); text-decoration: none; }
+.pf-shelf-img, .pf-shelf-img picture, .pf-shelf-img img { display: block; }
+.pf-shelf-img img { width: 100%; height: auto; border-radius: 22%; transition: filter .2s ease; }
+.pf-shelf-tile:hover .pf-shelf-img img, .pf-shelf-tile:focus-visible .pf-shelf-img img { filter: drop-shadow(0 0 22px rgba(139, 92, 246, .6)) brightness(1.08); }
+.pf-shelf-tile .coulisses-text { display: flex; flex-direction: column; gap: .35rem; align-items: center; }
+.pf-shelf-tile .coulisses-text strong { font-size: 1.15rem; line-height: 1.25; max-width: 15em; }
+.pf-shelf-tile .logo-btn-cta { display: inline-flex; align-items: center; gap: .5rem; }
+.pf-shelf .cta-play { flex: none; }
+@media (min-width: 900px) {
+  main > section.jd-screen.pf-shelf { padding-block: 0; }
+  .pf-shelf-bg { top: 0; right: 0; bottom: 0; width: 38%; }
+  .pf-shelf-bg img { object-position: 50% 50%;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 30%); mask-image: linear-gradient(90deg, transparent 0%, #000 30%); }
+  .pf-shelf-grid { max-width: none; width: 100%; margin-left: 0; padding-inline: clamp(1rem, 4vw, 4rem) 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .8fr) minmax(0, 38%); align-items: center; gap: clamp(1rem, 2vw, 2.5rem); }
+  .pf-shelf-grid .pf-coulisses-text h2 { font-size: clamp(2.4rem, 4.2vw, 4.4rem); line-height: 1.05; }
+  .pf-shelf-img { width: min(100%, 300px, 36svh); }
+  .pf-shelf-row { justify-self: center; }
+}
+@media (max-width: 899px) {
+  main > section.jd-screen.pf-shelf { padding: 0; justify-content: flex-start; }
+  .pf-shelf-bg { inset: 0; }
+  .pf-shelf-bg img { object-position: 50% 30%; }
+  .pf-shelf::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background: linear-gradient(180deg, rgba(13, 9, 23, .6) 0%, rgba(13, 9, 23, .25) 45%, rgba(13, 9, 23, .55) 70%, rgba(13, 9, 23, .92) 100%),
+      linear-gradient(90deg, rgba(13, 9, 23, .7) 0%, rgba(13, 9, 23, 0) 65%); }
+  .pf-shelf-grid { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: space-between; min-height: calc(100svh - var(--header-h)); padding-block: clamp(1.25rem, 6svh, 3.5rem) clamp(1rem, 3svh, 2rem); text-align: left; }
+  .pf-shelf .pf-coulisses-text .jd-label-line { justify-content: flex-start; }
+  .pf-shelf .pf-coulisses-text h2 { font-size: clamp(1.7rem, 8.6vw, 2.8rem); line-height: 1.05; margin-inline: 0; max-width: 8.5em; }
+  .pf-shelf .pf-coulisses-text .jd-lead { margin-inline: 0; max-width: 15em; font-size: clamp(.95rem, 4.6vw, 1.15rem); text-shadow: 0 1px 8px rgba(13, 9, 23, .8); }
+  .pf-shelf-row { align-self: center; }
+  .pf-shelf-img { width: min(52vw, 23svh); }
+  .pf-shelf-tile { gap: .4rem; }
+  .pf-shelf-tile .coulisses-text strong { font-size: 1.05rem; }
+  .pf-shelf-tile .cta-play { display: none; }
+}
+
+/* A6 — la règle générale « .pf-coulisses { padding-top … !important } » ne s'applique pas à l'étagère (plein écran) */
+.pf-shelf.pf-coulisses { padding-top: 0 !important; }
+@media (max-width: 899px) {
+  .jd-photo-split:not(.is-photo-right) .jd-split-text h2, .jd-photo-split:not(.is-photo-right) .jd-split-text p { text-align: left; }
+}
+
+/* A5/B2/B4 — textes plus longs de JD : petits écrans (≤ 760 px de haut) resserrés pour garder un écran par section */
+@media (max-width: 859px) {
+  html[lang^="fr"] .page-apropos .person-photo img { max-height: 24svh; }
+  html[lang^="fr"] .page-apropos .person-text p:not(.jd-role):not(.small) { font-size: .86rem; line-height: 1.45; }
+}
+@media (max-width: 859px) and (max-height: 760px) {
+  html[lang^="fr"] .page-apropos .person-photo img { max-height: 20svh; }
+  html[lang^="fr"] .page-apropos .person-text p:not(.jd-role):not(.small) { font-size: .82rem; line-height: 1.42; margin-block: .3rem; }
+  html[lang^="fr"] .page-apropos .person-text h2 { font-size: clamp(1.6rem, 7.4vw, 2.2rem); }
+}
+@media (max-width: 1023px) and (max-height: 760px) {
+  html[lang^="fr"] .pf-honneur .jd-lead { font-size: .86rem; line-height: 1.4; }
+  html[lang^="fr"] .pf-honneur .logo-btn-face { width: min(100%, 12svh); }
+}
+
+@media (max-width: 899px) and (max-height: 760px) {
+  .pf-shelf-img { width: min(46vw, 19svh); }
+  .pf-shelf .pf-coulisses-text h2 { font-size: clamp(1.6rem, 8vw, 2.4rem); }
+  .pf-shelf .pf-coulisses-text .jd-lead { font-size: .92rem; }
+}
+
+/* A1 — « dans toutes les pages du site » : aussi les héros des pages de zones et l'écran 1 de Contact
+   (même noir, même opacité réduite de moitié ; bords fondus) */
+html[lang^="fr"] .zone-hero > .container, html[lang^="fr"] .page-contact .contact-info { position: relative; isolation: isolate; }
+html[lang^="fr"] .zone-hero > .container::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  left: calc(50% - 50vw); width: 100vw; top: -2.5rem; bottom: -2.5rem;
+  background: linear-gradient(180deg, rgba(13, 9, 23, 0) 0, rgba(13, 9, 23, var(--rect-a)) 2.5rem,
+    rgba(13, 9, 23, var(--rect-a)) calc(100% - 2.5rem), rgba(13, 9, 23, 0) 100%);
+}
+html[lang^="fr"] .page-contact .contact-info::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  inset: -1.25rem; border-radius: 1rem; background: rgba(13, 9, 23, var(--rect-a));
+}
+@media (max-width: 959px) {
+  html[lang^="fr"] .page-contact .contact-info::before {
+    inset: 0 auto 0 calc(50% - 50vw); width: 100vw; border-radius: 0;
+    background: linear-gradient(180deg, rgba(13, 9, 23, 0) 0, rgba(13, 9, 23, var(--rect-a)) 1.5rem,
+      rgba(13, 9, 23, var(--rect-a)) calc(100% - 1.5rem), rgba(13, 9, 23, 0) 100%);
+  }
+}
+
+/* Contrôle visuel contre les maquettes « souhaitées » de JD (15 nov.) : textes, boutons et photos agrandis
+   pour suivre les proportions des maquettes 16:9 et 9:16 */
+@media (min-width: 900px) {
+  /* Portfolio p5, À propos p5 */
+  .jd-photo-split h2 { font-size: clamp(2.6rem, 4.6vw, 5rem); }
+  .jd-photo-split .jd-lead { font-size: clamp(1.05rem, 1.5vw, 1.45rem); line-height: 1.5; max-width: 38rem; }
+  .jd-photo-split .cta-row .btn { font-size: clamp(1rem, 1.25vw, 1.25rem); min-height: 56px; padding-inline: 1.6rem; }
+  .jd-photo-split.is-photo-right .jd-wrap { grid-template-columns: minmax(0, 1.3fr) minmax(0, .9fr); }
+  .jd-photo-split.is-photo-right h2 { max-width: 10.5em; font-size: clamp(2.4rem, 3.9vw, 4.4rem); }
+  .jd-photo-split.is-photo-right .jd-split-photo { align-self: end; height: calc(100svh - var(--header-h) - .5rem); }
+  /* Portfolio p4 (étagère) */
+  .pf-shelf-grid .pf-coulisses-text h2 { font-size: clamp(2.6rem, 4.6vw, 5rem); }
+  .pf-shelf-grid .pf-coulisses-text .jd-lead { font-size: clamp(1.05rem, 1.5vw, 1.45rem); line-height: 1.45; max-width: 30rem; }
+  .pf-shelf-img { width: min(100%, 340px, 40svh); }
+  .pf-shelf-tile .coulisses-text strong { font-size: clamp(1.15rem, 1.45vw, 1.4rem); }
+  .pf-shelf-tile .coulisses-text { font-size: clamp(1rem, 1.15vw, 1.15rem); }
+}
+@media (min-width: 960px) {
+  /* Accueil p2 : texte plus grand, vignettes plus hautes (maquette « positionnement optimisé ») */
+  html[lang^="fr"] .home-portfolio .jd-lead { font-size: clamp(1.05rem, 1.4vw, 1.4rem); max-width: 60rem; }
+  html[lang^="fr"] .home-portfolio .hp-cards { --hp-h: calc(100svh - var(--header-h) - 20rem); }
+  html[lang^="fr"] .home-portfolio .hp-card .yt-tile-label { font-size: clamp(.95rem, 1.1vw, 1.15rem); }
+  html[lang^="fr"] .home-portfolio .cta-row .btn { font-size: clamp(1rem, 1.25vw, 1.2rem); min-height: 54px; padding-inline: 1.6rem; }
+}
+@media (min-width: 900px) {
+  /* Accueil p5 : titre sur trois lignes comme la maquette, texte et bouton plus grands */
+  html[lang^="fr"] .home-contact h2 { font-size: clamp(2.6rem, 4.4vw, 5rem); max-width: 9.5em; }
+  html[lang^="fr"] .home-contact .jd-lead { font-size: clamp(1.05rem, 1.5vw, 1.45rem); max-width: 36rem; }
+  html[lang^="fr"] .home-contact .cta-row .btn { font-size: clamp(1rem, 1.25vw, 1.25rem); min-height: 56px; padding-inline: 1.6rem; }
+}
+@media (max-width: 899px) {
+  /* Accueil p5 et Portfolio p5 mobiles : titre plus grand (maquettes 9:16), colonne de texte un peu plus large */
+  html[lang^="fr"] .home-contact .home-split-text { margin-left: 46%; padding-right: 12px; }
+  html[lang^="fr"] .home-contact h2 { font-size: clamp(1.5rem, 6.9vw, 2.6rem); }
+  html[lang^="fr"] .home-contact-photo { height: 82%; }
+  .jd-photo-split:not(.is-photo-right) .jd-split-text { margin-left: 46%; padding-right: 12px; }
+  .jd-photo-split:not(.is-photo-right) .jd-split-text h2 { font-size: clamp(1.5rem, 6.9vw, 2.6rem); }
+  .jd-photo-split:not(.is-photo-right) .jd-lead { font-size: clamp(.9rem, 4.2vw, 1.1rem); }
+  .jd-photo-split:not(.is-photo-right) .jd-split-photo { height: 84%; }
+  /* À propos p5 mobile : photo plus grande, coupée par le bas de l'écran comme la maquette */
+  .jd-photo-split.is-photo-right .jd-split-photo { margin-top: .25rem; }
+}
+/* À propos p5 : photo plus grande, recadrée par le bas (comme les maquettes) sans dépasser de l'écran :
+   la boîte de l'image garde la hauteur disponible, l'image remplit une boîte moins haute que la photo entière */
+.jd-photo-split.is-photo-right .jd-split-photo img { aspect-ratio: 944 / 1250; object-fit: cover; object-position: 50% 0; }
+
+/* Relecture de Natasha (15 nov.) */
+@media (max-width: 899px) {
+  /* À propos p5 mobile : photo de JD en bas de l'écran sur plus de la moitié de la hauteur, fondu en haut */
+  .jd-photo-split.is-photo-right .jd-split-text { position: relative; z-index: 1; }
+  .jd-photo-split.is-photo-right .jd-split-photo { position: absolute; left: 0; right: 0; bottom: 0; height: 58%; margin: 0; z-index: 0; justify-content: center; }
+  .jd-photo-split.is-photo-right .jd-split-photo picture { height: 100%; }
+  .jd-photo-split.is-photo-right .jd-split-photo img { aspect-ratio: auto; object-fit: contain; height: 100%;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 14%, #000 82%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 9%, #000 91%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0%, #000 14%, #000 82%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 9%, #000 91%, transparent 100%); }
+  /* Portfolio p5 mobile : photo à gauche (54 %), texte à droite sans chevaucher le visage ni la caméra */
+  .jd-photo-split:not(.is-photo-right) .jd-split-photo { width: 54%; height: 90%; overflow: hidden; }
+  .jd-photo-split:not(.is-photo-right) .jd-split-photo picture { margin-left: 0; height: 100%; width: 100%; }
+  .jd-photo-split:not(.is-photo-right) .jd-split-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 78% 0; }
+  .jd-photo-split:not(.is-photo-right) .jd-split-text { margin-left: 53%; padding-right: 12px; }
+  .jd-photo-split:not(.is-photo-right) .jd-split-text h2 { font-size: clamp(1.3rem, 6vw, 2.4rem); }
+  .jd-photo-split:not(.is-photo-right) .jd-lead { font-size: clamp(.8rem, 3.9vw, 1rem); text-shadow: none; }
+  .jd-photo-split:not(.is-photo-right) .jd-label-line { font-size: .75rem; }
+}
+@media (max-width: 899px) and (max-height: 760px) {
+  .jd-photo-split.is-photo-right .jd-split-photo { height: 50%; }
+}
+/* Contact ordi : les six réseaux (Google compris) sur une ligne */
+@media (min-width: 960px) {
+  html[lang^="fr"] .page-contact .socials { flex-wrap: nowrap; gap: .3rem; }
+  html[lang^="fr"] .page-contact .socials a { padding: 0 8px; font-size: .9rem; }
+}
+
+/* C10 — Pages des entreprises : titre centré à l'horizontale, même hauteur et même couleur */
+.collection-title.is-centered { text-align: center; margin-inline: auto; width: 100%; }
+
+/* C9 — Services : un seul mot (« Services ») ; même style et même position */
+html[lang^="fr"] .page-hero.full-hero > .container:has(> h1.hero-stack.is-one-line)::before { --c-h: 2.4rem; }
+
+/* B3 — À propos, pages JD et Renaud : étiquette au format des autres sections (trait + majuscules violettes) */
+html[lang^="fr"] .page-apropos .jd-screen > .jd-wrap > .jd-label-line { display: flex; align-items: center; gap: 1rem; }
+
+/* C11 — Contact mobile : le fond animé 9:16 occupe un écran (logo entier, sans zoom) et reste derrière les deux écrans
+   (coordonnées, formulaire). Avant, la boîte vidéo faisait la hauteur des deux écrans : le 9:16 était agrandi et coupé. */
+@media (max-width: 959px) {
+  html[lang^="fr"] .page-contact .bg-video { position: sticky; top: var(--header-h); inset: auto; height: calc(100svh - var(--header-h)); margin-bottom: calc(-1 * (100svh - var(--header-h))); }
+}
+/* === FIN JD 2026-11-14 === */
+
+/* Relecture de Natasha (15 nov.) : Accueil écrans 2 et 3 tenus dans « 100svh moins l'en-tête » sur ordi portable.
+   Écran 2 : la hauteur des vignettes = l'écran moins l'en-tête, les marges (4svh × 2) et le reste du contenu
+   (étiquette, titre, texte, légendes, bouton ; leur taille suit la largeur, d'où le terme en vw, plafonné).
+   Écran 3 : photos 3:4 bornées par la hauteur de l'écran et par la place laissée à une colonne de texte assez
+   large pour garder le titre sur trois lignes ; ni étirées ni recadrées. */
+@media (min-width: 960px) {
+  html[lang^="fr"] .home-portfolio .hp-cards { --hp-h: calc(100svh - var(--header-h) - 8svh - min(26vw, 24.5rem)); }
+}
+@media (min-width: 900px) {
+  html[lang^="fr"] .home-team {
+    --tm-text: clamp(24rem, 30vw, 31rem);
+    --tm-p: min(calc((100svh - var(--header-h) - 3rem) * .75),
+                calc((min(100vw, 1600px) - 2 * clamp(1rem, 4vw, 4rem) - clamp(2rem, 3vw, 3.5rem) - 1rem - var(--tm-text)) / 2));
+  }
+  html[lang^="fr"] .home-team .jd-wrap { max-width: 1600px; }
+  html[lang^="fr"] .home-team .home-split { grid-template-columns: minmax(var(--tm-text), 1fr) auto; }
+  html[lang^="fr"] .home-team-photos { grid-template-columns: repeat(2, var(--tm-p)); }
+  html[lang^="fr"] .home-team-photos img { width: var(--tm-p); height: auto; max-height: none; aspect-ratio: 3 / 4; }
+  html[lang^="fr"] .home-team .home-team-title { font-size: clamp(2.4rem, 4.2vw, 4.25rem); }
+}

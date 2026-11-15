@@ -492,3 +492,36 @@
     if (Math.abs(dx) > 40) show(current + (dx < 0 ? 1 : -1));
   });
 })();
+
+/* Titre animé de l'accueil et icônes animées (JD, 2026-11-14) : IIFE à part, sur toutes les pages */
+(() => {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Titre animé de l'accueil (JD, 2026-11-14) : WebM VP9 avec transparence, lu en boucle par-dessus l'image fixe.
+  // Safari ne lit pas la transparence du WebM (fond opaque) : il garde l'image fixe, comme « réduire les animations ».
+  const titrage = document.querySelector('.hero-titrage[data-webm]');
+  const isSafari = /^((?!chrome|android|crios|fxios|edg).)*safari/i.test(navigator.userAgent);
+  // Sources : HEVC avec alpha d'abord (Safari/iOS), WebM VP9 avec alpha ensuite. Sans HEVC, Safari garde le poster fixe.
+  if (titrage && !reduced && (!isSafari || titrage.dataset.hevc)) {
+    const v = Object.assign(document.createElement('video'), { muted: true, loop: true, playsInline: true, autoplay: true, preload: 'auto' });
+    v.className = 'hero-titrage-video';
+    v.setAttribute('aria-hidden', 'true');
+    v.setAttribute('muted', '');
+    v.setAttribute('playsinline', '');
+    if (titrage.dataset.hevc) v.append(Object.assign(document.createElement('source'), { src: titrage.dataset.hevc, type: 'video/mp4; codecs="hvc1"' }));
+    v.append(Object.assign(document.createElement('source'), { src: titrage.dataset.webm, type: 'video/webm; codecs="vp9"' }));
+    v.addEventListener('playing', () => titrage.classList.add('is-playing'), { once: true });
+    titrage.append(v);
+    v.play().catch(() => {});
+  }
+
+  // Icônes des réseaux (Contact, pied de page) : même tracé que les illustrations de Services, à l'arrivée à l'écran
+  const socialLists = document.querySelectorAll('.socials, .cta-play');
+  if ('IntersectionObserver' in window && socialLists.length) {
+    const seen = new IntersectionObserver((entries) => entries.forEach(({ target, isIntersecting }) => {
+      if (!isIntersecting) return;
+      target.classList.add('is-visible');
+      seen.unobserve(target);
+    }), { threshold: 0.3 });
+    socialLists.forEach((ul) => seen.observe(ul));
+  } else socialLists.forEach((ul) => ul.classList.add('is-visible'));
+})();

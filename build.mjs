@@ -335,7 +335,8 @@ function structuredData(key, lang, pageVideos = [], page = null) {
     knowsLanguage: ['fr-CA', 'en-CA'],
     founder: { '@id': `${SITE_URL}/#jd` },
     employee: persons.map((p) => ({ '@id': p['@id'] })),
-    sameAs: site.reseaux.map((r) => r.url),
+    // Fiche Google Business (JD, 2026-11-14, C12) : forme durable du lien share.google, version française seulement
+    sameAs: [...site.reseaux.map((r) => r.url), ...(lang === 'fr' && site.google?.sameAs ? [site.google.sameAs] : [])],
   };
   const seo = page?.seo || L.seo[key];
   const pageUrl = abs((page?.route || ROUTES[key])[lang]);
@@ -527,7 +528,7 @@ ${endScreen ? `<div class="end-screen">\n${endBand ? `${endBand}\n` : ''}` : ''}
     </div>
     <div>
       <p class="label">${esc(L.contact.suivre)}</p>
-      ${socials({ icons: true, iconsOnly: true, suffix: `pied-${lang}` })}
+      ${socials({ icons: true, iconsOnly: true, suffix: `pied-${lang}`, lang })}
     </div>
     <nav aria-label="${esc(L.pied.zones)}">
       <p class="label">${esc(L.pied.zones)}</p>
@@ -550,7 +551,7 @@ ${/* GSAP, ScrollTrigger et Lenis (src/vendor/) sont chargés par main.js après
 }
 
 // Icônes officielles des réseaux (Simple Icons, CC0), en ligne. Blanches ; dégradé du site au survol.
-const SOCIAL_ICON_FILE = { Instagram: 'instagram', TikTok: 'tiktok', YouTube: 'youtube', Facebook: 'facebook', X: 'x' };
+const SOCIAL_ICON_FILE = { Instagram: 'instagram', TikTok: 'tiktok', YouTube: 'youtube', Facebook: 'facebook', X: 'x', Google: 'google' };
 function socialIcon(nom, suffix) {
   const file = SOCIAL_ICON_FILE[nom];
   if (!file) return '';
@@ -561,9 +562,20 @@ function socialIcon(nom, suffix) {
 }
 
 // iconsOnly (pied de page, JD 2026-11-10) : le logo seul, le nom reste lu par les lecteurs d'écran (aria-label)
-const socials = ({ icons = false, iconsOnly = false, suffix = '' } = {}) =>
+// Icône Google (JD, courriel du 2026-11-14) : version française seulement (Contact et pied de page).
+// site.google.url = lien de la fiche Google Business fourni par JD (2026-11-14). S'il est vide, l'icône est affichée
+// mais non cliquable (aria-disabled), sans lien inventé.
+const googleItem = ({ icons, iconsOnly, suffix }) => {
+  const g = site.google;
+  if (!g) return '';
+  const inner = `${icons ? socialIcon(g.nom, suffix) : ''}${iconsOnly ? '' : esc(g.nom)}`;
+  return g.url
+    ? `<li><a href="${esc(g.url)}" target="_blank" rel="noopener" aria-label="${esc(g.nom)}">${inner}</a></li>`
+    : `<li><a class="is-pending" role="link" aria-disabled="true"${iconsOnly ? ` aria-label="${esc(g.nom)}"` : ''}>${inner}</a></li>`;
+};
+const socials = ({ icons = false, iconsOnly = false, suffix = '', lang = '' } = {}) =>
   `<ul class="socials${iconsOnly ? ' icons-only' : ''}">
-        ${site.reseaux.map((r) => `<li><a href="${esc(r.url)}" rel="me noopener" target="_blank"${iconsOnly ? ` aria-label="${esc(r.nom)}"` : ''}>${icons ? socialIcon(r.nom, suffix) : ''}${iconsOnly ? '' : esc(r.nom)}</a></li>`).join('\n        ')}
+        ${site.reseaux.map((r) => `<li><a href="${esc(r.url)}" rel="me noopener" target="_blank"${iconsOnly ? ` aria-label="${esc(r.nom)}"` : ''}>${icons ? socialIcon(r.nom, suffix) : ''}${iconsOnly ? '' : esc(r.nom)}</a></li>`).join('\n        ')}${lang === 'fr' ? `\n        ${googleItem({ icons, iconsOnly, suffix })}` : ''}
       </ul>`;
 
 // Zones desservies du pied de page : la liste exacte de JD (pied.zonesListe, capture du 2026-11-10).
@@ -655,7 +667,7 @@ function contactBlock(lang, { tag = 'h2', id = 'contact-title' } = {}) {
       ${tag === 'h1' ? `<p class="muted small" data-reveal>${esc(L.contact.deplacement)}</p>` : ''}
       <div data-reveal>
         <p class="label">${esc(L.contact.suivre)}</p>
-        ${socials({ icons: tag === 'h1', suffix: lang })}
+        ${socials({ icons: tag === 'h1', suffix: lang, lang: tag === 'h1' ? lang : '' })}
       </div>
     </div>
     <form class="contact-form card glass" name="contact" method="POST" action="${ROUTES.merci[lang]}" data-netlify="true" netlify-honeypot="bot-field" data-reveal
@@ -744,6 +756,17 @@ function homePage(lang) {
   const contactPhoto = A.contact.photo && existsSync(join(ROOT, 'static', `${A.contact.photo}.webp`));
   // Écran 4 (JD, 2026-11-10) : photo du studio ; l'ancien portrait détouré revient si la photo manque
   const studio = A.services.photoStudio && existsSync(join(ROOT, 'static', `${A.services.photoStudio}.webp`));
+  // Titre animé (JD, courriel du 2026-11-14, C1-C2) : l'animation détourée remplace le titre visible ; le H1 reste
+  // dans la page (masqué visuellement). Image fixe d'abord (sans JavaScript ni « réduire les animations ») ;
+  // main.js ajoute la vidéo WebM avec transparence, ou l'image animée sur Safari (pas de WebM transparent).
+  const TT = A.hero.titrage;
+  const titrage = TT && exists(`${TT.poster}.webp`) ? TT : null;
+  const titrageHtml = titrage
+    ? `<div class="hero-titrage" aria-hidden="true"${exists(titrage.webm) ? ` data-webm="${titrage.webm}"` : ''}${exists(titrage.hevc) ? ` data-hevc="${titrage.hevc}"` : ''}${exists(titrage.anim) ? ` data-anim="${titrage.anim}"` : ''}>
+      <picture class="hero-titrage-img"><source srcset="${titrage.poster}.webp" type="image/webp"><img src="${titrage.poster}.png" alt="" width="${titrage.largeur}" height="${titrage.hauteur}" decoding="async" fetchpriority="high"></picture>
+    </div>`
+    : '';
+  const heroH1 = `<h1 id="hero-title" class="hero-title hero-title-jd${titrage ? ' visually-hidden' : ''}" data-no-accent${titrage ? '' : ' data-reveal'}><span class="ht-videos">${esc(tVideos)}</span> <span class="ht-make">${esc(tMake)}</span> <span class="ht-money">${esc(tMoney)}</span>${h1Seo(L.seo.accueil.h1)}</h1>`;
   const body = `
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero-media" aria-hidden="true">
@@ -751,7 +774,7 @@ function homePage(lang) {
     <div class="hero-vignette"></div>
   </div>
   <div class="container hero-content">
-    <h1 id="hero-title" class="hero-title hero-title-jd" data-no-accent data-reveal><span class="ht-videos">${esc(tVideos)}</span> <span class="ht-make">${esc(tMake)}</span> <span class="ht-money">${esc(tMoney)}</span>${h1Seo(L.seo.accueil.h1)}</h1>
+    ${titrageHtml}${titrageHtml ? '\n    ' : ''}${heroH1}
     <p class="hero-sub hero-signature" data-reveal>${rich(A.hero.signature)}</p>
     <p class="hero-text" data-reveal>${t(L.hero.texte)}</p>
     <p class="hero-ctas" data-reveal>
@@ -868,7 +891,7 @@ function fullHero(clipId, title, L, hero = null, h1 = '', opts = {}) {
   <div class="container">
     ${
       hero
-        ? `<h1 id="hero-title" class="hero-stack" data-no-accent><span class="hero-line">${esc(hero.ligne1)}</span> <span class="hero-word">${esc(hero.ligne2)}</span>${h1Seo(h1)}</h1>
+        ? `<h1 id="hero-title" class="hero-stack${hero.ligne1 ? '' : ' is-one-line'}" data-no-accent>${hero.ligne1 ? `<span class="hero-line">${esc(hero.ligne1)}</span> ` : ''}<span class="hero-word">${esc(hero.ligne2)}</span>${h1Seo(h1)}</h1>
     ${hero.intro ? `<p class="intro hero-intro">${t(hero.intro)}</p>` : ''}`
         : `<h1 id="hero-title" class="hero-word" data-no-accent>${esc(title)}${h1Seo(h1)}</h1>`
     }${opts.resume ? `
@@ -1045,11 +1068,54 @@ function portfolioPage(lang) {
   const head = (label, title, intro, id) => `<p class="jd-label jd-label-line" data-reveal>${esc(label)}</p>
     <h2 id="${id}" data-reveal data-no-accent>${t(title)}</h2>
     ${[].concat(intro || []).map((x) => `<p class="jd-lead" data-reveal>${t(x)}</p>`).join('\n    ')}`;
+  // Écran 4 (JD, courriel du 2026-11-14, A6) : fond étagère + tuile VMM, quand ces visuels existent (version française).
+  const CB = P.coulissesBloc;
+  const shelf = CB.fond && existsSync(join(ROOT, 'static', `${CB.fond}-720.webp`)) && existsSync(join(ROOT, 'static', `${CB.tuile}.webp`));
+  const playIcon = '<svg class="cta-play" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10"/><path d="m10 8 6 4-6 4Z"/></svg>';
+  const coulissesSection = shelf
+    ? `<section class="jd-screen pf-coulisses pf-shelf" aria-labelledby="pf-coulisses-title">
+  <div class="pf-shelf-bg" aria-hidden="true"><picture><source media="(min-width: 900px)" srcset="${CB.fond}-1080.webp" type="image/webp"><source srcset="${CB.fond}-720.webp 720w, ${CB.fond}-1080.webp 1080w" sizes="100vw" type="image/webp"><img src="${CB.fond}-1080.jpg" alt="" width="1080" height="1920" loading="lazy" decoding="async"></picture></div>
+  <div class="jd-wrap pf-shelf-grid">
+    <div class="pf-coulisses-text">
+    ${head(CB.etiquette, CB.titre, CB.intro, 'pf-coulisses-title')}
+    </div>
+    <p class="pf-shelf-row"><a class="coulisses-link pf-shelf-tile" href="${coulissesRoute[lang]}" aria-label="${esc(CB.voir)} (${countText(behind.length, P)})" data-reveal>
+      <span class="pf-shelf-img">${picture(CB.tuile, '', { w: 512, h: 512, fallback: 'png' })}</span>
+      <span class="coulisses-text"><strong>${esc(CB.legende)}</strong><span class="coulisses-count">${countText(behind.length, P)}</span><span class="logo-btn-cta">${playIcon}${esc(P.cliquer)}</span></span>
+    </a></p>
+  </div>
+</section>`
+    : `<section class="jd-screen pf-coulisses" aria-labelledby="pf-coulisses-title">
+  <div class="jd-wrap">
+    <div class="pf-coulisses-grid">
+    <div class="pf-coulisses-text">
+    ${head(CB.etiquette, CB.titre, CB.intro, 'pf-coulisses-title')}
+    </div>
+    <p class="pf-coulisses-row"><a class="coulisses-link" href="${coulissesRoute[lang]}" aria-label="${esc(CB.voir)} (${countText(behind.length, P)})" data-reveal>
+      <span class="coulisses-photo">${hasPhoto ? picture(photo, CB.photoAlt, { w: COUL.photoLargeur || 1152, h: COUL.photoHauteur || 2048, fallback: photoFallback }) : '<span class="thumb-empty" aria-hidden="true"></span>'}</span>
+      <span class="coulisses-text"><strong>${esc(CB.legende)}</strong><span class="coulisses-count">${countText(behind.length, P)}</span><span class="logo-btn-cta">${esc(P.cliquer)}</span></span>
+    </a></p>
+    </div>
+  </div>
+</section>`;
+  // Écran 5 (JD, courriel du 2026-11-14, A9) : photo de JD à gauche, fondue dans le fond ; texte à droite.
+  const finPhoto = P.fin.photo && existsSync(join(ROOT, 'static', `${P.fin.photo}.webp`));
+  const finSection = `<section class="jd-screen jd-end pf-end${finPhoto ? ' jd-photo-split' : ''}" aria-labelledby="pf-fin-title">
+  <div class="jd-wrap">${finPhoto ? `
+    <div class="jd-split-photo" data-reveal>${picture(P.fin.photo, P.fin.photoAlt, { w: P.fin.photoLargeur, h: P.fin.photoHauteur, fallback: 'png' })}</div>
+    <div class="jd-split-text">` : ''}
+    <p class="jd-label${finPhoto ? ' jd-label-line' : ''}" data-reveal>${esc(P.fin.etiquette)}</p>
+    <h2 id="pf-fin-title" data-reveal data-no-accent>${t(P.fin.titre)}</h2>
+    <p class="jd-lead" data-reveal>${t(P.fin.texte)}</p>
+    <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.apropos[lang]}">${esc(P.bouton)}</a></p>${finPhoto ? `
+    </div>` : ''}
+  </div>
+</section>`;
   const body = `${fullHero('portfolio', P.heroTitre, L, null, L.seo.portfolio.h1, { cls: 'pf-hero', scroll: { texte: P.scroll, label: P.scrollLabel, cible: 'realisons' }, resume: heroResume(L, 'portfolio') })}
 ${heroResume(L, 'portfolio') ? '' : summaryBand(L.seo.portfolio.resume)}
 <section class="jd-screen pf-cats" id="realisons" aria-labelledby="realisons-title">
   <div class="jd-wrap">
-    ${head(P.realisons.etiquette, P.realisons.titre, [P.intro, P.realisons.intro], 'realisons-title')}
+    ${head(P.realisons.etiquette, P.realisons.titre, P.realisons.texte ? [P.realisons.texte] : [P.intro, P.realisons.intro], 'realisons-title')}
     <ul class="pf-cat-grid" role="list">
       ${portfolio.categories
         .map((c, i) => `<li data-reveal>${ytTile(catVideos[i], lang, { cls: 'pf-cat', label: t((c.titrePortfolio || c.titre)[lang]), img: c.miniature })}</li>`)
@@ -1072,28 +1138,9 @@ ${heroResume(L, 'portfolio') ? '' : summaryBand(L.seo.portfolio.resume)}
   </div>
 </section>
 
-<section class="jd-screen pf-coulisses" aria-labelledby="pf-coulisses-title">
-  <div class="jd-wrap">
-    <div class="pf-coulisses-grid">
-    <div class="pf-coulisses-text">
-    ${head(P.coulissesBloc.etiquette, P.coulissesBloc.titre, P.coulissesBloc.intro, 'pf-coulisses-title')}
-    </div>
-    <p class="pf-coulisses-row"><a class="coulisses-link" href="${coulissesRoute[lang]}" aria-label="${esc(P.coulissesBloc.voir)} (${countText(behind.length, P)})" data-reveal>
-      <span class="coulisses-photo">${hasPhoto ? picture(photo, P.coulissesBloc.photoAlt, { w: COUL.photoLargeur || 1152, h: COUL.photoHauteur || 2048, fallback: photoFallback }) : '<span class="thumb-empty" aria-hidden="true"></span>'}</span>
-      <span class="coulisses-text"><strong>${esc(P.coulissesBloc.legende)}</strong><span class="coulisses-count">${countText(behind.length, P)}</span><span class="logo-btn-cta">${esc(P.cliquer)}</span></span>
-    </a></p>
-    </div>
-  </div>
-</section>
+${coulissesSection}
 
-<section class="jd-screen jd-end pf-end" aria-labelledby="pf-fin-title">
-  <div class="jd-wrap">
-    <p class="jd-label" data-reveal>${esc(P.fin.etiquette)}</p>
-    <h2 id="pf-fin-title" data-reveal data-no-accent>${t(P.fin.titre)}</h2>
-    <p class="jd-lead" data-reveal>${t(P.fin.texte)}</p>
-    <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.apropos[lang]}">${esc(P.bouton)}</a></p>
-  </div>
-</section>`;
+${finSection}`;
   return layout({ key: 'portfolio', lang, body, videos: portfolioVideos(), preload: posterPreload('portfolio') });
 }
 
@@ -1101,12 +1148,13 @@ ${heroResume(L, 'portfolio') ? '' : summaryBand(L.seo.portfolio.resume)}
 // le titre en blanc (seul texte du héros), puis les miniatures et les flèches posées directement sur la vidéo, en bas.
 // Les anciens éléments du héros (résumé « VMM Productions a réalisé… », nombre de vidéos, « Retour aux projets »)
 // sont retirés de la page ; leurs textes restent dans content/*.json.
-function collectionScreen(L, lang, { clip, title, h1, list }) {
+// centered (pages des entreprises, version française ; JD, courriel du 2026-11-14, C10) : titre centré à l'horizontale, même hauteur.
+function collectionScreen(L, lang, { clip, title, h1, list, centered = false }) {
   const hasClip = clip && clips.clips[clip];
   return `<section class="page-hero collection-screen${hasClip ? ' full-hero has-bg-video' : ''}" aria-labelledby="hero-title">
   ${hasClip ? bgVideo(clip) : ''}
   <div class="container collection-inner">
-    <h1 id="hero-title" class="collection-title${title.length > 22 ? ' is-long' : ''}" data-no-accent>${esc(title)}${h1Seo(h1)}</h1>
+    <h1 id="hero-title" class="collection-title${title.length > 22 ? ' is-long' : ''}${centered ? ' is-centered' : ''}" data-no-accent>${esc(title)}${h1Seo(h1)}</h1>
     <div class="collection-library" id="videos">
       ${library(list, lang, `biblio-${lang}`)}
     </div>
@@ -1122,7 +1170,7 @@ function clientPage(c, lang) {
   const list = visibleVideos(clientVideos(c));
   // Élision en français : « de Installations » devient « d'Installations ».
   const fill = (s) => (lang === 'fr' && /^[aeiouyàâéèêîôûh]/i.test(c.nom) ? s.replaceAll('de {client}', 'd’{client}') : s).replaceAll('{client}', c.nom);
-  const body = collectionScreen(L, lang, { clip: c.clip, title: c.nomHero || c.nom, h1: fill(P.clientH1), list });
+  const body = collectionScreen(L, lang, { clip: c.clip, title: c.nomHero || c.nom, h1: fill(P.clientH1), list, centered: lang === 'fr' });
   return layout({
     key: 'portfolio',
     lang,
@@ -1301,11 +1349,16 @@ function aboutPage(lang) {
   const L = langs[lang];
   const A = L.apropos;
   const label = `<p class="jd-label" data-reveal>${esc(A.etiquette)}</p>`;
+  // Version française (JD, courriel du 2026-11-14, B1-B3) : l'écran « Les visages derrière VMM. » est fusionné dans le
+  // dernier écran (photo de JD à droite / en bas) ; les pages JD et Renaud portent l'étiquette « Les visages derrière VMM »
+  // au format des autres étiquettes (trait + majuscules violettes). La version anglaise garde l'ancienne structure.
+  const fused = Boolean(A.fin.photo && existsSync(join(ROOT, 'static', `${A.fin.photo}.webp`)));
+  const personLabel = fused && A.etiquettePersonnes ? `<p class="jd-label jd-label-line" data-reveal>${esc(A.etiquettePersonnes)}</p>` : label;
   const members = A.membres
     .map(
       (m) => `<section class="jd-screen" id="${m.id}" aria-labelledby="${m.id}-title">
   <div class="jd-wrap">
-    ${label}
+    ${personLabel}
     <div class="person">
       <div class="person-photo" data-reveal>
         ${m.photo ? picture(m.photo, m.photoAlt, { w: 900, h: 1200 }) : `<span class="tbc">${t(L.equipe.photoManquante)}</span>`}
@@ -1321,10 +1374,7 @@ function aboutPage(lang) {
 </section>`
     )
     .join('\n');
-  // Repère « SCROLL ↓ » du PDF À propos (écran 01), même composant que Portfolio
-  const body = `${fullHero('about', A.titre, L, null, L.seo.apropos.h1, { scroll: { texte: L.portfolio.scroll, label: L.portfolio.scrollLabel, cible: 'vision' }, resume: heroResume(L, 'apropos') })}
-${heroResume(L, 'apropos') ? '' : summaryBand(L.seo.apropos.resume)}
-<section class="jd-screen jd-vision" id="vision" aria-labelledby="visages-title">
+  const visionSection = `<section class="jd-screen jd-vision" id="vision" aria-labelledby="visages-title">
   <div class="jd-wrap${A.vision.photo ? ' vision-grid' : ''}">
     <div class="vision-text">
       ${label}
@@ -1335,10 +1385,20 @@ ${heroResume(L, 'apropos') ? '' : summaryBand(L.seo.apropos.resume)}
       ${picture(A.vision.photo, A.vision.photoAlt, { w: A.vision.photoLargeur || 900, h: A.vision.photoHauteur || 1200, fallback: A.vision.photoFormat || 'jpg' })}
     </div>` : ''}
   </div>
-</section>
-${members}
-${coulissesGrid(A.coulisses)}
-<section class="jd-screen jd-closing" aria-labelledby="gens-title">
+</section>`;
+  const closing = fused
+    ? `<section class="jd-screen jd-closing jd-photo-split is-photo-right" id="vision" aria-labelledby="gens-title">
+  <div class="jd-wrap">
+    <div class="jd-split-text">
+    <p class="jd-label" data-reveal>${esc(A.fin.etiquette)}</p>
+    <h2 id="gens-title" class="vision-title" data-reveal>${rich(A.fin.titre)}</h2>
+    <p class="jd-lead" data-reveal>${t(A.fin.texte)}</p>
+    <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.contact[lang]}">${esc(A.fin.bouton)}</a></p>
+    </div>
+    <div class="jd-split-photo" data-reveal>${picture(A.fin.photo, A.fin.photoAlt, { w: A.fin.photoLargeur, h: A.fin.photoHauteur, fallback: 'png' })}</div>
+  </div>
+</section>`
+    : `<section class="jd-screen jd-closing" aria-labelledby="gens-title">
   <div class="jd-wrap">
     ${label}
     <h2 id="gens-title" class="vision-title" data-reveal>${rich(A.fin.titre)}</h2>
@@ -1346,6 +1406,12 @@ ${coulissesGrid(A.coulisses)}
     <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.contact[lang]}">${esc(A.fin.bouton)}</a></p>
   </div>
 </section>`;
+  // Repère « SCROLL ↓ » du PDF À propos (écran 01), même composant que Portfolio
+  const body = `${fullHero('about', A.titre, L, null, L.seo.apropos.h1, { scroll: { texte: L.portfolio.scroll, label: L.portfolio.scrollLabel, cible: fused ? A.membres[0].id : 'vision' }, resume: heroResume(L, 'apropos') })}
+${heroResume(L, 'apropos') ? '' : summaryBand(L.seo.apropos.resume)}
+${fused ? '' : `${visionSection}\n`}${members}
+${coulissesGrid(A.coulisses)}
+${closing}`;
   return layout({ key: 'apropos', lang, body, preload: posterPreload('about') });
 }
 
