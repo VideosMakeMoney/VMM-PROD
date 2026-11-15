@@ -1945,6 +1945,27 @@ html[lang^="fr"] .is-visible .contact-icon img { animation: svc-draw 1.4s var(--
   .pf-shelf .pf-coulisses-text .jd-lead { font-size: .92rem; }
 }
 
+/* A1 — « dans toutes les pages du site » : aussi les héros des pages de zones et l'écran 1 de Contact
+   (même noir, même opacité réduite de moitié ; bords fondus) */
+html[lang^="fr"] .zone-hero > .container, html[lang^="fr"] .page-contact .contact-info { position: relative; isolation: isolate; }
+html[lang^="fr"] .zone-hero > .container::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  left: calc(50% - 50vw); width: 100vw; top: -2.5rem; bottom: -2.5rem;
+  background: linear-gradient(180deg, rgba(13, 9, 23, 0) 0, rgba(13, 9, 23, var(--rect-a)) 2.5rem,
+    rgba(13, 9, 23, var(--rect-a)) calc(100% - 2.5rem), rgba(13, 9, 23, 0) 100%);
+}
+html[lang^="fr"] .page-contact .contact-info::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  inset: -1.25rem; border-radius: 1rem; background: rgba(13, 9, 23, var(--rect-a));
+}
+@media (max-width: 959px) {
+  html[lang^="fr"] .page-contact .contact-info::before {
+    inset: 0 auto 0 calc(50% - 50vw); width: 100vw; border-radius: 0;
+    background: linear-gradient(180deg, rgba(13, 9, 23, 0) 0, rgba(13, 9, 23, var(--rect-a)) 1.5rem,
+      rgba(13, 9, 23, var(--rect-a)) calc(100% - 1.5rem), rgba(13, 9, 23, 0) 100%);
+  }
+}
+
 /* C10 — Pages des entreprises : titre centré à l'horizontale, même hauteur et même couleur */
 .collection-title.is-centered { text-align: center; margin-inline: auto; width: 100%; }
 

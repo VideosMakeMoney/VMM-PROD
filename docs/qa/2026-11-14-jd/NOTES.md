@@ -21,6 +21,7 @@ Estimation sur captures : luminance du fond derrière le paragraphe du héros (p
 | Portfolio | 11,0:1 | 10,4:1 |
 | À propos | 14,2:1 | 12,4:1 |
 | Tapis Rouge (page client) | — | 5,7:1 |
+Le rectangle s'applique aussi aux héros des pages de zones et à l'écran 1 de Contact (ajout du 15 nov., « dans toutes les pages du site »).
 Tout reste au-dessus de 4,5:1 sur les instants mesurés. Une image plus claire de la vidéo pourrait descendre plus bas : à revoir sur l'aperçu.
 
 ## Animation du titre (C1/C2)
