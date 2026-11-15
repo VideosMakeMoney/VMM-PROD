@@ -118,5 +118,10 @@
     "strategie": true,
     "servicesCamera": false,
     "servicesFin": false
+  },
+  "google": {
+    "nom": "Google",
+    "url": "",
+    "_aide": "TODO (JD, courriel du 2026-11-14, C12) : URL de la fiche Google Business de VMM Productions, à fournir par Max/JD. Tant que url est vide, l’icône Google s’affiche (Contact et pied de page, version française) mais n’est pas cliquable (aria-disabled). Aucune URL inventée."
   }
 }

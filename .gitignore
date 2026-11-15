@@ -147,3 +147,6 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Médias originaux de JD (sources hors du repo : seuls les dérivés web sont commités)
+media-originaux/
