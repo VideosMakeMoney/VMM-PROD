@@ -335,7 +335,8 @@ function structuredData(key, lang, pageVideos = [], page = null) {
     knowsLanguage: ['fr-CA', 'en-CA'],
     founder: { '@id': `${SITE_URL}/#jd` },
     employee: persons.map((p) => ({ '@id': p['@id'] })),
-    sameAs: site.reseaux.map((r) => r.url),
+    // Fiche Google Business (JD, 2026-11-14, C12) : forme durable du lien share.google, version française seulement
+    sameAs: [...site.reseaux.map((r) => r.url), ...(lang === 'fr' && site.google?.sameAs ? [site.google.sameAs] : [])],
   };
   const seo = page?.seo || L.seo[key];
   const pageUrl = abs((page?.route || ROUTES[key])[lang]);
@@ -562,14 +563,14 @@ function socialIcon(nom, suffix) {
 
 // iconsOnly (pied de page, JD 2026-11-10) : le logo seul, le nom reste lu par les lecteurs d'écran (aria-label)
 // Icône Google (JD, courriel du 2026-11-14) : version française seulement (Contact et pied de page).
-// TODO : site.google.url = URL de la fiche Google Business, à fournir par Max/JD. Tant qu'elle manque, l'icône est
-// affichée mais non cliquable (aria-disabled), sans lien inventé.
+// site.google.url = lien de la fiche Google Business fourni par JD (2026-11-14). S'il est vide, l'icône est affichée
+// mais non cliquable (aria-disabled), sans lien inventé.
 const googleItem = ({ icons, iconsOnly, suffix }) => {
   const g = site.google;
   if (!g) return '';
   const inner = `${icons ? socialIcon(g.nom, suffix) : ''}${iconsOnly ? '' : esc(g.nom)}`;
   return g.url
-    ? `<li><a href="${esc(g.url)}" rel="noopener" target="_blank"${iconsOnly ? ` aria-label="${esc(g.nom)}"` : ''}>${inner}</a></li>`
+    ? `<li><a href="${esc(g.url)}" target="_blank" rel="noopener" aria-label="${esc(g.nom)}">${inner}</a></li>`
     : `<li><a class="is-pending" role="link" aria-disabled="true"${iconsOnly ? ` aria-label="${esc(g.nom)}"` : ''}>${inner}</a></li>`;
 };
 const socials = ({ icons = false, iconsOnly = false, suffix = '', lang = '' } = {}) =>

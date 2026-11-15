@@ -622,7 +622,7 @@
         "_aide": "JD, courriels du 2026-11-14 (ajustements), C1 et C2 : animation du titre (MP4 de JD sur fond vert, détouré, recadré sur le titre). Le H1 « VIDEOS MAKE MONEY » reste dans la page pour les lecteurs d’écran et le référencement (masqué visuellement). Fichiers absents = titre texte comme avant.",
         "largeur": 1152,
         "hauteur": 360,
-        "_aideFichiers": "titrage-vmm.webm : VP9 avec transparence, 1152×360, recadré sur le titre, fondu enchaîné de 0,25 s (6 dernières images vers la première) pour une boucle sans saut. Aucun HEVC transparent ni WebP animé (pas d’encodeur HEVC alpha ici ; WebP animé > 1,5 Mo) : Safari/iOS affiche l’image fixe (poster). Le MP4 original reste hors du repo."
+        "_aideFichiers": "titrage-vmm.webm : tiré de la v2 du MP4 de JD (courriel du 2026-11-14, 22 h 58 ; 185 images, 7,7 s ; son muet retiré). VP9 avec transparence, 1152×360, recadré sur le titre, fondu enchaîné de 0,25 s (6 dernières images vers la première) pour une boucle sans saut. Aucun HEVC transparent ni WebP animé (pas d’encodeur HEVC alpha ici ; WebP animé > 1,5 Mo) : Safari/iOS affiche l’image fixe (poster). Le MP4 original reste hors du repo."
       }
     },
     "portfolio": {

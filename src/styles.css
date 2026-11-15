@@ -1782,18 +1782,21 @@ html[lang^="fr"] .cta-play.is-visible { animation: svc-draw-svg 1.4s var(--ease)
   html[lang^="fr"] .home-portfolio .jd-lead { font-size: .78rem; }
 }
 
-/* C4 — Accueil, écran 3 (sans maquette) : photos agrandies, zone d'affichage élargie, proportions intactes */
+/* C4 — Accueil, écran 3 (sans maquette ; confirmé par JD le 14 nov. au soir) : photos agrandies, zone d'affichage
+   élargie pour révéler tout leur contenu ; format 3:4 d'origine, ni étirées ni recadrées */
 @media (min-width: 900px) {
   html[lang^="fr"] .home-team { padding-block: 1rem; }
   html[lang^="fr"] .home-team .jd-wrap { max-width: 1440px; padding-inline: clamp(1rem, 4vw, 4rem); }
-  html[lang^="fr"] .home-team .home-split { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(2rem, 3vw, 3.5rem); }
-  html[lang^="fr"] .home-team-photos img { height: calc(100svh - var(--header-h) - 2rem); max-height: none; aspect-ratio: auto; object-position: 50% 30%; }
+  html[lang^="fr"] .home-team .home-split { grid-template-columns: minmax(0, .62fr) minmax(0, 1.38fr); gap: clamp(2rem, 3vw, 3.5rem); align-items: center; }
+  html[lang^="fr"] .home-team-photos img { width: 100%; height: auto; aspect-ratio: 3 / 4; max-height: calc(100svh - var(--header-h) - 2rem); object-fit: cover; object-position: 50% 30%; }
 }
 @media (max-width: 899px) {
-  html[lang^="fr"] .home-team-photos img { max-height: none; height: 36svh; aspect-ratio: auto; }
+  html[lang^="fr"] .home-team-photos img { width: 100%; height: auto; max-height: none; aspect-ratio: 3 / 4; }
   html[lang^="fr"] .home-team .home-split { gap: 1rem; }
 }
-@media (max-width: 899px) and (max-height: 760px) { html[lang^="fr"] .home-team-photos img { height: 29svh; } }
+@media (max-width: 899px) and (max-height: 760px) {
+  html[lang^="fr"] .home-team-photos img { width: auto; height: 26svh; margin-inline: auto; }
+}
 
 /* C7 — Accueil, écran 4 mobile (maquette 9:16) : icônes plus grosses en 2 × 3, photo du studio pleine largeur en bas.
    Textes et police du site gardés (la maquette montre d'autres textes). Ordi inchangé (C5). */

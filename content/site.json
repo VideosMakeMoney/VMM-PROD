@@ -121,7 +121,8 @@
   },
   "google": {
     "nom": "Google",
-    "url": "",
-    "_aide": "TODO (JD, courriel du 2026-11-14, C12) : URL de la fiche Google Business de VMM Productions, à fournir par Max/JD. Tant que url est vide, l’icône Google s’affiche (Contact et pied de page, version française) mais n’est pas cliquable (aria-disabled). Aucune URL inventée."
+    "url": "https://share.google/Q1kfklKWv8FgykyCD",
+    "sameAs": "https://www.google.com/search?kgmid=/g/11p2q1ff9j&q=VMM+Productions",
+    "_aide": "Fiche Google Business de VMM Productions (JD, 2026-11-14 au soir, C12). url = lien fourni par JD (icône Google, Contact et pied de page, version française). sameAs = forme durable du même lien (identifiant Knowledge Graph /g/11p2q1ff9j), ajoutée au JSON-LD LocalBusiness de la version française seulement. Si url est vide, l’icône s’affiche sans être cliquable (aria-disabled)."
   }
 }
