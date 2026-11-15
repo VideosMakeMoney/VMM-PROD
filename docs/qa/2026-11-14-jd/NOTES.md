@@ -1,6 +1,6 @@
 # QA : ajustements JD du 14 novembre 2026
 
-Build local (`node build.mjs`, `python3 -m http.server`), Playwright Chromium. Le conteneur n'atteint pas les aperçus Netlify : à revérifier sur l'aperçu de la PR.
+Build local (`node build.mjs`, `python3 -m http.server`), Playwright Chromium, puis contrôle sur l'aperçu Netlify de la PR (navigateur intégré de l'app de bureau, 15 nov.) : voir « Aperçu Netlify » plus bas.
 
 ## Captures
 - `mobile/` : écrans modifiés à 360×740, 390×844, 430×932 et 390×664, DSF 3 (WebP q62).
@@ -47,3 +47,12 @@ Tout reste au-dessus de 4,5:1 sur les instants mesurés. Une image plus claire d
 
 ## Pages EN
 HTML identique à main hors `<style>` (vérifié sur toutes les pages /en/).
+
+## Aperçu Netlify (15 nov., commit 276eaf0)
+Captures dans `apercu/`, prises dans le navigateur intégré sur `https://deploy-preview-26--vmm-prod.netlify.app/` (bandeau Netlify « Collaborate » visible en bas, il n'existe que sur les aperçus).
+- Accueil écran 1 à 360×740, 390×844, 430×932, 390×664, 1440×900 et 1920×1080 : titre animé centré, entier, sur la vidéo.
+- 390×844 : Contact, À propos écran 5 (photo de JD sur plus de la moitié de la hauteur, fondu en haut), Portfolio écran 5 (photo à gauche, texte à droite, sans chevauchement).
+- 1440×900 : Contact, Google sur la première ligne des réseaux.
+- Vérifié par script : vidéo du titre présente, en lecture, `loop`, `is-playing`, marges 16/16 à 390 px ; `.socials` reçoit `is-visible` sur /contact/ (3 listes, dont le pied de page) ; lien Google `https://share.google/Q1kfklKWv8FgykyCD` ; `sameAs` Google sur l'accueil FR seulement ; robots `noindex,nofollow`.
+- Boucle du titre : `1920x1080-titre-derniere-image.png` (t = 8,02 s) et `1920x1080-titre-premiere-image.png` (t = 0) sont identiques à l'œil sur la vidéo. Le fondu enchaîné est gardé : sans lui, l'écart mesuré au raccord est 6,88, soit deux fois le plus grand écart entre images voisines.
+- Le bouton « Voir notre travail » est gris-violet (#8b8ba8) sur la vidéo, comme sur main : pas changé ici.
