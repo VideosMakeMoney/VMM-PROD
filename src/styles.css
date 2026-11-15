@@ -2064,3 +2064,24 @@ html[lang^="fr"] .page-apropos .jd-screen > .jd-wrap > .jd-label-line { display:
   html[lang^="fr"] .page-contact .bg-video { position: sticky; top: var(--header-h); inset: auto; height: calc(100svh - var(--header-h)); margin-bottom: calc(-1 * (100svh - var(--header-h))); }
 }
 /* === FIN JD 2026-11-14 === */
+
+/* Relecture de Natasha (15 nov.) : Accueil écrans 2 et 3 tenus dans « 100svh moins l'en-tête » sur ordi portable.
+   Écran 2 : la hauteur des vignettes = l'écran moins l'en-tête, les marges (4svh × 2) et le reste du contenu
+   (étiquette, titre, texte, légendes, bouton ; leur taille suit la largeur, d'où le terme en vw, plafonné).
+   Écran 3 : photos 3:4 bornées par la hauteur de l'écran et par la place laissée à une colonne de texte assez
+   large pour garder le titre sur trois lignes ; ni étirées ni recadrées. */
+@media (min-width: 960px) {
+  html[lang^="fr"] .home-portfolio .hp-cards { --hp-h: calc(100svh - var(--header-h) - 8svh - min(26vw, 24.5rem)); }
+}
+@media (min-width: 900px) {
+  html[lang^="fr"] .home-team {
+    --tm-text: clamp(24rem, 30vw, 31rem);
+    --tm-p: min(calc((100svh - var(--header-h) - 3rem) * .75),
+                calc((min(100vw, 1600px) - 2 * clamp(1rem, 4vw, 4rem) - clamp(2rem, 3vw, 3.5rem) - 1rem - var(--tm-text)) / 2));
+  }
+  html[lang^="fr"] .home-team .jd-wrap { max-width: 1600px; }
+  html[lang^="fr"] .home-team .home-split { grid-template-columns: minmax(var(--tm-text), 1fr) auto; }
+  html[lang^="fr"] .home-team-photos { grid-template-columns: repeat(2, var(--tm-p)); }
+  html[lang^="fr"] .home-team-photos img { width: var(--tm-p); height: auto; max-height: none; aspect-ratio: 3 / 4; }
+  html[lang^="fr"] .home-team .home-team-title { font-size: clamp(2.4rem, 4.2vw, 4.25rem); }
+}
