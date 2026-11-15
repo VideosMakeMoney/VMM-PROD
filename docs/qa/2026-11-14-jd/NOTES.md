@@ -33,7 +33,13 @@ Estimation sur captures : luminance du fond derrière le paragraphe du héros (p
 Le rectangle s'applique aussi aux héros des pages de zones et à l'écran 1 de Contact (ajout du 15 nov., « dans toutes les pages du site »).
 Tout reste au-dessus de 4,5:1 sur les instants mesurés. Une image plus claire de la vidéo pourrait descendre plus bas : à revoir sur l'aperçu.
 
-## Animation du titre (C1/C2)
+## Animation du titre (C1/C2), v2 du 14 nov. au soir
+- Source remplacée par le MP4 v2 de JD (courriel uid 1930, 22 h 58) : H.264 2304×4096, 7,708 s, 24 i/s, 185 images, piste AAC muette (retirée, `-an`).
+- Même recadrage (2304×720 à y 1660, couvre le titre et l'éclat, y ≈ 1692–2327 mesuré), même détourage maison ; aucun pixel verdâtre (G > max(R,B)+25 sous alpha > 40) sur les images 0, 30, 92, 150, 184. WebM VP9 alpha 1152×360, crf 37, 733 Ko ; poster WebP 57 Ko / PNG 267 Ko.
+- Boucle v2, mesurée sur la bande recadrée (écart absolu moyen 0–255, demi-résolution) : images voisines moyenne 1,72, médiane 1,54, max 3,43 ; raccord dernière→première **6,88** (titre seul : 10,10). Le saut reste deux fois plus grand que le plus grand pas normal : fondu enchaîné gardé (6 dernières images vers la première, 0,25 s). Après fondu : raccord **0,95**, pas maximal 3,43 (celui de la source).
+- Capture : `titrage/v2-sombre-et-video.webp` (images 0, 30, 92, 184 sur #0d0917 et sur l'image du héros).
+
+## Animation du titre (C1/C2), v1 (remplacée)
 - WebM VP9 avec alpha, 1152×360, 721 Ko, 8 s en boucle. Raccord fin→début : écart 14,53 avant, 2,07 après un fondu de 0,25 s (images voisines : 1,73 en moyenne).
 - Safari/iOS ne lit pas le WebM alpha : il affiche le poster fixe (même titre). Pas de HEVC alpha possible ici.
 - Le H1 reste dans la page (masqué visuellement) pour le référencement et les lecteurs d'écran.
