@@ -491,6 +491,11 @@
     x0 = null;
     if (Math.abs(dx) > 40) show(current + (dx < 0 ? 1 : -1));
   });
+})();
+
+/* Titre animé de l'accueil et icônes animées (JD, 2026-11-14) : IIFE à part, sur toutes les pages */
+(() => {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   // Titre animé de l'accueil (JD, 2026-11-14) : WebM VP9 avec transparence, lu en boucle par-dessus l'image fixe.
   // Safari ne lit pas la transparence du WebM (fond opaque) : il garde l'image fixe, comme « réduire les animations ».
   const titrage = document.querySelector('.hero-titrage[data-webm]');
