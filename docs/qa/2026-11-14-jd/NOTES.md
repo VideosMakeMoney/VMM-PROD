@@ -56,3 +56,22 @@ Captures dans `apercu/`, prises dans le navigateur intégré sur `https://deploy
 - Vérifié par script : vidéo du titre présente, en lecture, `loop`, `is-playing`, marges 16/16 à 390 px ; `.socials` reçoit `is-visible` sur /contact/ (3 listes, dont le pied de page) ; lien Google `https://share.google/Q1kfklKWv8FgykyCD` ; `sameAs` Google sur l'accueil FR seulement ; robots `noindex,nofollow`.
 - Boucle du titre : `1920x1080-titre-derniere-image.png` (t = 8,02 s) et `1920x1080-titre-premiere-image.png` (t = 0) sont identiques à l'œil sur la vidéo. Le fondu enchaîné est gardé : sans lui, l'écart mesuré au raccord est 6,88, soit deux fois le plus grand écart entre images voisines.
 - Le bouton « Voir notre travail » est gris-violet (#8b8ba8) sur la vidéo, comme sur main : pas changé ici.
+
+## Accueil écrans 2 et 3 sur ordi portable (relecture de Natasha, 15 nov. midi)
+Avant (aperçu, commit f0e9796) : l'écran 2 dépassait à 1280×720, 1366×768, 1440×900 et 1536×864, l'écran 3 à 1280×720 et 1366×768 (titre sur 5 ou 6 lignes, bouton sous l'écran).
+Correction : vignettes de l'écran 2 limitées à `100svh − en-tête − 8svh − min(26vw, 24.5rem)` (marges + étiquette, titre, texte, légendes et bouton), largeur déduite au format des affiches (460:642) ; à l'écran 3, photos 3:4 bornées par la hauteur et par la place laissée à une colonne de texte d'au moins 24rem, titre ramené à clamp(2.4rem, 4.2vw, 4.25rem).
+
+Mesuré sur l'aperçu (commit 54ac72c, navigateur intégré ; hauteur de section / dispo, bas du bouton, lignes du titre, média) :
+
+| Format | Écran 2 | Écran 3 |
+|---|---|---|
+| 1024×768 | 704 / 703,3, bouton 662, 1 ligne, vignettes 226×316 | 704, bouton 580, 3 lignes, photos 255×340 |
+| 1280×720 | 656 / 655, bouton 619, vignettes 190×266 | 656, bouton 572, 3 lignes, photos 370×493 |
+| 1366×768 | 704 / 703, bouton 673, vignettes 206×287 | 704, bouton 590, 3 lignes, photos 395×527 |
+| 1440×900 | 836 / 835, bouton 798, vignettes 279×390 | 836, bouton 665, 3 lignes, photos 417×556 |
+| 1536×864 | 800,6 / 799,3, bouton 761, vignettes 243×339 | 800,6, bouton 653, 3 lignes, photos 445×594 |
+| 1920×1080 | 1016,5 / 1015,3, bouton 920, vignettes 304×424 | 1016,5, bouton 757, 3 lignes, photos 452×603 |
+
+La hauteur des sections est leur `min-height` (contenu plus court partout). L'écart de 1 à 1,3 px vient de l'en-tête, qui fait 64,7 px au rendu alors que `--header-h` vaut 64 px ; c'est le cas de toutes les sections du site, comme sur main.
+Captures (build local identique, Playwright) : `desktop-ecrans-2-3/`. Les captures du navigateur intégré étaient recadrées à ces formats, d'où les mesures par script.
+Mobile : `tools/mesure-mobile.mjs` OK à 360×740, 390×844 et 430×932 ; à 390×664, seulement les « sautées » du snap tactile déjà présentes sur main. Les règles ne s'appliquent qu'à partir de 900 px de large. Pages EN : HTML identique à main hors `<style>`.
