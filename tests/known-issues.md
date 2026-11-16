@@ -96,9 +96,28 @@ Sont concernés :
 
 ---
 
-## 6. Médias > 5 Mo dans le dossier public
+## 6. Médias > 5 Mo dans le dossier public (`static/` et `dist/`)
 
-Trois fichiers vidéo originaux hérités excèdent la limite stricte de 5 Mo :
-- `static/videos/work-9x16.webm` (5,69 Mo)
-- `static/videos/services-9x16-ancien.webm` (5,31 Mo)
-- `static/videos/vmm-camera-scroll.webm` (5,13 Mo)
+14 fichiers vidéo originaux historiques (hérités des versions précédentes et des PR 24 à 26 de JD) excèdent la limite recommandée de 5 Mo :
+- `static/videos/jd/hero-accueil-16x9.mp4` (10,6 Mo)
+- `static/videos/jd/hero-accueil-16x9.webm` (6,0 Mo)
+- `static/videos/jd/hero-accueil-9x16.mp4` (10,8 Mo)
+- `static/videos/jd/hero-accueil-9x16.webm` (7,3 Mo)
+- `static/videos/jd/hero-ordi.mp4` (6,8 Mo)
+- `static/videos/jd/portfolio-hero-mobile.webm` (5,7 Mo)
+- `static/videos/jd/portfolio-hero-ordi.mp4` (8,3 Mo)
+- `static/videos/jd/portfolio-hero-ordi.webm` (6,5 Mo)
+- `static/videos/jd/services-9x16-ancien.webm` (5,3 Mo)
+- `static/videos/jd/work-16x9.mp4` (7,9 Mo)
+- `static/videos/jd/work-9x16-ancien.webm` (5,7 Mo)
+- `static/videos/jd/work-9x16.mp4` (7,9 Mo)
+- `static/videos/jd/work-9x16.webm` (5,4 Mo)
+- `static/videos/vmm-camera-scroll.webm` (5,1 Mo)
+
+La suite de tests vérifie qu'**aucun nouveau fichier lourd > 5 Mo** n'est ajouté par une PR.
+
+---
+
+## 7. Descriptions SEO des héros en français (Régression connue PR24)
+
+Dans la PR #24 (`7fc021f`), le choix éditorial consigné dans `content/fr.json` (`heroResume.source: "services"`) affiche la description SEO de la page Services dans le héros de toutes les pages françaises (`portfolio-fr`, `apropos-fr`, `contact-fr`) au lieu de leur propre description SEO respective. Ces tests sont isolés en `test.fixme` en attendant l'instruction de bascule vers `source: "page"`.

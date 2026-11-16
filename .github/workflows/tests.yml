@@ -35,9 +35,13 @@ jobs:
         run: npx playwright install --with-deps chromium webkit
 
       - name: Build static site
+        env:
+          VMM_ALLOW_INDEX: 'true'
         run: node build.mjs
 
       - name: Regenerate Linux reference snapshots
+        env:
+          VMM_ALLOW_INDEX: 'true'
         run: npx playwright test tests/visual.spec.ts --update-snapshots
 
       - name: Commit Linux snapshots if changed
@@ -52,6 +56,8 @@ jobs:
           fi
 
       - name: Run Playwright tests
+        env:
+          VMM_ALLOW_INDEX: 'true'
         run: npm test -- --workers=4
 
       - name: Upload Playwright HTML Report
