@@ -1,0 +1,187 @@
+/* ==========================================================================
+   Partie E — ajustements JD du 15 nov. 2026 (#5 à #12) : mises en page selon les maquettes « souhaitée »
+   (docs/jd/2026-11-15/mod-05 … mod-12). FR seulement (html[lang^="fr"]) ; EN inchangé.
+   ========================================================================== */
+
+/* #5 Accueil, écran 3 (équipe), MOBILE (mod-05-…-souhaite-9x16) : eyebrow, titre, texte et bouton centrés en haut,
+   puis les 2 photos côte à côte, chacune ≈ moitié de la largeur (marge 1,7 %, écart 2,2 %), qui remplissent
+   le reste de l'écran (≈ 48 % de la hauteur sur la maquette) ; coins arrondis, bordure et lueur violettes.
+   object-fit: cover (aucun étirement), cadrage sur les visages. Ordinateur inchangé. */
+@media (max-width: 899px) {
+  html[lang^="fr"] main > section.jd-screen.home-team { height: calc(100svh - var(--header-h)); justify-content: flex-start;
+    padding-block: clamp(.6rem, 2svh, 1.1rem) clamp(.6rem, 2.4svh, 1.4rem); }
+  html[lang^="fr"] .home-team .jd-wrap.home-split { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column;
+    gap: clamp(.9rem, 2.8svh, 1.5rem); padding-inline: 0; }
+  html[lang^="fr"] .home-team .home-split-text { flex: 0 0 auto; padding-inline: var(--gutter); }
+  html[lang^="fr"] .home-team .jd-label { margin-bottom: clamp(.35rem, 1.2svh, .8rem); }
+  html[lang^="fr"] .home-team .home-team-title { font-size: clamp(2rem, 10vw, 2.9rem); line-height: 1.08; margin-bottom: clamp(.4rem, 1.4svh, .9rem); }
+  html[lang^="fr"] .home-team .jd-lead { font-size: clamp(.9rem, 4vw, 1.05rem); line-height: 1.4; max-width: 34em; }
+  html[lang^="fr"] .home-team .cta-row { margin-top: clamp(.7rem, 2.2svh, 1.2rem); }
+  html[lang^="fr"] .home-team .cta-row .btn { min-width: 73%; min-height: 48px; }
+  html[lang^="fr"] .home-team-photos { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: 1fr 1fr;
+    gap: 2.2vw; padding-inline: 1.7vw; }
+  html[lang^="fr"] .home-team-photos li { min-height: 0; height: 100%; border-radius: 14px; overflow: hidden;
+    border: 2px solid rgba(192, 132, 252, .85); box-shadow: 0 0 14px rgba(139, 92, 246, .65), 0 0 2px rgba(216, 180, 254, .9); }
+  html[lang^="fr"] .home-team-photos picture { display: block; height: 100%; }
+  html[lang^="fr"] .home-team-photos img { width: 100%; height: 100%; max-height: none; aspect-ratio: auto; margin: 0;
+    object-fit: cover; border-radius: 0; }
+  html[lang^="fr"] .home-team-photos li:first-child img { object-position: 42% 20%; }
+  html[lang^="fr"] .home-team-photos li:last-child img { object-position: 50% 15%; }
+}
+
+/* #6 Accueil, écran 4 (services), MOBILE — reproduction de mod-06-…-souhaite-9x16 :
+   eyebrow à gauche, titre en dégradé sur 2 lignes (« La stratégie rencontre » ≈ 91 % de la largeur / « la création. »),
+   description centrée sur 2 lignes, 6 services en 2 colonnes (icônes PNG plus grandes, filet vertical, libellé
+   gras/normal), puis la photo du studio pleine largeur (≈ moitié basse de l'écran) fondue dans le fond, et le bouton
+   posé dessus en bas (≈ 87–94 % de la hauteur). Ordinateur inchangé. */
+@media (max-width: 899px) {
+  html[lang^="fr"] main > section.jd-screen.home-services { height: calc(100svh - var(--header-h)); padding: clamp(.7rem, 2.6svh, 1.5rem) 0 0;
+    justify-content: flex-start; overflow: hidden; }
+  html[lang^="fr"] .home-services::before { content: ""; position: absolute; top: 0; right: 0; width: 75%; height: 22%; z-index: 0; pointer-events: none;
+    background: url("/img/accueil-services-jd.webp") 70% 8% / 160% auto no-repeat; opacity: .75;
+    -webkit-mask-image: radial-gradient(ellipse 70% 85% at 85% 0%, #000 0%, transparent 72%); mask-image: radial-gradient(ellipse 70% 85% at 85% 0%, #000 0%, transparent 72%); }
+  html[lang^="fr"] .home-services .jd-wrap { position: static; flex: 0 0 auto; display: block; padding-inline: 3vw; }
+  html[lang^="fr"] .home-services-text, html[lang^="fr"] .home-services-split, html[lang^="fr"] .home-services-split .home-split-text { display: block; flex: none; }
+  html[lang^="fr"] .home-services-text > .jd-label, html[lang^="fr"] .home-services-text > h2, html[lang^="fr"] .home-services-text > .jd-lead { position: relative; z-index: 1; }
+  html[lang^="fr"] .page-accueil .home-services .jd-label-line, html[lang^="fr"] .home-services .jd-label-line { justify-content: flex-start; color: #fff; font-size: .78rem; margin-bottom: clamp(.4rem, 1.4svh, .8rem); }
+  html[lang^="fr"] .home-services .jd-label-line::before { flex-basis: 2.2rem; }
+  html[lang^="fr"] .home-services h2 { font-size: 7.85vw; line-height: 1.12; width: 93vw; max-width: none; text-wrap: wrap; margin: 0 auto clamp(.4rem, 1.4svh, .8rem); text-align: center; }
+  html[lang^="fr"] .home-services .jd-lead { font-size: max(.75rem, 3.7vw); line-height: 1.38; margin: 0 auto; max-width: none; }
+  html[lang^="fr"] .home-services-split { margin-top: clamp(.6rem, 2.6svh, 1.4rem); }
+  html[lang^="fr"] .home-services .hp-svc-grid { position: relative; z-index: 1; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    gap: clamp(.4rem, 2.2svh, 1.3rem) 2.5vw; }
+  html[lang^="fr"] .home-services .hp-svc { gap: 1.6vw; min-height: 48px; padding: 0; align-items: center; }
+  html[lang^="fr"] .home-services .hp-svc-icon, html[lang^="fr"] .home-services .hp-svc-icon img { width: 14vw; height: 14vw; flex: 0 0 14vw; max-width: 64px; max-height: 64px; }
+  html[lang^="fr"] .home-services .hp-svc-text { padding-left: 2.6vw; border-left: 1px solid rgba(255, 255, 255, .28); font-size: max(.75rem, 3.1vw); line-height: 1.22; }
+  html[lang^="fr"] .home-services .hp-svc-text strong { font-size: max(.78rem, 3.3vw); }
+  html[lang^="fr"] .home-services .cta-row { position: absolute; left: 0; right: 0; bottom: 5.8%; z-index: 2; margin: 0; padding: 0; text-align: center; }
+  html[lang^="fr"] .home-services .cta-row .btn { min-width: 70%; min-height: 48px; }
+  html[lang^="fr"] .home-services-studio { position: relative; inset: auto; z-index: 0; flex: 1 1 auto; min-height: 0; height: auto; max-height: 98vw;
+    margin: -3svh 0 0; }
+  html[lang^="fr"] .home-services-studio picture, html[lang^="fr"] .home-services-studio img { display: block; width: 100%; height: 100%; }
+  html[lang^="fr"] .home-services-studio img { object-fit: cover; object-position: 50% 96%; border-radius: 0;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.6) 12%, #000 24%); mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.6) 12%, #000 24%); }
+}
+
+/* #7 Accueil, écran 5 (contact), ORDINATEUR (mod-07-…-souhaite-16x9) : JD détouré collé au bord gauche, plus grand
+   (hauteur 112 % de l'écran, haut de la casquette au haut de l'écran, bas recadré sous l'appareil photo ; ≈ 0–38 %
+   de la largeur en 16:9) ; bloc texte à partir de 41 % de la largeur, titre (3 lignes), texte et bouton plus grands.
+   Proportions de la photo conservées (hauteur imposée, largeur auto), masque progressif gardé (bords gauche/droit et bas). */
+@media (min-width: 900px) {
+  html[lang^="fr"] .home-contact .jd-wrap.home-contact-split { position: static; display: flex; align-items: center; max-width: none; padding: 0; gap: 0; }
+  html[lang^="fr"] .home-contact-photo { position: absolute; left: 0; top: 0; height: 116%; width: auto; z-index: 0; display: block; align-self: auto; }
+  html[lang^="fr"] .home-contact-photo picture { display: block; height: 100%; margin: 0; }
+  html[lang^="fr"] .home-contact-photo img { height: 100%; width: auto; max-width: none; max-height: none; object-fit: contain;
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 78%, transparent 96%), linear-gradient(90deg, transparent 0%, #000 7%, #000 92%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 78%, transparent 96%), linear-gradient(90deg, transparent 0%, #000 7%, #000 92%, transparent 100%); }
+  html[lang^="fr"] .home-contact .home-split-text { position: relative; z-index: 1; margin: 0 0 0 41%; padding: 0 3vw 2svh 0; align-self: center; }
+  html[lang^="fr"] .home-contact .jd-label-line { font-size: min(1.15vw, 2svh); letter-spacing: .08em; margin-bottom: min(2.6vw, 4.6svh); }
+  html[lang^="fr"] .home-contact .jd-label-line::before { flex-basis: min(4.8vw, 8.5svh); height: 3px; }
+  html[lang^="fr"] .home-contact h2 { font-size: min(5.7vw, 10.1svh); line-height: 1.04; max-width: 57vw; margin-bottom: min(2.4vw, 4.2svh); }
+  html[lang^="fr"] .home-contact .jd-lead { font-size: max(1rem, min(2.05vw, 3.65svh)); line-height: 1.45; max-width: 49vw; }
+  html[lang^="fr"] .home-contact .cta-row { margin-top: min(2.8vw, 5svh); }
+  html[lang^="fr"] .home-contact .cta-row .btn { font-size: max(1rem, min(2.1vw, 3.7svh)); min-height: max(56px, min(5.5vw, 9.8svh)); padding-inline: min(3.8vw, 6.7svh); border-radius: 12px; }
+}
+
+/* #8 Services, dernier écran : « Découvrez ce que » (blanc) prend le même dégradé que « nous offrons. »
+   (violet → bleu → rose, var(--gradient)) : dégradé sur le titre (largeur de la 1re ligne, la plus longue) ; « nous offrons. »
+   garde son propre dégradé. FR seulement. */
+html[lang^="fr"] .jd-screen.svc-to-portfolio h2:not(.jd-label) { background-image: var(--gradient); -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent; }
+
+/* #9 Portfolio, écran 4 (étagère des coulisses) : les 3 tablettes (caméra ; drone + manette ; petit drone, batterie,
+   téléphone) entièrement visibles, sans étirer (photo 1080 × 1920 du repo, déjà complète : elle était seulement trop
+   recadrée). Textes inchangés.
+   Ordinateur (mod-09-…-souhaite-16x9) : photo à droite, ≈ 64–100 % de la largeur, ancrée en bas (le haut, vide, est
+   recadré) ; tuile VMM centrée ≈ 53 % de la largeur. */
+@media (min-width: 900px) {
+  html[lang^="fr"] .pf-shelf-bg { top: 0; right: 0; bottom: 0; width: min(36%, calc((100svh - var(--header-h)) * .64)); }
+  html[lang^="fr"] .pf-shelf-bg img { object-fit: cover; object-position: 55% 100%;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%); mask-image: linear-gradient(90deg, transparent 0%, #000 22%); }
+  html[lang^="fr"] .pf-shelf-grid { grid-template-columns: minmax(0, 36fr) minmax(0, 22fr) minmax(0, 36fr); padding-inline: 4vw 0; gap: 2vw; }
+  html[lang^="fr"] .pf-shelf-img { width: min(100%, 19vw, 36svh); }
+}
+/* Mobile (mod-09-…-souhaite-9x16) : photo en haut à droite derrière le titre (≈ 53 % de la largeur, 3 tablettes
+   entières, bord gauche fondu), tuile VMM agrandie (≈ 42 % de la largeur) centrée sous la photo, avec son libellé. */
+@media (max-width: 899px) {
+  html[lang^="fr"] main > section.jd-screen.pf-shelf { height: calc(100svh - var(--header-h)); }
+  html[lang^="fr"] .pf-shelf-bg { inset: 0 0 auto auto; width: 56vw; height: calc(56vw * 16 / 9); max-height: 64%; }
+  html[lang^="fr"] .pf-shelf-bg img { object-fit: cover; object-position: 50% 100%;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 30%), linear-gradient(180deg, #000 93%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(90deg, transparent 0%, #000 30%), linear-gradient(180deg, #000 93%, transparent 100%); mask-composite: intersect; }
+  html[lang^="fr"] .pf-shelf::after { background: linear-gradient(90deg, rgba(13, 9, 23, .55) 0%, rgba(13, 9, 23, 0) 60%); }
+  html[lang^="fr"] .pf-shelf-grid { min-height: 0; height: 100%; padding-block: clamp(1.25rem, 7svh, 3.5rem) clamp(.75rem, 2.5svh, 1.5rem); }
+  html[lang^="fr"] .pf-shelf .pf-coulisses-text h2 { font-size: clamp(1.7rem, 9.6vw, 3rem); }
+  html[lang^="fr"] .pf-shelf-img { width: min(42vw, 25svh); }
+  html[lang^="fr"] .pf-shelf-img img { box-shadow: 0 0 0 2px rgba(192, 132, 252, .7), 0 0 18px rgba(139, 92, 246, .55); }
+  html[lang^="fr"] .pf-shelf-tile { gap: clamp(.4rem, 1.4svh, .8rem); }
+  html[lang^="fr"] .pf-shelf-tile .coulisses-text { gap: clamp(.15rem, .8svh, .4rem); }
+  html[lang^="fr"] .pf-shelf-tile .coulisses-text strong { font-size: clamp(1rem, 4.5vw, 1.2rem); }
+}
+@media (max-width: 899px) and (max-height: 700px) {
+  html[lang^="fr"] .pf-shelf .pf-coulisses-text h2 { font-size: clamp(1.6rem, 8.6vw, 2.6rem); }
+  html[lang^="fr"] .pf-shelf-img { width: min(42vw, 23svh); }
+  html[lang^="fr"] .pf-shelf-grid { padding-top: clamp(1rem, 5svh, 2rem); }
+}
+
+/* #10 et #11 À propos, écrans JD et Renaud, MOBILE (mod-10 / mod-11 …-souhaite-9x16) : étiquette, grande photo
+   (JD ≈ 82 % de la largeur, Renaud ≈ 76 %, format presque carré, coins arrondis) juste sous l'étiquette, puis rôle,
+   titre et biographie en 2 paragraphes (JD aligné à gauche ; Renaud centré avec un trait violet sous le titre).
+   Tout tient dans « 100svh − en-tête » : la photo est la seule partie qui se réduit (proportionnellement : hauteur
+   prise par la place restante, largeur = hauteur × format), jamais le texte (≥ 12 px). Ordinateur inchangé. */
+@media (max-width: 859px) {
+  html[lang^="fr"] .page-apropos main > section.jd-screen#jd, html[lang^="fr"] .page-apropos main > section.jd-screen#renaud {
+    height: calc(100svh - var(--header-h)); justify-content: flex-start; padding-block: clamp(.6rem, 2.4svh, 1.25rem) clamp(.6rem, 2.4svh, 1.4rem);
+    background: radial-gradient(ellipse 85% 38% at 85% 100%, rgba(124, 58, 237, .28), transparent 72%), var(--bg); }
+  html[lang^="fr"] .page-apropos :is(#jd, #renaud) .jd-wrap { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; padding-inline: 8vw; }
+  html[lang^="fr"] .page-apropos :is(#jd, #renaud) .jd-wrap > .jd-label-line { margin: 0 0 clamp(.5rem, 1.8svh, 1rem); font-size: .8rem; }
+  html[lang^="fr"] .page-apropos :is(#jd, #renaud) .person { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 0; margin: 0; }
+  html[lang^="fr"] .page-apropos :is(#jd, #renaud) .person-photo { flex: 1 1 auto; min-height: 0; max-height: 47svh; display: flex; justify-content: center; container-type: size; }
+  html[lang^="fr"] .page-apropos :is(#jd, #renaud) .person-photo picture { display: block; height: auto; max-width: 100cqh; aspect-ratio: 1 / 1; }
+  html[lang^="fr"] .page-apropos :is(#jd, #renaud) .person-photo img { display: block; width: 100%; height: auto; aspect-ratio: 1 / 1; max-width: none; max-height: none;
+    object-fit: cover; border-radius: 22px; margin: 0; }
+  html[lang^="fr"] .page-apropos #jd .person-photo picture { width: 82vw; }
+  html[lang^="fr"] .page-apropos #jd .person-photo img { object-position: 50% 22%; }
+  html[lang^="fr"] .page-apropos #renaud .person-photo picture { width: 76vw; }
+  html[lang^="fr"] .page-apropos #renaud .person-photo img { object-position: 50% 30%; }
+  html[lang^="fr"] .page-apropos :is(#jd, #renaud) .person-text { flex: 0 0 auto; padding-top: clamp(.6rem, 2.4svh, 1.4rem); }
+  html[lang^="fr"] .page-apropos :is(#jd, #renaud) .jd-role { font-size: .8rem; margin: 0 0 clamp(.2rem, .8svh, .5rem); }
+  html[lang^="fr"] .page-apropos :is(#jd, #renaud) .person-text h2 { font-size: clamp(2rem, 11.2vw, 3rem); line-height: 1.02; margin: 0 0 clamp(.5rem, 1.6svh, 1rem); }
+  html[lang^="fr"] .page-apropos :is(#jd, #renaud) .person-text p:not(.jd-role):not(.small) { color: rgba(255, 255, 255, .92); font-size: max(.75rem, 3.35vw);
+    line-height: 1.4; margin: 0 0 clamp(.4rem, 1.4svh, .9rem); max-width: none; }
+  html[lang^="fr"] .page-apropos :is(#jd, #renaud) .person-text p:last-child { margin-bottom: 0; }
+  /* Renaud : rôle, titre et texte centrés, trait violet sous le titre (≈ 30 % de la largeur) */
+  html[lang^="fr"] .page-apropos #renaud .person-text { text-align: center; }
+  html[lang^="fr"] .page-apropos #renaud .person-text h2 { margin-inline: auto; }
+  html[lang^="fr"] .page-apropos #renaud .person-text h2::after { content: ""; display: block; width: 30vw; height: 3px; margin: clamp(.4rem, 1.6svh, .9rem) auto 0;
+    border-radius: 2px; background: linear-gradient(90deg, #7c3aed, #a855f7); }
+  html[lang^="fr"] .page-apropos #renaud .person-text p:not(.jd-role):not(.small) { margin-inline: auto; }
+}
+/* À propos JD / Renaud, ordinateur à écran bas (1280 × 720, 1366 × 768) : l'écran dépassait de 5 et 9 px.
+   Marge au-dessus de la photo réduite de 24 à 10 px ; rien d'autre ne bouge (même photo, même texte, même 16:9). */
+@media (min-width: 860px) and (max-height: 820px) {
+  html[lang^="fr"] .page-apropos :is(#jd, #renaud) .person { margin-top: 10px; }
+}
+
+/* #12 À propos, écran 5 (fin de page), MOBILE (mod-12-…-souhaite-9x16) : JD détouré agrandi, de sous le bouton
+   jusqu'au bas de l'écran (≈ 70 % de la largeur pour le sujet), centré ; bouton centré (≈ 71 % de la largeur).
+   Hauteur imposée, largeur auto (aucune déformation) ; masque progressif (côtés et bas) conservé. Ordinateur inchangé. */
+@media (max-width: 899px) {
+  html[lang^="fr"] .page-apropos main > section.jd-screen#vision { height: calc(100svh - var(--header-h));
+    background: radial-gradient(ellipse 70% 38% at 50% 72%, rgba(124, 58, 237, .3), transparent 72%), radial-gradient(ellipse 55% 45% at 92% 92%, rgba(124, 58, 237, .28), transparent 70%), var(--bg); }
+  html[lang^="fr"] #vision.jd-photo-split h2 { font-size: clamp(1.5rem, 7vw, 2.4rem); }
+  html[lang^="fr"] #vision.jd-photo-split .jd-wrap { min-height: 0; height: 100%; }
+  html[lang^="fr"] #vision.jd-photo-split .jd-split-text { flex: 0 0 auto; padding: clamp(.8rem, 3.4svh, 1.8rem) 6vw 0; }
+  html[lang^="fr"] #vision .jd-label { display: flex; align-items: center; gap: .75rem; }
+  html[lang^="fr"] #vision .jd-label::before { content: ""; flex: 0 0 2.4rem; height: 2px; background: var(--jd-violet); }
+  html[lang^="fr"] #vision .jd-lead { color: rgba(255, 255, 255, .92); font-size: max(.8rem, 3.6vw); line-height: 1.4; }
+  html[lang^="fr"] #vision .cta-row { margin-top: clamp(.6rem, 2svh, 1.1rem); text-align: center; }
+  html[lang^="fr"] #vision .cta-row .btn { min-width: 71%; justify-content: center; }
+  html[lang^="fr"] #vision.jd-photo-split .jd-split-photo { flex: 1 1 0; min-height: 0; margin-top: clamp(.4rem, 1.6svh, 1rem); display: flex; justify-content: center; align-items: flex-end; }
+  html[lang^="fr"] #vision .jd-split-photo picture { display: block; height: 100%; }
+  html[lang^="fr"] #vision .jd-split-photo img { display: block; height: 100%; width: auto; max-width: 78vw; max-height: none; object-fit: contain; object-position: 50% 100%;
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 80%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(180deg, #000 0%, #000 80%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%); mask-composite: intersect; }
+}
