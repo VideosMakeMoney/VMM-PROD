@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { PAGES, stabilizePage, PageDefinition, SectionDefinition } from './helpers';
+import { PAGES, preparePageForLayout, PageDefinition, SectionDefinition } from './helpers';
 
 /**
  * BLOC 2 : RÈGLES DE LAYOUT DE JD (tests stricts par section)
@@ -51,7 +51,7 @@ for (const p of PAGES) {
     for (const sec of p.sections) {
       test(`1. Section ${sec.index} (${sec.label}) tient dans un écran (hauteur <= 100svh - header + 1px)`, async ({ page }, testInfo) => {
         await page.goto(p.url);
-        await stabilizePage(page);
+        await preparePageForLayout(page);
 
         const secData = await page.evaluate(({ selector, index }) => {
           const header = document.querySelector('header');
@@ -88,7 +88,7 @@ for (const p of PAGES) {
       // 2. Bouton de chaque section entièrement visible
       test(`2. Section ${sec.index} (${sec.label}) bouton visible dans l'écran`, async ({ page }, testInfo) => {
         await page.goto(p.url);
-        await stabilizePage(page);
+        await preparePageForLayout(page);
 
         const btnData = await page.evaluate(({ selector, index }) => {
           document.documentElement.style.scrollBehavior = 'auto';
@@ -132,7 +132,7 @@ for (const p of PAGES) {
     // 3. Débordement horizontal du document
     test('3. Aucun débordement horizontal', async ({ page }, testInfo) => {
       await page.goto(p.url);
-      await stabilizePage(page);
+      await preparePageForLayout(page);
 
       const overflowInfo = await page.evaluate(() => {
         const scrollW = document.documentElement.scrollWidth;
@@ -156,7 +156,7 @@ for (const p of PAGES) {
     // 4. Aucun élément coupé ou superposé
     test('4. Aucun élément coupé ou superposé', async ({ page }, testInfo) => {
       await page.goto(p.url);
-      await stabilizePage(page);
+      await preparePageForLayout(page);
 
       const issues = await page.evaluate(() => {
         const keyItems = Array.from(
@@ -233,7 +233,7 @@ for (const p of PAGES) {
     // 5. Texte >= 12 px, cibles tactiles >= 44 px sur mobile
     test('5. Texte >= 12 px, cibles tactiles >= 44 px sur mobile', async ({ page, isMobile }, testInfo) => {
       await page.goto(p.url);
-      await stabilizePage(page);
+      await preparePageForLayout(page);
 
       const { smallText, smallTouch } = await page.evaluate(({ isMobile }) => {
         const smallTextItems = [];
@@ -295,7 +295,7 @@ for (const p of PAGES) {
     // 6. scroll-snap présent (une section par défilement)
     test('6. scroll-snap présent (une section par défilement)', async ({ page }) => {
       await page.goto(p.url);
-      await stabilizePage(page);
+      await preparePageForLayout(page);
 
       const snapInfo = await page.evaluate(() => {
         const htmlSnap = window.getComputedStyle(document.documentElement).scrollSnapType;
@@ -323,7 +323,7 @@ for (const p of PAGES) {
     // 7. Images non déformées (ratio affiché vs ratio naturel +-5%)
     test('7. Images non déformées (ratio affiché vs ratio naturel +-5%)', async ({ page }) => {
       await page.goto(p.url);
-      await stabilizePage(page);
+      await preparePageForLayout(page);
 
       const distortedImages = await page.evaluate(() => {
         const imgs = Array.from(document.querySelectorAll('img'));

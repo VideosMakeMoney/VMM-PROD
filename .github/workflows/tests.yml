@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   test:
@@ -38,22 +38,6 @@ jobs:
         env:
           VMM_ALLOW_INDEX: 'true'
         run: node build.mjs
-
-      - name: Regenerate Linux reference snapshots
-        env:
-          VMM_ALLOW_INDEX: 'true'
-        run: npx playwright test tests/visual.spec.ts --update-snapshots
-
-      - name: Commit Linux snapshots if changed
-        if: github.ref == 'refs/heads/tests-regression'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add tests/__snapshots__/
-          if ! git diff --staged --quiet; then
-            git commit -m "chore: regenere captures de reference sous Linux (ubuntu-latest)"
-            git push origin HEAD:tests-regression
-          fi
 
       - name: Run Playwright tests
         env:

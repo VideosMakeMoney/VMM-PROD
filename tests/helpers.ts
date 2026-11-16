@@ -234,20 +234,37 @@ export const PAGES: PageDefinition[] = [
  * - Gèle les transitions et animations CSS
  * - Masque le curseur de texte
  */
+export async function preparePageForLayout(page: Page): Promise<void> {
+  await page.evaluate(async () => {
+    if (document.fonts) {
+      await document.fonts.ready;
+    }
+    if ((window as any).ScrollTrigger) {
+      (window as any).ScrollTrigger.getAll().forEach((t: any) => t.kill());
+    }
+    if ((window as any).gsap) {
+      (window as any).gsap.globalTimeline.clear();
+      (window as any).gsap.killTweensOf('*');
+    }
+    document.querySelectorAll('[data-reveal]').forEach((el) => {
+      el.classList.add('is-visible');
+      (el as HTMLElement).style.opacity = '1';
+      (el as HTMLElement).style.transform = 'none';
+    });
+  });
+}
+
+/**
+ * Stabilise une page avant capture ou assertion de mise en page :
+ * - Active prefers-reduced-motion
+ * - Attend le chargement des polices
+ * - Déclenche et tue les animations ScrollTrigger / GSAP pour révéler le contenu final
+ * - Met en pause toutes les vidéos à t=0
+ * - Neutralise les transitions CSS
+ * - Masque le curseur de texte
+ */
 export async function stabilizePage(page: Page): Promise<void> {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.waitForLoadState('networkidle');
-
-  // Faire défiler la page pour déclencher le chargement de tous les médias différés
-  await page.evaluate(() => {
-    window.scrollTo(0, document.body.scrollHeight);
-  });
-  await page.waitForTimeout(100);
-  await page.waitForLoadState('networkidle');
-  await page.evaluate(() => {
-    window.scrollTo(0, 0);
-  });
-  await page.waitForTimeout(100);
 
   await page.evaluate(async () => {
     // Attendre les polices
@@ -319,7 +336,4 @@ export async function stabilizePage(page: Page): Promise<void> {
     `;
     document.head.appendChild(style);
   });
-
-  // Laisser 100ms pour que le layout se stabilise
-  await page.waitForTimeout(100);
 }
