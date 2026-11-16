@@ -5,7 +5,19 @@
   "description": "Site de VMM Productions (Videos Make Money), généré à partir de content/*.json",
   "scripts": {
     "build": "node build.mjs",
-    "serve": "node build.mjs && npx --yes serve dist -l 8080"
+    "serve": "node scripts/serve.mjs",
+    "test": "playwright test",
+    "test:visual": "playwright test visual.spec.ts",
+    "test:layout": "playwright test layout.spec.ts",
+    "test:content": "playwright test content.spec.ts",
+    "test:media": "playwright test media.spec.ts",
+    "test:seo": "playwright test seo.spec.ts",
+    "test:update-snapshots": "playwright test visual.spec.ts --update-snapshots"
   },
-  "engines": { "node": ">=18" }
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1"
+  }
 }
