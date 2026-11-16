@@ -47,9 +47,9 @@ const KNOWN_HEIGHT_ISSUES = new Set([
 for (const p of PAGES) {
   test.describe(`Layout JD - ${p.name} (${p.url})`, () => {
 
-    // 1. Hauteur individuelle de chaque section
+    // 1 & 2. Règles JD par section : hauteur <= 100svh et bouton visible
     for (const sec of p.sections) {
-      test(`1. Section ${sec.index} (${sec.label}) tient dans un écran (hauteur <= 100svh - header + 1px)`, async ({ page }, testInfo) => {
+      test(`Section ${sec.index} (${sec.label}) tient dans un écran et bouton visible`, async ({ page }, testInfo) => {
         await page.goto(p.url);
         await preparePageForLayout(page);
 
@@ -61,44 +61,9 @@ for (const p of PAGES) {
           const el = allSections[index] || document.querySelector(selector);
           if (!el) return null;
           const rect = el.getBoundingClientRect();
-          return {
-            height: Math.round(rect.height),
-            maxH,
-            diff: Math.round(rect.height - maxH),
-            overflows: rect.height > maxH,
-          };
-        }, { selector: sec.selector, index: sec.index });
 
-        if (!secData) return;
-
-        const issueKey = `${p.name}|${sec.index}|${testInfo.project.name}`;
-        const isKnown = KNOWN_HEIGHT_ISSUES.has(issueKey);
-
-        test.fixme(
-          isKnown,
-          `Dépassement connu sur main (${p.name} sec ${sec.index} sur ${testInfo.project.name} : ${secData.height}px > ${secData.maxH}px, cf. tests/known-issues.md)`
-        );
-
-        expect(
-          secData.height,
-          `Section ${sec.index} (${sec.label}) dépasse la hauteur d'écran de ${secData.diff}px (${secData.height}px > ${secData.maxH}px)`
-        ).toBeLessThanOrEqual(secData.maxH);
-      });
-
-      // 2. Bouton de chaque section entièrement visible
-      test(`2. Section ${sec.index} (${sec.label}) bouton visible dans l'écran`, async ({ page }, testInfo) => {
-        await page.goto(p.url);
-        await preparePageForLayout(page);
-
-        const btnData = await page.evaluate(({ selector, index }) => {
           document.documentElement.style.scrollBehavior = 'auto';
-          const header = document.querySelector('header');
-          const headerH = header ? header.offsetHeight : 72;
-          const allSections = Array.from(document.querySelectorAll('section'));
-          const el = allSections[index] || document.querySelector(selector);
-          if (!el) return [];
-
-          const secTop = el.getBoundingClientRect().top + window.scrollY;
+          const secTop = rect.top + window.scrollY;
           window.scrollTo(0, Math.max(0, secTop - headerH));
 
           const btns = Array.from(el.querySelectorAll('.btn, button, a.btn')).filter((b) => b.checkVisibility());
@@ -115,17 +80,36 @@ for (const p of PAGES) {
               });
             }
           }
-          return hidden;
+
+          return {
+            height: Math.round(rect.height),
+            maxH,
+            diff: Math.round(rect.height - maxH),
+            overflows: rect.height > maxH,
+            hiddenBtns: hidden,
+          };
         }, { selector: sec.selector, index: sec.index });
 
-        if (btnData.length > 0) {
-          test.fixme(
-            true,
-            `Bouton(s) hors écran dans section ${sec.index} sur ${testInfo.project.name} (cf. tests/known-issues.md)`
-          );
-        }
+        if (!secData) return;
 
-        expect(btnData).toEqual([]);
+        const issueKey = `${p.name}|${sec.index}|${testInfo.project.name}`;
+        const isHeightKnown = KNOWN_HEIGHT_ISSUES.has(issueKey);
+        const isBtnHidden = secData.hiddenBtns.length > 0;
+
+        test.fixme(
+          isHeightKnown || isBtnHidden,
+          `Dépassement ou bouton hors écran connu sur main (${p.name} sec ${sec.index} sur ${testInfo.project.name}, cf. tests/known-issues.md)`
+        );
+
+        expect(
+          secData.height,
+          `Section ${sec.index} (${sec.label}) dépasse la hauteur d'écran de ${secData.diff}px (${secData.height}px > ${secData.maxH}px)`
+        ).toBeLessThanOrEqual(secData.maxH);
+
+        expect(
+          secData.hiddenBtns,
+          `Bouton(s) non entièrement visibles dans la section ${sec.index}`
+        ).toEqual([]);
       });
     }
 

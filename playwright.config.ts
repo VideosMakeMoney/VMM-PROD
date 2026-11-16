@@ -42,7 +42,7 @@ export default defineConfig({
     // --- Projets Desktop (Chromium) ---
     {
       name: 'desktop-1280x720',
-      testIgnore: /.*visual\.spec\.ts/,
+      testIgnore: /.*(visual|content|media|seo)\.spec\.ts/,
       use: {
         browserName: 'chromium',
         viewport: { width: 1280, height: 720 },
@@ -50,6 +50,7 @@ export default defineConfig({
     },
     {
       name: 'desktop-1366x768',
+      testIgnore: /.*(content|media|seo)\.spec\.ts/,
       use: {
         browserName: 'chromium',
         viewport: { width: 1366, height: 768 },
@@ -57,7 +58,7 @@ export default defineConfig({
     },
     {
       name: 'desktop-1440x900',
-      testIgnore: /.*visual\.spec\.ts/,
+      testIgnore: /.*(visual|content|media|seo)\.spec\.ts/,
       use: {
         browserName: 'chromium',
         viewport: { width: 1440, height: 900 },
@@ -65,7 +66,7 @@ export default defineConfig({
     },
     {
       name: 'desktop-1536x864',
-      testIgnore: /.*visual\.spec\.ts/,
+      testIgnore: /.*(visual|content|media|seo)\.spec\.ts/,
       use: {
         browserName: 'chromium',
         viewport: { width: 1536, height: 864 },
@@ -82,6 +83,7 @@ export default defineConfig({
     // --- Projets Mobile (WebKit pour iPhone, Chromium pour Android) ---
     {
       name: 'mobile-iphone-390x844',
+      testIgnore: /.*seo\.spec\.ts/,
       use: {
         browserName: 'webkit',
         viewport: { width: 390, height: 844 },
@@ -91,7 +93,7 @@ export default defineConfig({
     },
     {
       name: 'mobile-iphone-390x664',
-      testIgnore: /.*visual\.spec\.ts/,
+      testIgnore: /.*(visual|content|media|seo)\.spec\.ts/,
       use: {
         browserName: 'webkit',
         viewport: { width: 390, height: 664 },
@@ -101,6 +103,7 @@ export default defineConfig({
     },
     {
       name: 'mobile-android-360x740',
+      testIgnore: /.*(content|media|seo)\.spec\.ts/,
       use: {
         browserName: 'chromium',
         viewport: { width: 360, height: 740 },
@@ -110,7 +113,7 @@ export default defineConfig({
     },
     {
       name: 'mobile-iphone-430x932',
-      testIgnore: /.*visual\.spec\.ts/,
+      testIgnore: /.*(visual|content|media|seo)\.spec\.ts/,
       use: {
         browserName: 'webkit',
         viewport: { width: 430, height: 932 },
