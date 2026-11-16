@@ -92,7 +92,8 @@
     "surtitre": "VMM PRODUCTIONS · CINÉMA ET RÉCIT",
     "titre": "Videos Make Money.",
     "sousTitre": "Notre passion, aider la vôtre à grandir.",
-    "texte": "Derrière chaque entreprise, il y a des gens, une passion et une histoire qui mérite d’être racontée. Chez VMM, nous allons sur le terrain pour capter cette réalité et lui donner vie à travers des images, des sons et des émotions. Parce qu’une belle production ne se contente pas d’être vue : elle doit aussi être ressentie.",
+    "texte": "Derrière chaque entreprise, il y a des gens, une passion et une histoire à raconter. Chez VMM, nous captons ce qui les rend uniques pour créer des productions authentiques qui inspirent confiance et mettent leur entreprise en valeur.",
+    "texteAncienJd15": "Derrière chaque entreprise, il y a des gens, une passion et une histoire qui mérite d’être racontée. Chez VMM, nous allons sur le terrain pour capter cette réalité et lui donner vie à travers des images, des sons et des émotions. Parce qu’une belle production ne se contente pas d’être vue : elle doit aussi être ressentie.",
     "bouton": "Nous contacter ↓",
     "posterManquant": "[À CONFIRMER : vidéo et image poster à fournir]",
     "pause": "Mettre la vidéo en pause",
@@ -211,7 +212,8 @@
     "vision": {
       "etiquette": "Ce que nous créons",
       "titre": "Une *vision.*\nSix *expertises.*",
-      "texte": "De la stratégie au montage final, nous mettons notre expérience, notre créativité et notre passion au service de votre vision pour produire des contenus qui inspirent confiance et mettent votre entreprise en valeur.",
+      "texte": "De la stratégie au montage final, nous réunissons créativité, expérience et passion pour donner vie à votre vision et créer des productions qui inspirent confiance et mettent votre entreprise en valeur.",
+      "texteAncienJd15": "De la stratégie au montage final, nous mettons notre expérience, notre créativité et notre passion au service de votre vision pour produire des contenus qui inspirent confiance et mettent votre entreprise en valeur.",
       "reperes": [
         {
           "icone": "target",
@@ -351,7 +353,8 @@
     "finPortfolio": {
       "_aide": "Dernière section de Services = transition vers le Portfolio (JD, courriels du 2026-11-12 (docs/jd/2026-11-12/)). Titre de la maquette mobile de JD ; \\n = retour à la ligne, *mot* = dégradé. Photo = celle de l’écran 4 du Portfolio, fondue dans le fond. Aucune flèche (celles de la maquette sont ignorées, demande de JD). L’ancienne section reste dans « fin ».",
       "titre": "Découvrez ce que\n*nous offrons.*",
-      "texte": "Vous connaissez maintenant nos expertises. Derrière chaque production, il y a une idée, une vision et une histoire à raconter. Découvrez comment nous leur donnons vie à travers nos réalisations.",
+      "texte": "Derrière chaque production, il y a une idée, une vision et une histoire à raconter. Découvrez comment nous leur donnons vie à travers nos réalisations.",
+      "texteAncienJd15": "Vous connaissez maintenant nos expertises. Derrière chaque production, il y a une idée, une vision et une histoire à raconter. Découvrez comment nous leur donnons vie à travers nos réalisations.",
       "texteMaquette": "Production, tournage et montage de contenu sur mesure pour mettre en valeur votre entreprise et vos projets.",
       "bouton": "Voir nos réalisations →",
       "photo": "/img/portfolio/coulisses-portfolio",
@@ -388,7 +391,8 @@
       "etiquette": "Ce que nous réalisons",
       "titre": "Quatre façons de raconter votre histoire.",
       "intro": "Explorez nos productions par catégorie. Chaque miniature ouvre directement sa vidéo sur YouTube.",
-      "texte": "Chaque entreprise a une histoire qui mérite d’être racontée. Des premières images au montage final, découvrez nos réalisations et leurs coulisses, où créativité, savoir-faire et passion se rencontrent pour donner vie à chaque projet.",
+      "texte": "Chaque entreprise a une histoire à raconter. Découvrez nos réalisations et leurs coulisses, où créativité, savoir-faire et passion donnent vie à chaque projet.",
+      "texteAncienJd15": "Chaque entreprise a une histoire qui mérite d’être racontée. Des premières images au montage final, découvrez nos réalisations et leurs coulisses, où créativité, savoir-faire et passion se rencontrent pour donner vie à chaque projet.",
       "_aideTexte": "Texte unique de l’écran 2 (JD, courriels du 2026-11-14 (ajustements), A4) ; il remplace portfolio.intro + realisons.intro, gardés tels quels (encore utilisés par la version anglaise)."
     },
     "honneur": {
@@ -418,7 +422,8 @@
     "fin": {
       "etiquette": "Et après les images ?",
       "titre": "Rencontrez les gens derrière VMM.",
-      "texte": "Découvrez les parcours, l'expérience et la passion de ceux qui donnent vie à chaque projet de VMM Productions.",
+      "texte": "Découvrez les parcours, l’expérience et la passion des gens qui donnent vie à chaque projet.",
+      "texteAncienJd15": "Découvrez les parcours, l'expérience et la passion de ceux qui donnent vie à chaque projet de VMM Productions.",
       "texteAncien": "Découvrez les personnes qui donnent vie à ces productions.",
       "photo": "/img/portfolio/fin-jd",
       "photoLargeur": 946,
@@ -471,8 +476,13 @@
         "role": "Fondateur / Vidéaste",
         "titre": "Rencontrez\n*JD.*",
         "paragraphes": [
+          "Travailleur de la construction et passionné d’image, j’ai étudié à la Toronto Film School avant de développer mes compétences en captation, en pilotage de drone et en postproduction, ma spécialité.",
+          "Je connais la réalité du terrain et la valeur du travail bien fait. C’est cette expérience qui m’inspire à travers VMM Productions : raconter les histoires des entrepreneurs, mettre leur savoir-faire en valeur et les aider à grandir."
+        ],
+        "paragraphesAnciensJd15": [
           "Travailleur de la construction et passionné de production vidéo, j’ai développé un parcours qui réunit deux univers complémentaires. J’ai étudié en production vidéo à la Toronto Film School et développé mon expérience en captation, en pilotage de drone, avec une spécialisation en postproduction. Ma connaissance du terrain et des métiers spécialisés me permet de comprendre la réalité des entrepreneurs et la valeur de leur savoir-faire. À travers VMM Productions, je mets mon expérience, ma créativité et ma passion au service des gens pour valoriser leur travail, raconter leur histoire et contribuer à la croissance de leur entreprise."
         ],
+        "_aideJd15": "JD, courriel du 2026-11-15 (texte 9) et maquette « Format mobile souhaité » (deux paragraphes). Ancienne bio dans paragraphesAnciensJd15.",
         "photo": "/img/about-jd-photo",
         "photoAlt": "Portrait de JD, fondateur et vidéaste de VMM Productions",
         "paragraphesAnciens": [
@@ -485,6 +495,10 @@
         "role": "Caméraman",
         "titre": "Rencontrez\n*Renaud.*",
         "paragraphes": [
+          "Avec 10 ans d’expérience en cinéma, Renaud se spécialise en captation cinématographique. Il a notamment contribué à des films comme Les Êtres chers, The Colour of Your Lips et Hochelaga, Terre des âmes.",
+          "Son savoir-faire et sa créativité donnent vie à des images authentiques et immersives."
+        ],
+        "paragraphesAnciensJd15": [
           "Avec 10 ans d’expérience dans l’industrie du cinéma, Renaud se spécialise en captation cinématographique. Il a notamment contribué à des productions telles que Les Êtres chers (2015), The Colour of Your Lips (2018) et Hochelaga, Terre des âmes (2017). Son expérience, sa créativité et son sens de l’image lui permettent de saisir des moments authentiques et de leur donner vie à travers des images immersives et soignées."
         ],
         "noteInterne": "[À CONFIRMER : biographie à enrichir avec les réponses de Renaud] Aperçu : non affiché sur le site.",
@@ -497,7 +511,8 @@
     ],
     "fin": {
       "titre": "Derrière chaque image, il y a des gens.",
-      "texte": "Vous connaissez maintenant les gens derrière VMM Productions. À notre tour de découvrir votre histoire, votre passion et le savoir-faire qui rend votre entreprise unique. Ensemble, créons quelque chose qui vous ressemble et qui met votre travail en valeur.",
+      "texte": "Vous connaissez maintenant les gens derrière VMM Productions. À notre tour de découvrir votre histoire, votre passion et ce qui rend votre entreprise unique. Ensemble, donnons vie à votre vision.",
+      "texteAncienJd15": "Vous connaissez maintenant les gens derrière VMM Productions. À notre tour de découvrir votre histoire, votre passion et le savoir-faire qui rend votre entreprise unique. Ensemble, créons quelque chose qui vous ressemble et qui met votre travail en valeur.",
       "bouton": "Donnons vie à votre vision →",
       "ancien": {
         "titre": "Derrière chaque image,\n*il y a des gens.*",
@@ -628,7 +643,8 @@
     "portfolio": {
       "etiquette": "Ce que nous réalisons",
       "titre": "Quatre façons de raconter votre histoire.",
-      "intro": "Chaque histoire mérite d’être racontée à sa façon. Découvrez comment nous donnons vie aux entreprises, aux événements et aux gens qui les rendent uniques, à travers des productions authentiques et captivantes.",
+      "intro": "Chaque histoire mérite d’être racontée. Découvrez ce qui rend les entreprises, les événements et les gens uniques à travers nos productions authentiques et captivantes.",
+      "introAncienJd15": "Chaque histoire mérite d’être racontée à sa façon. Découvrez comment nous donnons vie aux entreprises, aux événements et aux gens qui les rendent uniques, à travers des productions authentiques et captivantes.",
       "bouton": "EXPLORER NOTRE PORTFOLIO →",
       "_aideTitre": "Titre visible de la maquette p. 2. La directive p. 7 demande « travail » et « lui-même » en violet, mots du titre « Le travail parle de lui-même. » (ancienne section Nos réalisations) absents du titre de la p. 2. [À CONFIRMER JD : quel titre garder ?]",
       "titreVariante": "Le *travail* parle de *lui-même*.",
@@ -638,7 +654,8 @@
     "equipe": {
       "etiquette": "Les gens derrière VMM",
       "titre": "Une *équipe*.\nUne *vision*.\nDes *histoires*.",
-      "texte": "Animés par la même passion, nous réunissons créativité, savoir-faire et engagement pour raconter vos histoires avec authenticité. Chaque projet est une occasion de mettre notre expérience au service de votre vision.",
+      "texte": "Animés par la même passion, nous réunissons créativité, savoir-faire et expérience pour donner vie à votre vision et raconter votre histoire avec authenticité.",
+      "texteAncienJd15": "Animés par la même passion, nous réunissons créativité, savoir-faire et engagement pour raconter vos histoires avec authenticité. Chaque projet est une occasion de mettre notre expérience au service de votre vision.",
       "bouton": "DÉCOUVRIR NOTRE ÉQUIPE →",
       "photos": [
         {
@@ -655,7 +672,8 @@
     "services": {
       "etiquette": "Nos services",
       "titre": "La *stratégie* rencontre la *création*.",
-      "intro": "Six expertises complémentaires, une même ambition : transformer vos idées en productions réfléchies, authentiques et captivantes.",
+      "intro": "Six expertises, une même ambition : donner vie à vos idées à travers des productions authentiques et captivantes.",
+      "introAncienJd15": "Six expertises complémentaires, une même ambition : transformer vos idées en productions réfléchies, authentiques et captivantes.",
       "libelles": [
         [
           "Contenu publicitaire",
