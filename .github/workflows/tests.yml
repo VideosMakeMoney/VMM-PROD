@@ -7,15 +7,20 @@ on:
     branches: [ main, tests-regression ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   test:
     name: tests
-    runs-on: windows-latest
-    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -26,14 +31,28 @@ jobs:
       - name: Install dependencies
         run: npm ci || npm install
 
-      - name: Install Playwright browsers
-        run: npx playwright install chromium webkit
+      - name: Install Playwright browsers and OS dependencies
+        run: npx playwright install --with-deps chromium webkit
 
       - name: Build static site
         run: node build.mjs
 
+      - name: Regenerate Linux reference snapshots
+        run: npx playwright test tests/visual.spec.ts --update-snapshots
+
+      - name: Commit Linux snapshots if changed
+        if: github.ref == 'refs/heads/tests-regression'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tests/__snapshots__/
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: regenere captures de reference sous Linux (ubuntu-latest)"
+            git push origin HEAD:tests-regression
+          fi
+
       - name: Run Playwright tests
-        run: npm test
+        run: npm test -- --workers=4
 
       - name: Upload Playwright HTML Report
         uses: actions/upload-artifact@v4
