@@ -62,8 +62,10 @@
     }
   },
   "heroResume": {
-    "_aide": "Description SEO (seo.<page>.resume) lisible dans le héros des pages autres que l’accueil, pendant que le clip joue (JD, courriels du 2026-11-12 (docs/jd/2026-11-12/)). source = \"page\" : chaque page montre sa propre description ; \"services\" : la description de Services partout. Absent de en.json : les pages anglaises gardent la bande sous le héros.",
-    "source": "services",
+    "_aide": "Description SEO (seo.<page>.resume) lisible dans le héros des pages autres que l’accueil, pendant que le clip joue (JD, courriels du 2026-11-12 (docs/jd/2026-11-12/)). source = \"page\" : chaque page montre sa propre description ; \"services\" : la description de Services partout. Aussi dans en.json (2026-11-15), avec accueilBandeFin = false pour garder la bande de l’accueil EN sous le héros.",
+    "source": "page",
+    "sourceAncien": "services",
+    "_aideSource": "JD, courriel du 2026-11-15 (docs/jd/2026-11-15/seo-consigne-hero.jpg) : « appliquer partout » voulait dire déplacer la description dans le héros de chaque page, pas le même texte partout. Chaque page affiche donc sa propre description seo.<page>.resume. Ancienne valeur dans sourceAncien.",
     "_aideChoix": "Choix de Natasha (2026-11-13) : texte exact de la capture de JD (description SEO de Services) dans le héros de toutes les pages sauf l'accueil."
   },
   "seoAncien": {

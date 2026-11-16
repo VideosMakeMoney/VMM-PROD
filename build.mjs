@@ -142,8 +142,10 @@ const ogFor = (key, page) => page?.og || OG[key] || OG.defaut;
 // Phrase d'intro courte et factuelle (seo.<page>.resume), facile à citer par Google et les IA.
 const summary = (text, cls = '') => (text ? `<p class="page-summary${cls ? ` ${cls}` : ''}" data-reveal>${t(text)}</p>` : '');
 // Description SEO dans le héros des pages autres que l'accueil (JD, 2026-11-12) : seulement si la langue a heroResume
-// (fr.json) ; sinon la bande sous le héros reste comme avant (pages anglaises inchangées).
+// (fr.json, en.json) ; sinon la bande sous le héros reste comme avant.
 const heroResume = (L, key) => (L.heroResume ? (L.heroResume.source === 'services' ? L.seo.services.resume : L.seo[key].resume) : '');
+// Accueil : la bande de description passe en fin de page (FR) ; heroResume.accueilBandeFin = false la garde sous le héros (EN).
+const accueilBandeFin = (L) => Boolean(L.heroResume) && L.heroResume.accueilBandeFin !== false;
 const summaryBand = (text) => (text ? `<div class="summary-band"><div class="container">${summary(text)}</div></div>` : '');
 
 // Dimensions réelles d'un JPEG de static/ (width/height des images, sans dépendance)
@@ -790,7 +792,7 @@ function homePage(lang) {
   </div>
   ${hasVideo ? `<button class="hero-toggle" type="button" aria-pressed="false" data-pause="${esc(L.hero.pause)}" data-play="${esc(L.hero.lecture)}" aria-label="${esc(L.hero.pause)}"><span aria-hidden="true">❚❚</span></button>` : ''}
 </section>
-${L.heroResume ? '' : summaryBand(L.seo.accueil.resume)}
+${accueilBandeFin(L) ? '' : summaryBand(L.seo.accueil.resume)}
 
 <section class="jd-screen home-portfolio" id="portfolio-accueil" aria-labelledby="hp-portfolio-title">
   <div class="jd-wrap">
@@ -855,7 +857,7 @@ ${L.heroResume ? '' : summaryBand(L.seo.accueil.resume)}
     </div>
   </div>
 </section>${avis}`;
-  const endBand = L.heroResume ? summaryBand(L.seo.accueil.resume).replace('class="summary-band"', 'class="summary-band summary-band-end"') : '';
+  const endBand = accueilBandeFin(L) ? summaryBand(L.seo.accueil.resume).replace('class="summary-band"', 'class="summary-band summary-band-end"') : '';
 
   return layout({ key: 'accueil', lang, body: lang === 'fr' ? body : `${body}${endBand ? `\n${endBand}` : ''}`, endBand: lang === 'fr' ? endBand : '', videos: catVideos.filter((v) => v?.youtubeId), preload: heroPreload });
 }

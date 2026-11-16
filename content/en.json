@@ -61,6 +61,11 @@
       "description": "This page does not exist."
     }
   },
+  "heroResume": {
+    "_aide": "SEO description (seo.<page>.resume) shown in the hero of Services, Portfolio, About and Contact while the clip plays, instead of the band below the hero (JD, email of 2026-11-15, docs/jd/2026-11-15/seo-en-*.jpg). source = \"page\": each page shows its own description. No description in the home page hero. accueilBandeFin = false: the home page keeps its band right below the hero (unchanged).",
+    "source": "page",
+    "accueilBandeFin": false
+  },
   "seoAncien": {
     "accueil": {
       "title": "VMM Productions | Video Production, Greater Montreal and the Laurentians",
