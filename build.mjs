@@ -167,7 +167,12 @@ const h1Seo = () => '';
 
 // Feuille de style en ligne dans chaque page (≈ 10 Ko compressée) : aucune requête ne bloque le premier affichage.
 // src/styles.css reste la source (et est toujours copiée dans dist/).
-const CSS = readFileSync(join(ROOT, 'src', 'styles.css'), 'utf8')
+// Ajustements JD du 15 nov. : chaque partie (A à E) garde ses règles dans src/parts/*.css, ajoutées après styles.css
+// (ordre alphabétique) ; même principe pour src/parts/*.js, ajoutés à la fin de main.js dans dist/.
+const PARTS_DIR = join(ROOT, 'src', 'parts');
+const partFiles = (ext) => (existsSync(PARTS_DIR) ? readdirSync(PARTS_DIR).filter((f) => f.endsWith(ext)).sort() : []);
+const CSS_SOURCE = [readFileSync(join(ROOT, 'src', 'styles.css'), 'utf8'), ...partFiles('.css').map((f) => readFileSync(join(PARTS_DIR, f), 'utf8'))].join('\n');
+const CSS = CSS_SOURCE
   .replace(/\/\*[\s\S]*?\*\//g, '')
   .replace(/\s+/g, ' ')
   .replace(/\s*([{};,>])\s*/g, '$1')
@@ -1592,6 +1597,9 @@ if (existsSync(OUT)) rmSync(OUT, { recursive: true });
 mkdirSync(OUT, { recursive: true });
 cpSync(join(ROOT, 'static'), OUT, { recursive: true });
 cpSync(join(ROOT, 'src'), OUT, { recursive: true });
+if (partFiles('.css').length) writeFileSync(join(OUT, 'styles.css'), CSS_SOURCE);
+if (partFiles('.js').length)
+  writeFileSync(join(OUT, 'main.js'), [readFileSync(join(ROOT, 'src', 'main.js'), 'utf8'), ...partFiles('.js').map((f) => readFileSync(join(PARTS_DIR, f), 'utf8'))].join('\n'));
 
 for (const lang of ['fr', 'en']) {
   const L = langs[lang];
