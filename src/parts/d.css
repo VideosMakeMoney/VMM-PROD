@@ -14,11 +14,13 @@
   html[lang^="fr"] .jd-screen .jd-wrap:has(> .jd-car) > :not(.jd-car) { flex-shrink: 0; }
   html[lang^="fr"] .jd-screen:has(.jd-car) { overflow-x: clip; }
 
-  html[lang^="fr"] .jd-car { display: block; position: relative; flex: 1 1 auto; min-height: 9rem; margin: clamp(.75rem, 2.4svh, 1.5rem) calc(-1 * var(--gutter)) 0; }
-  html[lang^="fr"] .jd-car-cats { --car-ar: calc(460 / 642); max-height: calc(50vw * 642 / 460); }
-  html[lang^="fr"] .jd-car-logos { --car-ar: 1; max-height: 44vw; }
-  html[lang^="fr"] .jd-car.jd-car-logos .jd-car-list > li[data-car-pos="-1"] > * { transform: translateX(calc(-10% - 26vw)) rotateY(16deg) scale(.8); }
-  html[lang^="fr"] .jd-car.jd-car-logos .jd-car-list > li[data-car-pos="1"] > * { transform: translateX(calc(10% + 26vw)) rotateY(-16deg) scale(.8); }
+  html[lang^="fr"] .jd-car { display: block; position: relative; flex: 1 1 auto; min-height: 9rem; margin: clamp(.75rem, 3.2svh, 2.25rem) calc(-1 * var(--gutter)) 0; }
+  html[lang^="fr"] .jd-car-cats { --car-ar: calc(460 / 642); max-height: calc(56vw * 642 / 460); }
+  html[lang^="fr"] .jd-car.jd-car-cats .jd-car-list > li[data-car-pos="-1"] > * { transform: translateX(calc(-10% - 21vw)) rotateY(14deg) scale(.8); }
+  html[lang^="fr"] .jd-car.jd-car-cats .jd-car-list > li[data-car-pos="1"] > * { transform: translateX(calc(10% + 21vw)) rotateY(-14deg) scale(.8); }
+  html[lang^="fr"] .jd-car-logos { --car-ar: 1; max-height: 50vw; }
+  html[lang^="fr"] .jd-car.jd-car-logos .jd-car-list > li[data-car-pos="-1"] > * { transform: translateX(calc(-10% - 23vw)) rotateY(16deg) scale(.8); }
+  html[lang^="fr"] .jd-car.jd-car-logos .jd-car-list > li[data-car-pos="1"] > * { transform: translateX(calc(10% + 23vw)) rotateY(-16deg) scale(.8); }
 
   html[lang^="fr"] .jd-car .jd-car-list {
     position: absolute; inset: 0; display: block; margin: 0; padding: 0; max-width: none; width: auto; height: auto;
@@ -74,24 +76,27 @@
   html[lang^="fr"] .jd-car .jd-car-arrow.is-next { right: 4px; }
 
   /* Points : cibles 44 px, point visible 10 px (12 px et violet pour la vignette sélectionnée) */
-  html[lang^="fr"] .jd-car + .jd-car-dots { display: flex; justify-content: center; margin-top: clamp(.25rem, 1.2svh, .75rem); }
-  html[lang^="fr"] .jd-car-dot { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer; }
-  html[lang^="fr"] .jd-car-dot::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: rgba(184, 176, 207, .55); transition: background .3s ease, transform .3s ease, box-shadow .3s ease; }
+  html[lang^="fr"] .jd-car + .jd-car-dots { display: flex; justify-content: center; margin-top: clamp(.25rem, 2svh, 1.5rem); }
+  html[lang^="fr"] .jd-car-dot { display: grid; place-items: center; width: 44px; height: 44px; margin-inline: -8px; padding: 0; border: 0; background: none; cursor: pointer; }
+  html[lang^="fr"] .jd-car-dot::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: rgba(184, 176, 207, .55); transition: background .3s ease, transform .3s ease, box-shadow .3s ease; }
   html[lang^="fr"] .jd-car-dot[aria-current="true"]::before { background: var(--hero-violet); transform: scale(1.25); box-shadow: 0 0 10px rgba(139, 92, 246, .8); }
   html[lang^="fr"] .jd-car-dot:focus-visible { outline: 2px solid var(--violet-light); outline-offset: -6px; border-radius: 50%; }
 
   /* Titre de la catégorie sélectionnée, souligné d'un trait violet */
   html[lang^="fr"] .jd-car-dots + .jd-car-info { display: block; text-align: center; }
-  html[lang^="fr"] .jd-car-title { display: inline-block; margin: 0; padding-bottom: .35rem; font: 700 clamp(1.1rem, 5vw, 1.35rem)/1.25 "Inter", system-ui, sans-serif; letter-spacing: -.01em; color: var(--title); background: linear-gradient(90deg, rgba(124, 58, 237, .25), var(--hero-violet) 20%, var(--violet-light) 50%, var(--hero-violet) 80%, rgba(124, 58, 237, .25)) bottom / 100% 2px no-repeat; }
+  html[lang^="fr"] .jd-car-title { display: inline-block; margin: 0; padding-bottom: .35rem; font: 700 clamp(1.1rem, min(6.5vw, 3.3svh), 1.9rem)/1.25 "Inter", system-ui, sans-serif; letter-spacing: -.01em; color: var(--title); background: linear-gradient(90deg, rgba(124, 58, 237, .25), var(--hero-violet) 20%, var(--violet-light) 50%, var(--hero-violet) 80%, rgba(124, 58, 237, .25)) bottom / 100% 2px no-repeat; }
 
+  /* Logos : sur les écrans hauts, l'espace libre se répartit autour du carrousel et du texte (maquette 9:16) */
+  html[lang^="fr"] .jd-car.jd-car-logos { margin-top: clamp(.75rem, 5.5svh, 3.5rem); }
+  html[lang^="fr"] .jd-car-logos + .jd-car-dots { margin-top: clamp(.25rem, 3.5svh, 2.25rem); }
   /* Logos : nom, nombre de vidéos, « Cliquez pour visionner », trait violet */
-  html[lang^="fr"] .jd-car-logos + .jd-car-dots + .jd-car-info { display: flex; flex-direction: column; align-items: center; gap: .1rem; position: relative; padding-bottom: .7rem; }
+  html[lang^="fr"] .jd-car-logos + .jd-car-dots + .jd-car-info { display: flex; flex-direction: column; align-items: center; gap: clamp(.1rem, 1svh, .6rem); position: relative; padding-bottom: clamp(.7rem, 2svh, 1.2rem); }
   html[lang^="fr"] .jd-car-logos + .jd-car-dots + .jd-car-info::after { content: ""; position: absolute; bottom: 0; left: 50%; width: min(60%, 18rem); height: 2px; translate: -50% 0; background: linear-gradient(90deg, transparent, var(--hero-violet) 25%, var(--violet-light) 50%, var(--hero-violet) 75%, transparent); }
-  html[lang^="fr"] .jd-car-info strong { font: 700 clamp(1.3rem, 6vw, 1.6rem)/1.2 "Inter", system-ui, sans-serif; letter-spacing: -.01em; color: var(--title); }
-  html[lang^="fr"] .jd-car-info .logo-btn-count { font-size: clamp(1rem, 4.4vw, 1.15rem); color: var(--title); }
-  html[lang^="fr"] .jd-car-info .logo-btn-cta { font-size: clamp(.875rem, 3.8vw, 1rem); color: var(--lavande, #b8b0cf); }
+  html[lang^="fr"] .jd-car-info strong { font: 700 clamp(1.3rem, min(7.5vw, 3.6svh), 2.1rem)/1.2 "Inter", system-ui, sans-serif; letter-spacing: -.01em; color: var(--title); }
+  html[lang^="fr"] .jd-car-info .logo-btn-count { font-size: clamp(1rem, min(6vw, 2.9svh), 1.65rem); color: var(--title); }
+  html[lang^="fr"] .jd-car-info .logo-btn-cta { font-size: clamp(.875rem, min(4.8vw, 2.3svh), 1.3rem); color: var(--lavande, #b8b0cf); }
 
   /* Accueil : le bouton suit le titre */
-  html[lang^="fr"] .jd-car-info + .cta-row { margin-top: clamp(.75rem, 2.4svh, 1.5rem); }
+  html[lang^="fr"] .jd-car-info + .cta-row { margin-top: clamp(.75rem, 3svh, 2rem); }
 }
 /* === FIN PARTIE D === */
