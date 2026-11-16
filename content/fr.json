@@ -632,6 +632,15 @@
       "bouton": "CONTACTEZ-NOUS →",
       "boutonTravail": "Voir notre travail",
       "titrage": {
+        "empile": "/videos/jd/titre-vmm-alpha-1280.mp4",
+        "empileMobile": "/videos/jd/titre-vmm-alpha-960.mp4",
+        "poster": "/videos/jd/titre-vmm-poster",
+        "largeur": 1280,
+        "hauteur": 160,
+        "_aide": "JD, courriels du 2026-11-15 (#2) et 2026-11-16 (MP4 « TITRE VMM HOMEPAGE OPTIMISER ») : nouvelle animation du titre, placée juste au-dessus de la signature. Le H1 « VIDEOS MAKE MONEY » reste dans la page (masqué visuellement). Fichiers absents = titre texte comme avant.",
+        "_aideFichiers": "Tirés du MP4 de JD (2202×948, 24 i/s, 193 images, 8,04 s, fond vert ; son retiré), détouré (excès de vert → transparence, démélange des bords, sans halo) et recadré sur le titre (2064×258 → 1280×160). titre-vmm-alpha-*.mp4 : H.264 « alpha empilé » (moitié haute = couleur prémultipliée, moitié basse = transparence en gris), lu dans une <video> cachée et composé dans un <canvas> WebGL (src/parts/c.js) : même rendu sur Safari/iOS, Chrome et Firefox, sans WebM. Boucle sans fondu (la dernière image raccorde à la première). titre-vmm-poster.{webp,png} : première image, vraie transparence (sans WebGL ou avec « réduire les animations »). Le MP4 original reste hors du repo."
+      },
+      "titrageAncien": {
         "webm": "/videos/jd/titrage-vmm.webm",
         "hevc": "/videos/jd/titrage-vmm-hevc.mp4",
         "anim": "/videos/jd/titrage-vmm-anim.webp",

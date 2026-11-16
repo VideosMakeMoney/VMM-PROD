@@ -769,7 +769,7 @@ function homePage(lang) {
   const TT = A.hero.titrage;
   const titrage = TT && exists(`${TT.poster}.webp`) ? TT : null;
   const titrageHtml = titrage
-    ? `<div class="hero-titrage" aria-hidden="true"${exists(titrage.webm) ? ` data-webm="${titrage.webm}"` : ''}${exists(titrage.hevc) ? ` data-hevc="${titrage.hevc}"` : ''}${exists(titrage.anim) ? ` data-anim="${titrage.anim}"` : ''}>
+    ? `<div class="hero-titrage" aria-hidden="true"${exists(titrage.webm) ? ` data-webm="${titrage.webm}"` : ''}${exists(titrage.hevc) ? ` data-hevc="${titrage.hevc}"` : ''}${exists(titrage.anim) ? ` data-anim="${titrage.anim}"` : ''}${exists(titrage.empile) ? ` data-empile="${titrage.empile}"` : ''}${exists(titrage.empileMobile) ? ` data-empile-mobile="${titrage.empileMobile}"` : ''} style="--titrage-ratio: ${titrage.largeur} / ${titrage.hauteur}">
       <picture class="hero-titrage-img"><source srcset="${titrage.poster}.webp" type="image/webp"><img src="${titrage.poster}.png" alt="" width="${titrage.largeur}" height="${titrage.hauteur}" decoding="async" fetchpriority="high"></picture>
     </div>`
     : '';
@@ -782,8 +782,10 @@ function homePage(lang) {
   </div>
   <div class="container hero-content">
     ${titrageHtml}${titrageHtml ? '\n    ' : ''}${heroH1}
+    <div class="hero-desc">
     <p class="hero-sub hero-signature" data-reveal>${rich(A.hero.signature)}</p>
     <p class="hero-text" data-reveal>${t(L.hero.texte)}</p>
+    </div>
     <p class="hero-ctas" data-reveal>
       <a class="btn btn-solid hero-cta" href="${ROUTES.contact[lang]}">${esc(A.hero.bouton)}</a>
       <a class="btn btn-ghost hero-cta-ghost" href="${ROUTES.portfolio[lang]}">${esc(A.hero.boutonTravail)}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
