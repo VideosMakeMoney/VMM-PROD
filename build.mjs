@@ -144,7 +144,7 @@ const summary = (text, cls = '') => (text ? `<p class="page-summary${cls ? ` ${c
 // Description SEO dans le héros des pages autres que l'accueil (JD, 2026-11-12) : seulement si la langue a heroResume
 // (fr.json, en.json) ; sinon la bande sous le héros reste comme avant.
 const heroResume = (L, key) => (L.heroResume ? (L.heroResume.source === 'services' ? L.seo.services.resume : L.seo[key].resume) : '');
-// Accueil : la bande de description passe en fin de page (FR) ; heroResume.accueilBandeFin = false la garde sous le héros (EN).
+// Accueil : la bande de description passe en fin de page (FR et EN).
 const accueilBandeFin = (L) => Boolean(L.heroResume) && L.heroResume.accueilBandeFin !== false;
 const summaryBand = (text) => (text ? `<div class="summary-band"><div class="container">${summary(text)}</div></div>` : '');
 
@@ -247,7 +247,8 @@ const groupKey = (v) => (v.type === 'coulisses' ? '_coulisses' : v.client);
 }
 const groupName = (v, lang) => (v.type === 'coulisses' ? (lang === 'fr' ? 'Coulisses' : 'Behind the scenes') : v.client);
 // Nom utilisé pour Google et les lecteurs d'écran ; à l'écran, un titre manquant reste un placeholder.
-const videoName = (v, lang) => (v.titre ? v.titre : `${groupName(v, lang)} ${v.rang}`);
+const videoTitle = (v, lang) => (lang === 'en' && v?.titreEn ? v.titreEn : v?.titre || '');
+const videoName = (v, lang) => (videoTitle(v, lang) ? videoTitle(v, lang) : `${groupName(v, lang)} ${v.rang}`);
 // Vedette de la catégorie qui a un ID YouTube, sinon videoAccueil, sinon la vedette sans ID (placeholder).
 const categoryVideo = (cat) =>
   portfolio.videos.find((v) => v.vedette && v.categorie === cat.id && v.youtubeId) ||
@@ -619,12 +620,13 @@ const pageHead = (title, intro, clip = '', resume = '', h1 = '') => `<section cl
 function videoTile(v, lang, { shape = 'vertical', caption = true, missing, img = '', label = '' } = {}) {
   const L = langs[lang];
   const own = img && existsSync(join(ROOT, 'static', `${img}.webp`)) ? picture(img, '', { w: 460, h: 642 }) : '';
-  const cap = () => `<span class="tile-caption">${v?.titre ? `<strong>${esc(v.titre)}</strong>` : label ? `<strong>${esc(label)}</strong>` : ''}${v?.client ? `<span class="muted">${esc(v.client)}</span>` : ''}</span>`;
+  const title = videoTitle(v, lang);
+  const cap = () => `<span class="tile-caption">${title ? `<strong>${esc(title)}</strong>` : label ? `<strong>${esc(label)}</strong>` : ''}${v?.client ? `<span class="muted">${esc(v.client)}</span>` : ''}</span>`;
   if (own && !v?.youtubeId) {
     return `<span class="tile tile-${shape} tile-static"><span class="thumb">${own}</span>${caption ? cap() : ''}</span>`;
   }
   if (!v || !v.youtubeId) {
-    const name = v?.titre || '';
+    const name = title || '';
     return `<button type="button" class="tile tile-${shape}" data-video="" aria-label="${esc(L.lightbox.voir)}${name ? ` : ${esc(name)}` : ''}">
           <span class="thumb"><span class="thumb-empty" aria-hidden="true"></span><span class="play" aria-hidden="true">▶</span></span>
           ${caption ? `<span class="tile-caption">${name ? `<strong>${esc(name)}</strong>` : ''}${v?.client ? `<span class="muted">${esc(v.client)}</span>` : ''}${t(v?.note || missing || L.lightbox.manquante)}</span>` : ''}
@@ -635,7 +637,7 @@ function videoTile(v, lang, { shape = 'vertical', caption = true, missing, img =
           <span class="thumb">${own || `<img src="${ytThumb(v.youtubeId)}" alt="" loading="lazy" decoding="async" width="480" height="360">`}<span class="play" aria-hidden="true">▶</span></span>
           ${
             caption
-              ? `<span class="tile-caption">${v.titre ? `<strong>${esc(v.titre)}</strong>` : t(L.portfolio.titreManquant)}${v.client ? `<span class="muted">${esc(v.client)}</span>` : ''}${note(v.note)}</span>`
+              ? `<span class="tile-caption">${title ? `<strong>${esc(title)}</strong>` : t(L.portfolio.titreManquant)}${v.client ? `<span class="muted">${esc(v.client)}</span>` : ''}${note(v.note)}</span>`
               : ''
           }
         </a>`;
@@ -1595,7 +1597,7 @@ function llmsTxt() {
     `- ${en.portfolio.coulissesPage.titre} (${visibleVideos(coulissesVideos()).length} videos) : ${abs(coulissesRoute.en)}`,
     '',
     '## Service areas',
-    ...site.zonesDesservies.map((z) => `- ${z === 'Laurentides' ? 'Laurentians' : z}`),
+    ...site.zonesDesservies.map((z) => `- ${z === 'Tout le Québec' ? 'All of Quebec' : z === 'Grand Montréal' ? 'Greater Montreal' : z === 'Laurentides' ? 'Laurentians' : z}`),
     `- ${en.contact.deplacement}`,
     '',
     '## Hours',

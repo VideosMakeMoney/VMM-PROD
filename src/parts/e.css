@@ -1,6 +1,6 @@
 /* ==========================================================================
    Partie E — ajustements JD du 15 nov. 2026 (#5 à #12) : mises en page selon les maquettes « souhaitée »
-   (docs/jd/2026-11-15/mod-05 … mod-12). FR seulement (html[lang^="fr"]) ; EN inchangé.
+   (docs/jd/2026-11-15/mod-05 … mod-12). Appliqué en français et en anglais (:is(html[lang^="fr"], html[lang^="en"])).
    ========================================================================== */
 
 /* #5 Accueil, écran 3 (équipe), MOBILE (mod-05-…-souhaite-9x16) : eyebrow, titre, texte et bouton centrés en haut,
@@ -103,7 +103,7 @@
 
 /* #8 Services, dernier écran : « Découvrez ce que » (blanc) prend le même dégradé que « nous offrons. »
    (violet → bleu → rose, var(--gradient)) : dégradé sur le titre (largeur de la 1re ligne, la plus longue) ; « nous offrons. »
-   garde son propre dégradé. FR seulement. */
+   garde son propre dégradé. Appliqué en FR et en EN. */
 :is(html[lang^="fr"], html[lang^="en"]) .jd-screen.svc-to-portfolio h2:not(.jd-label) { background-image: var(--gradient); -webkit-background-clip: text; background-clip: text;
   color: transparent; -webkit-text-fill-color: transparent; }
 

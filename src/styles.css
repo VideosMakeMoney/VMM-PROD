@@ -1682,7 +1682,7 @@ main > .summary-band-end { scroll-snap-align: start; }
 
 /* ==========================================================================
    === JD 2026-11-14 === Ajustements de JD du 14 novembre (courriels 14 h 55, 14 h 58, 16 h 47, 17 h 48).
-   Version française seulement (html[lang^="fr"]) : les pages /en/ restent telles quelles.
+   Appliqué en français et en anglais (:is(html[lang^="fr"], html[lang^="en"])).
    ========================================================================== */
 
 /* A1 — Rectangle noir semi-transparent des héros : opacité réduite de moitié (.88 → .44, .9 → .45),

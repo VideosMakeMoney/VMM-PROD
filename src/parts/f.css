@@ -6,7 +6,7 @@
    (.page-contact .socials { flex-wrap: nowrap }) s'appliquait aussi à la liste des zones du pied de page, qui
    débordait à droite (+535 à +855 px de défilement horizontal). Le pied de page de Contact redevient identique à
    celui des autres pages (retour à la ligne, écarts, taille des pastilles) ; les réseaux de la section Contact
-   restent sur une ligne. FR seulement (la page Contact EN ne déborde pas). */
+   restent sur une ligne. Appliqué en FR et en EN. */
 @media (min-width: 960px) {
   :is(html[lang^="fr"], html[lang^="en"]) body.page-contact .site-footer .socials { flex-wrap: wrap; gap: .5rem; }
   :is(html[lang^="fr"], html[lang^="en"]) body.page-contact .site-footer .socials a { padding: 0 12px; font-size: inherit; gap: normal; }

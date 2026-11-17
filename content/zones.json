@@ -7,7 +7,7 @@
       "clip": "services",
       "villesLocales": ["Laurentides"],
       "videos": ["fxGb6xSqsfw", "3T-zTO2Q30A", "HeLdEo_awQ0", "LQmzAY6qCv8"],
-      "areaServed": { "@type": "AdministrativeArea", "name": "Laurentides", "containedInPlace": { "@type": "AdministrativeArea", "name": "Québec" } },
+      "areaServed": { "@type": "AdministrativeArea", "name": { "fr": "Laurentides", "en": "Laurentians" }, "containedInPlace": { "@type": "AdministrativeArea", "name": "Québec" } },
       "fr": {
         "route": "/production-video-laurentides/",
         "lien": "Laurentides",
@@ -54,7 +54,7 @@
       "clip": "about",
       "villesLocales": ["Sainte-Thérèse"],
       "videos": ["aRr26p8dQxk", "F8bCIpVoDFI", "t7zXkOFUdBs", "zga2uMl5zhk"],
-      "areaServed": { "@type": "City", "name": "Sainte-Thérèse", "containedInPlace": { "@type": "AdministrativeArea", "name": "Laurentides" } },
+      "areaServed": { "@type": "City", "name": "Sainte-Thérèse", "containedInPlace": { "@type": "AdministrativeArea", "name": { "fr": "Laurentides", "en": "Laurentians" } } },
       "fr": {
         "route": "/production-video-sainte-therese/",
         "lien": "Sainte-Thérèse",
@@ -101,7 +101,7 @@
       "clip": "work",
       "villesLocales": ["Saint-Jérôme"],
       "videos": ["duRjqB2By-0", "3ru2cIaqzeo", "fxGb6xSqsfw", "a6L9xFtDSgc"],
-      "areaServed": { "@type": "City", "name": "Saint-Jérôme", "containedInPlace": { "@type": "AdministrativeArea", "name": "Laurentides" } },
+      "areaServed": { "@type": "City", "name": "Saint-Jérôme", "containedInPlace": { "@type": "AdministrativeArea", "name": { "fr": "Laurentides", "en": "Laurentians" } } },
       "fr": {
         "route": "/production-video-saint-jerome/",
         "lien": "Saint-Jérôme",

@@ -62,7 +62,7 @@
     }
   },
   "heroResume": {
-    "_aide": "SEO description (seo.<page>.resume) shown in the hero of Services, Portfolio, About and Contact while the clip plays, instead of the band below the hero (JD, email of 2026-11-15, docs/jd/2026-11-15/seo-en-*.jpg). source = \"page\": each page shows its own description. No description in the home page hero. accueilBandeFin = false: the home page keeps its band right below the hero (unchanged).",
+    "_aide": "SEO description (seo.<page>.resume) shown in the hero of Services, Portfolio, About and Contact while the clip plays, instead of the band below the hero (JD, email of 2026-11-15, docs/jd/2026-11-15/seo-en-*.jpg). source = \"page\": each page shows its own description. No description in the home page hero. The home page description band appears at the bottom of the page, exactly as in French.",
     "source": "page"
   },
   "seoAncien": {
@@ -91,7 +91,7 @@
     "surtitre": "VMM PRODUCTIONS · CINEMA AND STORYTELLING",
     "titre": "Videos Make Money.",
     "sousTitre": "Our passion, helping yours grow.",
-    "texte": "Behind every business, there are people, a passion, and a story to tell. At VMM, we capture what makes them unique to create authentic productions that inspire confidence and elevate their brand.",
+    "texte": "Behind every business, there are people, a passion, and a story to tell. At VMM, we capture what makes them unique to create authentic productions that inspire confidence and showcase their business.",
     "bouton": "Contact us ↓",
     "posterManquant": "[TO CONFIRM: video and poster image to be provided]",
     "pause": "Pause video",
@@ -342,7 +342,7 @@
     "finPortfolio": {
       "titre": "Discover what\n*we offer.*",
       "texte": "Behind every production, there is an idea, a vision, and a story to tell. Discover how we bring them to life through our work.",
-      "texteMaquette": "Behind every business, every event, and every person, there is a story to tell. Discover our work and get inspired.",
+      "texteMaquette": "Custom production, filming and editing to showcase your business and your projects.",
       "bouton": "See our work →",
       "photo": "/img/portfolio/coulisses-portfolio",
       "photoAlt": "JD in the VMM Productions editing studio"
@@ -468,7 +468,7 @@
         "role": "Camera operator",
         "titre": "Meet\n*Renaud.*",
         "paragraphes": [
-          "With 10 years of experience in film, Renaud specializes in cinematic camera operation. He notably contributed to films such as Les Êtres chers, The Colour of Your Lips, and Hochelaga, Terre des âmes.",
+          "With 10 years of experience in film, Renaud specializes in cinematic camera operation. He notably contributed to films such as Our Loved Ones, The Colour of Your Lips, and Hochelaga, Land of Souls.",
           "His craft and creativity bring authentic and immersive images to life."
         ],
         "noteInterne": "[TO CONFIRM: bio to be expanded with Renaud’s answers] Preview: not shown on the site.",
