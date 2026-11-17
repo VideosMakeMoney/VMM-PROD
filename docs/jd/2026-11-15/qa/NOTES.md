@@ -23,14 +23,14 @@ comparée à `main` (1cfd059). Date : 16 nov. 2026.
 | #3 carrousel accueil p2 / portfolio p2 (mobile) | src/parts/d.css, d.js | Fait (écart mineur, voir plus bas) | 06 |
 | #4 carrousel des logos portfolio p3 (mobile) | src/parts/d.css, d.js | Fait (écart mineur) | 07 |
 | #5 équipe, accueil p3 (mobile) | src/parts/e.css | Fait | 08 |
-| #6 accueil p4 (mobile) | src/parts/e.css | Fait | 09 |
-| #7 accueil p5 (ordinateur) | src/parts/e.css | Fait | 10 |
+| #6 accueil p4 (mobile) | src/parts/e.css | Fait : grille ajustée (.82fr / 1.18fr) et « Image de marque et » insécable (aucun mot orphelin) | 09 |
+| #7 accueil p5 (ordinateur) | src/parts/e.css | Fait : photo ramenée à min(90%, 100% - 2.5rem), ancrée en bas, appareil photo entier, marge sous l'en-tête, 0 px de débordement | 10 |
 | #8 « Découvrez ce que » en dégradé | src/parts/e.css | Fait | — |
 | #9 portfolio p4, mobile | e.css + **f.css (QA)** | Corrigé en QA : photo ≈ 66 % de la largeur, du haut à ≈ 58 % de la hauteur, 3 tablettes entières, fondu à gauche/en bas ; titre 10,4 vw ; libellés de la tuile 5,5 vw | 01, 02 |
 | #9 portfolio p4, ordinateur | e.css + **f.css (QA)** | Corrigé en QA : étiquette, titre, texte et libellés à l'échelle de la maquette (×1,2 à ×1,8), tuile 20,5 vw | 03 |
 | #10 / #11 À propos JD / Renaud (mobile) | e.css + **f.css (QA)** | Corrigé en QA avec les vraies bios : vide photo → rôle supprimé (60 / 120 px → ≈ 20 px), titres à la largeur des maquettes, texte de Renaud ≈ 4 vw | 04, 05 |
-| #12 À propos p5 (mobile) | src/parts/e.css | Fait | 11 |
-| Contact : débordement horizontal (ordinateur) | **f.css (QA)** | Corrigé : pied de page de Contact identique aux autres pages | 14 |
+| #12 À propos p5 (mobile) | src/parts/e.css | Fait : vide de 80 px éliminé (écart bouton-tête ≈ 9 px), sujet agrandi (largeur max 86vw) sous le bouton jusqu'au bas | 11 |
+| Contact : débordement horizontal (ordinateur) | **f.css (QA)** | Corrigé et verrouillé par test : débordement horizontal 0 px sur toutes résolutions, test.fixme retirés | 14 |
 
 Corrections de QA : commit `1739a7a` (src/parts/f.css, FR seulement, aucun texte modifié).
 

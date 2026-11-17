@@ -152,12 +152,6 @@ for (const p of PAGES) {
         return { overflowsDoc, scrollW, clientW };
       });
 
-      const isKnownContactOverflow = p.name === 'contact-fr' && testInfo.project.name.startsWith('desktop-');
-      test.fixme(
-        isKnownContactOverflow,
-        `Débordement horizontal connu sur contact-fr desktop (.footer-zones sans flex-wrap, cf. tests/known-issues.md)`
-      );
-
       expect(
         overflowInfo.overflowsDoc,
         `Débordement horizontal du document : scrollWidth (${overflowInfo.scrollW}) > clientWidth (${overflowInfo.clientW})`
@@ -229,11 +223,10 @@ for (const p of PAGES) {
         return { overlaps, clipped };
       });
 
-      const isKnownContactClipped = p.name === 'contact-fr' && testInfo.project.name.startsWith('desktop-');
       const isKnownHomeClipped = (p.name === 'accueil-fr' || p.name === 'accueil-en') && testInfo.project.name === 'mobile-iphone-390x664';
 
       test.fixme(
-        isKnownContactClipped || isKnownHomeClipped,
+        isKnownHomeClipped,
         `Élément coupé connu sur main (${p.name} sur ${testInfo.project.name}, cf. tests/known-issues.md)`
       );
 

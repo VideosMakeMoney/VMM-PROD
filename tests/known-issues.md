@@ -51,16 +51,7 @@ Seules les sections suivantes débordent :
 
 ## 2. Débordement Horizontal (scrollWidth > clientWidth)
 
-Sur l'ensemble des 18 pages et 9 résolutions, 17 pages ont un débordement horizontal strictement nul (0 px).
-Seule la page suivante présente un débordement horizontal sur Desktop :
-
-| Résolution | Page | clientWidth | scrollWidth | Élément en cause |
-| :--- | :--- | :---: | :---: | :--- |
-| **1280×720** | `contact-fr` | 1 280 px | 2 135 px | Pied de page : `nav[aria-label="Zones desservies"] ul.footer-zones` (14 pastilles sans retour à la ligne automatique) |
-| **1366×768** | `contact-fr` | 1 366 px | 2 178 px | Idem |
-| **1440×900** | `contact-fr` | 1 440 px | 2 215 px | Idem |
-| **1536×864** | `contact-fr` | 1 536 px | 2 263 px | Idem |
-| **1920×1080** | `contact-fr` | 1 920 px | 2 455 px | Idem |
+Sur l'ensemble des 18 pages et 9 résolutions, **toutes les 18 pages ont un débordement horizontal strictement nul (0 px)**. L'anomalie historique de `contact-fr` sur Desktop (`nav[aria-label="Zones desservies"] ul.footer-zones`) est résolue et verrouillée par test bloquant.
 
 ---
 
@@ -68,7 +59,6 @@ Seule la page suivante présente un débordement horizontal sur Desktop :
 
 | Résolution | Page | Élément | Conteneur parent | Cause |
 | :--- | :--- | :--- | :--- | :--- |
-| **Desktop (toutes)** | `contact-fr` | `<p class="label">Zones desservies</p>` | `BODY.page-contact` | Débordement horizontal du bloc de zones du pied de page |
 | **390×664** | `accueil-fr` | `<p>EXPLORER NOS SERVICES →</p>` | `SECTION.home-services` | Bouton calé en bas de la boîte studio sur écran mobile très court (664 px) |
 | **390×664** | `accueil-en` | `<p>EXPLORE OUR SERVICES →</p>` | `SECTION.home-services` | Idem |
 

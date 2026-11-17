@@ -48,12 +48,13 @@
   html[lang^="fr"] .home-services h2 { font-size: 7.85vw; line-height: 1.12; width: 93vw; max-width: none; text-wrap: wrap; margin: 0 auto clamp(.4rem, 1.4svh, .8rem); text-align: center; }
   html[lang^="fr"] .home-services .jd-lead { font-size: max(.75rem, 3.7vw); line-height: 1.38; margin: 0 auto; max-width: none; }
   html[lang^="fr"] .home-services-split { margin-top: clamp(.6rem, 2.6svh, 1.4rem); }
-  html[lang^="fr"] .home-services .hp-svc-grid { position: relative; z-index: 1; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  html[lang^="fr"] .home-services .hp-svc-grid { position: relative; z-index: 1; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
     gap: clamp(.4rem, 2.2svh, 1.3rem) 2.5vw; }
   html[lang^="fr"] .home-services .hp-svc { gap: 1.6vw; min-height: 48px; padding: 0; align-items: center; }
   html[lang^="fr"] .home-services .hp-svc-icon, html[lang^="fr"] .home-services .hp-svc-icon img { width: 14vw; height: 14vw; flex: 0 0 14vw; max-width: 64px; max-height: 64px; }
   html[lang^="fr"] .home-services .hp-svc-text { padding-left: 2.6vw; border-left: 1px solid rgba(255, 255, 255, .28); font-size: max(.75rem, 3.1vw); line-height: 1.22; }
   html[lang^="fr"] .home-services .hp-svc-text strong { font-size: max(.78rem, 3.3vw); }
+  html[lang^="fr"] .home-services .hp-svc:last-child .hp-svc-text strong { white-space: nowrap; }
   html[lang^="fr"] .home-services .cta-row { position: absolute; left: 0; right: 0; bottom: 5.8%; z-index: 2; margin: 0; padding: 0; text-align: center; }
   html[lang^="fr"] .home-services .cta-row .btn { min-width: 70%; min-height: 48px; }
   html[lang^="fr"] .home-services-studio { position: relative; inset: auto; z-index: 0; flex: 1 1 auto; min-height: 0; height: auto; max-height: 98vw;
@@ -69,12 +70,29 @@
    Proportions de la photo conservées (hauteur imposée, largeur auto), masque progressif gardé (bords gauche/droit et bas). */
 @media (min-width: 900px) {
   html[lang^="fr"] .home-contact .jd-wrap.home-contact-split { position: static; display: flex; align-items: center; max-width: none; padding: 0; gap: 0; }
-  html[lang^="fr"] .home-contact-photo { position: absolute; left: 0; top: 0; height: 116%; width: auto; z-index: 0; display: block; align-self: auto; }
+  html[lang^="fr"] .home-contact-photo {
+    position: absolute;
+    left: clamp(0.5rem, 1.5vw, 2.5rem);
+    bottom: 0;
+    top: auto;
+    height: min(90%, calc(100% - 2.5rem));
+    width: auto;
+    z-index: 0;
+    display: block;
+    align-self: auto;
+  }
   html[lang^="fr"] .home-contact-photo picture { display: block; height: 100%; margin: 0; }
-  html[lang^="fr"] .home-contact-photo img { height: 100%; width: auto; max-width: none; max-height: none; object-fit: contain;
-    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 78%, transparent 96%), linear-gradient(90deg, transparent 0%, #000 7%, #000 92%, transparent 100%);
-    mask-image: linear-gradient(180deg, #000 0%, #000 78%, transparent 96%), linear-gradient(90deg, transparent 0%, #000 7%, #000 92%, transparent 100%); }
-  html[lang^="fr"] .home-contact .home-split-text { position: relative; z-index: 1; margin: 0 0 0 41%; padding: 0 3vw 2svh 0; align-self: center; }
+  html[lang^="fr"] .home-contact-photo img {
+    height: 100%;
+    width: auto;
+    max-width: none;
+    max-height: none;
+    object-fit: contain;
+    object-position: 0 100%;
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 90%, transparent 100%), linear-gradient(90deg, #000 0%, #000 88%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 90%, transparent 100%), linear-gradient(90deg, #000 0%, #000 88%, transparent 100%);
+  }
+  html[lang^="fr"] .home-contact .home-split-text { position: relative; z-index: 1; margin: 0 0 0 38%; padding: 0 3vw 2svh 0; align-self: center; }
   html[lang^="fr"] .home-contact .jd-label-line { font-size: min(1.15vw, 2svh); letter-spacing: .08em; margin-bottom: min(2.6vw, 4.6svh); }
   html[lang^="fr"] .home-contact .jd-label-line::before { flex-basis: min(4.8vw, 8.5svh); height: 3px; }
   html[lang^="fr"] .home-contact h2 { font-size: min(5.7vw, 10.1svh); line-height: 1.04; max-width: 57vw; margin-bottom: min(2.4vw, 4.2svh); }
@@ -178,10 +196,11 @@ html[lang^="fr"] .jd-screen.svc-to-portfolio h2:not(.jd-label) { background-imag
   html[lang^="fr"] #vision .jd-lead { color: rgba(255, 255, 255, .92); font-size: max(.8rem, 3.6vw); line-height: 1.4; }
   html[lang^="fr"] #vision .cta-row { margin-top: clamp(.6rem, 2svh, 1.1rem); text-align: center; }
   html[lang^="fr"] #vision .cta-row .btn { min-width: 71%; justify-content: center; }
-  html[lang^="fr"] #vision.jd-photo-split .jd-split-photo { flex: 1 1 0; min-height: 0; margin-top: clamp(.4rem, 1.6svh, 1rem); display: flex; justify-content: center; align-items: flex-end; }
+  html[lang^="fr"] #vision.jd-photo-split .jd-split-photo { flex: 1 1 0; min-height: 0; margin-top: 0; display: flex; justify-content: center; align-items: flex-end; overflow: hidden; }
   html[lang^="fr"] #vision .jd-split-photo picture { display: block; height: 100%; }
-  html[lang^="fr"] #vision .jd-split-photo img { display: block; height: 100%; width: auto; max-width: 78vw; max-height: none; object-fit: contain; object-position: 50% 100%;
-    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 80%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
+  html[lang^="fr"] #vision .jd-split-photo img { display: block; height: calc(100% + clamp(2.4rem, 9.5svh, 5.5rem)); width: auto; max-width: 86vw; max-height: none; object-fit: contain; object-position: 50% 100%;
+    margin-top: calc(-1 * clamp(2.4rem, 9.5svh, 5.5rem));
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 82%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%);
     -webkit-mask-composite: source-in;
-    mask-image: linear-gradient(180deg, #000 0%, #000 80%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%); mask-composite: intersect; }
+    mask-image: linear-gradient(180deg, #000 0%, #000 82%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%); mask-composite: intersect; }
 }
