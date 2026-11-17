@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [ main ]
   push:
-    branches: [ main, tests-regression, en-complet-2026-11-17 ]
+    branches: [ main, tests-regression ]
   workflow_dispatch:
 
 permissions:
@@ -38,17 +38,6 @@ jobs:
         env:
           VMM_ALLOW_INDEX: 'true'
         run: node build.mjs
-
-      - name: Update EN snapshots
-        env:
-          VMM_ALLOW_INDEX: 'true'
-        run: npx playwright test tests/visual.spec.ts -g "-en" --update-snapshots
-
-      - name: Upload updated snapshots
-        uses: actions/upload-artifact@v4
-        with:
-          name: updated-snapshots
-          path: tests/__snapshots__/visual.spec.ts/
 
       - name: Run Playwright tests
         env:
