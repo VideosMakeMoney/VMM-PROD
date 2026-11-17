@@ -74,25 +74,43 @@ Seule la page suivante présente un débordement horizontal sur Desktop :
 
 ---
 
-## 4. Boutons hors du viewport initial
+## 4. Boutons masqués hors du premier écran (`KNOWN_HIDDEN_BUTTONS`)
 
-Sur les sections dont la hauteur dépasse l'écran (voir tableau 1), ou lorsque le bouton est positionné en bas de section, le bouton nécessite un défilement pour être visible.
-Sont concernés :
-- `accueil-fr` & `accueil-en` : Boutons d'action des écrans 1 à 4 sur desktop et mobile.
-- `services-fr` & `services-en` : Boutons de transition vers le Portfolio.
-- `portfolio-fr` & `portfolio-en` : Bouton d'action de la section 1.
-- `apropos-fr` & `apropos-en` : Bouton de bas de page.
-- `contact-fr` & `contact-en` : Bouton d'envoi du formulaire sur mobile.
+Règle JD : *Le bouton d'action d'une section doit être entièrement visible dans l'écran initial sans défilement*.
+
+Dans la suite de tests (`tests/layout.spec.ts`), la condition `test.fixme` repose sur la liste exacte `KNOWN_HIDDEN_BUTTONS`. Sur l'ensemble des 55 sections × 9 résolutions (495 vérifications), seuls **8 cas précis** présentent un bouton situé sous la ligne de flottaison initiale, tous situés sur la section formulaire de la page Contact sur mobile :
+
+| Résolution | Page | Section | Sélecteur | Bouton | Position top | Hauteur écran | Clé exacte (`KNOWN_HIDDEN_BUTTONS`) |
+| :--- | :--- | :---: | :--- | :--- | :---: | :---: | :--- |
+| **390×844** | `contact-fr` | Section 0 | `.section-contact` | « Envoyer » (`button[type="submit"]`) | 1 480 px | 844 px | `contact-fr\|0\|mobile-iphone-390x844` |
+| **390×844** | `contact-en` | Section 0 | `.section-contact` | « Send » (`button[type="submit"]`) | 1 480 px | 844 px | `contact-en\|0\|mobile-iphone-390x844` |
+| **390×664** | `contact-fr` | Section 0 | `.section-contact` | « Envoyer » (`button[type="submit"]`) | 1 194 px | 664 px | `contact-fr\|0\|mobile-iphone-390x664` |
+| **390×664** | `contact-en` | Section 0 | `.section-contact` | « Send » (`button[type="submit"]`) | 1 194 px | 664 px | `contact-en\|0\|mobile-iphone-390x664` |
+| **360×740** | `contact-fr` | Section 0 | `.section-contact` | « Envoyer » (`button[type="submit"]`) | 1 311 px | 740 px | `contact-fr\|0\|mobile-android-360x740` |
+| **360×740** | `contact-en` | Section 0 | `.section-contact` | « Send » (`button[type="submit"]`) | 1 311 px | 740 px | `contact-en\|0\|mobile-android-360x740` |
+| **430×932** | `contact-fr` | Section 0 | `.section-contact` | « Envoyer » (`button[type="submit"]`) | 1 620 px | 932 px | `contact-fr\|0\|mobile-iphone-430x932` |
+| **430×932** | `contact-en` | Section 0 | `.section-contact` | « Send » (`button[type="submit"]`) | 1 620 px | 932 px | `contact-en\|0\|mobile-iphone-430x932` |
+
+Tout autre bouton masqué ou tronqué sur toute autre page ou section fait immédiatement échouer le test Playwright de manière bloquante.
 
 ---
 
-## 5. Typographie et Cibles Tactiles
+## 5. Typographie et Cibles Tactiles (Allowlists strictes par sélecteur)
 
-1. **Texte < 12 px** :
-   - Pages `/services/` et `/about/` : Le bouton de bascule d'arrière-plan `.bg-toggle` utilise un `font-size: 0.7rem` (11.2 px).
-2. **Cibles tactiles mobiles < 44 px** :
-   - Liens `mailto:` dans le pied de page : hauteur calculée de 22 à 24 px.
-   - Icône sociale "X" dans le pied de page : largeur calculée de 40 à 41 px.
+Le test 5 (`layout.spec.ts`) est un **test bloquant** (`test.fixme` retiré) : il filtre exclusivement les éléments connus répertoriés ci-dessous via des sélecteurs CSS précis. Tout nouvel élément textuel < 12 px ou toute nouvelle cible tactile mobile < 44 px fait échouer le test avec `expect(reste).toEqual([])`.
+
+### A. Typographie < 12 px (`ALLOWED_SMALL_TEXT_SELECTORS`)
+- **Sélecteur** : `.bg-toggle`
+- **Taille** : `font-size: 0.7rem` (11.2 px)
+- **Élément** : Bouton discret permettant de mettre en pause la vidéo d'arrière-plan sur les pages `/services/`, `/en/services/`, `/about/` et `/en/about/`.
+
+### B. Cibles tactiles mobiles < 44 px (`ALLOWED_SMALL_TOUCH_SELECTORS`)
+- `footer a[href^="mailto:"]` : Lien textuel courriel du pied de page (`jeandavid@videosmakemoney.ca`, hauteur ~20 px).
+- `footer a[href^="tel:"]` : Lien textuel téléphonique du pied de page (`514-604-5682`, hauteur ~20 px).
+- `footer a[aria-label="X"]` & `footer a[href*="x.com"]` : Bouton de réseau social X dans le pied de page (largeur 40 à 48 px selon rendu de police/icône).
+- `footer .footer-zones a` : Liens de navigation des pastilles de zones desservies dans le pied de page (`Laurentides`, `Saint-Jérôme`, `Sainte-Thérèse`, hauteur ~32 px).
+- `.section-contact a[href^="mailto:"]` : Lien textuel direct de contact dans le bloc coordonnées (hauteur ~19 px).
+- `.section-contact a[href^="tel:"]` : Lien textuel téléphonique direct dans le bloc coordonnées (hauteur ~16 px).
 
 ---
 
@@ -114,7 +132,7 @@ Sont concernés :
 - `static/videos/jd/work-9x16.webm` (5,4 Mo)
 - `static/videos/vmm-camera-scroll.webm` (5,1 Mo)
 
-La suite de tests vérifie qu'**aucun nouveau fichier lourd > 5 Mo** n'est ajouté par une PR.
+Dans `tests/media.spec.ts`, le test vide de placeholder a été supprimé. Le test principal `aucun fichier public > 5 Mo et fichiers PNG/MP4 optimisés` est strictement bloquant et utilise cette allowlist exacte de 14 fichiers. Tout ajout d'un fichier lourd supplémentaire fait échouer la CI.
 
 ---
 

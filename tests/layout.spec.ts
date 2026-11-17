@@ -44,6 +44,33 @@ const KNOWN_HEIGHT_ISSUES = new Set([
   'contact-en|0|mobile-iphone-430x932',
 ]);
 
+// Liste exacte des 8 boutons masqués hors du premier écran connus sur main (cf. tests/known-issues.md section 4)
+const KNOWN_HIDDEN_BUTTONS = new Set([
+  'contact-fr|0|mobile-iphone-390x844',
+  'contact-en|0|mobile-iphone-390x844',
+  'contact-fr|0|mobile-iphone-390x664',
+  'contact-en|0|mobile-iphone-390x664',
+  'contact-fr|0|mobile-android-360x740',
+  'contact-en|0|mobile-android-360x740',
+  'contact-fr|0|mobile-iphone-430x932',
+  'contact-en|0|mobile-iphone-430x932',
+]);
+
+// Allowlists d'éléments connus précis pour la typographie (< 12px) et les cibles tactiles mobiles (< 44px)
+const ALLOWED_SMALL_TEXT_SELECTORS = [
+  '.bg-toggle', // Bouton de pause/lecture vidéo d'arrière-plan (font-size: 0.7rem = 11.2px) sur /services/ et /about/
+];
+
+const ALLOWED_SMALL_TOUCH_SELECTORS = [
+  'footer a[href^="mailto:"]', // Lien courriel du pied de page (h: ~20px)
+  'footer a[href^="tel:"]', // Lien téléphonique du pied de page (h: ~20px)
+  'footer a[aria-label="X"]', // Icône sociale X du pied de page (w: ~40-48px, h: ~44px)
+  'footer a[href*="x.com"]', // Icône sociale X du pied de page (sélecteur fallback)
+  'footer .footer-zones a', // Liens des pastilles de zones desservies du pied de page (h: ~32px)
+  '.section-contact a[href^="mailto:"]', // Lien courriel dans le bloc coordonnées de la page contact (h: ~19px)
+  '.section-contact a[href^="tel:"]', // Lien téléphonique dans le bloc coordonnées de la page contact (h: ~16px)
+];
+
 for (const p of PAGES) {
   test.describe(`Layout JD - ${p.name} (${p.url})`, () => {
 
@@ -94,10 +121,10 @@ for (const p of PAGES) {
 
         const issueKey = `${p.name}|${sec.index}|${testInfo.project.name}`;
         const isHeightKnown = KNOWN_HEIGHT_ISSUES.has(issueKey);
-        const isBtnHidden = secData.hiddenBtns.length > 0;
+        const isBtnKnown = KNOWN_HIDDEN_BUTTONS.has(issueKey);
 
         test.fixme(
-          isHeightKnown || isBtnHidden,
+          isHeightKnown || isBtnKnown,
           `Dépassement ou bouton hors écran connu sur main (${p.name} sec ${sec.index} sur ${testInfo.project.name}, cf. tests/known-issues.md)`
         );
 
@@ -219,61 +246,74 @@ for (const p of PAGES) {
       await page.goto(p.url);
       await preparePageForLayout(page);
 
-      const { smallText, smallTouch } = await page.evaluate(({ isMobile }) => {
-        const smallTextItems = [];
-        const all = document.querySelectorAll('body *');
-        for (const el of all) {
-          if (el.children.length === 0 && el.textContent && el.textContent.trim().length > 0) {
-            if (el.closest('.hp') || el.closest('[aria-hidden="true"]') || el.classList.contains('visually-hidden')) continue;
-            if (el.checkVisibility()) {
-              const style = window.getComputedStyle(el);
-              const fs = parseFloat(style.fontSize);
-              if (fs < 12) {
-                smallTextItems.push({
-                  tag: el.tagName,
-                  text: el.textContent.trim().slice(0, 30),
-                  fontSize: fs,
-                });
-              }
-            }
-          }
-        }
+      const { unexpectedSmallText, unexpectedSmallTouch } = await page.evaluate(
+        ({ isMobile, allowedTextSelectors, allowedTouchSelectors }) => {
+          const isAllowedText = (el: Element) =>
+            allowedTextSelectors.some((sel: string) => el.matches(sel) || Boolean(el.closest(sel)));
+          const isAllowedTouch = (el: Element) =>
+            allowedTouchSelectors.some((sel: string) => el.matches(sel) || Boolean(el.closest(sel)));
 
-        const smallTouchItems = [];
-        if (isMobile) {
-          const interactive = document.querySelectorAll('a, button, input, summary, [role="button"]');
-          for (const el of interactive) {
-            if (el.closest('.hp') || el.closest('[aria-hidden="true"]') || el.classList.contains('visually-hidden')) continue;
-            if (el.checkVisibility()) {
-              const r = el.getBoundingClientRect();
-              if (r.width > 0 && r.height > 0) {
-                if (r.width < 44 || r.height < 44) {
-                  smallTouchItems.push({
+          const smallTextItems: { tag: string; text: string; fontSize: number }[] = [];
+          const all = document.querySelectorAll('body *');
+          for (const el of all) {
+            if (el.children.length === 0 && el.textContent && el.textContent.trim().length > 0) {
+              if (el.closest('.hp') || el.closest('[aria-hidden="true"]') || el.classList.contains('visually-hidden')) continue;
+              if (isAllowedText(el)) continue;
+              if (el.checkVisibility()) {
+                const style = window.getComputedStyle(el);
+                const fs = parseFloat(style.fontSize);
+                if (fs < 12) {
+                  smallTextItems.push({
                     tag: el.tagName,
-                    cls: el.className,
-                    text: el.textContent?.trim().slice(0, 25) || '',
-                    width: Math.round(r.width),
-                    height: Math.round(r.height),
+                    text: el.textContent.trim().slice(0, 30),
+                    fontSize: fs,
                   });
                 }
               }
             }
           }
+
+          const smallTouchItems: { tag: string; cls: string; text: string; width: number; height: number }[] = [];
+          if (isMobile) {
+            const interactive = document.querySelectorAll('a, button, input, summary, [role="button"]');
+            for (const el of interactive) {
+              if (el.closest('.hp') || el.closest('[aria-hidden="true"]') || el.classList.contains('visually-hidden')) continue;
+              if (isAllowedTouch(el)) continue;
+              if (el.checkVisibility()) {
+                const r = el.getBoundingClientRect();
+                if (r.width > 0 && r.height > 0) {
+                  if (r.width < 44 || r.height < 44) {
+                    smallTouchItems.push({
+                      tag: el.tagName,
+                      cls: el.className,
+                      text: el.textContent?.trim().slice(0, 25) || '',
+                      width: Math.round(r.width),
+                      height: Math.round(r.height),
+                    });
+                  }
+                }
+              }
+            }
+          }
+
+          return { unexpectedSmallText: smallTextItems, unexpectedSmallTouch: smallTouchItems };
+        },
+        {
+          isMobile,
+          allowedTextSelectors: ALLOWED_SMALL_TEXT_SELECTORS,
+          allowedTouchSelectors: ALLOWED_SMALL_TOUCH_SELECTORS,
         }
-
-        return { smallText: smallTextItems, smallTouch: smallTouchItems };
-      }, { isMobile });
-
-      const hasKnownBgToggle = (p.name.includes('services') || p.name.includes('apropos')) && smallText.some((t) => t.fontSize < 12);
-      const hasKnownTouchIssues = isMobile && smallTouch.length > 0;
-
-      test.fixme(
-        hasKnownBgToggle || hasKnownTouchIssues,
-        `Typo < 12px ou cibles tactiles < 44px connues sur main (cf. tests/known-issues.md)`
       );
 
-      expect(smallText).toEqual([]);
-      expect(smallTouch).toEqual([]);
+      expect(
+        unexpectedSmallText,
+        `Élément(s) textuel(s) avec police < 12px non autorisés sur ${p.name}`
+      ).toEqual([]);
+
+      expect(
+        unexpectedSmallTouch,
+        `Cible(s) tactile(s) mobile(s) < 44px non autorisées sur ${p.name} (${testInfo.project.name})`
+      ).toEqual([]);
     });
 
     // 6. scroll-snap présent (une section par défilement)

@@ -210,11 +210,4 @@ test.describe('Fichiers lourds et optimisation des médias publics', () => {
     expect(nonOptimizedPng, `Fichiers PNG non optimisés (> 1.5 Mo) trouvés`).toEqual([]);
     expect(nonOptimizedMp4, `Fichiers MP4 non optimisés (> 5 Mo) trouvés`).toEqual([]);
   });
-
-  test('fichiers vidéo historiques > 5 Mo sur main actuel', async () => {
-    test.fixme(
-      true,
-      '14 fichiers vidéo historiques > 5 Mo sur main actuel (hérités des PR24-26 de JD). Documentés dans tests/known-issues.md'
-    );
-  });
 });
