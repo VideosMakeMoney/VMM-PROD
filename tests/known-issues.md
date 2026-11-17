@@ -133,9 +133,3 @@ Le test 5 (`layout.spec.ts`) est un **test bloquant** (`test.fixme` retiré) : i
 - `static/videos/vmm-camera-scroll.webm` (5,1 Mo)
 
 Dans `tests/media.spec.ts`, le test vide de placeholder a été supprimé. Le test principal `aucun fichier public > 5 Mo et fichiers PNG/MP4 optimisés` est strictement bloquant et utilise cette allowlist exacte de 14 fichiers. Tout ajout d'un fichier lourd supplémentaire fait échouer la CI.
-
----
-
-## 7. Descriptions SEO des héros en français (Régression connue PR24)
-
-Dans la PR #24 (`7fc021f`), le choix éditorial consigné dans `content/fr.json` (`heroResume.source: "services"`) affiche la description SEO de la page Services dans le héros de toutes les pages françaises (`portfolio-fr`, `apropos-fr`, `contact-fr`) au lieu de leur propre description SEO respective. Ces tests sont isolés en `test.fixme` en attendant l'instruction de bascule vers `source: "page"`.

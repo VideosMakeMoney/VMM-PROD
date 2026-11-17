@@ -77,7 +77,7 @@
 
   /* Points : cibles 44 px, point visible 10 px (12 px et violet pour la vignette sélectionnée) */
   html[lang^="fr"] .jd-car + .jd-car-dots { display: flex; justify-content: center; margin-top: clamp(.25rem, 2svh, 1.5rem); }
-  html[lang^="fr"] .jd-car-dot { display: grid; place-items: center; width: 44px; height: 44px; margin-inline: -8px; padding: 0; border: 0; background: none; cursor: pointer; }
+  html[lang^="fr"] .jd-car-dot { display: grid; place-items: center; width: 44px; height: 44px; margin-inline: 0; padding: 0; border: 0; background: none; cursor: pointer; }
   html[lang^="fr"] .jd-car-dot::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: rgba(184, 176, 207, .55); transition: background .3s ease, transform .3s ease, box-shadow .3s ease; }
   html[lang^="fr"] .jd-car-dot[aria-current="true"]::before { background: var(--hero-violet); transform: scale(1.25); box-shadow: 0 0 10px rgba(139, 92, 246, .8); }
   html[lang^="fr"] .jd-car-dot:focus-visible { outline: 2px solid var(--violet-light); outline-offset: -6px; border-radius: 50%; }
