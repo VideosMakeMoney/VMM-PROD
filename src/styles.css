@@ -1687,11 +1687,11 @@ main > .summary-band-end { scroll-snap-align: start; }
 
 /* A1 — Rectangle noir semi-transparent des héros : opacité réduite de moitié (.88 → .44, .9 → .45),
    sur mobile ET sur ordi, derrière les textes des héros de toutes les pages. Un seul système (celui de la PR #25). */
-html[lang^="fr"] { --rect-a: .44; --rect-a-max: .45; }
+:is(html[lang^="fr"], html[lang^="en"]) { --rect-a: .44; --rect-a-max: .45; }
 @media (min-width: 768px) {
-  html[lang^="fr"] .page-hero.full-hero:not(.collection-screen) > .container::before,
-  html[lang^="fr"] .collection-screen .collection-inner::before,
-  html[lang^="fr"] .page-accueil .hero-content::before {
+  :is(html[lang^="fr"], html[lang^="en"]) .page-hero.full-hero:not(.collection-screen) > .container::before,
+  :is(html[lang^="fr"], html[lang^="en"]) .collection-screen .collection-inner::before,
+  :is(html[lang^="fr"], html[lang^="en"]) .page-accueil .hero-content::before {
     content: ""; position: absolute; z-index: -1; pointer-events: none;
     left: calc(50% - 50vw); width: 100vw;
     --c-fade-t: 3rem; --c-fade-b: 2.5rem; --c-pad: .75rem; --c-h: 2.375rem;
@@ -1701,27 +1701,27 @@ html[lang^="fr"] { --rect-a: .44; --rect-a-max: .45; }
       rgba(13, 9, 23, var(--rect-a)) calc(100% - var(--c-fade-b)), rgba(13, 9, 23, 0) 100%);
   }
   /* Services, Portfolio, À propos : du titre jusqu'au bas du héros (titre + description) */
-  html[lang^="fr"] .page-hero.full-hero:not(.collection-screen) > .container::before {
+  :is(html[lang^="fr"], html[lang^="en"]) .page-hero.full-hero:not(.collection-screen) > .container::before {
     --c-pb: clamp(3.5rem, 9vh, 5.5rem);
     height: calc(var(--c-fade-t) + var(--c-pad) + 100% + var(--c-pb));
   }
   /* Pages des entreprises et Coulisses : le titre seul */
-  html[lang^="fr"] .collection-screen .collection-inner::before { font-size: clamp(2.2rem, 7vw, 4.5rem); --c-h: 1.05em;
+  :is(html[lang^="fr"], html[lang^="en"]) .collection-screen .collection-inner::before { font-size: clamp(2.2rem, 7vw, 4.5rem); --c-h: 1.05em;
     background: linear-gradient(180deg, rgba(13, 9, 23, 0) 0, rgba(13, 9, 23, var(--rect-a-max)) var(--c-fade-t),
       rgba(13, 9, 23, var(--rect-a-max)) calc(100% - var(--c-fade-b)), rgba(13, 9, 23, 0) 100%); }
-  html[lang^="fr"] .collection-screen .collection-inner:has(> .collection-title.is-long)::before { font-size: clamp(1.6rem, 4.2vw, 3.4rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .collection-screen .collection-inner:has(> .collection-title.is-long)::before { font-size: clamp(1.6rem, 4.2vw, 3.4rem); }
 }
 /* Accueil : le rectangle couvre tout le bloc du bas (titre animé, signature, paragraphe, boutons), mobile et ordi */
-html[lang^="fr"] .page-accueil .hero-content { position: relative; }
-html[lang^="fr"] .page-accueil .hero-content::before {
+:is(html[lang^="fr"], html[lang^="en"]) .page-accueil .hero-content { position: relative; }
+:is(html[lang^="fr"], html[lang^="en"]) .page-accueil .hero-content::before {
   --c-fade-t: 2rem; --c-fade-b: 0rem; --c-pad: 0rem;
   height: calc(var(--c-fade-t) + 100% + var(--c-fade-b)); margin-top: calc(-1 * var(--c-fade-t)); top: 0;
 }
-html[lang^="fr"] .page-accueil .hero-ctas::after { content: none; }
+:is(html[lang^="fr"], html[lang^="en"]) .page-accueil .hero-ctas::after { content: none; }
 
 /* C1-C2 — Accueil, écran 1 : titre animé (WebM transparent) centré en bas, entièrement visible, plus petit */
-html[lang^="fr"] .page-accueil .hero { align-items: end; }
-html[lang^="fr"] .page-accueil .hero-content { padding-block: clamp(.75rem, 4svh, 2.5rem) clamp(1rem, 4svh, 2.5rem); }
+:is(html[lang^="fr"], html[lang^="en"]) .page-accueil .hero { align-items: end; }
+:is(html[lang^="fr"], html[lang^="en"]) .page-accueil .hero-content { padding-block: clamp(.75rem, 4svh, 2.5rem) clamp(1rem, 4svh, 2.5rem); }
 .hero-titrage { position: relative; width: min(100%, 860px, calc((100svh - var(--header-h)) * .95)); aspect-ratio: 1152 / 360; margin: 0 auto clamp(.25rem, 1.5svh, 1rem); }
 .hero-titrage picture, .hero-titrage img, .hero-titrage-video { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; }
 .hero-titrage-video { opacity: 0; transition: opacity .2s linear; }
@@ -1730,25 +1730,25 @@ html[lang^="fr"] .page-accueil .hero-content { padding-block: clamp(.75rem, 4svh
 @media (min-width: 900px) { .hero-titrage { width: min(100%, 62vw, 860px); } }
 @media (max-width: 559px) { .hero-titrage { margin-bottom: 0; } }
 /* Le cadre du titre animé reste dans le conteneur (marges égales) : pas de débordement de 94vw */
-html[lang^="fr"] .page-accueil .hero-content { box-sizing: border-box; }
+:is(html[lang^="fr"], html[lang^="en"]) .page-accueil .hero-content { box-sizing: border-box; }
 .hero-titrage { max-width: 100%; margin-inline: auto; }
 
 /* C6 — Animation des icônes : même effet que les illustrations de Services (svc-draw : balayage + éclat, 1,4 s) */
-html[lang^="fr"] .hp-svc-grid > li.is-visible .hp-svc-icon img { animation: svc-draw 1.4s var(--ease) both; }
-html[lang^="fr"] .hp-svc-grid > li:nth-child(2).is-visible .hp-svc-icon img { animation-delay: .12s; }
-html[lang^="fr"] .hp-svc-grid > li:nth-child(3).is-visible .hp-svc-icon img { animation-delay: .24s; }
-html[lang^="fr"] .hp-svc-grid > li:nth-child(4).is-visible .hp-svc-icon img { animation-delay: .36s; }
-html[lang^="fr"] .hp-svc-grid > li:nth-child(5).is-visible .hp-svc-icon img { animation-delay: .48s; }
-html[lang^="fr"] .hp-svc-grid > li:nth-child(6).is-visible .hp-svc-icon img { animation-delay: .6s; }
+:is(html[lang^="fr"], html[lang^="en"]) .hp-svc-grid > li.is-visible .hp-svc-icon img { animation: svc-draw 1.4s var(--ease) both; }
+:is(html[lang^="fr"], html[lang^="en"]) .hp-svc-grid > li:nth-child(2).is-visible .hp-svc-icon img { animation-delay: .12s; }
+:is(html[lang^="fr"], html[lang^="en"]) .hp-svc-grid > li:nth-child(3).is-visible .hp-svc-icon img { animation-delay: .24s; }
+:is(html[lang^="fr"], html[lang^="en"]) .hp-svc-grid > li:nth-child(4).is-visible .hp-svc-icon img { animation-delay: .36s; }
+:is(html[lang^="fr"], html[lang^="en"]) .hp-svc-grid > li:nth-child(5).is-visible .hp-svc-icon img { animation-delay: .48s; }
+:is(html[lang^="fr"], html[lang^="en"]) .hp-svc-grid > li:nth-child(6).is-visible .hp-svc-icon img { animation-delay: .6s; }
 @keyframes svc-draw-svg { from { clip-path: inset(0 100% 0 0); opacity: .55; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
-html[lang^="fr"] .socials.is-visible .social-icon { animation: svc-draw-svg 1.4s var(--ease) both; }
-html[lang^="fr"] .is-visible .contact-icon img { animation: svc-draw 1.4s var(--ease) both; }
+:is(html[lang^="fr"], html[lang^="en"]) .socials.is-visible .social-icon { animation: svc-draw-svg 1.4s var(--ease) both; }
+:is(html[lang^="fr"], html[lang^="en"]) .is-visible .contact-icon img { animation: svc-draw 1.4s var(--ease) both; }
 /* Autres SVG du site (flèche « Voir notre travail », icône lecture de la tuile Coulisses) : même effet */
-html[lang^="fr"] .hero-cta-ghost svg { animation: svc-draw-svg 1.4s var(--ease) .6s both; }
-html[lang^="fr"] .cta-play.is-visible { animation: svc-draw-svg 1.4s var(--ease) both; }
+:is(html[lang^="fr"], html[lang^="en"]) .hero-cta-ghost svg { animation: svc-draw-svg 1.4s var(--ease) .6s both; }
+:is(html[lang^="fr"], html[lang^="en"]) .cta-play.is-visible { animation: svc-draw-svg 1.4s var(--ease) both; }
 @media (prefers-reduced-motion: reduce) {
-  html[lang^="fr"] .hp-svc-icon img, html[lang^="fr"] .social-icon, html[lang^="fr"] .contact-icon img,
-  html[lang^="fr"] .hero-cta-ghost svg, html[lang^="fr"] .cta-play { animation: none !important; }
+  :is(html[lang^="fr"], html[lang^="en"]) .hp-svc-icon img, :is(html[lang^="fr"], html[lang^="en"]) .social-icon, :is(html[lang^="fr"], html[lang^="en"]) .contact-icon img,
+  :is(html[lang^="fr"], html[lang^="en"]) .hero-cta-ghost svg, :is(html[lang^="fr"], html[lang^="en"]) .cta-play { animation: none !important; }
 }
 
 /* C12 — Icône Google : même style que les autres réseaux ; non cliquable tant que l'URL de la fiche manque (TODO) */
@@ -1757,76 +1757,76 @@ html[lang^="fr"] .cta-play.is-visible { animation: svc-draw-svg 1.4s var(--ease)
 /* C3 — Accueil, écran 2 (ordi, maquette « positionnement optimisé ») : texte plus large et plus court,
    miniatures agrandies ; mobile : les 4 miniatures 9:16 en 2 colonnes, tout tient dans l'écran (règles d'or) */
 @media (min-width: 960px) {
-  html[lang^="fr"] .home-portfolio .jd-wrap { max-width: 1320px; }
-  html[lang^="fr"] .home-portfolio h2 { font-size: clamp(2.2rem, 3.6vw, 3.6rem); white-space: nowrap; }
-  html[lang^="fr"] .home-portfolio .jd-lead { max-width: 64rem; font-size: clamp(1rem, 1.25vw, 1.2rem); line-height: 1.45; }
-  html[lang^="fr"] .home-portfolio .jd-label { margin-bottom: .5rem; }
-  html[lang^="fr"] .home-portfolio .hp-cards { margin-top: clamp(.75rem, 2svh, 1.5rem); max-width: calc(4 * var(--hp-h) * 460 / 642 + 4.5rem); --hp-h: calc(100svh - var(--header-h) - 22rem); }
-  html[lang^="fr"] .home-portfolio .hp-card .thumb:has(picture) { max-height: var(--hp-h); }
-  html[lang^="fr"] .home-portfolio .cta-row { margin-top: clamp(.75rem, 2svh, 1.75rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio .jd-wrap { max-width: 1320px; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio h2 { font-size: clamp(2.2rem, 3.6vw, 3.6rem); white-space: nowrap; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio .jd-lead { max-width: 64rem; font-size: clamp(1rem, 1.25vw, 1.2rem); line-height: 1.45; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio .jd-label { margin-bottom: .5rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio .hp-cards { margin-top: clamp(.75rem, 2svh, 1.5rem); max-width: calc(4 * var(--hp-h) * 460 / 642 + 4.5rem); --hp-h: calc(100svh - var(--header-h) - 22rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio .hp-card .thumb:has(picture) { max-height: var(--hp-h); }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio .cta-row { margin-top: clamp(.75rem, 2svh, 1.75rem); }
 }
 @media (max-width: 959px) {
-  html[lang^="fr"] .home-portfolio { --hp-h: calc((100svh - var(--header-h)) * .22); }
-  html[lang^="fr"] main > section.jd-screen.home-portfolio { padding-block: clamp(.75rem, 3svh, 2rem); }
-  html[lang^="fr"] .home-portfolio .hp-cards { grid-auto-flow: row; grid-template-columns: repeat(2, max(calc(var(--hp-h) * 460 / 642), 8.5rem)); grid-auto-columns: auto; justify-items: center; justify-content: center; overflow: visible; gap: .5rem 1rem; margin-top: .75rem; padding: 0; }
-  html[lang^="fr"] .home-portfolio .hp-card .thumb:has(picture) { max-height: var(--hp-h); width: 100%; }
-  html[lang^="fr"] .home-portfolio .yt-tile { gap: .25rem; }
-  html[lang^="fr"] .home-portfolio .hp-card .yt-tile-label { font-size: .8rem; line-height: 1.2; }
-  html[lang^="fr"] .home-portfolio .jd-lead { font-size: .84rem; line-height: 1.4; }
-  html[lang^="fr"] .home-portfolio h2 { font-size: clamp(1.45rem, 6.6vw, 1.9rem); }
-  html[lang^="fr"] .home-portfolio .cta-row { margin-top: .75rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio { --hp-h: calc((100svh - var(--header-h)) * .22); }
+  :is(html[lang^="fr"], html[lang^="en"]) main > section.jd-screen.home-portfolio { padding-block: clamp(.75rem, 3svh, 2rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio .hp-cards { grid-auto-flow: row; grid-template-columns: repeat(2, max(calc(var(--hp-h) * 460 / 642), 8.5rem)); grid-auto-columns: auto; justify-items: center; justify-content: center; overflow: visible; gap: .5rem 1rem; margin-top: .75rem; padding: 0; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio .hp-card .thumb:has(picture) { max-height: var(--hp-h); width: 100%; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio .yt-tile { gap: .25rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio .hp-card .yt-tile-label { font-size: .8rem; line-height: 1.2; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio .jd-lead { font-size: .84rem; line-height: 1.4; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio h2 { font-size: clamp(1.45rem, 6.6vw, 1.9rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio .cta-row { margin-top: .75rem; }
 }
 @media (max-width: 959px) and (max-height: 760px) {
-  html[lang^="fr"] .home-portfolio { --hp-h: calc((100svh - var(--header-h)) * .165); }
-  html[lang^="fr"] main > section.jd-screen.home-portfolio { padding-block: .6rem; }
-  html[lang^="fr"] .home-portfolio .jd-lead { font-size: .78rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio { --hp-h: calc((100svh - var(--header-h)) * .165); }
+  :is(html[lang^="fr"], html[lang^="en"]) main > section.jd-screen.home-portfolio { padding-block: .6rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio .jd-lead { font-size: .78rem; }
 }
 
 /* C4 — Accueil, écran 3 (sans maquette ; confirmé par JD le 14 nov. au soir) : photos agrandies, zone d'affichage
    élargie pour révéler tout leur contenu ; format 3:4 d'origine, ni étirées ni recadrées */
 @media (min-width: 900px) {
-  html[lang^="fr"] .home-team { padding-block: 1rem; }
-  html[lang^="fr"] .home-team .jd-wrap { max-width: 1440px; padding-inline: clamp(1rem, 4vw, 4rem); }
-  html[lang^="fr"] .home-team .home-split { grid-template-columns: minmax(0, .62fr) minmax(0, 1.38fr); gap: clamp(2rem, 3vw, 3.5rem); align-items: center; }
-  html[lang^="fr"] .home-team-photos img { width: 100%; height: auto; aspect-ratio: 3 / 4; max-height: calc(100svh - var(--header-h) - 2rem); object-fit: cover; object-position: 50% 30%; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-team { padding-block: 1rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-team .jd-wrap { max-width: 1440px; padding-inline: clamp(1rem, 4vw, 4rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-team .home-split { grid-template-columns: minmax(0, .62fr) minmax(0, 1.38fr); gap: clamp(2rem, 3vw, 3.5rem); align-items: center; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-team-photos img { width: 100%; height: auto; aspect-ratio: 3 / 4; max-height: calc(100svh - var(--header-h) - 2rem); object-fit: cover; object-position: 50% 30%; }
 }
 @media (max-width: 899px) {
-  html[lang^="fr"] .home-team-photos img { width: 100%; height: auto; max-height: none; aspect-ratio: 3 / 4; }
-  html[lang^="fr"] .home-team .home-split { gap: 1rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-team-photos img { width: 100%; height: auto; max-height: none; aspect-ratio: 3 / 4; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-team .home-split { gap: 1rem; }
 }
 @media (max-width: 899px) and (max-height: 760px) {
-  html[lang^="fr"] .home-team-photos img { width: auto; height: 26svh; margin-inline: auto; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-team-photos img { width: auto; height: 26svh; margin-inline: auto; }
 }
 
 /* C7 — Accueil, écran 4 mobile (maquette 9:16) : icônes plus grosses en 2 × 3, photo du studio pleine largeur en bas.
    Textes et police du site gardés (la maquette montre d'autres textes). Ordi inchangé (C5). */
 @media (max-width: 899px) {
-  html[lang^="fr"] .home-services .hp-svc-grid { gap: 1rem .75rem; }
-  html[lang^="fr"] .home-services .hp-svc-icon, html[lang^="fr"] .home-services .hp-svc-icon img { width: 62px; height: 62px; flex-basis: 62px; }
-  html[lang^="fr"] .home-services .hp-svc-text { font-size: .8rem; }
-  html[lang^="fr"] .home-services .hp-svc-text strong { font-size: .9rem; }
-  html[lang^="fr"] .home-services-studio { height: 40%; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-services .hp-svc-grid { gap: 1rem .75rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-services .hp-svc-icon, :is(html[lang^="fr"], html[lang^="en"]) .home-services .hp-svc-icon img { width: 62px; height: 62px; flex-basis: 62px; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-services .hp-svc-text { font-size: .8rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-services .hp-svc-text strong { font-size: .9rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-services-studio { height: 40%; }
 }
 @media (max-width: 899px) and (max-height: 760px) {
-  html[lang^="fr"] .home-services .hp-svc-grid { gap: .55rem .6rem; }
-  html[lang^="fr"] .home-services .hp-svc-icon, html[lang^="fr"] .home-services .hp-svc-icon img { width: 50px; height: 50px; flex-basis: 50px; }
-  html[lang^="fr"] .home-services .hp-svc-text { font-size: .75rem; }
-  html[lang^="fr"] .home-services .hp-svc-text strong { font-size: .8rem; }
-  html[lang^="fr"] .home-services-studio { height: 33%; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-services .hp-svc-grid { gap: .55rem .6rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-services .hp-svc-icon, :is(html[lang^="fr"], html[lang^="en"]) .home-services .hp-svc-icon img { width: 50px; height: 50px; flex-basis: 50px; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-services .hp-svc-text { font-size: .75rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-services .hp-svc-text strong { font-size: .8rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-services-studio { height: 33%; }
 }
 
 /* C8 — Accueil, écran 5 : photo de JD plus grande (à gauche), texte et bouton à droite */
 @media (min-width: 900px) {
-  html[lang^="fr"] .home-contact .jd-wrap { max-width: 1440px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(1rem, 3vw, 3rem); }
-  html[lang^="fr"] .home-contact-photo { height: calc(100svh - var(--header-h)); justify-content: flex-end; }
-  html[lang^="fr"] .home-contact h2 { font-size: clamp(2.2rem, 3.6vw, 4.2rem); max-width: 11em; }
-  html[lang^="fr"] .home-contact .jd-lead { font-size: clamp(1rem, 1.3vw, 1.25rem); max-width: 34rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-contact .jd-wrap { max-width: 1440px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(1rem, 3vw, 3rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-contact-photo { height: calc(100svh - var(--header-h)); justify-content: flex-end; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-contact h2 { font-size: clamp(2.2rem, 3.6vw, 4.2rem); max-width: 11em; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-contact .jd-lead { font-size: clamp(1rem, 1.3vw, 1.25rem); max-width: 34rem; }
 }
 @media (max-width: 899px) {
-  html[lang^="fr"] .home-contact-photo { height: 90%; }
-  html[lang^="fr"] .home-contact-photo picture { margin-left: calc(-.16 * .565 * .9 * (100svh - var(--header-h))); }
-  html[lang^="fr"] .home-contact .home-split-text { margin-left: 49%; padding-top: clamp(1.25rem, 5svh, 3rem); }
-  html[lang^="fr"] .home-contact h2 { font-size: clamp(1.25rem, 6.1vw, 2.4rem); overflow-wrap: normal; word-break: normal; hyphens: none; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-contact-photo { height: 90%; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-contact-photo picture { margin-left: calc(-.16 * .565 * .9 * (100svh - var(--header-h))); }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-contact .home-split-text { margin-left: 49%; padding-top: clamp(1.25rem, 5svh, 3rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-contact h2 { font-size: clamp(1.25rem, 6.1vw, 2.4rem); overflow-wrap: normal; word-break: normal; hyphens: none; }
 }
 
 /* Écrans « photo détourée + texte » (Portfolio écran 5, À propos écran 5) : photo fondue dans le fond, sans IA */
@@ -1876,14 +1876,14 @@ html[lang^="fr"] .cta-play.is-visible { animation: svc-draw-svg 1.4s var(--ease)
 
 /* A2/A4 — Portfolio, écran 2 mobile (maquette « format désiré ») : 4 miniatures 9:16 en 2 colonnes, agrandies */
 @media (max-width: 1023px) {
-  html[lang^="fr"] .pf-cats { --pf-h: calc((100svh - var(--header-h)) * .25); }
-  html[lang^="fr"] .pf-cat-grid { max-width: none; grid-template-columns: repeat(2, max(calc(var(--pf-h) * 460 / 642), 8.5rem)); justify-content: center; justify-items: center; gap: .5rem 1.25rem; margin-top: .75rem; }
-  html[lang^="fr"] .pf-cat .thumb:has(picture), html[lang^="fr"] .pf-cat .thumb { max-height: var(--pf-h); }
-  html[lang^="fr"] .pf-cats .jd-lead { font-size: .86rem; line-height: 1.4; }
+  :is(html[lang^="fr"], html[lang^="en"]) .pf-cats { --pf-h: calc((100svh - var(--header-h)) * .25); }
+  :is(html[lang^="fr"], html[lang^="en"]) .pf-cat-grid { max-width: none; grid-template-columns: repeat(2, max(calc(var(--pf-h) * 460 / 642), 8.5rem)); justify-content: center; justify-items: center; gap: .5rem 1.25rem; margin-top: .75rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .pf-cat .thumb:has(picture), :is(html[lang^="fr"], html[lang^="en"]) .pf-cat .thumb { max-height: var(--pf-h); }
+  :is(html[lang^="fr"], html[lang^="en"]) .pf-cats .jd-lead { font-size: .86rem; line-height: 1.4; }
 }
 @media (max-width: 1023px) and (max-height: 760px) {
-  html[lang^="fr"] .pf-cats { --pf-h: calc((100svh - var(--header-h)) * .21); }
-  html[lang^="fr"] .pf-cats .jd-lead { font-size: .8rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .pf-cats { --pf-h: calc((100svh - var(--header-h)) * .21); }
+  :is(html[lang^="fr"], html[lang^="en"]) .pf-cats .jd-lead { font-size: .8rem; }
 }
 
 /* A6 — Portfolio, écran 4 : fond étagère + tuile VMM (maquettes 9:16 et 16:9) */
@@ -1936,17 +1936,17 @@ html[lang^="fr"] .cta-play.is-visible { animation: svc-draw-svg 1.4s var(--ease)
 
 /* A5/B2/B4 — textes plus longs de JD : petits écrans (≤ 760 px de haut) resserrés pour garder un écran par section */
 @media (max-width: 859px) {
-  html[lang^="fr"] .page-apropos .person-photo img { max-height: 24svh; }
-  html[lang^="fr"] .page-apropos .person-text p:not(.jd-role):not(.small) { font-size: .86rem; line-height: 1.45; }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos .person-photo img { max-height: 24svh; }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos .person-text p:not(.jd-role):not(.small) { font-size: .86rem; line-height: 1.45; }
 }
 @media (max-width: 859px) and (max-height: 760px) {
-  html[lang^="fr"] .page-apropos .person-photo img { max-height: 20svh; }
-  html[lang^="fr"] .page-apropos .person-text p:not(.jd-role):not(.small) { font-size: .82rem; line-height: 1.42; margin-block: .3rem; }
-  html[lang^="fr"] .page-apropos .person-text h2 { font-size: clamp(1.6rem, 7.4vw, 2.2rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos .person-photo img { max-height: 20svh; }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos .person-text p:not(.jd-role):not(.small) { font-size: .82rem; line-height: 1.42; margin-block: .3rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos .person-text h2 { font-size: clamp(1.6rem, 7.4vw, 2.2rem); }
 }
 @media (max-width: 1023px) and (max-height: 760px) {
-  html[lang^="fr"] .pf-honneur .jd-lead { font-size: .86rem; line-height: 1.4; }
-  html[lang^="fr"] .pf-honneur .logo-btn-face { width: min(100%, 12svh); }
+  :is(html[lang^="fr"], html[lang^="en"]) .pf-honneur .jd-lead { font-size: .86rem; line-height: 1.4; }
+  :is(html[lang^="fr"], html[lang^="en"]) .pf-honneur .logo-btn-face { width: min(100%, 12svh); }
 }
 
 @media (max-width: 899px) and (max-height: 760px) {
@@ -1957,19 +1957,19 @@ html[lang^="fr"] .cta-play.is-visible { animation: svc-draw-svg 1.4s var(--ease)
 
 /* A1 — « dans toutes les pages du site » : aussi les héros des pages de zones et l'écran 1 de Contact
    (même noir, même opacité réduite de moitié ; bords fondus) */
-html[lang^="fr"] .zone-hero > .container, html[lang^="fr"] .page-contact .contact-info { position: relative; isolation: isolate; }
-html[lang^="fr"] .zone-hero > .container::before {
+:is(html[lang^="fr"], html[lang^="en"]) .zone-hero > .container, :is(html[lang^="fr"], html[lang^="en"]) .page-contact .contact-info { position: relative; isolation: isolate; }
+:is(html[lang^="fr"], html[lang^="en"]) .zone-hero > .container::before {
   content: ""; position: absolute; z-index: -1; pointer-events: none;
   left: calc(50% - 50vw); width: 100vw; top: -2.5rem; bottom: -2.5rem;
   background: linear-gradient(180deg, rgba(13, 9, 23, 0) 0, rgba(13, 9, 23, var(--rect-a)) 2.5rem,
     rgba(13, 9, 23, var(--rect-a)) calc(100% - 2.5rem), rgba(13, 9, 23, 0) 100%);
 }
-html[lang^="fr"] .page-contact .contact-info::before {
+:is(html[lang^="fr"], html[lang^="en"]) .page-contact .contact-info::before {
   content: ""; position: absolute; z-index: -1; pointer-events: none;
   inset: -1.25rem; border-radius: 1rem; background: rgba(13, 9, 23, var(--rect-a));
 }
 @media (max-width: 959px) {
-  html[lang^="fr"] .page-contact .contact-info::before {
+  :is(html[lang^="fr"], html[lang^="en"]) .page-contact .contact-info::before {
     inset: 0 auto 0 calc(50% - 50vw); width: 100vw; border-radius: 0;
     background: linear-gradient(180deg, rgba(13, 9, 23, 0) 0, rgba(13, 9, 23, var(--rect-a)) 1.5rem,
       rgba(13, 9, 23, var(--rect-a)) calc(100% - 1.5rem), rgba(13, 9, 23, 0) 100%);
@@ -1995,22 +1995,22 @@ html[lang^="fr"] .page-contact .contact-info::before {
 }
 @media (min-width: 960px) {
   /* Accueil p2 : texte plus grand, vignettes plus hautes (maquette « positionnement optimisé ») */
-  html[lang^="fr"] .home-portfolio .jd-lead { font-size: clamp(1.05rem, 1.4vw, 1.4rem); max-width: 60rem; }
-  html[lang^="fr"] .home-portfolio .hp-cards { --hp-h: calc(100svh - var(--header-h) - 20rem); }
-  html[lang^="fr"] .home-portfolio .hp-card .yt-tile-label { font-size: clamp(.95rem, 1.1vw, 1.15rem); }
-  html[lang^="fr"] .home-portfolio .cta-row .btn { font-size: clamp(1rem, 1.25vw, 1.2rem); min-height: 54px; padding-inline: 1.6rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio .jd-lead { font-size: clamp(1.05rem, 1.4vw, 1.4rem); max-width: 60rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio .hp-cards { --hp-h: calc(100svh - var(--header-h) - 20rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio .hp-card .yt-tile-label { font-size: clamp(.95rem, 1.1vw, 1.15rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio .cta-row .btn { font-size: clamp(1rem, 1.25vw, 1.2rem); min-height: 54px; padding-inline: 1.6rem; }
 }
 @media (min-width: 900px) {
   /* Accueil p5 : titre sur trois lignes comme la maquette, texte et bouton plus grands */
-  html[lang^="fr"] .home-contact h2 { font-size: clamp(2.6rem, 4.4vw, 5rem); max-width: 9.5em; }
-  html[lang^="fr"] .home-contact .jd-lead { font-size: clamp(1.05rem, 1.5vw, 1.45rem); max-width: 36rem; }
-  html[lang^="fr"] .home-contact .cta-row .btn { font-size: clamp(1rem, 1.25vw, 1.25rem); min-height: 56px; padding-inline: 1.6rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-contact h2 { font-size: clamp(2.6rem, 4.4vw, 5rem); max-width: 9.5em; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-contact .jd-lead { font-size: clamp(1.05rem, 1.5vw, 1.45rem); max-width: 36rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-contact .cta-row .btn { font-size: clamp(1rem, 1.25vw, 1.25rem); min-height: 56px; padding-inline: 1.6rem; }
 }
 @media (max-width: 899px) {
   /* Accueil p5 et Portfolio p5 mobiles : titre plus grand (maquettes 9:16), colonne de texte un peu plus large */
-  html[lang^="fr"] .home-contact .home-split-text { margin-left: 46%; padding-right: 12px; }
-  html[lang^="fr"] .home-contact h2 { font-size: clamp(1.5rem, 6.9vw, 2.6rem); }
-  html[lang^="fr"] .home-contact-photo { height: 82%; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-contact .home-split-text { margin-left: 46%; padding-right: 12px; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-contact h2 { font-size: clamp(1.5rem, 6.9vw, 2.6rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-contact-photo { height: 82%; }
   .jd-photo-split:not(.is-photo-right) .jd-split-text { margin-left: 46%; padding-right: 12px; }
   .jd-photo-split:not(.is-photo-right) .jd-split-text h2 { font-size: clamp(1.5rem, 6.9vw, 2.6rem); }
   .jd-photo-split:not(.is-photo-right) .jd-lead { font-size: clamp(.9rem, 4.2vw, 1.1rem); }
@@ -2045,23 +2045,23 @@ html[lang^="fr"] .page-contact .contact-info::before {
 }
 /* Contact ordi : les six réseaux (Google compris) sur une ligne */
 @media (min-width: 960px) {
-  html[lang^="fr"] .page-contact .socials { flex-wrap: nowrap; gap: .3rem; }
-  html[lang^="fr"] .page-contact .socials a { padding: 0 8px; font-size: .9rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-contact .socials { flex-wrap: nowrap; gap: .3rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-contact .socials a { padding: 0 8px; font-size: .9rem; }
 }
 
 /* C10 — Pages des entreprises : titre centré à l'horizontale, même hauteur et même couleur */
 .collection-title.is-centered { text-align: center; margin-inline: auto; width: 100%; }
 
 /* C9 — Services : un seul mot (« Services ») ; même style et même position */
-html[lang^="fr"] .page-hero.full-hero > .container:has(> h1.hero-stack.is-one-line)::before { --c-h: 2.4rem; }
+:is(html[lang^="fr"], html[lang^="en"]) .page-hero.full-hero > .container:has(> h1.hero-stack.is-one-line)::before { --c-h: 2.4rem; }
 
 /* B3 — À propos, pages JD et Renaud : étiquette au format des autres sections (trait + majuscules violettes) */
-html[lang^="fr"] .page-apropos .jd-screen > .jd-wrap > .jd-label-line { display: flex; align-items: center; gap: 1rem; }
+:is(html[lang^="fr"], html[lang^="en"]) .page-apropos .jd-screen > .jd-wrap > .jd-label-line { display: flex; align-items: center; gap: 1rem; }
 
 /* C11 — Contact mobile : le fond animé 9:16 occupe un écran (logo entier, sans zoom) et reste derrière les deux écrans
    (coordonnées, formulaire). Avant, la boîte vidéo faisait la hauteur des deux écrans : le 9:16 était agrandi et coupé. */
 @media (max-width: 959px) {
-  html[lang^="fr"] .page-contact .bg-video { position: sticky; top: var(--header-h); inset: auto; height: calc(100svh - var(--header-h)); margin-bottom: calc(-1 * (100svh - var(--header-h))); }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-contact .bg-video { position: sticky; top: var(--header-h); inset: auto; height: calc(100svh - var(--header-h)); margin-bottom: calc(-1 * (100svh - var(--header-h))); }
 }
 /* === FIN JD 2026-11-14 === */
 
@@ -2071,17 +2071,17 @@ html[lang^="fr"] .page-apropos .jd-screen > .jd-wrap > .jd-label-line { display:
    Écran 3 : photos 3:4 bornées par la hauteur de l'écran et par la place laissée à une colonne de texte assez
    large pour garder le titre sur trois lignes ; ni étirées ni recadrées. */
 @media (min-width: 960px) {
-  html[lang^="fr"] .home-portfolio .hp-cards { --hp-h: calc(100svh - var(--header-h) - 8svh - min(26vw, 24.5rem)); }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-portfolio .hp-cards { --hp-h: calc(100svh - var(--header-h) - 8svh - min(26vw, 24.5rem)); }
 }
 @media (min-width: 900px) {
-  html[lang^="fr"] .home-team {
+  :is(html[lang^="fr"], html[lang^="en"]) .home-team {
     --tm-text: clamp(24rem, 30vw, 31rem);
     --tm-p: min(calc((100svh - var(--header-h) - 3rem) * .75),
                 calc((min(100vw, 1600px) - 2 * clamp(1rem, 4vw, 4rem) - clamp(2rem, 3vw, 3.5rem) - 1rem - var(--tm-text)) / 2));
   }
-  html[lang^="fr"] .home-team .jd-wrap { max-width: 1600px; }
-  html[lang^="fr"] .home-team .home-split { grid-template-columns: minmax(var(--tm-text), 1fr) auto; }
-  html[lang^="fr"] .home-team-photos { grid-template-columns: repeat(2, var(--tm-p)); }
-  html[lang^="fr"] .home-team-photos img { width: var(--tm-p); height: auto; max-height: none; aspect-ratio: 3 / 4; }
-  html[lang^="fr"] .home-team .home-team-title { font-size: clamp(2.4rem, 4.2vw, 4.25rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-team .jd-wrap { max-width: 1600px; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-team .home-split { grid-template-columns: minmax(var(--tm-text), 1fr) auto; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-team-photos { grid-template-columns: repeat(2, var(--tm-p)); }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-team-photos img { width: var(--tm-p); height: auto; max-height: none; aspect-ratio: 3 / 4; }
+  :is(html[lang^="fr"], html[lang^="en"]) .home-team .home-team-title { font-size: clamp(2.4rem, 4.2vw, 4.25rem); }
 }

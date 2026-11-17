@@ -63,8 +63,7 @@
   },
   "heroResume": {
     "_aide": "SEO description (seo.<page>.resume) shown in the hero of Services, Portfolio, About and Contact while the clip plays, instead of the band below the hero (JD, email of 2026-11-15, docs/jd/2026-11-15/seo-en-*.jpg). source = \"page\": each page shows its own description. No description in the home page hero. accueilBandeFin = false: the home page keeps its band right below the hero (unchanged).",
-    "source": "page",
-    "accueilBandeFin": false
+    "source": "page"
   },
   "seoAncien": {
     "accueil": {
@@ -91,8 +90,8 @@
   "hero": {
     "surtitre": "VMM PRODUCTIONS · CINEMA AND STORYTELLING",
     "titre": "Videos Make Money.",
-    "sousTitre": "Our passion: helping yours grow.",
-    "texte": "Bringing someone's vision to life is something special. At VMM, we bring story, image and sound together to capture what makes your business different: the people, the passion and the pride behind every project.",
+    "sousTitre": "Our passion, helping yours grow.",
+    "texte": "Behind every business, there are people, a passion, and a story to tell. At VMM, we capture what makes them unique to create authentic productions that inspire confidence and elevate their brand.",
     "bouton": "Contact us ↓",
     "posterManquant": "[TO CONFIRM: video and poster image to be provided]",
     "pause": "Pause video",
@@ -153,7 +152,7 @@
     "heures": "7 a.m. to 7 p.m.",
     "deplacement": "Based in Sainte-Thérèse, we travel within a 50 km radius (Laurentians, North Shore, Greater Montreal). Farther away? Travel costs are added.",
     "zoneLabel": "Area",
-    "zone": "Laval, Mirabel, Brossard, Longueuil, Montréal, Blainville, Boisbriand, Repentigny, Terrebonne, Lanaudière, Laurentides, Saint-Eustache, Saint-Jérôme, Sainte-Thérèse",
+    "zone": "Laval, Mirabel, Brossard, Longueuil, Montréal, Blainville, Boisbriand, Repentigny, Terrebonne, Lanaudière, Laurentians, Saint-Eustache, Saint-Jérôme, Sainte-Thérèse",
     "zoneAncienne": "All of Quebec, mainly Greater Montreal and the Laurentians",
     "zoneAncien": "Greater Montreal and the Laurentians",
     "suivre": "Follow us",
@@ -197,16 +196,16 @@
     "_aide": "Services page (JD's PDF). In headings, *word* = violet word, \\n = line break. « drapeau » refers to site.json → drapeaux.",
     "titre": "SERVICES",
     "hero": {
-      "ligne1": "OUR",
-      "ligne2": "SERVICES.",
-      "intro": "From the first idea to the final cut, we bring together the creative and technical skills needed to bring your vision to life."
+      "ligne1": "",
+      "ligne2": "Services",
+      "intro": ""
     },
     "heroPause": "Pause the video",
     "heroLecture": "Play the video",
     "vision": {
       "etiquette": "What we create",
       "titre": "One *vision.*\nSix *specialties.*",
-      "texte": "From strategy to the final cut, VMM Productions brings together the skills needed to bring your message to life and showcase your business.",
+      "texte": "From strategy to the final cut, we bring together creativity, experience, and passion to bring your vision to life and create productions that inspire confidence and elevate your business.",
       "reperes": [
         {
           "icone": "target",
@@ -227,7 +226,13 @@
           "texte": "Careful execution"
         }
       ],
-      "photoAlt": "JD, founder of VMM Productions, with his camera and drone"
+      "photoAlt": "JD, founder of VMM Productions, with his camera and drone",
+      "image": {
+        "ordi": "/img/services-premiere-ordi",
+        "mobile": "/img/services-premiere-mobile",
+        "alt": "Video editing in Adobe Premiere Pro at VMM Productions"
+      },
+      "bouton": "EXPLORE OUR SERVICES →"
     },
     "etiquette": "Our services",
     "groupes": [
@@ -333,6 +338,14 @@
           "texte": "Titles, graphics and animated effects that bring your images to life."
         }
       ]
+    },
+    "finPortfolio": {
+      "titre": "Discover what\n*we offer.*",
+      "texte": "Behind every production, there is an idea, a vision, and a story to tell. Discover how we bring them to life through our work.",
+      "texteMaquette": "Behind every business, every event, and every person, there is a story to tell. Discover our work and get inspired.",
+      "bouton": "See our work →",
+      "photo": "/img/portfolio/coulisses-portfolio",
+      "photoAlt": "JD in the VMM Productions editing studio"
     }
   },
   "portfolio": {
@@ -364,19 +377,27 @@
     "realisons": {
       "etiquette": "What we create",
       "titre": "Four ways to tell your story.",
-      "intro": "Explore our productions by category. Each thumbnail opens its video directly on YouTube."
+      "intro": "Explore our productions by category. Each thumbnail opens its video directly on YouTube.",
+      "texte": "Every business has a story to tell. Discover our productions and behind-the-scenes moments, where creativity, craft, and passion bring every project to life."
     },
     "honneur": {
       "etiquette": "Featured businesses",
       "titre": "Every business. Its own world.",
       "logoAlt": "Logo of",
-      "intro": "Choose a business to explore its library of productions.",
+      "intro": "Explore our productions by business and discover the projects that came to life behind every collaboration.",
       "voir": "See the videos for {client}"
     },
     "coulissesBloc": {
-      "etiquette": "Behind the images",
-      "titre": "And behind every production...",
-      "intro": "A collection dedicated to the moments behind the camera.",
+      "etiquette": "Behind the camera",
+      "titre": "And behind every production,",
+      "intro": "Discover the behind-the-scenes, encounters, and moments that make every VMM Productions project unique.",
+      "ancien": {
+        "etiquette": "Behind the images",
+        "titre": "And behind every production...",
+        "intro": "A collection dedicated to the moments behind the camera."
+      },
+      "fond": "/img/portfolio/coulisses-etagere",
+      "tuile": "/img/portfolio/coulisses-bouton-vmm-512",
       "legende": "Behind the scenes / Making-of / Trailers",
       "voir": "See all behind-the-scenes videos",
       "photoAlt": "VMM Productions team member in the editing studio"
@@ -384,7 +405,11 @@
     "fin": {
       "etiquette": "And after the images?",
       "titre": "Meet the people behind VMM.",
-      "texte": "Discover the people who bring these productions to life."
+      "texte": "Discover the journeys, experience, and passion of the people who bring every project to life.",
+      "photo": "/img/portfolio/fin-jd",
+      "photoLargeur": 946,
+      "photoHauteur": 1662,
+      "photoAlt": "JD, founder of VMM Productions, with his camera and drone"
     },
     "biblio": {
       "precedent": "Previous videos",
@@ -432,8 +457,8 @@
         "role": "Founder / Videographer",
         "titre": "Meet\n*JD.*",
         "paragraphes": [
-          "My journey began with a passion for visual storytelling. I studied at the Toronto Film School before having to put my studies on hold for financial reasons.",
-          "Today, I work in construction while building VMM Productions: two worlds that taught me the value of hard work and human relationships."
+          "A construction worker with a passion for visual storytelling, I studied at the Toronto Film School before developing my skills in filming, drone piloting, and post-production, my specialty.",
+          "I know the reality on the ground and the value of a job well done. That experience is what drives me through VMM Productions: telling entrepreneurs' stories, highlighting their expertise, and helping them grow."
         ],
         "photo": "/img/about-jd-photo",
         "photoAlt": "Portrait of JD, founder and videographer of VMM Productions"
@@ -443,7 +468,8 @@
         "role": "Camera operator",
         "titre": "Meet\n*Renaud.*",
         "paragraphes": [
-          "With 10 years of experience in film, Renaud brings originality and an instinct for capturing the action. His immersive approach turns spontaneous moments into vivid images."
+          "With 10 years of experience in film, Renaud specializes in cinematic camera operation. He notably contributed to films such as Les Êtres chers, The Colour of Your Lips, and Hochelaga, Terre des âmes.",
+          "His craft and creativity bring authentic and immersive images to life."
         ],
         "noteInterne": "[TO CONFIRM: bio to be expanded with Renaud’s answers] Preview: not shown on the site.",
         "photo": "/img/about-renaud",
@@ -451,9 +477,19 @@
       }
     ],
     "fin": {
-      "titre": "Behind every image,\n*there are people.*",
-      "texte": "A story to tell? Let’s talk.",
-      "bouton": "Get in touch →"
+      "titre": "Behind every image, there are people.",
+      "texte": "You now know the people behind VMM Productions. Now it's our turn to discover your story, your passion, and what makes your business unique. Together, let's bring your vision to life.",
+      "bouton": "Let's bring your vision to life →",
+      "ancien": {
+        "titre": "Behind every image,\n*there are people.*",
+        "texte": "A story to tell? Let’s talk.",
+        "bouton": "Get in touch →"
+      },
+      "etiquette": "About",
+      "photo": "/img/about-jd",
+      "photoLargeur": 944,
+      "photoHauteur": 1665,
+      "photoAlt": "Portrait of JD, founder of VMM Productions"
     },
     "bouton": "Get in touch →",
     "bluewise": "[TO CONFIRM: BlueWise AI paragraph]",
@@ -474,7 +510,8 @@
           "note": "[TO CONFIRM: bio to be validated]"
         }
       ]
-    }
+    },
+    "etiquettePersonnes": "The faces behind VMM"
   },
   "lightbox": {
     "fermer": "Close video",
@@ -497,7 +534,7 @@
       "Repentigny",
       "Terrebonne",
       "Lanaudière",
-      "Laurentides",
+      "Laurentians",
       "Saint-Eustache",
       "Saint-Jérôme",
       "Sainte-Thérèse"
@@ -554,12 +591,19 @@
       ],
       "signature": "Our *passion*. Helping yours *grow*.",
       "bouton": "CONTACT US →",
-      "boutonTravail": "See Our Work"
+      "boutonTravail": "See Our Work",
+      "titrage": {
+        "empile": "/videos/jd/titre-vmm-alpha-1280.mp4",
+        "empileMobile": "/videos/jd/titre-vmm-alpha-960.mp4",
+        "poster": "/videos/jd/titre-vmm-poster",
+        "largeur": 1280,
+        "hauteur": 160
+      }
     },
     "portfolio": {
       "etiquette": "What we produce",
       "titre": "Four ways to tell your story.",
-      "intro": "Explore our productions by category. Each thumbnail opens its video on YouTube.",
+      "intro": "Every story deserves to be told. Discover what makes businesses, events, and people unique through our authentic and captivating productions.",
       "bouton": "EXPLORE OUR PORTFOLIO →",
       "titreVariante": "The *work* speaks for *itself*.",
       "sansVideo": "[TO CONFIRM: YouTube ID for this thumbnail]"
@@ -567,7 +611,7 @@
     "equipe": {
       "etiquette": "The people behind VMM",
       "titre": "One *team*.\nOne *vision*.\n*Stories*.",
-      "texte": "From strategy to filming, passionate people put their experience to work for your projects.",
+      "texte": "Driven by the same passion, we bring together creativity, craft, and experience to bring your vision to life and tell your story with authenticity.",
       "bouton": "MEET OUR TEAM →",
       "photos": [
         {
@@ -583,7 +627,7 @@
     "services": {
       "etiquette": "Our services",
       "titre": "Where *strategy* meets *creativity*.",
-      "intro": "Six areas of expertise brought together to bring your vision to life.",
+      "intro": "Six areas of expertise, one shared ambition: bringing your ideas to life through authentic and captivating productions.",
       "libelles": [
         [
           "Strategic",

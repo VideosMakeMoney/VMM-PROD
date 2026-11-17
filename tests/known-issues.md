@@ -9,29 +9,23 @@ Conformément aux directives, ces écarts sont isolés dans la suite de tests Pl
 
 Règle JD : *Chaque section tient dans un écran (hauteur $\le$ 100svh moins l'en-tête + 1px)*.
 
-Sur 495 vérifications de hauteur (55 sections × 9 résolutions), **474 sections respectent strictement la règle d'or**. Les **21 dépassements réels** sont listés ci-dessous :
+Sur 495 vérifications de hauteur (55 sections × 9 résolutions), **481 sections respectent strictement la règle d'or**. Les **14 dépassements réels** sont listés ci-dessous :
 
-### A. Desktop Compact (1280×720) — 7 sections
+### A. Desktop Compact (1280×720) — 4 sections
 | Page | Section | Sélecteur | Hauteur réelle | Hauteur max | Dépassement | Cause |
 | :--- | :--- | :--- | :---: | :---: | :---: | :--- |
 | `portfolio-fr` | Section 1 | `#realisons` | 662 px | 656 px | +6 px | Titre + grille de cartes légèrement trop hauts à 720p |
 | `apropos-fr` | Section 1 | `#jd` | 660 px | 656 px | +4 px | Portrait JD + bio textuelle |
 | `apropos-fr` | Section 2 | `#renaud` | 660 px | 656 px | +4 px | Portrait Renaud + bio textuelle |
 | `contact-fr` | Section 0 | `.section-contact` | 669 px | 656 px | +13 px | Formulaire + coordonnées sur un seul écran |
-| `portfolio-en` | Section 1 | `#realisons` | 680 px | 656 px | +24 px | Hauteur de la grille de réalisations en version anglaise |
-| `apropos-en` | Section 2 | `#jd` | 660 px | 656 px | +4 px | Portrait JD + bio |
-| `apropos-en` | Section 3 | `#renaud` | 660 px | 656 px | +4 px | Portrait Renaud + bio |
 
-### B. Desktop Compact (1366×768) — 5 sections
+### B. Desktop Compact (1366×768) — 2 sections
 | Page | Section | Sélecteur | Hauteur réelle | Hauteur max | Dépassement | Cause |
 | :--- | :--- | :--- | :---: | :---: | :---: | :--- |
 | `apropos-fr` | Section 1 | `#jd` | 712 px | 704 px | +8 px | Portrait JD + bio |
 | `apropos-fr` | Section 2 | `#renaud` | 712 px | 704 px | +8 px | Portrait Renaud + bio |
-| `portfolio-en` | Section 1 | `#realisons` | 708 px | 704 px | +4 px | Grille réalisations anglaise |
-| `apropos-en` | Section 2 | `#jd` | 712 px | 704 px | +8 px | Portrait JD + bio |
-| `apropos-en` | Section 3 | `#renaud` | 712 px | 704 px | +8 px | Portrait Renaud + bio |
 
-### C. Mobile — 9 sections
+### C. Mobile — 8 sections
 *Note : Sur mobile, les sections multi-cartes de l'accueil, de services et du portfolio tiennent désormais toutes dans un écran grâce aux ajustements des PR #24 et #25.*
 Seules les sections suivantes débordent :
 
@@ -41,7 +35,6 @@ Seules les sections suivantes débordent :
 | **390×844** | `contact-en` | Section 0 | `.section-contact` | 1 656 px | 781 px | +875 px | Idem version anglaise |
 | **390×664** | `contact-fr` | Section 0 | `.section-contact` | 1 296 px | 601 px | +695 px | Coordonnées + formulaire sur 1 balise `<section>` |
 | **390×664** | `contact-en` | Section 0 | `.section-contact` | 1 296 px | 601 px | +695 px | Coordonnées + formulaire sur 1 balise `<section>` |
-| **390×664** | `services-en` | Section 1 | `.jd-vision` | 618 px | 601 px | +17 px | Bloc vision JD dépasse sur très petit écran en hauteur (664 px) |
 | **360×740** | `contact-fr` | Section 0 | `.section-contact` | 1 448 px | 677 px | +771 px | Coordonnées + formulaire sur 1 balise `<section>` |
 | **360×740** | `contact-en` | Section 0 | `.section-contact` | 1 448 px | 677 px | +771 px | Coordonnées + formulaire sur 1 balise `<section>` |
 | **430×932** | `contact-fr` | Section 0 | `.section-contact` | 1 832 px | 869 px | +963 px | Coordonnées + formulaire sur 1 balise `<section>` |

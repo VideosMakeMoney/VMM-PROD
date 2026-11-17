@@ -5,13 +5,14 @@
 // n'existe qu'en CSS sous 900 px (src/parts/d.css). Sur ordinateur, ces ajouts sont masqués et rien ne change.
 // Boucle : la vignette 1 a ses deux voisines visibles, comme sur les maquettes de JD.
 (() => {
-  if (!/^fr/i.test(document.documentElement.lang)) return;
+  if (!/^(fr|en)/i.test(document.documentElement.lang)) return;
+  const isEn = /^en/i.test(document.documentElement.lang);
   const mq = window.matchMedia('(max-width: 899px)');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const LISTS = [
-    { sel: '.home-portfolio .hp-cards', kind: 'cats', nom: 'Catégories' },
-    { sel: '.pf-cats .pf-cat-grid', kind: 'cats', nom: 'Catégories' },
-    { sel: '.pf-honneur .logo-grid', kind: 'logos', nom: 'Entreprises' },
+    { sel: '.home-portfolio .hp-cards', kind: 'cats', nom: isEn ? 'Categories' : 'Catégories' },
+    { sel: '.pf-cats .pf-cat-grid', kind: 'cats', nom: isEn ? 'Categories' : 'Catégories' },
+    { sel: '.pf-honneur .logo-grid', kind: 'logos', nom: isEn ? 'Companies' : 'Entreprises' },
   ];
   const chevron = (d) => `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="${d}"/></svg>`;
 
@@ -30,12 +31,12 @@
     const prev = document.createElement('button');
     prev.type = 'button';
     prev.className = 'jd-car-arrow is-prev';
-    prev.setAttribute('aria-label', 'Précédent');
+    prev.setAttribute('aria-label', isEn ? 'Previous' : 'Précédent');
     prev.innerHTML = chevron('m15 18-6-6 6-6');
     const next = document.createElement('button');
     next.type = 'button';
     next.className = 'jd-car-arrow is-next';
-    next.setAttribute('aria-label', 'Suivant');
+    next.setAttribute('aria-label', isEn ? 'Next' : 'Suivant');
     next.innerHTML = chevron('m9 18 6-6-6-6');
     wrap.append(prev, list, next);
     list.classList.add('jd-car-list');
@@ -50,7 +51,7 @@
       b.type = 'button';
       b.className = 'jd-car-dot';
       const name = kind === 'logos' ? (li.querySelector('.logo-btn-text strong')?.textContent || '').trim() : labelOf(li);
-      b.setAttribute('aria-label', `${name || `Élément ${i + 1}`} (${i + 1} sur ${n})`);
+      b.setAttribute('aria-label', isEn ? `${name || `Item ${i + 1}`} (${i + 1} of ${n})` : `${name || `Élément ${i + 1}`} (${i + 1} sur ${n})`);
       b.setAttribute('aria-controls', list.id);
       b.addEventListener('click', () => show(i));
       dots.append(b);
@@ -136,7 +137,7 @@
     const sync = () => {
       if (active()) {
         list.setAttribute('tabindex', '0');
-        list.setAttribute('aria-roledescription', 'carrousel');
+        list.setAttribute('aria-roledescription', isEn ? 'carousel' : 'carrousel');
         list.setAttribute('aria-label', nom);
         show(current);
       } else {

@@ -342,8 +342,8 @@ function structuredData(key, lang, pageVideos = [], page = null) {
     knowsLanguage: ['fr-CA', 'en-CA'],
     founder: { '@id': `${SITE_URL}/#jd` },
     employee: persons.map((p) => ({ '@id': p['@id'] })),
-    // Fiche Google Business (JD, 2026-11-14, C12) : forme durable du lien share.google, version française seulement
-    sameAs: [...site.reseaux.map((r) => r.url), ...(lang === 'fr' && site.google?.sameAs ? [site.google.sameAs] : [])],
+    // Fiche Google Business (JD, 2026-11-14, C12) : forme durable du lien share.google
+    sameAs: [...site.reseaux.map((r) => r.url), ...(site.google?.sameAs ? [site.google.sameAs] : [])],
   };
   const seo = page?.seo || L.seo[key];
   const pageUrl = abs((page?.route || ROUTES[key])[lang]);
@@ -439,9 +439,8 @@ const FOOTER_NAME = `${site.nom} (${site.nomLegal})`;
 // endBand : bande placée avec le pied de page dans le dernier écran (accueil FR).
 function layout({ key, lang, body, videos = [], page = null, preload = '', endBand = '' }) {
   if (preload) preload += '\n';
-  // Pages FR : le pied de page (et la bande de fin de l'accueil) forment le dernier écran sur mobile (.end-screen,
-  // neutre sur ordi). Les pages EN gardent leur HTML tel quel.
-  const endScreen = lang === 'fr';
+  // Le pied de page (et la bande de fin de l'accueil) forment le dernier écran sur mobile (.end-screen, neutre sur ordi).
+  const endScreen = true;
   const L = langs[lang];
   const other = lang === 'fr' ? 'en' : 'fr';
   const routed = Boolean(page?.route || ROUTES[key]);
@@ -582,7 +581,7 @@ const googleItem = ({ icons, iconsOnly, suffix }) => {
 };
 const socials = ({ icons = false, iconsOnly = false, suffix = '', lang = '' } = {}) =>
   `<ul class="socials${iconsOnly ? ' icons-only' : ''}">
-        ${site.reseaux.map((r) => `<li><a href="${esc(r.url)}" rel="me noopener" target="_blank"${iconsOnly ? ` aria-label="${esc(r.nom)}"` : ''}>${icons ? socialIcon(r.nom, suffix) : ''}${iconsOnly ? '' : esc(r.nom)}</a></li>`).join('\n        ')}${lang === 'fr' ? `\n        ${googleItem({ icons, iconsOnly, suffix })}` : ''}
+        ${site.reseaux.map((r) => `<li><a href="${esc(r.url)}" rel="me noopener" target="_blank"${iconsOnly ? ` aria-label="${esc(r.nom)}"` : ''}>${icons ? socialIcon(r.nom, suffix) : ''}${iconsOnly ? '' : esc(r.nom)}</a></li>`).join('\n        ')}${lang ? `\n        ${googleItem({ icons, iconsOnly, suffix })}` : ''}
       </ul>`;
 
 // Zones desservies du pied de page : la liste exacte de JD (pied.zonesListe, capture du 2026-11-10).
@@ -681,7 +680,7 @@ function contactBlock(lang, { tag = 'h2', id = 'contact-title' } = {}) {
       data-sending="${esc(c.envoi)}" data-success="${esc(c.succes)}" data-error="${esc(c.erreur)}">
       <input type="hidden" name="form-name" value="contact">
       <input type="hidden" name="langue" value="${lang}">
-      <p class="hp" aria-hidden="true"><label>Ne pas remplir <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+      <p class="hp" aria-hidden="true"><label>${lang === 'en' ? 'Do not fill in' : 'Ne pas remplir'} <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
       <label for="${f('name')}">${esc(c.nom)}</label>
       <input id="${f('name')}" name="name" type="text" autocomplete="name" required>
       <label for="${f('email')}">${esc(c.courriel)}</label>
@@ -861,7 +860,7 @@ ${accueilBandeFin(L) ? '' : summaryBand(L.seo.accueil.resume)}
 </section>${avis}`;
   const endBand = accueilBandeFin(L) ? summaryBand(L.seo.accueil.resume).replace('class="summary-band"', 'class="summary-band summary-band-end"') : '';
 
-  return layout({ key: 'accueil', lang, body: lang === 'fr' ? body : `${body}${endBand ? `\n${endBand}` : ''}`, endBand: lang === 'fr' ? endBand : '', videos: catVideos.filter((v) => v?.youtubeId), preload: heroPreload });
+  return layout({ key: 'accueil', lang, body, endBand, videos: catVideos.filter((v) => v?.youtubeId), preload: heroPreload });
 }
 
 function memberPhoto(m, L) {
@@ -1179,7 +1178,7 @@ function clientPage(c, lang) {
   const list = visibleVideos(clientVideos(c));
   // Élision en français : « de Installations » devient « d'Installations ».
   const fill = (s) => (lang === 'fr' && /^[aeiouyàâéèêîôûh]/i.test(c.nom) ? s.replaceAll('de {client}', 'd’{client}') : s).replaceAll('{client}', c.nom);
-  const body = collectionScreen(L, lang, { clip: c.clip, title: c.nomHero || c.nom, h1: fill(P.clientH1), list, centered: lang === 'fr' });
+  const body = collectionScreen(L, lang, { clip: c.clip, title: c.nomHero || c.nom, h1: fill(P.clientH1), list, centered: true });
   return layout({
     key: 'portfolio',
     lang,
@@ -1572,23 +1571,54 @@ function llmsTxt() {
     '',
     '## English',
     '',
-    en.seo.accueil.resume,
+    `> ${en.seo.accueil.resume}`,
+    '',
+    `${site.nom} (legal name: ${site.nomLegal}) is a video production company and corporate videographer based in Greater Montreal and the Laurentians, serving all of Quebec (Canada). Founder: JD. Core statement: "${en.hero.sousTitre}"`,
     '',
     `Mission: ${en.mission}`,
     '',
+    '## How we work',
+    `- ${en.surMesure}`,
+    `- Delivery time: ${site.delaiLivraison.en}, depending on complexity.`,
+    '',
+    '## What we create',
+    ...portfolio.categories.map((c) => `- ${c.titre.en} : ${c.texte.en}`),
+    '',
+    '## Services',
+    ...en.services.items.filter(shown).map((s) => `- ${s.titre} : ${s.texte}`),
+    '',
+    '## Team',
+    ...en.equipe.membres.map((m) => `- ${m.nomComplet}${m.nom !== m.nomComplet ? ` (${m.nom})` : ''}, ${m.role} : ${m.texte}`),
+    '',
+    '## Featured Clients',
+    ...portfolio.clients.map((c) => `- ${c.nom}${c.villes?.length ? `, ${c.villes.join(', ')}` : ''}${c.url ? ` (${c.url})` : ''} (${visibleVideos(clientVideos(c)).length} videos)${CLIENTS.includes(c) ? ` : ${abs(clientRoute(c).en)}` : ''}`),
+    `- ${en.portfolio.coulissesPage.titre} (${visibleVideos(coulissesVideos()).length} videos) : ${abs(coulissesRoute.en)}`,
+    '',
+    '## Service areas',
+    ...site.zonesDesservies.map((z) => `- ${z === 'Laurentides' ? 'Laurentians' : z}`),
+    `- ${en.contact.deplacement}`,
+    '',
+    '## Hours',
+    `- Monday to Sunday, ${en.contact.heures}.`,
+    '',
+    '## Highlights',
+    `- Founded: ${site.dateFondation}`,
+    '',
+    '## Pages (English)',
     ...pageLinks(en, 'en'),
     '',
-    '### Service areas',
-    ...ZONES.map((z) => `- [${z.en.h1}](${abs(z.en.route)}): ${z.en.intro}`),
+    '## Service areas (local pages)',
+    ...ZONES.map((z) => `- [${z.en.h1}](${abs(z.en.route)}) : ${z.en.intro}`),
     '',
-    `- Services: ${en.services.items.filter(shown).map((s) => s.titre).join('; ')}`,
-    `- Team: ${en.equipe.membres.map((m) => `${m.nom} (${m.role})`).join(', ')}`,
-    `- Areas served: ${en.contact.zone}. ${en.contact.deplacement}`,
-    `- Hours: Monday to Sunday, ${en.contact.heures}`,
-    `- Founded: ${site.dateFondation}`,
-    `- How we work: ${en.surMesure} Delivery time: ${site.delaiLivraison.en}, depending on complexity.`,
-    `- Email: ${site.courriel}`,
-    ...(site.telephone ? [`- Phone: ${site.telephone}`] : []),
+    '## Contact',
+    `- Email : ${site.courriel}`,
+    ...(site.telephone ? [`- Phone : ${site.telephone}`] : []),
+    `- Form : ${abs(ROUTES.contact.en)}`,
+    ...site.reseaux.map((r) => `- ${r.nom} : ${r.url}`),
+  );
+  const faqEn = en.faq.items.filter((f) => known(f.r) && !f.note);
+  if (faqEn.length) lines.push('', '## Frequently Asked Questions', ...faqEn.flatMap((f) => ['', `### ${f.q}`, f.r]));
+  lines.push(
     '',
     '## Optional',
     `- [Sitemap](${abs('/sitemap.xml')})`

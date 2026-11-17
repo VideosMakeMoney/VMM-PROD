@@ -148,11 +148,11 @@ export const PAGES: PageDefinition[] = [
     type: 'services',
     sections: [
       { index: 0, selector: '.page-hero', label: 'Hero Services' },
-      { index: 1, selector: '.jd-vision', label: 'Vision' },
-      { index: 2, selector: 'section:nth-of-type(3)', label: 'Services Group 1' },
-      { index: 3, selector: 'section:nth-of-type(4)', label: 'Services Group 2' },
-      { index: 4, selector: 'section:nth-of-type(5)', label: 'Services Group 3' },
-      { index: 5, selector: '.svc-cta', label: 'Transition Portfolio' },
+      { index: 1, selector: '.jd-vision', label: 'Vision JD Premiere' },
+      { index: 2, selector: '#svc-liste', label: 'Services List' },
+      { index: 3, selector: 'section:nth-of-type(4)', label: 'Services Group 1' },
+      { index: 4, selector: 'section:nth-of-type(5)', label: 'Services Group 2' },
+      { index: 5, selector: '.svc-to-portfolio', label: 'Transition Portfolio' },
     ],
   },
   {
@@ -207,11 +207,10 @@ export const PAGES: PageDefinition[] = [
     type: 'apropos',
     sections: [
       { index: 0, selector: '.page-hero', label: 'Hero About' },
-      { index: 1, selector: '#vision', label: 'Vision' },
-      { index: 2, selector: '#jd', label: 'Jean-David' },
-      { index: 3, selector: '#renaud', label: 'Renaud' },
-      { index: 4, selector: '.jd-coulisses', label: 'Behind the scenes' },
-      { index: 5, selector: '.jd-closing', label: 'Closing' },
+      { index: 1, selector: '#jd', label: 'Jean-David' },
+      { index: 2, selector: '#renaud', label: 'Renaud' },
+      { index: 3, selector: '.jd-coulisses', label: 'Behind the scenes' },
+      { index: 4, selector: '#vision', label: 'Vision' },
     ],
   },
   {
