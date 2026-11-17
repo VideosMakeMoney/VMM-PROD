@@ -42,7 +42,10 @@ jobs:
       - name: Update EN snapshots
         env:
           VMM_ALLOW_INDEX: 'true'
-        run: npx playwright test tests/visual.spec.ts -g "-en" --update-snapshots
+        run: |
+          rm -f tests/__snapshots__/visual.spec.ts/accueil-en-section-0-hero-*
+          rm -f tests/__snapshots__/visual.spec.ts/apropos-en-section-2-renaud-*
+          npx playwright test tests/visual.spec.ts -g "-en" --update-snapshots
 
       - name: Upload updated snapshots
         uses: actions/upload-artifact@v4
