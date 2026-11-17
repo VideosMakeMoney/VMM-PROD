@@ -119,25 +119,12 @@ test.describe('Bloc 3 - Description SEO et spécificité du héros', () => {
       if (pageDef.type === 'services') {
         expect(summaryText).toBe(servicesResume);
       } else if (pageDef.type === 'portfolio') {
-        // Détection de la régression PR24 (le héros FR de portfolio affiche la description SEO de services)
-        test.fixme(
-          pageDef.lang === 'fr',
-          'Régression connue sur main (PR24) : Le héros de portfolio-fr affiche la description SEO de Services au lieu de sa propre description'
-        );
         expect(summaryText).toBe(normalizeText(dict.seo.portfolio.resume));
         expect(summaryText).not.toContain(servicesResume);
       } else if (pageDef.type === 'apropos') {
-        test.fixme(
-          pageDef.lang === 'fr',
-          'Régression connue sur main (PR24) : Le héros de apropos-fr affiche la description SEO de Services au lieu de sa propre description'
-        );
         expect(summaryText).toBe(normalizeText(dict.seo.apropos.resume));
         expect(summaryText).not.toContain(servicesResume);
       } else if (pageDef.type === 'contact') {
-        test.fixme(
-          pageDef.lang === 'fr',
-          'Régression connue sur main (PR24) : Le héros de contact-fr affiche la description SEO de Services au lieu de sa propre description'
-        );
         expect(summaryText).toBe(normalizeText(dict.seo.contact.resume));
         expect(summaryText).not.toContain(servicesResume);
       }

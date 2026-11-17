@@ -1,0 +1,70 @@
+/* === PARTIE C — JD, courriel du 15 nov. (#1 et #2) === */
+
+/* #1 — Rectangle noir transparent des héros : il ne couvre plus que le texte descriptif (largeur ajustée au texte,
+   marge intérieure serrée), au lieu d'une bande pleine largeur derrière le titre et le texte. Opacité + 8 points
+   (.44 → .52). Même rectangle en français et en anglais, sur mobile et sur ordi : accueil (signature + paragraphe),
+   Services, Portfolio, À propos (description du héros), pages des zones (paragraphe d'intro), Contact (intro + résumé).
+   Les pages des entreprises (titre seul, sans texte descriptif) gardent leur bande. */
+html[lang] { --rect-a: .52; --rect-py: .5rem; --rect-px: .625rem; --rect-r: .625rem; }
+@media (min-width: 768px) { html[lang] { --rect-py: .7rem; --rect-px: 1.25rem; } }
+
+/* anciennes bandes pleine largeur retirées (mêmes sélecteurs que styles.css, déclarés plus loin = prioritaires) */
+html[lang] .page-hero.full-hero:not(.collection-screen) > .container::before,
+html[lang] .page-accueil .hero-content::before,
+html[lang] .page-accueil .hero-ctas::after,
+html[lang] .zone-hero > .container::before,
+html[lang] .page-contact .contact-info::before { content: none; }
+
+/* éléments qui portent le rectangle */
+.page-accueil .hero-desc,
+.page-hero.full-hero:not(.collection-screen) > .container > p:is(.hero-intro, .hero-resume, .page-summary),
+.zone-hero > .container > p.intro,
+.page-contact .contact-info > p:is(.intro, .page-summary) { position: relative; isolation: isolate; }
+.page-accueil .hero-desc::before,
+.page-hero.full-hero:not(.collection-screen) > .container > p:is(.hero-intro, .hero-resume, .page-summary)::before,
+.zone-hero > .container > p.intro::before,
+.page-contact .contact-info > p:is(.intro, .page-summary)::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  inset: calc(-1 * var(--rect-py)) calc(-1 * var(--rect-px));
+  border-radius: var(--rect-r);
+  background: rgba(13, 9, 23, var(--rect-a));
+  box-shadow: 0 0 .75rem .125rem rgba(13, 9, 23, calc(var(--rect-a) * .5));
+}
+/* largeur ajustée au texte (pas pleine colonne) */
+.page-accueil .hero-desc,
+.page-hero.full-hero:not(.collection-screen) > .container > p:is(.hero-intro, .hero-resume, .page-summary),
+.zone-hero > .container > p.intro { width: fit-content; }
+/* Accueil : signature + paragraphe dans un seul rectangle, centré */
+.page-accueil .hero-content > .hero-desc { margin-inline: auto; margin-bottom: clamp(1rem, 3svh, 2rem); }
+.page-accueil .hero-desc > * { margin-inline: auto; }
+.page-accueil .hero-desc > .hero-text { margin-bottom: 0; }
+/* Deux paragraphes descriptifs qui se suivent (ex. intro + résumé) : un seul rectangle continu, même largeur.
+   Le premier rectangle descend jusqu'à mi-chemin, le second commence là (sans superposition plus foncée). */
+.page-hero.full-hero:not(.collection-screen) > .container > p:is(.hero-intro, .hero-resume, .page-summary):has(+ p:is(.hero-intro, .hero-resume, .page-summary)),
+.page-hero.full-hero:not(.collection-screen) > .container > p:is(.hero-intro, .hero-resume, .page-summary) + p:is(.hero-intro, .hero-resume, .page-summary) { width: min(100%, 46rem); max-width: none; }
+.page-hero.full-hero:not(.collection-screen) > .container > p:is(.hero-intro, .hero-resume, .page-summary):has(+ p:is(.hero-intro, .hero-resume, .page-summary))::before { bottom: -.5rem; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.page-hero.full-hero:not(.collection-screen) > .container > p:is(.hero-intro, .hero-resume, .page-summary) + p:is(.hero-intro, .hero-resume, .page-summary)::before { top: -.5rem; border-top-left-radius: 0; border-top-right-radius: 0; }
+.page-hero.full-hero:not(.collection-screen) > .container > p:is(.hero-intro, .hero-resume, .page-summary) + p:is(.hero-intro, .hero-resume, .page-summary) { margin-top: 1rem; }
+/* Contact : intro + résumé, un seul rectangle continu (même écart qu'avant entre les deux paragraphes : .5rem) */
+.page-contact .contact-info > p.intro:has(+ p.page-summary) { margin-bottom: 0; }
+.page-contact .contact-info > p.intro + p.page-summary { margin-top: .5rem; }
+.page-contact .contact-info > p.intro:has(+ p.page-summary)::before { bottom: -.25rem; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.page-contact .contact-info > p.intro + p.page-summary::before { top: -.25rem; border-top-left-radius: 0; border-top-right-radius: 0; }
+
+/* #2 — Titre animé « VIDEOS MAKE MONEY » : nouvelle animation (recadrée au plus près du titre), juste au-dessus
+   de la signature, grand et entièrement visible ; image fixe transparente puis canvas WebGL (src/parts/c.js). */
+.hero-titrage[data-empile] {
+  aspect-ratio: var(--titrage-ratio, 8 / 1);
+  width: min(100%, 980px, 66vw, calc((100svh - var(--header-h)) * 1.25));
+  margin: 0 auto clamp(.6rem, 2.2svh, 1.4rem);
+}
+@media (max-width: 767px) {
+  /* mobile : le titre déborde la marge du conteneur (6 px du bord de l'écran) pour rester grand */
+  /* largeur en % (pas en vw) : le titre ne doit pas élargir le bloc du héros */
+  .hero-titrage[data-empile] { width: calc(100% + 2 * var(--gutter) - 12px); max-width: none;
+    margin-inline: calc(6px - var(--gutter)); margin-bottom: clamp(.5rem, 1.6svh, .9rem); }
+}
+.hero-titrage[data-empile] .hero-titrage-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; opacity: 0; }
+.hero-titrage[data-empile].is-playing .hero-titrage-canvas { opacity: 1; }
+.hero-titrage[data-empile] .hero-titrage-source { position: absolute; left: 0; top: 0; width: 2px; height: 2px; opacity: 0; pointer-events: none; }
+/* === FIN PARTIE C === */

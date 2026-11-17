@@ -152,12 +152,6 @@ for (const p of PAGES) {
         return { overflowsDoc, scrollW, clientW };
       });
 
-      const isKnownContactOverflow = p.name === 'contact-fr' && testInfo.project.name.startsWith('desktop-');
-      test.fixme(
-        isKnownContactOverflow,
-        `Débordement horizontal connu sur contact-fr desktop (.footer-zones sans flex-wrap, cf. tests/known-issues.md)`
-      );
-
       expect(
         overflowInfo.overflowsDoc,
         `Débordement horizontal du document : scrollWidth (${overflowInfo.scrollW}) > clientWidth (${overflowInfo.clientW})`
@@ -229,11 +223,10 @@ for (const p of PAGES) {
         return { overlaps, clipped };
       });
 
-      const isKnownContactClipped = p.name === 'contact-fr' && testInfo.project.name.startsWith('desktop-');
       const isKnownHomeClipped = (p.name === 'accueil-fr' || p.name === 'accueil-en') && testInfo.project.name === 'mobile-iphone-390x664';
 
       test.fixme(
-        isKnownContactClipped || isKnownHomeClipped,
+        isKnownHomeClipped,
         `Élément coupé connu sur main (${p.name} sur ${testInfo.project.name}, cf. tests/known-issues.md)`
       );
 
@@ -378,6 +371,69 @@ for (const p of PAGES) {
 
       expect(distortedImages).toEqual([]);
     });
+
+    // 8. Aucun chevauchement texte/icône dans .hp-svc et texte dans sa colonne
+    if (p.type === 'accueil') {
+      test('8. Aucun chevauchement texte/icône dans .hp-svc et texte dans sa colonne', async ({ page }) => {
+        await page.goto(p.url);
+        await preparePageForLayout(page);
+
+        const svcIssues = await page.evaluate(() => {
+          const items = Array.from(document.querySelectorAll('.home-services .hp-svc'));
+          const issues: { text: string; issue: string; details: Record<string, number> }[] = [];
+
+          for (const item of items) {
+            const icon = item.querySelector('.hp-svc-icon');
+            const text = item.querySelector('.hp-svc-text');
+            const li = item.closest('li');
+            if (!icon || !text || !li) continue;
+
+            const iRect = icon.getBoundingClientRect();
+            const tRect = text.getBoundingClientRect();
+            const liRect = li.getBoundingClientRect();
+
+            // 1. Aucun chevauchement texte / icône (le texte doit être à droite de l'icône)
+            if (tRect.left < iRect.right - 1) {
+              issues.push({
+                text: text.textContent?.trim().replace(/\s+/g, ' ') || '',
+                issue: 'texte chevauche icone',
+                details: { textLeft: Math.round(tRect.left), iconRight: Math.round(iRect.right) },
+              });
+            }
+
+            // 2. Le texte reste dans sa colonne (sa cellule li)
+            if (tRect.right > liRect.right + 2) {
+              issues.push({
+                text: text.textContent?.trim().replace(/\s+/g, ' ') || '',
+                issue: 'texte deborde de sa colonne',
+                details: {
+                  textRight: Math.round(tRect.right),
+                  colRight: Math.round(liRect.right),
+                  overflow: Math.round(tRect.right - liRect.right),
+                },
+              });
+            }
+
+            // 3. Le texte ne dépasse pas de l'écran
+            if (tRect.right > window.innerWidth) {
+              issues.push({
+                text: text.textContent?.trim().replace(/\s+/g, ' ') || '',
+                issue: 'texte depasse de l ecran',
+                details: {
+                  textRight: Math.round(tRect.right),
+                  innerWidth: Math.round(window.innerWidth),
+                  overflow: Math.round(tRect.right - window.innerWidth),
+                },
+              });
+            }
+          }
+
+          return issues;
+        });
+
+        expect(svcIssues).toEqual([]);
+      });
+    }
 
   });
 }

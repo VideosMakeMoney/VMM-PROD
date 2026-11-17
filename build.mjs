@@ -142,8 +142,10 @@ const ogFor = (key, page) => page?.og || OG[key] || OG.defaut;
 // Phrase d'intro courte et factuelle (seo.<page>.resume), facile à citer par Google et les IA.
 const summary = (text, cls = '') => (text ? `<p class="page-summary${cls ? ` ${cls}` : ''}" data-reveal>${t(text)}</p>` : '');
 // Description SEO dans le héros des pages autres que l'accueil (JD, 2026-11-12) : seulement si la langue a heroResume
-// (fr.json) ; sinon la bande sous le héros reste comme avant (pages anglaises inchangées).
+// (fr.json, en.json) ; sinon la bande sous le héros reste comme avant.
 const heroResume = (L, key) => (L.heroResume ? (L.heroResume.source === 'services' ? L.seo.services.resume : L.seo[key].resume) : '');
+// Accueil : la bande de description passe en fin de page (FR) ; heroResume.accueilBandeFin = false la garde sous le héros (EN).
+const accueilBandeFin = (L) => Boolean(L.heroResume) && L.heroResume.accueilBandeFin !== false;
 const summaryBand = (text) => (text ? `<div class="summary-band"><div class="container">${summary(text)}</div></div>` : '');
 
 // Dimensions réelles d'un JPEG de static/ (width/height des images, sans dépendance)
@@ -167,7 +169,12 @@ const h1Seo = () => '';
 
 // Feuille de style en ligne dans chaque page (≈ 10 Ko compressée) : aucune requête ne bloque le premier affichage.
 // src/styles.css reste la source (et est toujours copiée dans dist/).
-const CSS = readFileSync(join(ROOT, 'src', 'styles.css'), 'utf8')
+// Ajustements JD du 15 nov. : chaque partie (A à E) garde ses règles dans src/parts/*.css, ajoutées après styles.css
+// (ordre alphabétique) ; même principe pour src/parts/*.js, ajoutés à la fin de main.js dans dist/.
+const PARTS_DIR = join(ROOT, 'src', 'parts');
+const partFiles = (ext) => (existsSync(PARTS_DIR) ? readdirSync(PARTS_DIR).filter((f) => f.endsWith(ext)).sort() : []);
+const CSS_SOURCE = [readFileSync(join(ROOT, 'src', 'styles.css'), 'utf8'), ...partFiles('.css').map((f) => readFileSync(join(PARTS_DIR, f), 'utf8'))].join('\n');
+const CSS = CSS_SOURCE
   .replace(/\/\*[\s\S]*?\*\//g, '')
   .replace(/\s+/g, ' ')
   .replace(/\s*([{};,>])\s*/g, '$1')
@@ -762,7 +769,7 @@ function homePage(lang) {
   const TT = A.hero.titrage;
   const titrage = TT && exists(`${TT.poster}.webp`) ? TT : null;
   const titrageHtml = titrage
-    ? `<div class="hero-titrage" aria-hidden="true"${exists(titrage.webm) ? ` data-webm="${titrage.webm}"` : ''}${exists(titrage.hevc) ? ` data-hevc="${titrage.hevc}"` : ''}${exists(titrage.anim) ? ` data-anim="${titrage.anim}"` : ''}>
+    ? `<div class="hero-titrage" aria-hidden="true"${exists(titrage.webm) ? ` data-webm="${titrage.webm}"` : ''}${exists(titrage.hevc) ? ` data-hevc="${titrage.hevc}"` : ''}${exists(titrage.anim) ? ` data-anim="${titrage.anim}"` : ''}${exists(titrage.empile) ? ` data-empile="${titrage.empile}"` : ''}${exists(titrage.empileMobile) ? ` data-empile-mobile="${titrage.empileMobile}"` : ''} style="--titrage-ratio: ${titrage.largeur} / ${titrage.hauteur}">
       <picture class="hero-titrage-img"><source srcset="${titrage.poster}.webp" type="image/webp"><img src="${titrage.poster}.png" alt="" width="${titrage.largeur}" height="${titrage.hauteur}" decoding="async" fetchpriority="high"></picture>
     </div>`
     : '';
@@ -775,8 +782,10 @@ function homePage(lang) {
   </div>
   <div class="container hero-content">
     ${titrageHtml}${titrageHtml ? '\n    ' : ''}${heroH1}
+    <div class="hero-desc">
     <p class="hero-sub hero-signature" data-reveal>${rich(A.hero.signature)}</p>
     <p class="hero-text" data-reveal>${t(L.hero.texte)}</p>
+    </div>
     <p class="hero-ctas" data-reveal>
       <a class="btn btn-solid hero-cta" href="${ROUTES.contact[lang]}">${esc(A.hero.bouton)}</a>
       <a class="btn btn-ghost hero-cta-ghost" href="${ROUTES.portfolio[lang]}">${esc(A.hero.boutonTravail)}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
@@ -785,7 +794,7 @@ function homePage(lang) {
   </div>
   ${hasVideo ? `<button class="hero-toggle" type="button" aria-pressed="false" data-pause="${esc(L.hero.pause)}" data-play="${esc(L.hero.lecture)}" aria-label="${esc(L.hero.pause)}"><span aria-hidden="true">❚❚</span></button>` : ''}
 </section>
-${L.heroResume ? '' : summaryBand(L.seo.accueil.resume)}
+${accueilBandeFin(L) ? '' : summaryBand(L.seo.accueil.resume)}
 
 <section class="jd-screen home-portfolio" id="portfolio-accueil" aria-labelledby="hp-portfolio-title">
   <div class="jd-wrap">
@@ -850,7 +859,7 @@ ${L.heroResume ? '' : summaryBand(L.seo.accueil.resume)}
     </div>
   </div>
 </section>${avis}`;
-  const endBand = L.heroResume ? summaryBand(L.seo.accueil.resume).replace('class="summary-band"', 'class="summary-band summary-band-end"') : '';
+  const endBand = accueilBandeFin(L) ? summaryBand(L.seo.accueil.resume).replace('class="summary-band"', 'class="summary-band summary-band-end"') : '';
 
   return layout({ key: 'accueil', lang, body: lang === 'fr' ? body : `${body}${endBand ? `\n${endBand}` : ''}`, endBand: lang === 'fr' ? endBand : '', videos: catVideos.filter((v) => v?.youtubeId), preload: heroPreload });
 }
@@ -1592,6 +1601,9 @@ if (existsSync(OUT)) rmSync(OUT, { recursive: true });
 mkdirSync(OUT, { recursive: true });
 cpSync(join(ROOT, 'static'), OUT, { recursive: true });
 cpSync(join(ROOT, 'src'), OUT, { recursive: true });
+if (partFiles('.css').length) writeFileSync(join(OUT, 'styles.css'), CSS_SOURCE);
+if (partFiles('.js').length)
+  writeFileSync(join(OUT, 'main.js'), [readFileSync(join(ROOT, 'src', 'main.js'), 'utf8'), ...partFiles('.js').map((f) => readFileSync(join(PARTS_DIR, f), 'utf8'))].join('\n'));
 
 for (const lang of ['fr', 'en']) {
   const L = langs[lang];
