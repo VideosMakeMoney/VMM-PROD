@@ -77,6 +77,57 @@ Redirections 301 (`_redirects`, liste `OLD_REDIRECTS` dans `build.mjs`), en un s
 - Clips de fond : une seule version téléchargée (mobile ou ordi), après le chargement de la page et seulement à l'approche de la section. Images sous la ligne de flottaison en `loading="lazy"`, avec `width`/`height`.
 - La classe `js` est posée dès le `<head>` : le menu mobile ne fait plus sauter la page au chargement.
 
+## Tests de non-régression (Playwright)
+
+Une suite de tests automatiques complète (@playwright/test) protège le site contre les régressions visuelles, de layout, de contenu, de médias et de SEO.
+
+### Lancer les tests en local
+
+```bash
+# Générer le site statique (dist/)
+npm run build
+
+# Lancer tous les tests
+npm test
+
+# Lancer un bloc spécifique
+npm run test:visual     # Régression visuelle (captures de référence)
+npm run test:layout     # Règles de layout strictes de JD (hauteurs, débordements, boutons)
+npm run test:content    # Conformité des textes (fr.json/en.json, descriptions SEO)
+npm run test:media      # Absence de 404, vidéos valides, pas de rectangle noir WebKit, fichiers <= 5 Mo
+npm run test:seo        # Balises SEO, JSON-LD, sitemap, robots.txt, pas de noindex en prod
+```
+
+### Mettre à jour les captures de référence
+
+Si une modification visuelle est intentionnelle :
+```bash
+npm run test:update-snapshots
+```
+Les captures PNG modifiées doivent être incluses dans le commit et visibles dans la pull request.
+
+### Que faire si un test échoue ?
+
+1. Ouvrir le rapport interactif Playwright :
+   ```bash
+   npx playwright show-report
+   ```
+2. Dans le rapport HTML :
+   - Pour les échecs visuels : inspecter le diff visuel (mode *slider*, *diff* ou *side-by-side*).
+   - Pour les échecs de layout : vérifier si une section dépasse 100svh, si un bouton est coupé ou s'il y a un débordement horizontal (`scrollWidth > clientWidth`).
+   - Pour les échecs de contenu : vérifier si un texte a été modifié en dur dans le code au lieu de `content/fr.json` ou `content/en.json`.
+   - Pour les échecs de médias : vérifier les requêtes en échec 404 ou les fichiers ajoutés > 5 Mo.
+3. Corriger le code source (`build.mjs`, `src/styles.css`, `content/*.json`) ou mettre à jour les captures si le changement visuel est voulu.
+
+### Intégration Continue (GitHub Actions)
+
+Le workflow `.github/workflows/tests.yml` s'exécute automatiquement sur chaque `pull_request` ciblant `main`. En cas d'échec, le rapport complet HTML Playwright est téléchargeable dans les artefacts de l'action.
+
+Pour rendre ce check obligatoire avant toute fusion :
+> Dans GitHub : **Settings** → **Branches** → **Branch protection rules** (pour `main`) → cocher **« Require status checks to pass before merging »** et sélectionner le check **« tests »**.
+
+
+
 ## Placeholders restants [À CONFIRMER]
 
 **Médias**
