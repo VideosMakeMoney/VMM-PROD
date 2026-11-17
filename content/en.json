@@ -441,6 +441,8 @@
     "_aide": "About page (JD's PDF). In headings, *word* = violet word, \\n = line break.",
     "titre": "ABOUT",
     "etiquette": "About",
+    "scroll": "SCROLL ↓",
+    "scrollLabel": "Scroll to the rest of the page",
     "vision": {
       "titre": "The faces behind VMM.",
       "texte": "Passionate people who bring visions to life and reveal the pride behind every project.",

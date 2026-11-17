@@ -1416,8 +1416,8 @@ function aboutPage(lang) {
     <p class="cta-row" data-reveal><a class="btn btn-solid" href="${ROUTES.contact[lang]}">${esc(A.fin.bouton)}</a></p>
   </div>
 </section>`;
-  // Repère « SCROLL ↓ » du PDF À propos (écran 01), même composant que Portfolio
-  const body = `${fullHero('about', A.titre, L, null, L.seo.apropos.h1, { scroll: { texte: L.portfolio.scroll, label: L.portfolio.scrollLabel, cible: fused ? A.membres[0].id : 'vision' }, resume: heroResume(L, 'apropos') })}
+  // Repère « SCROLL ↓ » / « DÉFILER ↓ » du PDF À propos (écran 01), même composant que Portfolio
+  const body = `${fullHero('about', A.titre, L, null, L.seo.apropos.h1, { scroll: { texte: A.scroll || L.portfolio.scroll, label: A.scrollLabel || L.portfolio.scrollLabel, cible: fused ? A.membres[0].id : 'vision' }, resume: heroResume(L, 'apropos') })}
 ${heroResume(L, 'apropos') ? '' : summaryBand(L.seo.apropos.resume)}
 ${fused ? '' : `${visionSection}\n`}${members}
 ${coulissesGrid(A.coulisses)}
