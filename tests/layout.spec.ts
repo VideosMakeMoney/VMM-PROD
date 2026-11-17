@@ -372,5 +372,68 @@ for (const p of PAGES) {
       expect(distortedImages).toEqual([]);
     });
 
+    // 8. Aucun chevauchement texte/icône dans .hp-svc et texte dans sa colonne
+    if (p.type === 'accueil') {
+      test('8. Aucun chevauchement texte/icône dans .hp-svc et texte dans sa colonne', async ({ page }) => {
+        await page.goto(p.url);
+        await preparePageForLayout(page);
+
+        const svcIssues = await page.evaluate(() => {
+          const items = Array.from(document.querySelectorAll('.home-services .hp-svc'));
+          const issues: { text: string; issue: string; details: Record<string, number> }[] = [];
+
+          for (const item of items) {
+            const icon = item.querySelector('.hp-svc-icon');
+            const text = item.querySelector('.hp-svc-text');
+            const li = item.closest('li');
+            if (!icon || !text || !li) continue;
+
+            const iRect = icon.getBoundingClientRect();
+            const tRect = text.getBoundingClientRect();
+            const liRect = li.getBoundingClientRect();
+
+            // 1. Aucun chevauchement texte / icône (le texte doit être à droite de l'icône)
+            if (tRect.left < iRect.right - 1) {
+              issues.push({
+                text: text.textContent?.trim().replace(/\s+/g, ' ') || '',
+                issue: 'texte chevauche icone',
+                details: { textLeft: Math.round(tRect.left), iconRight: Math.round(iRect.right) },
+              });
+            }
+
+            // 2. Le texte reste dans sa colonne (sa cellule li)
+            if (tRect.right > liRect.right + 2) {
+              issues.push({
+                text: text.textContent?.trim().replace(/\s+/g, ' ') || '',
+                issue: 'texte deborde de sa colonne',
+                details: {
+                  textRight: Math.round(tRect.right),
+                  colRight: Math.round(liRect.right),
+                  overflow: Math.round(tRect.right - liRect.right),
+                },
+              });
+            }
+
+            // 3. Le texte ne dépasse pas de l'écran
+            if (tRect.right > window.innerWidth) {
+              issues.push({
+                text: text.textContent?.trim().replace(/\s+/g, ' ') || '',
+                issue: 'texte depasse de l ecran',
+                details: {
+                  textRight: Math.round(tRect.right),
+                  innerWidth: Math.round(window.innerWidth),
+                  overflow: Math.round(tRect.right - window.innerWidth),
+                },
+              });
+            }
+          }
+
+          return issues;
+        });
+
+        expect(svcIssues).toEqual([]);
+      });
+    }
+
   });
 }

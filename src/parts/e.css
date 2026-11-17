@@ -48,13 +48,13 @@
   html[lang^="fr"] .home-services h2 { font-size: 7.85vw; line-height: 1.12; width: 93vw; max-width: none; text-wrap: wrap; margin: 0 auto clamp(.4rem, 1.4svh, .8rem); text-align: center; }
   html[lang^="fr"] .home-services .jd-lead { font-size: max(.75rem, 3.7vw); line-height: 1.38; margin: 0 auto; max-width: none; }
   html[lang^="fr"] .home-services-split { margin-top: clamp(.6rem, 2.6svh, 1.4rem); }
-  html[lang^="fr"] .home-services .hp-svc-grid { position: relative; z-index: 1; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
-    gap: clamp(.4rem, 2.2svh, 1.3rem) 2.5vw; }
-  html[lang^="fr"] .home-services .hp-svc { gap: 1.6vw; min-height: 48px; padding: 0; align-items: center; }
+  html[lang^="fr"] .home-services .hp-svc-grid { position: relative; z-index: 1; grid-template-columns: minmax(0, .89fr) minmax(0, 1.11fr);
+    gap: clamp(.4rem, 2.2svh, 1.3rem) 2vw; }
+  html[lang^="fr"] .home-services .hp-svc { gap: 1vw; min-height: 48px; padding: 0; align-items: center; }
   html[lang^="fr"] .home-services .hp-svc-icon, html[lang^="fr"] .home-services .hp-svc-icon img { width: 14vw; height: 14vw; flex: 0 0 14vw; max-width: 64px; max-height: 64px; }
-  html[lang^="fr"] .home-services .hp-svc-text { padding-left: 2.6vw; border-left: 1px solid rgba(255, 255, 255, .28); font-size: max(.75rem, 3.1vw); line-height: 1.22; }
+  html[lang^="fr"] .home-services .hp-svc-text { padding-left: 1.8vw; border-left: 1px solid rgba(255, 255, 255, .28); font-size: max(.75rem, 3.1vw); line-height: 1.22; }
   html[lang^="fr"] .home-services .hp-svc-text strong { font-size: max(.78rem, 3.3vw); }
-  html[lang^="fr"] .home-services .hp-svc:last-child .hp-svc-text strong { white-space: nowrap; }
+  html[lang^="fr"] .home-services .hp-svc-grid > li:last-child .hp-svc-text strong { white-space: nowrap; }
   html[lang^="fr"] .home-services .cta-row { position: absolute; left: 0; right: 0; bottom: 5.8%; z-index: 2; margin: 0; padding: 0; text-align: center; }
   html[lang^="fr"] .home-services .cta-row .btn { min-width: 70%; min-height: 48px; }
   html[lang^="fr"] .home-services-studio { position: relative; inset: auto; z-index: 0; flex: 1 1 auto; min-height: 0; height: auto; max-height: 98vw;
