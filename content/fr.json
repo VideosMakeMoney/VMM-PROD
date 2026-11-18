@@ -176,6 +176,10 @@
   },
   "faq": {
     "titre": "Questions fréquentes",
+    "photo": "/img/faq-jd",
+    "photoAlt": "JD au studio de VMM Productions",
+    "photoLargeur": 941,
+    "photoHauteur": 1672,
     "items": [
       {
         "q": "Combien de temps prend un projet typique ?",

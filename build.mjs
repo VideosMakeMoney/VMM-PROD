@@ -690,10 +690,7 @@ function contactBlock(lang, { tag = 'h2', id = 'contact-title' } = {}) {
       <label for="${f('company')}">${esc(c.entreprise)}</label>
       <input id="${f('company')}" name="company" type="text" autocomplete="organization">
       <label for="${f('budget')}">${esc(c.budget)}</label>
-      <select id="${f('budget')}" name="budget">
-        <option value="">${esc(c.budgetChoisir)}</option>
-        ${site.budgets.filter((b) => !isPlaceholder(b)).map((b) => `<option>${esc(b)}</option>`).join('\n        ')}
-      </select>
+      <input id="${f('budget')}" name="budget" type="text" autocomplete="off">
       
       <label for="${f('message')}">${esc(c.projet)}</label>
       <textarea id="${f('message')}" name="message" rows="5" required></textarea>
@@ -1427,14 +1424,17 @@ ${closing}`;
 
 function contactPage(lang) {
   const L = langs[lang];
+  const hasFaqPhoto = site.drapeaux?.faqPhoto && L.faq.photo && existsSync(join(ROOT, 'static', `${L.faq.photo}.webp`));
+  const faqInner = `
+    <h2 id="faq-title" data-reveal>${esc(L.faq.titre)}</h2>
+    ${L.faq.items.map((f) => `<details data-reveal><summary>${t(f.q)}</summary><p>${t(f.r)}</p>${f.note && !isPlaceholder(f.note) ? `<p class="small">${t(f.note)}</p>` : ''}</details>`).join('\n    ')}`;
   const body = `<section class="section section-contact page-contact has-bg-video" aria-labelledby="contact-page-title">
   ${bgVideo('contact-logo')}
   ${contactBlock(lang, { tag: 'h1', id: 'contact-page-title' })}
 </section>
 <section class="section section-tight" aria-labelledby="faq-title">
-  <div class="container faq">
-    <h2 id="faq-title" data-reveal>${esc(L.faq.titre)}</h2>
-    ${L.faq.items.map((f) => `<details data-reveal><summary>${t(f.q)}</summary><p>${t(f.r)}</p>${f.note && !isPlaceholder(f.note) ? `<p class="small">${t(f.note)}</p>` : ''}</details>`).join('\n    ')}
+  <div class="container faq${hasFaqPhoto ? ' faq-with-photo' : ''}">
+    ${hasFaqPhoto ? `<div class="faq-photo-wrap" data-reveal>${picture(L.faq.photo, L.faq.photoAlt, { w: L.faq.photoLargeur || 941, h: L.faq.photoHauteur || 1672, fallback: 'jpg' })}</div><div class="faq-content">${faqInner}</div>` : faqInner}
   </div>
 </section>`;
   return layout({ key: 'contact', lang, body, preload: posterPreload('contact-logo') });
