@@ -16,27 +16,20 @@ import { PAGES, preparePageForLayout, PageDefinition, SectionDefinition } from '
  * Dérogations documentées dans tests/known-issues.md appliquées individuellement par (page, section, résolution).
  */
 
-// Liste exacte des 21 dépassements de hauteur connus sur main (cf. tests/known-issues.md)
+// Liste exacte des dépassements de hauteur connus sur main (cf. tests/known-issues.md)
 const KNOWN_HEIGHT_ISSUES = new Set([
   // Desktop 1280x720
   'portfolio-fr|1|desktop-1280x720',
   'apropos-fr|1|desktop-1280x720',
   'apropos-fr|2|desktop-1280x720',
   'contact-fr|0|desktop-1280x720',
-  'portfolio-en|1|desktop-1280x720',
-  'apropos-en|2|desktop-1280x720',
-  'apropos-en|3|desktop-1280x720',
   // Desktop 1366x768
   'apropos-fr|1|desktop-1366x768',
   'apropos-fr|2|desktop-1366x768',
-  'portfolio-en|1|desktop-1366x768',
-  'apropos-en|2|desktop-1366x768',
-  'apropos-en|3|desktop-1366x768',
   // Mobile
   'contact-fr|0|mobile-iphone-390x844',
   'contact-en|0|mobile-iphone-390x844',
   'contact-fr|0|mobile-iphone-390x664',
-  'services-en|1|mobile-iphone-390x664',
   'contact-en|0|mobile-iphone-390x664',
   'contact-fr|0|mobile-android-360x740',
   'contact-en|0|mobile-android-360x740',

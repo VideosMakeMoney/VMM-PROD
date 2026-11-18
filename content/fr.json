@@ -62,7 +62,7 @@
     }
   },
   "heroResume": {
-    "_aide": "Description SEO (seo.<page>.resume) lisible dans le héros des pages autres que l’accueil, pendant que le clip joue (JD, courriels du 2026-11-12 (docs/jd/2026-11-12/)). source = \"page\" : chaque page montre sa propre description ; \"services\" : la description de Services partout. Aussi dans en.json (2026-11-15), avec accueilBandeFin = false pour garder la bande de l’accueil EN sous le héros.",
+    "_aide": "Description SEO (seo.<page>.resume) lisible dans le héros des pages autres que l’accueil, pendant que le clip joue (JD, courriels du 2026-11-12 (docs/jd/2026-11-12/)). source = \"page\" : chaque page montre sa propre description ; \"services\" : la description de Services partout. En FR comme en EN, la bande SEO de l’accueil est en bas de page, entre la section Contact et le pied de page.",
     "source": "page",
     "sourceAncien": "services",
     "_aideSource": "JD, courriel du 2026-11-15 (docs/jd/2026-11-15/seo-consigne-hero.jpg) : « appliquer partout » voulait dire déplacer la description dans le héros de chaque page, pas le même texte partout. Chaque page affiche donc sa propre description seo.<page>.resume. Ancienne valeur dans sourceAncien.",
@@ -127,8 +127,8 @@
         "nom": "Renaud",
         "nomComplet": "Renaud",
         "role": "Cameraman",
-        "experience": "10 ans d'expérience en cinéma.",
-        "texte": "Avec 10 ans d'expérience en cinéma, Renaud apporte créativité, énergie et une approche immersive pour saisir l'action sur le vif.",
+        "experience": "10 ans d’expérience en cinéma.",
+        "texte": "Avec 10 ans d’expérience en cinéma, Renaud apporte créativité, énergie et une approche immersive pour saisir l’action sur le vif.",
         "photo": ""
       }
     ],
@@ -387,7 +387,7 @@
     "bouton": "Rencontrer les gens derrière VMM →",
     "_aidePage": "Page Portfolio refaite le 2026-11-05 (description de Natasha d'après le PDF « VMM Portfolio LAYOUT » de JD). Les clés ci-dessus sont gardées.",
     "heroTitre": "PORTFOLIO",
-    "scroll": "SCROLL ↓",
+    "scroll": "DÉFILER ↓",
     "scrollLabel": "Défiler vers la suite de la page",
     "realisons": {
       "etiquette": "Ce que nous réalisons",
@@ -462,6 +462,8 @@
     "_aide": "Page À propos (PDF de JD « VMM About Section LAYOUT + DIRECTIONS »). Dans les titres, *mot* = mot en violet, \\n = retour à la ligne. photo = chemin sans extension (.webp + .jpg dans static/img/).",
     "titre": "À PROPOS",
     "etiquette": "À propos",
+    "scroll": "DÉFILER ↓",
+    "scrollLabel": "Défiler vers la suite de la page",
     "vision": {
       "titre": "Les visages derrière VMM.",
       "texte": "Des personnes passionnées qui donnent vie aux visions et révèlent la fierté derrière chaque projet.",

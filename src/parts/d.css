@@ -10,93 +10,93 @@
 
 @media (max-width: 899px) {
   /* L'écran : texte en haut, carrousel dans l'espace restant, puis points, titre et bouton */
-  html[lang^="fr"] .jd-screen .jd-wrap:has(> .jd-car) { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; min-height: 0; }
-  html[lang^="fr"] .jd-screen .jd-wrap:has(> .jd-car) > :not(.jd-car) { flex-shrink: 0; }
-  html[lang^="fr"] .jd-screen:has(.jd-car) { overflow-x: clip; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-screen .jd-wrap:has(> .jd-car) { flex: 1 1 auto; display: flex; flex-direction: column; justify-content: center; min-height: 0; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-screen .jd-wrap:has(> .jd-car) > :not(.jd-car) { flex-shrink: 0; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-screen:has(.jd-car) { overflow-x: clip; }
 
-  html[lang^="fr"] .jd-car { display: block; position: relative; flex: 1 1 auto; min-height: 9rem; margin: clamp(.75rem, 3.2svh, 2.25rem) calc(-1 * var(--gutter)) 0; }
-  html[lang^="fr"] .jd-car-cats { --car-ar: calc(460 / 642); max-height: calc(56vw * 642 / 460); }
-  html[lang^="fr"] .jd-car.jd-car-cats .jd-car-list > li[data-car-pos="-1"] > * { transform: translateX(calc(-10% - 21vw)) rotateY(14deg) scale(.8); }
-  html[lang^="fr"] .jd-car.jd-car-cats .jd-car-list > li[data-car-pos="1"] > * { transform: translateX(calc(10% + 21vw)) rotateY(-14deg) scale(.8); }
-  html[lang^="fr"] .jd-car-logos { --car-ar: 1; max-height: 50vw; }
-  html[lang^="fr"] .jd-car.jd-car-logos .jd-car-list > li[data-car-pos="-1"] > * { transform: translateX(calc(-10% - 23vw)) rotateY(16deg) scale(.8); }
-  html[lang^="fr"] .jd-car.jd-car-logos .jd-car-list > li[data-car-pos="1"] > * { transform: translateX(calc(10% + 23vw)) rotateY(-16deg) scale(.8); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car { display: block; position: relative; flex: 1 1 auto; min-height: 9rem; margin: clamp(.75rem, 3.2svh, 2.25rem) calc(-1 * var(--gutter)) 0; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car-cats { --car-ar: calc(460 / 642); max-height: calc(56vw * 642 / 460); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car.jd-car-cats .jd-car-list > li[data-car-pos="-1"] > * { transform: translateX(calc(-10% - 21vw)) rotateY(14deg) scale(.8); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car.jd-car-cats .jd-car-list > li[data-car-pos="1"] > * { transform: translateX(calc(10% + 21vw)) rotateY(-14deg) scale(.8); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car-logos { --car-ar: 1; max-height: 50vw; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car.jd-car-logos .jd-car-list > li[data-car-pos="-1"] > * { transform: translateX(calc(-10% - 23vw)) rotateY(16deg) scale(.8); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car.jd-car-logos .jd-car-list > li[data-car-pos="1"] > * { transform: translateX(calc(10% + 23vw)) rotateY(-16deg) scale(.8); }
 
-  html[lang^="fr"] .jd-car .jd-car-list {
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list {
     position: absolute; inset: 0; display: block; margin: 0; padding: 0; max-width: none; width: auto; height: auto;
     overflow: visible; touch-action: pan-y; scroll-snap-type: none; user-select: none; -webkit-user-select: none;
   }
-  html[lang^="fr"] .jd-car .jd-car-list:focus-visible { outline: 2px solid var(--violet-light); outline-offset: 4px; border-radius: var(--radius-card-md); }
-  html[lang^="fr"] .jd-car .jd-car-list > li {
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list:focus-visible { outline: 2px solid var(--violet-light); outline-offset: 4px; border-radius: var(--radius-card-md); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list > li {
     position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
     perspective: 900px; pointer-events: none; z-index: 1;
   }
-  html[lang^="fr"] .jd-car .jd-car-list > li[data-car-pos="0"] { z-index: 3; }
-  html[lang^="fr"] .jd-car .jd-car-list > li[data-car-pos="-1"], html[lang^="fr"] .jd-car .jd-car-list > li[data-car-pos="1"] { z-index: 2; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list > li[data-car-pos="0"] { z-index: 3; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list > li[data-car-pos="-1"], :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list > li[data-car-pos="1"] { z-index: 2; }
 
   /* La carte (lien) : hauteur de la scène, largeur par le format d'origine */
-  html[lang^="fr"] .jd-car .jd-car-list > li > a, html[lang^="fr"] .jd-car .jd-car-list > li > .yt-tile {
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list > li > a, :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list > li > .yt-tile {
     pointer-events: auto; display: block; height: 100%; width: auto; aspect-ratio: var(--car-ar); max-width: none; padding: 0; margin: 0;
     transition: transform .45s cubic-bezier(.22, .8, .3, 1), opacity .45s ease, filter .45s ease; transform-origin: 50% 50%; will-change: transform;
   }
-  html[lang^="fr"] .jd-car.is-reduced .jd-car-list > li > a, html[lang^="fr"] .jd-car.is-reduced .jd-car-list > li > .yt-tile { transition: none; }
-  html[lang^="fr"] .jd-car .jd-car-list > li[data-car-pos="-1"] > * { transform: translateX(calc(-10% - 24vw)) rotateY(14deg) scale(.8); filter: brightness(.72); }
-  html[lang^="fr"] .jd-car .jd-car-list > li[data-car-pos="1"] > * { transform: translateX(calc(10% + 24vw)) rotateY(-14deg) scale(.8); filter: brightness(.72); }
-  html[lang^="fr"] .jd-car .jd-car-list > li[data-car-pos="-2"] > * { transform: translateX(-90%) scale(.6); opacity: 0; }
-  html[lang^="fr"] .jd-car .jd-car-list > li[data-car-pos="2"] > * { transform: translateX(90%) scale(.6); opacity: 0; }
-  html[lang^="fr"] .jd-car .jd-car-list > li:not(.is-current) > * { cursor: pointer; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car.is-reduced .jd-car-list > li > a, :is(html[lang^="fr"], html[lang^="en"]) .jd-car.is-reduced .jd-car-list > li > .yt-tile { transition: none; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list > li[data-car-pos="-1"] > * { transform: translateX(calc(-10% - 24vw)) rotateY(14deg) scale(.8); filter: brightness(.72); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list > li[data-car-pos="1"] > * { transform: translateX(calc(10% + 24vw)) rotateY(-14deg) scale(.8); filter: brightness(.72); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list > li[data-car-pos="-2"] > * { transform: translateX(-90%) scale(.6); opacity: 0; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list > li[data-car-pos="2"] > * { transform: translateX(90%) scale(.6); opacity: 0; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list > li:not(.is-current) > * { cursor: pointer; }
 
   /* Catégories : visuel entier, contour violet et lueur sur la carte sélectionnée, reflet sous les voisines */
-  html[lang^="fr"] .jd-car .jd-car-list > li .thumb {
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list > li .thumb {
     display: block; width: 100%; height: 100%; max-height: none; aspect-ratio: auto; margin: 0;
     border: 2px solid rgba(191, 127, 255, .35); border-radius: var(--radius-card-md); background: #0d0917;
     transition: box-shadow .45s ease, border-color .45s ease;
   }
-  html[lang^="fr"] .jd-car .jd-car-list > li .thumb picture, html[lang^="fr"] .jd-car .jd-car-list > li .thumb img { display: block; width: 100%; height: 100%; object-fit: contain; transform: none; }
-  html[lang^="fr"] .jd-car .jd-car-list > li.is-current .thumb { border-color: rgba(206, 160, 255, .95); box-shadow: 0 0 0 1px rgba(124, 58, 237, .6), 0 0 22px rgba(139, 92, 246, .7), 0 0 48px rgba(124, 58, 237, .35); }
-  html[lang^="fr"] .jd-car .jd-car-list > li:not(.is-current) .thumb { -webkit-box-reflect: below 6px linear-gradient(to bottom, transparent 62%, rgba(255, 255, 255, .22)); }
-  html[lang^="fr"] .jd-car .jd-car-list > li:not(.is-current) .play { opacity: 0; }
-  html[lang^="fr"] .jd-car .jd-car-list .yt-tile-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list > li .thumb picture, :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list > li .thumb img { display: block; width: 100%; height: 100%; object-fit: contain; transform: none; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list > li.is-current .thumb { border-color: rgba(206, 160, 255, .95); box-shadow: 0 0 0 1px rgba(124, 58, 237, .6), 0 0 22px rgba(139, 92, 246, .7), 0 0 48px rgba(124, 58, 237, .35); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list > li:not(.is-current) .thumb { -webkit-box-reflect: below 6px linear-gradient(to bottom, transparent 62%, rgba(255, 255, 255, .22)); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list > li:not(.is-current) .play { opacity: 0; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list .yt-tile-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
   /* Logos : carré 1:1 entier ; le texte de chaque bouton s'affiche sous le carrousel (celui du logo sélectionné) */
-  html[lang^="fr"] .jd-car .jd-car-list .logo-btn-face { display: block; width: 100%; height: 100%; transform: none; transition: box-shadow .45s ease; }
-  html[lang^="fr"] .jd-car .jd-car-list > li.is-current .logo-btn-face { box-shadow: 0 0 0 2px rgba(206, 160, 255, .95), 0 0 22px rgba(139, 92, 246, .7), 0 0 48px rgba(124, 58, 237, .35); }
-  html[lang^="fr"] .jd-car .jd-car-list > li:not(.is-current) .logo-btn-face { -webkit-box-reflect: below 6px linear-gradient(to bottom, transparent 62%, rgba(255, 255, 255, .2)); }
-  html[lang^="fr"] .jd-car .jd-car-list .logo-btn-text { display: none; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list .logo-btn-face { display: block; width: 100%; height: 100%; transform: none; transition: box-shadow .45s ease; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list > li.is-current .logo-btn-face { box-shadow: 0 0 0 2px rgba(206, 160, 255, .95), 0 0 22px rgba(139, 92, 246, .7), 0 0 48px rgba(124, 58, 237, .35); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list > li:not(.is-current) .logo-btn-face { -webkit-box-reflect: below 6px linear-gradient(to bottom, transparent 62%, rgba(255, 255, 255, .2)); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-list .logo-btn-text { display: none; }
 
   /* Flèches ‹ › : rondes, violettes, 44 px, sur les bords des voisines (comme les pages client) */
-  html[lang^="fr"] .jd-car .jd-car-arrow {
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-arrow {
     position: absolute; top: 50%; z-index: 4; translate: 0 -50%; display: grid; place-items: center;
     width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
     background: var(--jd-violet); color: #fff; box-shadow: 0 4px 16px rgba(13, 9, 23, .55);
     transition: background .3s ease, box-shadow .3s ease;
   }
-  html[lang^="fr"] .jd-car .jd-car-arrow:hover, html[lang^="fr"] .jd-car .jd-car-arrow:focus-visible { background: var(--mauve); box-shadow: 0 0 20px rgba(124, 58, 237, .55); }
-  html[lang^="fr"] .jd-car .jd-car-arrow.is-prev { left: 4px; }
-  html[lang^="fr"] .jd-car .jd-car-arrow.is-next { right: 4px; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-arrow:hover, :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-arrow:focus-visible { background: var(--mauve); box-shadow: 0 0 20px rgba(124, 58, 237, .55); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-arrow.is-prev { left: 4px; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car .jd-car-arrow.is-next { right: 4px; }
 
   /* Points : cibles 44 px, point visible 10 px (12 px et violet pour la vignette sélectionnée) */
-  html[lang^="fr"] .jd-car + .jd-car-dots { display: flex; justify-content: center; margin-top: clamp(.25rem, 2svh, 1.5rem); }
-  html[lang^="fr"] .jd-car-dot { display: grid; place-items: center; width: 44px; height: 44px; margin-inline: 0; padding: 0; border: 0; background: none; cursor: pointer; }
-  html[lang^="fr"] .jd-car-dot::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: rgba(184, 176, 207, .55); transition: background .3s ease, transform .3s ease, box-shadow .3s ease; }
-  html[lang^="fr"] .jd-car-dot[aria-current="true"]::before { background: var(--hero-violet); transform: scale(1.25); box-shadow: 0 0 10px rgba(139, 92, 246, .8); }
-  html[lang^="fr"] .jd-car-dot:focus-visible { outline: 2px solid var(--violet-light); outline-offset: -6px; border-radius: 50%; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car + .jd-car-dots { display: flex; justify-content: center; margin-top: clamp(.25rem, 2svh, 1.5rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car-dot { display: grid; place-items: center; width: 44px; height: 44px; margin-inline: 0; padding: 0; border: 0; background: none; cursor: pointer; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car-dot::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: rgba(184, 176, 207, .55); transition: background .3s ease, transform .3s ease, box-shadow .3s ease; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car-dot[aria-current="true"]::before { background: var(--hero-violet); transform: scale(1.25); box-shadow: 0 0 10px rgba(139, 92, 246, .8); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car-dot:focus-visible { outline: 2px solid var(--violet-light); outline-offset: -6px; border-radius: 50%; }
 
   /* Titre de la catégorie sélectionnée, souligné d'un trait violet */
-  html[lang^="fr"] .jd-car-dots + .jd-car-info { display: block; text-align: center; }
-  html[lang^="fr"] .jd-car-title { display: inline-block; margin: 0; padding-bottom: .35rem; font: 700 clamp(1.1rem, min(6.5vw, 3.3svh), 1.9rem)/1.25 "Inter", system-ui, sans-serif; letter-spacing: -.01em; color: var(--title); background: linear-gradient(90deg, rgba(124, 58, 237, .25), var(--hero-violet) 20%, var(--violet-light) 50%, var(--hero-violet) 80%, rgba(124, 58, 237, .25)) bottom / 100% 2px no-repeat; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car-dots + .jd-car-info { display: block; text-align: center; }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car-title { display: inline-block; margin: 0; padding-bottom: .35rem; font: 700 clamp(1.1rem, min(6.5vw, 3.3svh), 1.9rem)/1.25 "Inter", system-ui, sans-serif; letter-spacing: -.01em; color: var(--title); background: linear-gradient(90deg, rgba(124, 58, 237, .25), var(--hero-violet) 20%, var(--violet-light) 50%, var(--hero-violet) 80%, rgba(124, 58, 237, .25)) bottom / 100% 2px no-repeat; }
 
   /* Logos : sur les écrans hauts, l'espace libre se répartit autour du carrousel et du texte (maquette 9:16) */
-  html[lang^="fr"] .jd-car.jd-car-logos { margin-top: clamp(.75rem, 5.5svh, 3.5rem); }
-  html[lang^="fr"] .jd-car-logos + .jd-car-dots { margin-top: clamp(.25rem, 3.5svh, 2.25rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car.jd-car-logos { margin-top: clamp(.75rem, 5.5svh, 3.5rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car-logos + .jd-car-dots { margin-top: clamp(.25rem, 3.5svh, 2.25rem); }
   /* Logos : nom, nombre de vidéos, « Cliquez pour visionner », trait violet */
-  html[lang^="fr"] .jd-car-logos + .jd-car-dots + .jd-car-info { display: flex; flex-direction: column; align-items: center; gap: clamp(.1rem, 1svh, .6rem); position: relative; padding-bottom: clamp(.7rem, 2svh, 1.2rem); }
-  html[lang^="fr"] .jd-car-logos + .jd-car-dots + .jd-car-info::after { content: ""; position: absolute; bottom: 0; left: 50%; width: min(60%, 18rem); height: 2px; translate: -50% 0; background: linear-gradient(90deg, transparent, var(--hero-violet) 25%, var(--violet-light) 50%, var(--hero-violet) 75%, transparent); }
-  html[lang^="fr"] .jd-car-info strong { font: 700 clamp(1.3rem, min(7.5vw, 3.6svh), 2.1rem)/1.2 "Inter", system-ui, sans-serif; letter-spacing: -.01em; color: var(--title); }
-  html[lang^="fr"] .jd-car-info .logo-btn-count { font-size: clamp(1rem, min(6vw, 2.9svh), 1.65rem); color: var(--title); }
-  html[lang^="fr"] .jd-car-info .logo-btn-cta { font-size: clamp(.875rem, min(4.8vw, 2.3svh), 1.3rem); color: var(--lavande, #b8b0cf); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car-logos + .jd-car-dots + .jd-car-info { display: flex; flex-direction: column; align-items: center; gap: clamp(.1rem, 1svh, .6rem); position: relative; padding-bottom: clamp(.7rem, 2svh, 1.2rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car-logos + .jd-car-dots + .jd-car-info::after { content: ""; position: absolute; bottom: 0; left: 50%; width: min(60%, 18rem); height: 2px; translate: -50% 0; background: linear-gradient(90deg, transparent, var(--hero-violet) 25%, var(--violet-light) 50%, var(--hero-violet) 75%, transparent); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car-info strong { font: 700 clamp(1.3rem, min(7.5vw, 3.6svh), 2.1rem)/1.2 "Inter", system-ui, sans-serif; letter-spacing: -.01em; color: var(--title); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car-info .logo-btn-count { font-size: clamp(1rem, min(6vw, 2.9svh), 1.65rem); color: var(--title); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car-info .logo-btn-cta { font-size: clamp(.875rem, min(4.8vw, 2.3svh), 1.3rem); color: var(--lavande, #b8b0cf); }
 
   /* Accueil : le bouton suit le titre */
-  html[lang^="fr"] .jd-car-info + .cta-row { margin-top: clamp(.75rem, 3svh, 2rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .jd-car-info + .cta-row { margin-top: clamp(.75rem, 3svh, 2rem); }
 }
 /* === FIN PARTIE D === */

@@ -398,7 +398,7 @@
       if (id) {
         const iframe = document.createElement('iframe');
         iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&playsinline=1&rel=0&modestbranding=1`;
-        iframe.title = tile.getAttribute('aria-label') || 'Vidéo';
+        iframe.title = tile.getAttribute('aria-label') || (document.documentElement.lang.startsWith('en') ? 'Video' : 'Vidéo');
         iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
         iframe.allowFullscreen = true;
         frame.append(iframe);
