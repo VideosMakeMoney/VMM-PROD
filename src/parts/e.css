@@ -114,17 +114,8 @@
   border-radius: 10px;
 }
 @media (max-width: 899px) {
-  :is(html[lang^="fr"], html[lang^="en"]) .home-contact .home-split-text {
-    margin-left: 43%;
-    padding: clamp(.5rem, 2.5svh, 1.25rem) var(--gutter, 16px) 0 0;
-  }
-  :is(html[lang^="fr"], html[lang^="en"]) .home-contact .cta-row {
-    margin-top: clamp(.4rem, 1.5svh, .8rem);
-  }
-}
-@media (max-width: 559px) {
   :is(html[lang^="fr"], html[lang^="en"]) .home-contact .cta-row .btn {
-    padding: 14px 14px;
+    padding: 14px 10px;
   }
 }
 
@@ -186,9 +177,9 @@
   :is(html[lang^="fr"], html[lang^="en"]) .page-apropos :is(#jd, #renaud) .person-photo picture { display: block; height: auto; aspect-ratio: 1 / 1; }
   :is(html[lang^="fr"], html[lang^="en"]) .page-apropos :is(#jd, #renaud) .person-photo img { display: block; width: 100%; height: 100%; aspect-ratio: 1 / 1; max-width: none; max-height: none;
     object-fit: cover; border-radius: 22px; margin: 0; }
-  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #jd .person-photo picture { width: min(82vw, 38.5svh); max-width: min(82vw, 38.5svh); }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #jd .person-photo picture { width: min(82vw, max(250px, 40svh)); max-width: min(82vw, max(250px, 40svh)); }
   :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #jd .person-photo img { object-position: 50% 22%; }
-  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #renaud .person-photo picture { width: min(78vw, 37.5svh); max-width: min(78vw, 37.5svh); }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #renaud .person-photo picture { width: min(78vw, max(250px, 39svh)); max-width: min(78vw, max(250px, 39svh)); }
   :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #renaud .person-photo img { object-position: 50% 30%; }
   :is(html[lang^="fr"], html[lang^="en"]) .page-apropos :is(#jd, #renaud) .person-text { flex: 0 0 auto; padding-top: clamp(.3rem, 1.5svh, .9rem); }
   :is(html[lang^="fr"], html[lang^="en"]) .page-apropos :is(#jd, #renaud) .jd-role { font-size: .8rem; margin: 0 0 clamp(.15rem, .6svh, .35rem); }
