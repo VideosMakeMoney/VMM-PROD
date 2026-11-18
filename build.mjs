@@ -1334,9 +1334,16 @@ function slug(s) {
 // Page À propos : maquette de JD (PDF « VMM About Section LAYOUT + DIRECTIONS »), même identité que Services.
 // Photos de coulisses (static/img/coulisses/coulisses-NN.webp + variante -576.webp), dans l'ordre des numéros.
 // Grille simple sur /about/, entre les bios et le mot de la fin ; chargement différé.
+// Photos de toit retirées (coulisses-02 à 05 supprimées du repo). coulisses-01 en attente de confirmation JD.
+// Pour retirer coulisses-01 dès validation de JD, décommenter la ligne dans COULISSES_EXCLUES (modification 1 ligne).
+const COULISSES_EXCLUES = new Set([
+  // 'coulisses-01.webp',
+]);
 const COULISSES_DIR = join(ROOT, 'static', 'img', 'coulisses');
 const coulissesPhotos = existsSync(COULISSES_DIR)
-  ? readdirSync(COULISSES_DIR).filter((f) => /^coulisses-\d+\.webp$/.test(f)).sort((a, b) => parseInt(a.slice(10), 10) - parseInt(b.slice(10), 10))
+  ? readdirSync(COULISSES_DIR)
+      .filter((f) => /^coulisses-\d+\.webp$/.test(f) && !COULISSES_EXCLUES.has(f))
+      .sort((a, b) => parseInt(a.slice(10), 10) - parseInt(b.slice(10), 10))
   : [];
 function coulissesGrid(C) {
   if (!C || !coulissesPhotos.length) return '';
