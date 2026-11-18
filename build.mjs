@@ -7,11 +7,11 @@
 //                    Sinon, le site est servi en noindex (démo Netlify).
 
 import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync, readdirSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
-const OUT = join(ROOT, 'dist');
+const OUT = process.env.VMM_OUT_DIR ? join(ROOT, process.env.VMM_OUT_DIR) : join(ROOT, 'dist');
 const readJson = (f) => JSON.parse(readFileSync(join(ROOT, 'content', f), 'utf8'));
 
 const site = readJson('site.json');
@@ -196,8 +196,24 @@ const rich = (s = '') => t(s).replace(/\*([^*]+)\*/g, '<span class="accent">$1</
 // Drapeaux de content/site.json (contenu en attente de JD) : un élément avec « drapeau » n'apparaît que si son drapeau est true
 const shown = (x) => !x?.drapeau || site.drapeaux?.[x.drapeau] === true;
 // Image .webp + repli .jpg/.png (chemin sans extension, fichiers dans static/img/)
-const picture = (src, alt, { w, h, cls = '', fallback = 'jpg', lazy = true } = {}) =>
-  `<picture${cls ? ` class="${cls}"` : ''}><source srcset="${src}.webp" type="image/webp"><img src="${src}.${fallback}" alt="${esc(alt)}" width="${w}" height="${h}"${lazy ? ' loading="lazy"' : ''} decoding="async"></picture>`;
+// Supporte les dérivés responsifs (ex. [470, 720, 941]) quand ils existent ou sont spécifiés
+const picture = (src, alt, { w, h, cls = '', fallback = 'jpg', lazy = true, widths, sizes } = {}) => {
+  const mime = fallback === 'png' ? 'image/png' : 'image/jpeg';
+  let candidateWidths = widths;
+  if (!candidateWidths && w) {
+    const auto = [470, 720].filter((width) => existsSync(join(ROOT, 'static', `${src}-${width}.webp`)));
+    if (auto.length > 0) {
+      candidateWidths = [...auto, w];
+    }
+  }
+  if (candidateWidths && candidateWidths.length > 1) {
+    const webpSrcset = candidateWidths.map((cw) => `${cw === w ? src : `${src}-${cw}`}.webp ${cw}w`).join(', ');
+    const fallbackSrcset = candidateWidths.map((cw) => `${cw === w ? src : `${src}-${cw}`}.${fallback} ${cw}w`).join(', ');
+    const sizesAttr = sizes ? ` sizes="${sizes}"` : ` sizes="(max-width: 480px) 100vw, ${w}px"`;
+    return `<picture${cls ? ` class="${cls}"` : ''}><source type="image/webp" srcset="${webpSrcset}"${sizesAttr}><source type="${mime}" srcset="${fallbackSrcset}"${sizesAttr}><img src="${src}.${fallback}" srcset="${fallbackSrcset}"${sizesAttr} alt="${esc(alt)}" width="${w}" height="${h}"${lazy ? ' loading="lazy"' : ''} decoding="async"></picture>`;
+  }
+  return `<picture${cls ? ` class="${cls}"` : ''}><source srcset="${src}.webp" type="image/webp"><img src="${src}.${fallback}" alt="${esc(alt)}" width="${w}" height="${h}"${lazy ? ' loading="lazy"' : ''} decoding="async"></picture>`;
+};
 const abs = (p) => SITE_URL + p;
 const jsonLd = (obj) => `<script type="application/ld+json">${JSON.stringify(obj).replace(/</g, '\\u003c')}</script>`;
 
@@ -690,10 +706,7 @@ function contactBlock(lang, { tag = 'h2', id = 'contact-title' } = {}) {
       <label for="${f('company')}">${esc(c.entreprise)}</label>
       <input id="${f('company')}" name="company" type="text" autocomplete="organization">
       <label for="${f('budget')}">${esc(c.budget)}</label>
-      <select id="${f('budget')}" name="budget">
-        <option value="">${esc(c.budgetChoisir)}</option>
-        ${site.budgets.filter((b) => !isPlaceholder(b)).map((b) => `<option>${esc(b)}</option>`).join('\n        ')}
-      </select>
+      <input id="${f('budget')}" name="budget" type="text" autocomplete="off">
       
       <label for="${f('message')}">${esc(c.projet)}</label>
       <textarea id="${f('message')}" name="message" rows="5" required></textarea>
@@ -1425,19 +1438,27 @@ ${closing}`;
   return layout({ key: 'apropos', lang, body, preload: posterPreload('about') });
 }
 
-function contactPage(lang) {
+function contactPage(lang, { faqPhoto } = {}) {
   const L = langs[lang];
+  const useFaqPhoto = faqPhoto !== undefined ? faqPhoto : (process.env.VMM_FAQ_PHOTO === '1' || process.env.VMM_FAQ_PHOTO === 'true' || site.drapeaux?.faqPhoto === true);
+  const hasFaqPhoto = useFaqPhoto && L.faq.photo && existsSync(join(ROOT, 'static', `${L.faq.photo}.webp`));
+  const faqInner = `
+    <h2 id="faq-title" data-reveal>${esc(L.faq.titre)}</h2>
+    ${L.faq.items.map((f) => `<details data-reveal><summary>${t(f.q)}</summary><p>${t(f.r)}</p>${f.note && !isPlaceholder(f.note) ? `<p class="small">${t(f.note)}</p>` : ''}</details>`).join('\n    ')}`;
   const body = `<section class="section section-contact page-contact has-bg-video" aria-labelledby="contact-page-title">
   ${bgVideo('contact-logo')}
   ${contactBlock(lang, { tag: 'h1', id: 'contact-page-title' })}
 </section>
 <section class="section section-tight" aria-labelledby="faq-title">
-  <div class="container faq">
-    <h2 id="faq-title" data-reveal>${esc(L.faq.titre)}</h2>
-    ${L.faq.items.map((f) => `<details data-reveal><summary>${t(f.q)}</summary><p>${t(f.r)}</p>${f.note && !isPlaceholder(f.note) ? `<p class="small">${t(f.note)}</p>` : ''}</details>`).join('\n    ')}
+  <div class="container faq${hasFaqPhoto ? ' faq-with-photo' : ''}">
+    ${hasFaqPhoto ? `<div class="faq-photo-wrap" data-reveal>${picture(L.faq.photo, L.faq.photoAlt, { w: L.faq.photoLargeur || 941, h: L.faq.photoHauteur || 1672, fallback: 'jpg', widths: [470, 720, 941], sizes: '(min-width: 900px) 380px, (min-width: 480px) 380px, 100vw' })}</div><div class="faq-content">${faqInner}</div>` : faqInner}
   </div>
 </section>`;
   return layout({ key: 'contact', lang, body, preload: posterPreload('contact-logo') });
+}
+
+function buildContactHtml(lang, options = {}) {
+  return accentLast(keepCompounds(contactPage(lang, options)));
 }
 
 function messagePage(lang, key, data) {
@@ -1629,40 +1650,41 @@ function llmsTxt() {
 }
 
 // ---------- génération ----------
-if (existsSync(OUT)) rmSync(OUT, { recursive: true });
-mkdirSync(OUT, { recursive: true });
-cpSync(join(ROOT, 'static'), OUT, { recursive: true });
-cpSync(join(ROOT, 'src'), OUT, { recursive: true });
-if (partFiles('.css').length) writeFileSync(join(OUT, 'styles.css'), CSS_SOURCE);
-if (partFiles('.js').length)
-  writeFileSync(join(OUT, 'main.js'), [readFileSync(join(ROOT, 'src', 'main.js'), 'utf8'), ...partFiles('.js').map((f) => readFileSync(join(PARTS_DIR, f), 'utf8'))].join('\n'));
+function buildSite() {
+  if (existsSync(OUT)) rmSync(OUT, { recursive: true });
+  mkdirSync(OUT, { recursive: true });
+  cpSync(join(ROOT, 'static'), OUT, { recursive: true });
+  cpSync(join(ROOT, 'src'), OUT, { recursive: true });
+  if (partFiles('.css').length) writeFileSync(join(OUT, 'styles.css'), CSS_SOURCE);
+  if (partFiles('.js').length)
+    writeFileSync(join(OUT, 'main.js'), [readFileSync(join(ROOT, 'src', 'main.js'), 'utf8'), ...partFiles('.js').map((f) => readFileSync(join(PARTS_DIR, f), 'utf8'))].join('\n'));
 
-for (const lang of ['fr', 'en']) {
-  const L = langs[lang];
-  write(ROUTES.accueil[lang], homePage(lang));
-  write(ROUTES.services[lang], servicesPage(lang));
-  write(ROUTES.portfolio[lang], portfolioPage(lang));
-  for (const c of CLIENTS) write(clientRoute(c)[lang], clientPage(c, lang));
-  write(coulissesRoute[lang], coulissesPage(lang));
-  write(ROUTES.apropos[lang], aboutPage(lang));
-  write(ROUTES.contact[lang], contactPage(lang));
-  write(ROUTES.merci[lang], messagePage(lang, 'merci', L.merci));
-  for (const z of ZONES) write(z[lang].route, zonePage(z, lang));
-}
-write('/404.html', notFoundPage('fr'));
-write('/en/404.html', notFoundPage('en'));
+  for (const lang of ['fr', 'en']) {
+    const L = langs[lang];
+    write(ROUTES.accueil[lang], homePage(lang));
+    write(ROUTES.services[lang], servicesPage(lang));
+    write(ROUTES.portfolio[lang], portfolioPage(lang));
+    for (const c of CLIENTS) write(clientRoute(c)[lang], clientPage(c, lang));
+    write(coulissesRoute[lang], coulissesPage(lang));
+    write(ROUTES.apropos[lang], aboutPage(lang));
+    write(ROUTES.contact[lang], contactPage(lang));
+    write(ROUTES.merci[lang], messagePage(lang, 'merci', L.merci));
+    for (const z of ZONES) write(z[lang].route, zonePage(z, lang));
+  }
+  write('/404.html', notFoundPage('fr'));
+  write('/en/404.html', notFoundPage('en'));
 
-write('/sitemap.xml', sitemap());
-write('/llms.txt', llmsTxt());
-write(
-  '/robots.txt',
-  ALLOW_INDEX
-    ? `User-agent: *\nAllow: /\n\nSitemap: ${abs('/sitemap.xml')}\n`
-    : `# Démo : indexation désactivée (VMM_ALLOW_INDEX n'est pas "true")\nUser-agent: *\nDisallow: /\n\nSitemap: ${abs('/sitemap.xml')}\n`
-);
-write(
-  '/_headers',
-  `/*
+  write('/sitemap.xml', sitemap());
+  write('/llms.txt', llmsTxt());
+  write(
+    '/robots.txt',
+    ALLOW_INDEX
+      ? `User-agent: *\nAllow: /\n\nSitemap: ${abs('/sitemap.xml')}\n`
+      : `# Démo : indexation désactivée (VMM_ALLOW_INDEX n'est pas "true")\nUser-agent: *\nDisallow: /\n\nSitemap: ${abs('/sitemap.xml')}\n`
+  );
+  write(
+    '/_headers',
+    `/*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
 ${ALLOW_INDEX ? '' : '  X-Robots-Tag: noindex, nofollow\n'}
@@ -1673,54 +1695,62 @@ ${ALLOW_INDEX ? '' : '  X-Robots-Tag: noindex, nofollow\n'}
 /videos/*
   Cache-Control: public, max-age=604800
 `
-);
-// Redirections 301 forcées (301!) de l'ancien site (URL sans préfixe = anglais, /fr/... = français), en UN seul saut :
-// chaque destination est l'adresse finale avec slash (pas de 2e redirection /services → /services/).
-// Netlify ignore le slash final dans les règles : « /process » couvre aussi « /process/ ».
-// /services, /about et /contact (anciennes pages EN) ne sont PAS redirigées : ce sont aussi les adresses des
-// nouvelles pages FR, et une règle forcée rendrait ces pages FR inaccessibles. Elles servent donc la page FR,
-// qui a le bouton EN et le hreflang vers /en/services/, /en/about/ et /en/contact/.
-const OLD_REDIRECTS = [
-  // ancien anglais
-  ['/work', '/en/portfolio/'],
-  ['/work/*', '/en/portfolio/'],
-  ['/process', '/en/services/'],
-  ['/pricing', '/en/contact/'],
-  // ancien français
-  ['/fr', '/'],
-  ['/fr/services', '/services/'],
-  ['/fr/about', '/about/'],
-  ['/fr/contact', '/contact/'],
-  ['/fr/work', '/portfolio/'],
-  ['/fr/work/*', '/portfolio/'],
-  ['/fr/process', '/services/'],
-  ['/fr/pricing', '/contact/'],
-  ['/fr/*', '/:splat'],
-  // anciennes variantes déjà redirigées avant cette version
-  ['/en/work', '/en/portfolio/'],
-  ['/en/process', '/en/services/'],
-  ['/en/pricing', '/en/contact/'],
-  ['/a-propos', '/about/'],
-];
-// Domaine : www et l'adresse Netlify vers videosmakemoney.ca (forcé). Seulement au lancement (indexation activée,
-// contexte production) : avant, la démo vmm-prod.netlify.app doit rester consultable. Les deploy previews
-// (deploy-preview-N--vmm-prod.netlify.app) ont un autre nom d'hôte et ne sont jamais touchés par ces règles.
-const DOMAIN_REDIRECTS = ALLOW_INDEX
-  ? ['https://www.videosmakemoney.ca/*', 'https://vmm-prod.netlify.app/*'].map((from) => [from, `${SITE_URL}/:splat`, '301!'])
-  : [];
-const col = (rows) => {
-  const w = Math.max(...rows.map((r) => r[0].length)) + 2;
-  const w2 = Math.max(...rows.map((r) => r[1].length)) + 2;
-  return rows.map(([a, b, c = '301!']) => `${a.padEnd(w)}${b.padEnd(w2)}${c}`).join('\n');
-};
-write(
-  '/_redirects',
-  `${DOMAIN_REDIRECTS.length ? `# Domaine principal (301 forcé)\n${col(DOMAIN_REDIRECTS)}\n\n` : ''}# Anciennes pages (301 forcé, un seul saut)
+  );
+  // Redirections 301 forcées (301!) de l'ancien site (URL sans préfixe = anglais, /fr/... = français), en UN seul saut :
+  // chaque destination est l'adresse finale avec slash (pas de 2e redirection /services → /services/).
+  // Netlify ignore le slash final dans les règles : « /process » couvre aussi « /process/ ».
+  // /services, /about et /contact (anciennes pages EN) ne sont PAS redirigées : ce sont aussi les adresses des
+  // nouvelles pages FR, et une règle forcée rendrait ces pages FR inaccessibles. Elles servent donc la page FR,
+  // qui a le bouton EN et le hreflang vers /en/services/, /en/about/ et /en/contact/.
+  const OLD_REDIRECTS = [
+    // ancien anglais
+    ['/work', '/en/portfolio/'],
+    ['/work/*', '/en/portfolio/'],
+    ['/process', '/en/services/'],
+    ['/pricing', '/en/contact/'],
+    // ancien français
+    ['/fr', '/'],
+    ['/fr/services', '/services/'],
+    ['/fr/about', '/about/'],
+    ['/fr/contact', '/contact/'],
+    ['/fr/work', '/portfolio/'],
+    ['/fr/work/*', '/portfolio/'],
+    ['/fr/process', '/services/'],
+    ['/fr/pricing', '/contact/'],
+    ['/fr/*', '/:splat'],
+    // anciennes variantes déjà redirigées avant cette version
+    ['/en/work', '/en/portfolio/'],
+    ['/en/process', '/en/services/'],
+    ['/en/pricing', '/en/contact/'],
+    ['/a-propos', '/about/'],
+  ];
+  // Domaine : www et l'adresse Netlify vers videosmakemoney.ca (forcé). Seulement au lancement (indexation activée,
+  // contexte production) : avant, la démo vmm-prod.netlify.app doit rester consultable. Les deploy previews
+  // (deploy-preview-N--vmm-prod.netlify.app) ont un autre nom d'hôte et ne sont jamais touchés par ces règles.
+  const DOMAIN_REDIRECTS = ALLOW_INDEX
+    ? ['https://www.videosmakemoney.ca/*', 'https://vmm-prod.netlify.app/*'].map((from) => [from, `${SITE_URL}/:splat`, '301!'])
+    : [];
+  const col = (rows) => {
+    const w = Math.max(...rows.map((r) => r[0].length)) + 2;
+    const w2 = Math.max(...rows.map((r) => r[1].length)) + 2;
+    return rows.map(([a, b, c = '301!']) => `${a.padEnd(w)}${b.padEnd(w2)}${c}`).join('\n');
+  };
+  write(
+    '/_redirects',
+    `${DOMAIN_REDIRECTS.length ? `# Domaine principal (301 forcé)\n${col(DOMAIN_REDIRECTS)}\n\n` : ''}# Anciennes pages (301 forcé, un seul saut)
 ${col(OLD_REDIRECTS)}
 
 # Page 404 en anglais pour les adresses /en/... (le 404.html racine est en français)
 /en/*         /en/404.html     404
 `
-);
+  );
 
-console.log(`Site généré dans dist/ (${SITE_URL}, indexation ${ALLOW_INDEX ? 'ACTIVÉE' : 'désactivée'})`);
+  console.log(`Site généré dans ${process.env.VMM_OUT_DIR || 'dist/'} (${SITE_URL}, indexation ${ALLOW_INDEX ? 'ACTIVÉE' : 'désactivée'})`);
+}
+
+export { buildSite, contactPage, buildContactHtml };
+
+const isDirectRun = Boolean(process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1]));
+if (isDirectRun) {
+  buildSite();
+}
