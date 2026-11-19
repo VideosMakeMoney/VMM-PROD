@@ -194,4 +194,123 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
     expect(frHasWrap).toBe(1);
     expect(enHasWrap).toBe(1);
   });
+
+  // =========================================================================
+  // AJOUT PR D — Liens JD (Événements 1NpXK1wLSl8 & Tapis Rouge 9 vidéos)
+  // =========================================================================
+
+  test('[PR-D #6] Tuile Événements : cliquable sur Accueil et Portfolio (FR + EN), pointe vers 1NpXK1wLSl8, miniature cat-evenements conservée, plus d état is-empty', async ({ page }) => {
+    const PAGES = [
+      { url: '/', cardSelector: '.hp-cards a.yt-tile.hp-card[href*="1NpXK1wLSl8"]', expectedLabel: 'Couverture événementielle' },
+      { url: '/en/', cardSelector: '.hp-cards a.yt-tile.hp-card[href*="1NpXK1wLSl8"]', expectedLabel: 'Event coverage' },
+      { url: '/portfolio/', cardSelector: '.pf-cat-grid a.yt-tile.pf-cat[href*="1NpXK1wLSl8"]', expectedLabel: 'Couverture événementielle' },
+      { url: '/en/portfolio/', cardSelector: '.pf-cat-grid a.yt-tile.pf-cat[href*="1NpXK1wLSl8"]', expectedLabel: 'Event coverage' },
+    ];
+
+    for (const { url, cardSelector, expectedLabel } of PAGES) {
+      await page.goto(url);
+
+      // La tuile Événements existe et est un lien cliquable <a> vers 1NpXK1wLSl8
+      const tileLink = page.locator(cardSelector);
+      await expect(tileLink, `La tuile Événements doit être un lien cliquable sur ${url}`).toBeVisible();
+      await expect(tileLink).toHaveAttribute('href', 'https://www.youtube.com/shorts/1NpXK1wLSl8');
+      await expect(tileLink).toHaveAttribute('target', '_blank');
+      await expect(tileLink).toHaveAttribute('rel', 'noopener');
+
+      // Le libellé exact de la catégorie est affiché
+      const label = tileLink.locator('.yt-tile-label');
+      await expect(label).toHaveText(expectedLabel);
+
+      // La miniature personnalisée cat-evenements est conservée
+      const img = tileLink.locator('picture img');
+      await expect(img).toBeVisible();
+      await expect(img).toHaveAttribute('src', '/img/portfolio/cat-evenements.jpg');
+
+      // Bouton play présent
+      const playIcon = tileLink.locator('.play');
+      await expect(playIcon).toBeVisible();
+
+      // Plus aucun état « is-empty » sur la page pour les cartes de catégories
+      const emptyCatTiles = page.locator('.hp-cards .yt-tile.is-empty, .pf-cat-grid .yt-tile.is-empty');
+      expect(await emptyCatTiles.count(), `Aucune tuile de catégorie ne doit être is-empty sur ${url}`).toBe(0);
+    }
+  });
+
+  test('[PR-D #7] Vidéo morte B7dWhLnxw08 : totalement absente de dist/ (HTML, XML, JSON-LD)', async () => {
+    const DEAD_ID = 'B7dWhLnxw08';
+    const { readdirSync, statSync } = await import('fs');
+
+    function checkDir(dir: string) {
+      for (const entry of readdirSync(dir)) {
+        const fullPath = join(dir, entry);
+        const stat = statSync(fullPath);
+        if (stat.isDirectory()) {
+          checkDir(fullPath);
+        } else if (/\.(html|xml|json|txt)$/.test(entry)) {
+          const content = readFileSync(fullPath, 'utf8');
+          expect(content.includes(DEAD_ID), `Le fichier ${fullPath} ne doit pas contenir ${DEAD_ID}`).toBe(false);
+        }
+      }
+    }
+
+    checkDir(join(ROOT, 'dist'));
+  });
+
+  test('[PR-D #8] Page Tapis Rouge (FR + EN) : 9 vidéos visibles dans la bibliothèque, contient 1NpXK1wLSl8 et u_HK2iiuUnw, ordre chronologique publie respecté, compteur 01 / 09', async ({ page }) => {
+    const EXPECTED_IDS = [
+      'hmrhpcyGGEk', // 2026-07-16
+      'O2UTFiYzGU0', // 2026-07-21
+      'kKz1pKN44dM', // 2026-07-27
+      'g8pY-zSgljI', // 2026-08-08
+      '3ru2cIaqzeo', // 2026-08-10
+      't7zXkOFUdBs', // 2026-08-13
+      'HeLdEo_awQ0', // 2026-08-16
+      '1NpXK1wLSl8', // 2026-11-18T07:25:33-08:00
+      'u_HK2iiuUnw', // 2026-11-18T07:31:48-08:00
+    ];
+
+    for (const [url, expectedCountText, expectedSr] of [
+      ['/portfolio/tapis-rouge/', '9 vidéos', 'Vidéo 1 sur 9'],
+      ['/en/portfolio/tapis-rouge/', '9 videos', 'Video 1 of 9'],
+    ] as const) {
+      await page.goto(url);
+
+      // Compteur bibliothèque
+      const counter = page.locator('.library-count');
+      await expect(counter).toBeVisible();
+      await expect(counter).toHaveAttribute('data-total', '9');
+      await expect(counter.locator('[data-library-index]')).toHaveText('01');
+      await expect(counter).toContainText('/ 09');
+      await expect(counter.locator('.visually-hidden')).toHaveText(expectedSr);
+
+      // 9 liens vidéo dans la bibliothèque
+      const links = page.locator('.library-track a[href*="youtu"]');
+      await expect(links).toHaveCount(9);
+
+      // Extraction des 9 IDs vidéo dans l'ordre du DOM
+      const renderedIds = await page.evaluate(() => {
+        return Array.from(document.querySelectorAll('.library-track a[href*="youtu"]'))
+          .map((el) => {
+            const href = el.getAttribute('href') || '';
+            const match = href.match(/(?:shorts\/|v=)([a-zA-Z0-9_-]{11})/);
+            return match ? match[1] : '';
+          })
+          .filter(Boolean);
+      });
+
+      expect(renderedIds, `Ordre chronologique strict des 9 vidéos Tapis Rouge sur ${url}`).toEqual(EXPECTED_IDS);
+      expect(renderedIds).toContain('1NpXK1wLSl8');
+      expect(renderedIds).toContain('u_HK2iiuUnw');
+    }
+
+    // Bouton logo Tapis Rouge sur la page Portfolio (FR + EN) affiche bien 9 vidéos
+    for (const [pfUrl, expectedText] of [
+      ['/portfolio/', '9 vidéos'],
+      ['/en/portfolio/', '9 videos'],
+    ] as const) {
+      await page.goto(pfUrl);
+      const trCount = page.locator('.logo-btn[href*="tapis-rouge"] .logo-btn-count');
+      await expect(trCount).toHaveText(expectedText);
+    }
+  });
 });
