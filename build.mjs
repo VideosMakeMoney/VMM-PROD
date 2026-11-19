@@ -46,11 +46,11 @@ const INDEXABLE = ['accueil', 'services', 'portfolio', 'apropos', 'contact'];
 
 // Une page par client qui a au moins une vidéo (portfolio.json). Ajouter un client = modifier seulement ce fichier.
 const clientSlug = (c) => c.slug || slug(c.nom);
-const clientVideos = (c) => portfolio.videos.filter((v) => v.type !== 'coulisses' && v.client === c.nom);
+const clientVideos = (c) => portfolio.videos.filter((v) => v.type !== 'coulisses' && v.client === c.nom).sort((a, b) => (a.publie || a.dateMiseEnLigne || '').localeCompare(b.publie || b.dateMiseEnLigne || ''));
 const CLIENTS = portfolio.clients.filter((c) => clientVideos(c).length);
 // Page de la collection Coulisses (portfolio.json → coulissesCollection)
 const COUL = portfolio.coulissesCollection || { slug: { fr: 'coulisses', en: 'behind-the-scenes' }, clip: '', photo: 'coulisses-01' };
-const coulissesVideos = () => portfolio.videos.filter((v) => v.type === 'coulisses');
+const coulissesVideos = () => portfolio.videos.filter((v) => v.type === 'coulisses').sort((a, b) => (a.publie || a.dateMiseEnLigne || '').localeCompare(b.publie || b.dateMiseEnLigne || ''));
 // Vidéos affichées dans les bibliothèques et comptées (« 01 / N », « N vidéos ») : seulement celles qui ont un ID YouTube.
 // Les autres restent dans portfolio.json et réapparaissent dès qu'un ID est ajouté (Natasha, 2026-11-12).
 const visibleVideos = (list) => list.filter((v) => v.youtubeId);
@@ -187,6 +187,13 @@ const PLACEHOLDER = /\[(?:À CONFIRMER|TO CONFIRM)[^\]]*\]/g;
 const isPlaceholder = (s) => !s || /\[(?:À CONFIRMER|TO CONFIRM)/.test(s);
 const esc = (s = '') =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const unesc = (s = '') =>
+  String(s)
+    .replace(/&amp;/g, '&')
+    .replace(/&#39;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
 // Texte affiché : échappé, et les placeholders sont rendus bien visibles.
 // Les placeholders [À CONFIRMER …] restent dans content/*.json (pour suivi) mais ne sont jamais publiés dans le HTML.
 const t = (s = '') => esc(s).replace(/\s*\[(?:À CONFIRMER|TO CONFIRM)[^\]]*\]/g, '');
@@ -268,7 +275,7 @@ const videoName = (v, lang) => (videoTitle(v, lang) ? videoTitle(v, lang) : `${g
 // Vedette de la catégorie qui a un ID YouTube, sinon videoAccueil, sinon la vedette sans ID (placeholder).
 const categoryVideo = (cat) =>
   portfolio.videos.find((v) => v.vedette && v.categorie === cat.id && v.youtubeId) ||
-  (cat.videoAccueil && (portfolio.videos.find((v) => v.youtubeId === cat.videoAccueil) || { youtubeId: cat.videoAccueil, vertical: true, titre: '', client: '', rang: 1 })) ||
+  (cat.videoAccueil && (portfolio.videos.find((v) => v.youtubeId === cat.videoAccueil) || { youtubeId: cat.videoAccueil, vertical: cat.videoAccueilVertical ?? true, titre: '', client: '', rang: 1 })) ||
   portfolio.videos.find((v) => v.vedette && v.categorie === cat.id) ||
   null;
 const featured = () => portfolio.videos.filter((v) => v.vedette);
@@ -276,7 +283,7 @@ const featured = () => portfolio.videos.filter((v) => v.vedette);
 // Une vidéo n'entre dans le JSON-LD et le sitemap vidéo qu'avec sa vraie date de mise en ligne (dateMiseEnLigne
 // dans portfolio.json, format AAAA-MM-JJ) : Google exige uploadDate. Les autres restent en réserve, prêtes à sortir
 // dès que la date est remplie.
-const videoReady = (v) => Boolean(v?.youtubeId && v.dateMiseEnLigne);
+const videoReady = (v) => Boolean(v?.youtubeId && (v.publie || v.dateMiseEnLigne));
 
 // pageUrl : la page où la vidéo est montrée ; l'@id de la vidéo est cette URL suivie de #video-<ID YouTube>.
 function videoObject(v, lang, pageUrl) {
@@ -292,7 +299,7 @@ function videoObject(v, lang, pageUrl) {
     embedUrl: ytEmbed(v.youtubeId),
     url: ytUrl(v),
     ...(v.fichier ? { contentUrl: abs(v.fichier) } : {}), // fichier vidéo hébergé sur le site, s'il existe un jour
-    ...(v.dateMiseEnLigne ? { uploadDate: v.dateMiseEnLigne } : {}),
+    ...((v.publie || v.dateMiseEnLigne) ? { uploadDate: (v.publie || v.dateMiseEnLigne).slice(0, 10) } : {}),
     ...(v.langue ? { inLanguage: v.langue === 'en' ? 'en-CA' : 'fr-CA' } : {}),
     publisher: { '@id': `${SITE_URL}/#entreprise` },
   };
@@ -637,18 +644,19 @@ function videoTile(v, lang, { shape = 'vertical', caption = true, missing, img =
   const L = langs[lang];
   const own = img && existsSync(join(ROOT, 'static', `${img}.webp`)) ? picture(img, '', { w: 460, h: 642 }) : '';
   const title = videoTitle(v, lang);
-  const cap = () => `<span class="tile-caption">${title ? `<strong>${esc(title)}</strong>` : label ? `<strong>${esc(label)}</strong>` : ''}${v?.client ? `<span class="muted">${esc(v.client)}</span>` : ''}</span>`;
+  const cleanLabel = label ? unesc(label) : '';
+  const cap = () => `<span class="tile-caption">${title ? `<strong>${esc(title)}</strong>` : cleanLabel ? `<strong>${esc(cleanLabel)}</strong>` : ''}${v?.client ? `<span class="muted">${esc(v.client)}</span>` : ''}</span>`;
   if (own && !v?.youtubeId) {
     return `<span class="tile tile-${shape} tile-static"><span class="thumb">${own}</span>${caption ? cap() : ''}</span>`;
   }
   if (!v || !v.youtubeId) {
-    const name = title || '';
+    const name = title || cleanLabel || '';
     return `<button type="button" class="tile tile-${shape}" data-video="" aria-label="${esc(L.lightbox.voir)}${name ? ` : ${esc(name)}` : ''}">
           <span class="thumb"><span class="thumb-empty" aria-hidden="true"></span><span class="play" aria-hidden="true">▶</span></span>
           ${caption ? `<span class="tile-caption">${name ? `<strong>${esc(name)}</strong>` : ''}${v?.client ? `<span class="muted">${esc(v.client)}</span>` : ''}${t(v?.note || missing || L.lightbox.manquante)}</span>` : ''}
         </button>`;
   }
-  const name = videoName(v, lang);
+  const name = cleanLabel || videoName(v, lang);
   return `<a href="${ytUrl(v)}" target="_blank" rel="noopener" class="tile tile-${shape}" data-video="${esc(v.youtubeId)}" data-vertical="${v.vertical ? '1' : '0'}" aria-label="${esc(L.lightbox.voir)} : ${esc(name)}">
           <span class="thumb">${own || `<img src="${ytThumb(v.youtubeId)}" alt="" loading="lazy" decoding="async" width="480" height="360">`}<span class="play" aria-hidden="true">▶</span></span>
           ${
@@ -1039,7 +1047,8 @@ function ytTile(v, lang, { label = '', cls = '', img = '' } = {}) {
   if (!v?.youtubeId) {
     return `<span class="yt-tile is-empty${cls ? ` ${cls}` : ''}"><span class="thumb">${own || '<span class="thumb-empty" aria-hidden="true"></span>'}</span>${label ? `<span class="yt-tile-label">${label}</span>` : ''}</span>`;
   }
-  const name = videoName(v, lang);
+  const cleanLabel = label ? unesc(label) : '';
+  const name = cleanLabel || videoName(v, lang);
   return `<a class="yt-tile${cls ? ` ${cls}` : ''}" href="${ytUrl(v)}" target="_blank" rel="noopener" aria-label="${esc(L.portfolio.biblio.youtube)} : ${esc(name)}">
           <span class="thumb">${own || `<img src="${ytThumb(v.youtubeId)}" alt="" loading="lazy" decoding="async" width="480" height="360">`}<span class="play" aria-hidden="true">▶</span></span>
           ${label ? `<span class="yt-tile-label">${label}</span>` : ''}
