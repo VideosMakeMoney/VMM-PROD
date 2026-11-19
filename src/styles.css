@@ -470,48 +470,35 @@ html:not(.js) .hero-toggle { display: none; }
 /* section.page-contact : le <body> de la page Contact porte aussi la classe page-contact */
 section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
 .page-contact h1 { font-weight: 700; font-size: clamp(2.5rem, 7vw, 4.5rem); }
-.section-faq { padding-block: 0.5rem 0.75rem; }
-.faq { max-width: 52rem; }
-.faq.faq-with-photo { max-width: 100%; display: flex; flex-direction: column; align-items: stretch; gap: 0.5rem; }
-.faq-photo-top {
-  display: block;
+.section-faq {
+  position: relative;
+  min-height: max(100svh, 1400px);
+  width: 100%;
+  overflow: hidden;
+  padding-block: 0;
+  margin: 0;
+}
+.faq {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 520px;
   margin-inline: auto;
-  height: clamp(75px, 11svh, 100px);
-  position: relative;
-  overflow: hidden;
-  border-radius: var(--radius-sm);
+  padding-top: clamp(310px, 23.5%, 335px);
+  padding-inline: 16px;
+  padding-bottom: 720px;
+  box-sizing: border-box;
 }
-.faq-photo-top picture,
-.faq-photo-top img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 8%;
-  -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent 100%);
-  mask-image: linear-gradient(180deg, #000 60%, transparent 100%);
-}
-.faq-photo-top::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(180deg, transparent 50%, var(--bg) 100%);
-}
-.faq-content { width: 100%; max-width: 52rem; margin-inline: auto; }
+.faq-content { width: 100%; margin: 0; }
 .faq-content #faq-title { margin-bottom: 0.4rem; font-size: clamp(1.5rem, 4.5vw, 2.25rem); }
 .faq-photo-wrap {
-  display: block;
+  position: absolute;
+  inset: 0;
   width: 100%;
-  max-width: 520px;
-  margin-inline: auto;
-  height: clamp(100px, 15svh, 150px);
-  position: relative;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
   overflow: hidden;
-  border-radius: var(--radius-sm);
-  margin-top: 0.25rem;
 }
 .faq-photo-wrap picture,
 .faq-photo-wrap img {
@@ -519,18 +506,24 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 75%;
-  -webkit-mask-image: linear-gradient(0deg, #000 65%, transparent 100%);
-  mask-image: linear-gradient(0deg, #000 65%, transparent 100%);
+  object-position: center top;
 }
-.faq-photo-wrap::after {
-  content: '';
+.faq-veil {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background:
-    linear-gradient(0deg, transparent 55%, var(--bg) 100%),
-    linear-gradient(180deg, transparent 80%, var(--bg) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(13, 9, 23, 0.15) 0%,
+    rgba(13, 9, 23, 0.25) 16%,
+    rgba(13, 9, 23, 0.82) 24%,
+    rgba(13, 9, 23, 0.88) 46%,
+    rgba(13, 9, 23, 0.35) 52%,
+    rgba(13, 9, 23, 0.08) 60%,
+    rgba(13, 9, 23, 0.12) 82%,
+    rgba(13, 9, 23, 0.75) 94%,
+    var(--bg) 100%
+  );
 }
 @media (min-width: 900px) {
   .section-faq {
@@ -539,45 +532,49 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
     box-sizing: border-box;
     display: flex;
     align-items: center;
-    padding-block: clamp(1rem, 2vh, 1.75rem);
+    padding-block: 0;
     overflow: hidden;
   }
-  .faq.faq-with-photo {
-    display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
-    gap: clamp(2.5rem, 5vw, 5rem);
-    align-items: center;
+  .faq {
+    position: relative;
+    z-index: 1;
     max-width: var(--max-w);
     width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    padding-top: 0;
+    padding-bottom: 0;
   }
-  .faq-photo-top { display: none !important; }
-  .faq-content { grid-column: 1; grid-row: 1; max-width: none; margin: 0; }
+  .faq-content {
+    max-width: min(580px, 54%);
+    margin: 0;
+  }
   .faq-photo-wrap {
-    grid-column: 2;
-    grid-row: 1;
-    height: auto;
-    max-width: 100%;
-    width: fit-content;
-    margin-left: auto;
-    margin-top: 0;
-    display: block;
-    position: relative;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    height: 100%;
+    width: min(44vw, calc((100svh - var(--header-h)) * 941 / 1672));
+    z-index: 0;
     overflow: hidden;
-    border-radius: var(--radius-md);
   }
-  .faq-photo-wrap picture { display: block; }
+  .faq-photo-wrap picture {
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
   .faq-photo-wrap img {
     display: block;
     width: 100%;
-    max-width: min(380px, calc((100svh - var(--header-h) - 3.5rem) * 941 / 1672));
-    height: auto;
-    aspect-ratio: 941 / 1672;
+    height: 100%;
     object-fit: cover;
     object-position: center center;
-    border-radius: var(--radius-md);
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 18%), linear-gradient(180deg, transparent 0%, #000 12%);
+    border-radius: 1rem 0 0 1rem;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 20%), linear-gradient(180deg, transparent 0%, #000 12%);
     -webkit-mask-composite: source-in;
-    mask-image: linear-gradient(90deg, transparent 0%, #000 18%), linear-gradient(180deg, transparent 0%, #000 12%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 20%), linear-gradient(180deg, transparent 0%, #000 12%);
     mask-composite: intersect;
   }
   .faq-photo-wrap::after {
@@ -585,10 +582,13 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
     position: absolute;
     inset: 0;
     pointer-events: none;
-    border-radius: var(--radius-md);
+    border-radius: 1rem 0 0 1rem;
     background:
-      linear-gradient(90deg, var(--bg) 0%, transparent 20%),
+      linear-gradient(90deg, var(--bg) 0%, transparent 22%),
       linear-gradient(180deg, var(--bg) 0%, transparent 14%);
+  }
+  .faq-veil {
+    display: none;
   }
 }
 .faq details { border-top: 1px solid var(--border); }

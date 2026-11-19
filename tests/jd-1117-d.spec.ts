@@ -5,8 +5,8 @@ import { join } from 'path';
 const ROOT = process.cwd();
 
 test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)', () => {
-  // 1. Présence de la photo dans dist/ pour /contact/ et /en/contact/
-  test('[PR-D #1] Photo présente dans dist/ pour /contact/ et /en/contact/ (picture, alt non vide, webp + jpg)', async () => {
+  // 1. Présence de la photo dans dist/ pour /contact/ et /en/contact/ (1 seule balise picture, plus de faq-photo-top)
+  test('[PR-D #1] Photo présente dans dist/ pour /contact/ et /en/contact/ (1 seule balise picture, alt non vide, webp + jpg, plus de faq-photo-top)', async () => {
     for (const [lang, pagePath, expectedAlt] of [
       ['fr', join(ROOT, 'dist', 'contact', 'index.html'), 'JD au studio de VMM Productions'],
       ['en', join(ROOT, 'dist', 'en', 'contact', 'index.html'), 'JD in the VMM Productions studio'],
@@ -17,20 +17,29 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
       // Balise picture présente dans .faq-photo-wrap
       expect(html).toMatch(/<div class="faq-photo-wrap"[^>]*><picture>/);
 
-      // Balise picture présente dans .faq-photo-top pour mobile
-      expect(html).toMatch(/<div class="faq-photo-top"[^>]*><picture>/);
+      // Plus de .faq-photo-top : une seule balise picture dans toute la section FAQ
+      expect(html).not.toContain('faq-photo-top');
+      const faqSectionMatch = html.match(/<section[^>]*section-faq[\s\S]*?<\/section>/);
+      expect(faqSectionMatch).not.toBeNull();
+      const pictureCount = (faqSectionMatch![0].match(/<picture>/g) || []).length;
+      expect(pictureCount, 'Il doit y avoir exactement une seule balise picture dans la section FAQ').toBe(1);
 
-      // Sources webp et jpg présentes
+      // Voile sombre présent pour le contraste
+      expect(html).toContain('class="faq-veil"');
+
+      // Sources webp et jpg présentes (470, 720, 941)
       expect(html).toContain('faq-jd.webp');
       expect(html).toContain('faq-jd.jpg');
+      expect(html).toContain('faq-jd-720.webp');
+      expect(html).toContain('faq-jd-470.webp');
 
       // Alt non vide et exact
       expect(html).toContain(`alt="${expectedAlt}"`);
     }
   });
 
-  // 2. Desktop 16:9 (1920x1080 et 1366x768) : disposition 2 colonnes
-  test('[PR-D #2] Desktop 16:9 (1920x1080 et 1366x768) : photo à droite, accordéons à gauche, pas de chevauchement, ratio préservé', async ({ page }) => {
+  // 2. Desktop 16:9 (1920x1080, 1536x864, 1440x900, 1366x768, 1280x720) : disposition 2 colonnes, pleine hauteur
+  test('[PR-D #2] Desktop 16:9 : photo à droite pleine hauteur (>= 98 %), accordéons à gauche, pas de chevauchement horizontal', async ({ page }) => {
     const viewport = page.viewportSize();
     test.skip(!viewport || viewport.width < 900, 'Test desktop seulement (>= 900px)');
 
@@ -40,8 +49,9 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
       const faqSection = page.locator('section[aria-labelledby="faq-title"]');
       await expect(faqSection).toBeVisible();
 
+      // Pas de faq-photo-top dans le DOM
       const topPhoto = faqSection.locator('.faq-photo-top');
-      await expect(topPhoto).toBeHidden(); // display: none sur desktop
+      expect(await topPhoto.count()).toBe(0);
 
       const content = faqSection.locator('.faq-content');
       await expect(content).toBeVisible();
@@ -64,20 +74,18 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
       // Accordéons à gauche (contentBox.x + contentBox.width <= photoBox.x)
       expect(contentBox.x + contentBox.width, 'Les accordéons doivent être à gauche de la photo sans chevauchement horizontal').toBeLessThanOrEqual(photoBox.x + 2);
 
-      // Aucun chevauchement avec le visage de JD ou la photo
+      // Aucun chevauchement avec la photo
       const overlapX = Math.max(0, Math.min(contentBox.x + contentBox.width, photoBox.x + photoBox.width) - Math.max(contentBox.x, photoBox.x));
-      expect(overlapX, 'Aucun chevauchement entre les accordéons et la photo de JD').toBe(0);
+      expect(overlapX, 'Aucun chevauchement horizontal entre les accordéons et la photo de JD').toBe(0);
 
-      // Ratio d'aspect préservé à ± 2 % (941 / 1672 = 0.562799...)
-      const renderedRatio = photoBox.width / photoBox.height;
-      const expectedRatio = 941 / 1672;
-      const diffRatio = Math.abs(renderedRatio - expectedRatio) / expectedRatio;
-      expect(diffRatio, `Le ratio rendu (${renderedRatio}) doit être à ± 2 % du ratio original (${expectedRatio})`).toBeLessThan(0.02);
+      // Pleine hauteur de la section : photoBox.height >= 98 % de sectionBox.height
+      const heightRatio = photoBox.height / sectionBox.height;
+      expect(heightRatio, `La photo (${photoBox.height}px) doit occuper au moins 98 % de la section (${sectionBox.height}px)`).toBeGreaterThanOrEqual(0.98);
     }
   });
 
-  // 3. Mobile 9:16 (390x844, 390x664, 360x740) : ordre vertical enseigne -> titre -> accordéons -> JD, pas de débordement horizontal
-  test('[PR-D #3] Mobile 9:16 : ordre vertical enseigne en haut -> titre -> accordéons -> JD en bas, pas de défilement horizontal', async ({ page }) => {
+  // 3. Mobile 9:16 (390x844, 390x664, 360x740, 430x932) : 1 seule image en fond, enseigne en haut, JD en bas, pas de chevauchement, pas de vide noir
+  test('[PR-D #3] Mobile 9:16 : 1 seule image en fond pleine largeur, enseigne en haut, JD en bas au complet, visage non chevauché, pas de vide noir', async ({ page }) => {
     const viewport = page.viewportSize();
     test.skip(!viewport || viewport.width >= 900, 'Test mobile seulement (< 900px)');
 
@@ -87,38 +95,61 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
       const faqSection = page.locator('section[aria-labelledby="faq-title"]');
       await expect(faqSection).toBeVisible();
 
-      const enseigne = faqSection.locator('.faq-photo-top');
-      await expect(enseigne).toBeVisible();
+      // Une seule photo dans la section FAQ (plus de .faq-photo-top)
+      expect(await faqSection.locator('.faq-photo-top').count()).toBe(0);
+      expect(await faqSection.locator('.faq-photo-wrap').count()).toBe(1);
 
       const titre = faqSection.locator('#faq-title');
       await expect(titre).toBeVisible();
 
-      const accordeons = faqSection.locator('.faq-content details').first();
-      await expect(accordeons).toBeVisible();
+      const accordeons = faqSection.locator('.faq-content details');
+      expect(await accordeons.count()).toBe(4);
 
-      const jd = faqSection.locator('.faq-photo-wrap');
-      await expect(jd).toBeVisible();
+      const photoImg = faqSection.locator('.faq-photo-wrap img');
+      await expect(photoImg).toBeVisible();
 
-      const enseigneBox = (await enseigne.boundingBox())!;
+      const secBox = (await faqSection.boundingBox())!;
       const titreBox = (await titre.boundingBox())!;
-      const accordeonsBox = (await accordeons.boundingBox())!;
-      const jdBox = (await jd.boundingBox())!;
+      const lastDetailsBox = (await accordeons.last().boundingBox())!;
 
-      // Ordre vertical : rect(enseigne).bottom <= rect(titre).top <= rect(accordéons).top <= rect(JD).top
-      expect(enseigneBox.y + enseigneBox.height, `L'enseigne VMM (${enseigneBox.y + enseigneBox.height}) doit précéder le titre FAQ (${titreBox.y})`).toBeLessThanOrEqual(titreBox.y + 2);
-      expect(titreBox.y + titreBox.height, `Le titre FAQ (${titreBox.y + titreBox.height}) doit précéder les accordéons (${accordeonsBox.y})`).toBeLessThanOrEqual(accordeonsBox.y + 2);
-      expect(accordeonsBox.y, `Les accordéons (${accordeonsBox.y}) doivent précéder la photo JD (${jdBox.y})`).toBeLessThanOrEqual(jdBox.y + 2);
+      // Calcul des coordonnées rendues de l'image (source 941x1672 avec object-fit: cover, object-position: center top)
+      // Proportions relatives dans l'image source (Y = 1672px) :
+      // - Enseigne bas = 380px (22.73%)
+      // - Casquette haut = 800px (47.85%)
+      // - Visage haut = 880px (52.63%), bas = 1140px (68.18%)
+      // - Pupitre bas = 1500px (89.71%)
+      const signBottom = secBox.y + (380 / 1672) * secBox.height;
+      const capTop = secBox.y + (800 / 1672) * secBox.height;
+      const faceTop = secBox.y + (880 / 1672) * secBox.height;
+      const faceBottom = secBox.y + (1140 / 1672) * secBox.height;
+      const deskBottom = secBox.y + (1500 / 1672) * secBox.height;
 
-      // Pas de défilement horizontal
-      const hasHorizontalOverflow = await page.evaluate(() => {
-        return document.documentElement.scrollWidth > document.documentElement.clientWidth;
-      });
+      // 1. L'enseigne VMM est en haut, le titre commence sous l'enseigne
+      expect(titreBox.y, `Le titre FAQ (${titreBox.y}) doit commencer sous l'enseigne VMM (${signBottom})`).toBeGreaterThanOrEqual(signBottom - 15);
+
+      // 2. Le visage entier de JD et son pupitre sont visibles dans la section
+      expect(faceTop, 'Le haut du visage de JD doit être dans la section').toBeGreaterThanOrEqual(secBox.y);
+      expect(faceBottom, 'Le bas du visage de JD doit être dans la section').toBeLessThanOrEqual(secBox.y + secBox.height);
+      expect(deskBottom, 'Le pupitre de JD doit être dans la section').toBeLessThanOrEqual(secBox.y + secBox.height + 5);
+
+      // 3. Les accordéons fermés ne chevauchent pas le visage de JD
+      const closedContentBottom = lastDetailsBox.y + lastDetailsBox.height;
+      expect(closedContentBottom, `Le contenu fermé (${closedContentBottom}) ne doit pas chevaucher le visage de JD (${faceTop})`).toBeLessThanOrEqual(faceTop);
+
+      // 4. Pas de vide noir sous la section : écart avec le footer <= 24px
+      const footer = page.locator('footer');
+      const footerBox = (await footer.boundingBox())!;
+      const gapToFooter = footerBox.y - (secBox.y + secBox.height);
+      expect(gapToFooter, `L'écart entre la section FAQ et le footer (${gapToFooter}px) doit être <= 24px`).toBeLessThanOrEqual(24);
+
+      // 5. Pas de défilement horizontal
+      const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
       expect(hasHorizontalOverflow, 'La page ne doit pas avoir de défilement horizontal sur mobile').toBe(false);
     }
   });
 
-  // 4. Accordéons ouverts : réponses lisibles (contraste >= 4.5:1), pas de débordement ni de chevauchement sur JD
-  test('[PR-D #4] Accordéons ouverts : réponse lisible (contraste >= 4.5:1), pas de chevauchement sur JD, défilement fluide', async ({ page }) => {
+  // 4. Accordéons ouverts : réponses lisibles (contraste >= 4.5:1), pas de chevauchement sur JD
+  test('[PR-D #4] Accordéons ouverts : réponse lisible (contraste >= 4.5:1), pas de chevauchement sur le visage de JD, défilement fluide', async ({ page }) => {
     for (const url of ['/contact/', '/en/contact/']) {
       await page.goto(url);
 
@@ -127,7 +158,9 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
       const count = await detailsList.count();
       expect(count).toBe(4);
 
-      const jd = faqSection.locator('.faq-photo-wrap');
+      const viewport = page.viewportSize();
+      const isMobile = viewport && viewport.width < 900;
+      const photoImg = faqSection.locator('.faq-photo-wrap img');
 
       for (let i = 0; i < count; i++) {
         const item = detailsList.nth(i);
@@ -148,25 +181,24 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
             return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
           }
           const textRgb = window.getComputedStyle(el).color.match(/\d+/g)!.map(Number);
-          // Fond sombre VMM #0d0917 -> rgb(13, 9, 23)
           const l1 = lum(textRgb[0], textRgb[1], textRgb[2]);
-          const l2 = lum(13, 9, 23);
+          const l2 = lum(13, 9, 23); // #0d0917
           return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
         });
         expect(contrastRatio, 'Le contraste de la réponse de FAQ doit être >= 4.5:1').toBeGreaterThanOrEqual(4.5);
 
-        // Vérification d'absence de chevauchement avec la photo de JD
-        const viewport = page.viewportSize();
-        if (viewport && viewport.width >= 900) {
-          // Desktop : pas de chevauchement horizontal
+        // Vérification d'absence de chevauchement avec le visage de JD
+        if (isMobile) {
+          // Mobile : l'élément ouvert ne doit jamais descendre sur le visage de JD
+          const secBox = (await faqSection.boundingBox())!;
+          const imgFaceTop = secBox.y + (880 / 1672) * secBox.height;
           const itemBox = (await item.boundingBox())!;
-          const jdBox = (await jd.boundingBox())!;
-          expect(itemBox.x + itemBox.width, 'L accordéon ouvert ne doit pas chevaucher la photo sur desktop').toBeLessThanOrEqual(jdBox.x + 2);
+          expect(itemBox.y + itemBox.height, `L accordéon ouvert (${itemBox.y + itemBox.height}) ne doit pas chevaucher le visage de JD (${imgFaceTop})`).toBeLessThanOrEqual(imgFaceTop);
         } else {
-          // Mobile : accordéon ouvert reste au-dessus de la photo de JD
+          // Desktop : pas de chevauchement horizontal
+          const photoBox = (await photoImg.boundingBox())!;
           const itemBox = (await item.boundingBox())!;
-          const jdBox = (await jd.boundingBox())!;
-          expect(itemBox.y + itemBox.height, 'L accordéon ouvert ne doit pas chevaucher la photo sur mobile').toBeLessThanOrEqual(jdBox.y + 2);
+          expect(itemBox.x + itemBox.width, 'L accordéon ouvert ne doit pas chevaucher la photo sur desktop').toBeLessThanOrEqual(photoBox.x + 2);
         }
 
         // Fermer l'accordéon pour le test suivant
@@ -176,23 +208,27 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
   });
 
   // 5. Parité FR / EN
-  test('[PR-D #5] Parité FR / EN : structure, nombre d accordéons (4) et attributs identiques', async ({ page }) => {
+  test('[PR-D #5] Parité FR / EN : structure, nombre d accordéons (4) et 1 seule image fond sans .faq-photo-top', async ({ page }) => {
     await page.goto('/contact/');
     const frCount = await page.locator('section[aria-labelledby="faq-title"] .faq-content details').count();
     const frHasTop = await page.locator('.faq-photo-top').count();
     const frHasWrap = await page.locator('.faq-photo-wrap').count();
+    const frHasVeil = await page.locator('.faq-veil').count();
 
     await page.goto('/en/contact/');
     const enCount = await page.locator('section[aria-labelledby="faq-title"] .faq-content details').count();
     const enHasTop = await page.locator('.faq-photo-top').count();
     const enHasWrap = await page.locator('.faq-photo-wrap').count();
+    const enHasVeil = await page.locator('.faq-veil').count();
 
     expect(frCount).toBe(4);
     expect(enCount).toBe(4);
-    expect(frHasTop).toBe(1);
-    expect(enHasTop).toBe(1);
+    expect(frHasTop).toBe(0);
+    expect(enHasTop).toBe(0);
     expect(frHasWrap).toBe(1);
     expect(enHasWrap).toBe(1);
+    expect(frHasVeil).toBe(1);
+    expect(enHasVeil).toBe(1);
   });
 
   // =========================================================================
@@ -236,7 +272,8 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
     }
   });
 
-  test('[PR-D #7] Vidéo morte B7dWhLnxw08 : totalement absente de dist/ (HTML, XML, JSON-LD)', async () => {
+  // 7. Garde-fou de régression (déjà passant sur commit initial ff18994) : absence totale de la vidéo morte B7dWhLnxw08
+  test('[PR-D #7] Vidéo morte B7dWhLnxw08 : totalement absente de dist/ (HTML, XML, JSON-LD) [garde-fou]', async () => {
     const DEAD_ID = 'B7dWhLnxw08';
     const { readdirSync, statSync } = await import('fs');
 
