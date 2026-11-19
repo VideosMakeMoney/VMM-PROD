@@ -1466,7 +1466,7 @@ function contactPage(lang, { faqPhoto } = {}) {
   ${bgVideo('contact-logo')}
   ${contactBlock(lang, { tag: 'h1', id: 'contact-page-title' })}
 </section>
-<section class="section section-tight section-faq${hasFaqPhoto ? ' faq-with-photo' : ''}" aria-labelledby="faq-title">
+<section class="section section-tight section-faq section-faq--photo${hasFaqPhoto ? ' faq-with-photo' : ''}" aria-labelledby="faq-title">
   ${hasFaqPhoto ? `${faqPhotoWrap}\n  ` : ''}<div class="container faq${hasFaqPhoto ? ' faq-with-photo' : ''}">
     <div class="faq-content">${faqInner}</div>
   </div>

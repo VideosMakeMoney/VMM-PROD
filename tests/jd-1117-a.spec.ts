@@ -444,19 +444,16 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR A : Contact', () => {
         expect(diffRatio, `Le ratio rendu (${renderedRatio}) doit être à ±1 % de 941/1672 (${expectedRatio})`).toBeLessThan(0.01);
       }
 
-      // Vérification de la hauteur de section (desktop tient dans l'écran <= hauteur, mobile >= 100svh selon maquettes JD)
+      // Vérification que la section tient dans un écran (spécifiquement requis pour 1366×768 et 390×844)
       const sectionBox = await faqSection.boundingBox();
       expect(sectionBox).not.toBeNull();
       if (sectionBox && viewport) {
-        if (viewport.width >= 900) {
-          if (viewport.width === 1366 && viewport.height === 768) {
-            expect(sectionBox.height, `La section FAQ (${sectionBox.height}px) doit tenir dans la hauteur desktop 1366x768 (768px)`).toBeLessThanOrEqual(768);
-          } else if (viewport.height >= 720) {
-            expect(sectionBox.height, `La section FAQ (${sectionBox.height}px) doit tenir dans la hauteur d'écran (${viewport.height}px)`).toBeLessThanOrEqual(viewport.height + 5);
-          }
-        } else {
-          // Mobile (< 900px) : au moins la hauteur d'écran (min-height 100svh selon maquettes JD)
-          expect(sectionBox.height, `La section FAQ (${sectionBox.height}px) doit être au moins de la hauteur d'écran mobile (${viewport.height}px)`).toBeGreaterThanOrEqual(viewport.height);
+        if (viewport.width === 1366 && viewport.height === 768) {
+          expect(sectionBox.height, `La section FAQ (${sectionBox.height}px) doit tenir dans la hauteur desktop 1366x768 (768px)`).toBeLessThanOrEqual(768);
+        } else if (viewport.width === 390 && viewport.height === 844) {
+          expect(sectionBox.height, `La section FAQ (${sectionBox.height}px) doit tenir dans la hauteur mobile 390x844 (844px)`).toBeLessThanOrEqual(844);
+        } else if (viewport.height >= 720) {
+          expect(sectionBox.height, `La section FAQ (${sectionBox.height}px) doit tenir dans la hauteur d'écran (${viewport.height}px)`).toBeLessThanOrEqual(viewport.height + 5);
         }
       }
 

@@ -25,7 +25,7 @@ Sur 495 vérifications de hauteur (55 sections × 9 résolutions), **481 section
 | `apropos-fr` | Section 1 | `#jd` | 712 px | 704 px | +8 px | Portrait JD + bio |
 | `apropos-fr` | Section 2 | `#renaud` | 712 px | 704 px | +8 px | Portrait Renaud + bio |
 
-### C. Mobile — 16 sections
+### C. Mobile — 8 sections
 *Note : Sur mobile, les sections multi-cartes de l'accueil, de services et du portfolio tiennent désormais toutes dans un écran grâce aux ajustements des PR #24 et #25.*
 Seules les sections suivantes débordent :
 
@@ -39,14 +39,6 @@ Seules les sections suivantes débordent :
 | **360×740** | `contact-en` | Section 0 | `.section-contact` | 1 448 px | 677 px | +771 px | Coordonnées + formulaire sur 1 balise `<section>` |
 | **430×932** | `contact-fr` | Section 0 | `.section-contact` | 1 832 px | 869 px | +963 px | Coordonnées + formulaire sur 1 balise `<section>` |
 | **430×932** | `contact-en` | Section 0 | `.section-contact` | 1 832 px | 869 px | +963 px | Coordonnées + formulaire sur 1 balise `<section>` |
-| **390×844** | `contact-fr` | Section 1 | `.section-faq` | 1 400 px | 781 px | +619 px | Photo FAQ 9:16 complète (enseigne en haut, accordéons, JD au complet en bas, PR D) |
-| **390×844** | `contact-en` | Section 1 | `.section-faq` | 1 400 px | 781 px | +619 px | Idem version anglaise |
-| **390×664** | `contact-fr` | Section 1 | `.section-faq` | 1 400 px | 601 px | +799 px | Photo FAQ 9:16 complète (PR D) |
-| **390×664** | `contact-en` | Section 1 | `.section-faq` | 1 400 px | 601 px | +799 px | Idem version anglaise |
-| **360×740** | `contact-fr` | Section 1 | `.section-faq` | 1 400 px | 677 px | +723 px | Photo FAQ 9:16 complète (PR D) |
-| **360×740** | `contact-en` | Section 1 | `.section-faq` | 1 400 px | 677 px | +723 px | Idem version anglaise |
-| **430×932** | `contact-fr` | Section 1 | `.section-faq` | 1 400 px | 869 px | +531 px | Photo FAQ 9:16 complète (PR D) |
-| **430×932** | `contact-en` | Section 1 | `.section-faq` | 1 400 px | 869 px | +531 px | Idem version anglaise |
 
 ---
 

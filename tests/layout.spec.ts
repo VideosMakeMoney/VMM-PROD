@@ -26,7 +26,7 @@ const KNOWN_HEIGHT_ISSUES = new Set([
   // Desktop 1366x768
   'apropos-fr|1|desktop-1366x768',
   'apropos-fr|2|desktop-1366x768',
-  // Mobile Contact Héros (Section 0)
+  // Mobile
   'contact-fr|0|mobile-iphone-390x844',
   'contact-en|0|mobile-iphone-390x844',
   'contact-fr|0|mobile-iphone-390x664',
@@ -35,15 +35,6 @@ const KNOWN_HEIGHT_ISSUES = new Set([
   'contact-en|0|mobile-android-360x740',
   'contact-fr|0|mobile-iphone-430x932',
   'contact-en|0|mobile-iphone-430x932',
-  // Mobile Contact FAQ (Section 1) : photo 9:16 complète avec accordéons (PR D maquettes JD)
-  'contact-fr|1|mobile-iphone-390x844',
-  'contact-en|1|mobile-iphone-390x844',
-  'contact-fr|1|mobile-iphone-390x664',
-  'contact-en|1|mobile-iphone-390x664',
-  'contact-fr|1|mobile-android-360x740',
-  'contact-en|1|mobile-android-360x740',
-  'contact-fr|1|mobile-iphone-430x932',
-  'contact-en|1|mobile-iphone-430x932',
 ]);
 
 // Liste exacte des 8 boutons masqués hors du premier écran connus sur main (cf. tests/known-issues.md section 4)

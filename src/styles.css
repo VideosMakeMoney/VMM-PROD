@@ -470,28 +470,67 @@ html:not(.js) .hero-toggle { display: none; }
 /* section.page-contact : le <body> de la page Contact porte aussi la classe page-contact */
 section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
 .page-contact h1 { font-weight: 700; font-size: clamp(2.5rem, 7vw, 4.5rem); }
-.section-faq {
+.section-faq { padding-block: 0.5rem 0.75rem; }
+.faq { max-width: 52rem; }
+.faq details { border-top: 1px solid var(--border); }
+.faq summary { min-height: 48px; display: flex; align-items: center; cursor: pointer; font-weight: 600; padding-block: 10px; }
+.faq details p { color: var(--text-2); }
+
+/* FAQ avec photo Contact selon maquettes JD (PR D) */
+.section-faq--photo {
   position: relative;
-  min-height: max(100svh, 1400px);
+  min-height: calc(100svh - var(--header-h));
   width: 100%;
   overflow: hidden;
   padding-block: 0;
   margin: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
-.faq {
+.section-faq--photo:has(details[open]) {
+  min-height: max(calc(100svh - var(--header-h)), 880px);
+}
+.section-faq--photo .faq {
   position: relative;
   z-index: 1;
   width: 100%;
   max-width: 520px;
   margin-inline: auto;
-  padding-top: clamp(310px, 23.5%, 335px);
+  padding-top: clamp(0.35rem, 1svh, 0.6rem);
   padding-inline: 16px;
-  padding-bottom: 720px;
+  padding-bottom: 0;
   box-sizing: border-box;
 }
-.faq-content { width: 100%; margin: 0; }
-.faq-content #faq-title { margin-bottom: 0.4rem; font-size: clamp(1.5rem, 4.5vw, 2.25rem); }
-.faq-photo-wrap {
+.section-faq--photo .faq-content {
+  width: 100%;
+  margin: 0;
+}
+.section-faq--photo #faq-title {
+  margin: 0 0 clamp(0.2rem, 0.5svh, 0.35rem) 0;
+  font-size: clamp(1.1rem, 3.8vw, 1.35rem);
+  line-height: 1.2;
+}
+.section-faq--photo details {
+  border-top: 1px solid var(--border);
+}
+.section-faq--photo summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: clamp(0.875rem, 3.2vw, 0.95rem);
+  line-height: 1.25;
+  padding-block: 4px;
+}
+.section-faq--photo details p {
+  color: var(--text-2);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin: 0.25rem 0 0.5rem 0;
+}
+.section-faq--photo .faq-photo-wrap {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -500,33 +539,32 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
   pointer-events: none;
   overflow: hidden;
 }
-.faq-photo-wrap picture,
-.faq-photo-wrap img {
+.section-faq--photo .faq-photo-wrap picture,
+.section-faq--photo .faq-photo-wrap img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center top;
+  object-position: center bottom;
 }
-.faq-veil {
+.section-faq--photo .faq-veil {
   position: absolute;
   inset: 0;
   pointer-events: none;
   background: linear-gradient(
     180deg,
-    rgba(13, 9, 23, 0.15) 0%,
-    rgba(13, 9, 23, 0.25) 16%,
-    rgba(13, 9, 23, 0.82) 24%,
-    rgba(13, 9, 23, 0.88) 46%,
-    rgba(13, 9, 23, 0.35) 52%,
-    rgba(13, 9, 23, 0.08) 60%,
-    rgba(13, 9, 23, 0.12) 82%,
-    rgba(13, 9, 23, 0.75) 94%,
+    rgba(13, 9, 23, 0.78) 0%,
+    rgba(13, 9, 23, 0.88) 32%,
+    rgba(13, 9, 23, 0.82) 42%,
+    rgba(13, 9, 23, 0.15) 50%,
+    rgba(13, 9, 23, 0.05) 75%,
+    rgba(13, 9, 23, 0.6) 96%,
     var(--bg) 100%
   );
 }
 @media (min-width: 900px) {
-  .section-faq {
+  .section-faq.section-faq--photo,
+  .section-faq--photo {
     min-height: calc(100svh - var(--header-h));
     max-height: calc(100svh - var(--header-h));
     box-sizing: border-box;
@@ -535,7 +573,7 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
     padding-block: 0;
     overflow: hidden;
   }
-  .faq {
+  .section-faq--photo .faq {
     position: relative;
     z-index: 1;
     max-width: var(--max-w);
@@ -545,11 +583,24 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
     padding-top: 0;
     padding-bottom: 0;
   }
-  .faq-content {
+  .section-faq--photo .faq-content {
     max-width: min(580px, 54%);
     margin: 0;
   }
-  .faq-photo-wrap {
+  .section-faq--photo #faq-title {
+    margin-bottom: 0.4rem;
+    font-size: clamp(1.5rem, 4.5vw, 2.25rem);
+    line-height: var(--lh-tight);
+  }
+  .section-faq--photo summary {
+    min-height: 48px;
+    font-size: 1rem;
+    padding-block: 10px;
+  }
+  .section-faq--photo details p {
+    font-size: 1rem;
+  }
+  .section-faq--photo .faq-photo-wrap {
     position: absolute;
     top: 0;
     right: 0;
@@ -560,12 +611,12 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
     z-index: 0;
     overflow: hidden;
   }
-  .faq-photo-wrap picture {
+  .section-faq--photo .faq-photo-wrap picture {
     display: block;
     height: 100%;
     width: 100%;
   }
-  .faq-photo-wrap img {
+  .section-faq--photo .faq-photo-wrap img {
     display: block;
     width: 100%;
     height: 100%;
@@ -577,7 +628,7 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
     mask-image: linear-gradient(90deg, transparent 0%, #000 20%), linear-gradient(180deg, transparent 0%, #000 12%);
     mask-composite: intersect;
   }
-  .faq-photo-wrap::after {
+  .section-faq--photo .faq-photo-wrap::after {
     content: '';
     position: absolute;
     inset: 0;
@@ -587,13 +638,10 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
       linear-gradient(90deg, var(--bg) 0%, transparent 22%),
       linear-gradient(180deg, var(--bg) 0%, transparent 14%);
   }
-  .faq-veil {
+  .section-faq--photo .faq-veil {
     display: none;
   }
 }
-.faq details { border-top: 1px solid var(--border); }
-.faq summary { min-height: 48px; display: flex; align-items: center; cursor: pointer; font-weight: 600; padding-block: 10px; }
-.faq details p { color: var(--text-2); }
 
 .page-simple { min-height: 60vh; }
 .page-simple h1 { font-weight: 700; font-size: clamp(2.5rem, 7vw, 4.5rem); }

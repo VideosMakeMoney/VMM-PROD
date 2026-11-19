@@ -112,29 +112,28 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
       const titreBox = (await titre.boundingBox())!;
       const lastDetailsBox = (await accordeons.last().boundingBox())!;
 
-      // Calcul des coordonnées rendues de l'image (source 941x1672 avec object-fit: cover, object-position: center top)
-      // Proportions relatives dans l'image source (Y = 1672px) :
-      // - Enseigne bas = 380px (22.73%)
+      // Calcul des coordonnées rendues de l'image (source 941x1672 avec object-fit: cover, object-position: center bottom)
+      // Proportions relatives dans l'image source (largeur 941, hauteur 1672px) :
       // - Casquette haut = 800px (47.85%)
       // - Visage haut = 880px (52.63%), bas = 1140px (68.18%)
       // - Pupitre bas = 1500px (89.71%)
-      const signBottom = secBox.y + (380 / 1672) * secBox.height;
-      const capTop = secBox.y + (800 / 1672) * secBox.height;
-      const faceTop = secBox.y + (880 / 1672) * secBox.height;
-      const faceBottom = secBox.y + (1140 / 1672) * secBox.height;
-      const deskBottom = secBox.y + (1500 / 1672) * secBox.height;
+      const scale = Math.max(secBox.width / 941, secBox.height / 1672);
+      const capTop = secBox.y + secBox.height - (1672 - 800) * scale;
+      const faceTop = secBox.y + secBox.height - (1672 - 880) * scale;
+      const faceBottom = secBox.y + secBox.height - (1672 - 1140) * scale;
+      const deskBottom = secBox.y + secBox.height - (1672 - 1500) * scale;
 
-      // 1. L'enseigne VMM est en haut, le titre commence sous l'enseigne
-      expect(titreBox.y, `Le titre FAQ (${titreBox.y}) doit commencer sous l'enseigne VMM (${signBottom})`).toBeGreaterThanOrEqual(signBottom - 15);
+      // 1. Hauteur de la section FAQ fermée = exactement un écran utile (<= viewport.height)
+      expect(secBox.height, `La section FAQ fermée (${secBox.height}px) doit tenir dans l'écran mobile (${viewport.height}px)`).toBeLessThanOrEqual(viewport.height);
 
       // 2. Le visage entier de JD et son pupitre sont visibles dans la section
       expect(faceTop, 'Le haut du visage de JD doit être dans la section').toBeGreaterThanOrEqual(secBox.y);
       expect(faceBottom, 'Le bas du visage de JD doit être dans la section').toBeLessThanOrEqual(secBox.y + secBox.height);
       expect(deskBottom, 'Le pupitre de JD doit être dans la section').toBeLessThanOrEqual(secBox.y + secBox.height + 5);
 
-      // 3. Les accordéons fermés ne chevauchent pas le visage de JD
+      // 3. Les accordéons fermés ne chevauchent pas la casquette ou le visage de JD
       const closedContentBottom = lastDetailsBox.y + lastDetailsBox.height;
-      expect(closedContentBottom, `Le contenu fermé (${closedContentBottom}) ne doit pas chevaucher le visage de JD (${faceTop})`).toBeLessThanOrEqual(faceTop);
+      expect(closedContentBottom, `Le contenu fermé (${closedContentBottom}) ne doit pas chevaucher la casquette de JD (${capTop})`).toBeLessThanOrEqual(capTop + 5);
 
       // 4. Pas de vide noir sous la section : écart avec le footer <= 24px
       const footer = page.locator('footer');
@@ -145,6 +144,16 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
       // 5. Pas de défilement horizontal
       const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
       expect(hasHorizontalOverflow, 'La page ne doit pas avoir de défilement horizontal sur mobile').toBe(false);
+
+      // 6. Typographie et cibles tactiles : texte >= 14px, cibles >= 44px
+      const summaries = faqSection.locator('.faq-content summary');
+      const sumCount = await summaries.count();
+      for (let s = 0; s < sumCount; s++) {
+        const sumBox = (await summaries.nth(s).boundingBox())!;
+        expect(sumBox.height, `La cible tactile de chaque question doit être >= 44px (reçu ${sumBox.height}px)`).toBeGreaterThanOrEqual(43.5);
+        const fontSize = await summaries.nth(s).evaluate((el) => parseFloat(window.getComputedStyle(el).fontSize));
+        expect(fontSize, `La taille de police de la question doit être >= 14px (reçu ${fontSize}px)`).toBeGreaterThanOrEqual(13.9);
+      }
     }
   });
 
@@ -191,9 +200,10 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
         if (isMobile) {
           // Mobile : l'élément ouvert ne doit jamais descendre sur le visage de JD
           const secBox = (await faqSection.boundingBox())!;
-          const imgFaceTop = secBox.y + (880 / 1672) * secBox.height;
+          const scale = Math.max(secBox.width / 941, secBox.height / 1672);
+          const imgFaceTop = secBox.y + secBox.height - (1672 - 880) * scale;
           const itemBox = (await item.boundingBox())!;
-          expect(itemBox.y + itemBox.height, `L accordéon ouvert (${itemBox.y + itemBox.height}) ne doit pas chevaucher le visage de JD (${imgFaceTop})`).toBeLessThanOrEqual(imgFaceTop);
+          expect(itemBox.y + itemBox.height, `L accordéon ouvert (${itemBox.y + itemBox.height}) ne doit pas chevaucher le visage de JD (${imgFaceTop})`).toBeLessThanOrEqual(imgFaceTop + 5);
         } else {
           // Desktop : pas de chevauchement horizontal
           const photoBox = (await photoImg.boundingBox())!;
@@ -348,6 +358,30 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
       await page.goto(pfUrl);
       const trCount = page.locator('.logo-btn[href*="tapis-rouge"] .logo-btn-count');
       await expect(trCount).toHaveText(expectedText);
+    }
+  });
+
+  // 9. Étanchéité CSS : les pages de zones SEO ne reçoivent aucune règle de photo FAQ
+  test('[PR-D #9] Pages de zones SEO : la section FAQ ne contient ni photo ni déformation CSS (max-width 52rem, padding normal)', async ({ page }) => {
+    for (const url of ['/production-video-saint-jerome/', '/en/video-production-saint-jerome/']) {
+      await page.goto(url);
+      const faqSec = page.locator('section[aria-labelledby="zone-faq"]');
+      await expect(faqSec).toBeVisible();
+
+      // Pas de photo wrap ni de photo top
+      expect(await faqSec.locator('.faq-photo-wrap').count()).toBe(0);
+      expect(await faqSec.locator('.faq-photo-top').count()).toBe(0);
+      expect(await faqSec.locator('.faq-veil').count()).toBe(0);
+
+      // Pas de classe section-faq--photo ou faq-with-photo
+      const className = (await faqSec.getAttribute('class')) || '';
+      expect(className).not.toContain('section-faq--photo');
+      expect(className).not.toContain('faq-with-photo');
+
+      // Le conteneur .faq a un padding raisonnable (pas les 310px / 720px)
+      const faqContainer = faqSec.locator('.faq');
+      const paddingTop = await faqContainer.evaluate((el) => parseFloat(window.getComputedStyle(el).paddingTop));
+      expect(paddingTop, `Le padding-top de la FAQ sur ${url} doit être normal (< 50px)`).toBeLessThan(50);
     }
   });
 });
