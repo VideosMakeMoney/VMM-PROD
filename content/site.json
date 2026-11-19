@@ -77,12 +77,12 @@
   },
   "heroVideo": {
     "_aide": "Vidéo du bandeau d'accueil, fichiers dans static/videos/jd/. hero-mobile = vidéo 9:16 de JD (original gardé hors du site : media-originaux/jd/hero-upload.mp4 ; réencodée 720 × 1280, 30 i/s, sans son). hero-ordi = la même vidéo en 16:9 (1920 × 1080, 30 i/s, sans son), fabriquée le 2026-11-05 : clip 9:16 centré sur un fond flou de la même vidéo. Les posters sont une image tirée de la vidéo (3 s), affichée avant la lecture. Quand JD fournira une vraie version 16:9, remplacer hero-ordi.mp4 / .webm / -poster.*.",
-    "ordi": "/videos/jd/hero-accueil-16x9.mp4",
-    "mobile": "/videos/jd/hero-accueil-9x16.mp4",
-    "ordiWebm": "/videos/jd/hero-accueil-16x9.webm",
-    "mobileWebm": "/videos/jd/hero-accueil-9x16.webm",
-    "poster": "/videos/jd/hero-accueil-9x16-poster.jpg",
-    "posterOrdi": "/videos/jd/hero-accueil-16x9-poster.jpg",
+    "ordi": "/videos/jd/hero-accueil-16x9-v20261117.mp4",
+    "mobile": "/videos/jd/hero-accueil-9x16-v20261117.mp4",
+    "ordiWebm": "/videos/jd/hero-accueil-16x9-v20261117.webm",
+    "mobileWebm": "/videos/jd/hero-accueil-9x16-v20261117.webm",
+    "poster": "/videos/jd/hero-accueil-9x16-v20261117-poster.jpg",
+    "posterOrdi": "/videos/jd/hero-accueil-16x9-v20261117-poster.jpg",
     "noteOrdi": "Version 16:9 provisoire (9:16 sur fond flou). [À CONFIRMER : vraie vidéo héro 16:9 de JD, si elle existe]",
     "ancien": {
       "ordi": "/videos/jd/hero-ordi.mp4",

@@ -3,30 +3,30 @@
   "dossier": "/videos/jd/",
   "clips": {
     "work": {
-      "mobile": "work-9x16",
-      "ordi": "work-16x9",
+      "mobile": "work-9x16-v20261117",
+      "ordi": "work-16x9-v20261117",
       "ancien": {
         "mobile": "work-9x16-ancien",
         "ordi": ""
       },
-      "note": "Clips Work Section 9-16 / 16-9 de JD (livraison du 2026-11-07, MANIFEST-medias.csv). L'ancien work-9x16 (même source, 20,2 s) est gardé sous work-9x16-ancien."
+      "note": "Clips Work Section 9-16 / 16-9 de JD (livraison du 2026-11-07, versionnés v20261117 pour invalidation du cache CDN 7j Netlify)."
     },
     "portfolio": {
-      "mobile": "work-9x16",
-      "ordi": "work-16x9",
+      "mobile": "work-9x16-v20261117",
+      "ordi": "work-16x9-v20261117",
       "focal": {
         "mobile": "50% 50%",
         "ordi": "50% 50%"
       },
-      "note": "Héros de /portfolio/ : clips Work de JD, vrai 16:9 pour l'ordi (2026-11-07). Les anciens fichiers portfolio-hero-* (16:9 composé sur fond flou) restent dans static/videos/jd/ (voir « ancien »).",
+      "note": "Héros de /portfolio/ : clips Work de JD (v20261117), vrai 16:9 pour l'ordi.",
       "ancien": {
         "mobile": "portfolio-hero-mobile",
         "ordi": "portfolio-hero-ordi"
       }
     },
     "services": {
-      "mobile": "services-9x16",
-      "ordi": "services-16x9",
+      "mobile": "services-9x16-v20261117",
+      "ordi": "services-16x9-v20261117",
       "focal": {
         "mobile": "50% 50%",
         "ordi": "50% 50%"
