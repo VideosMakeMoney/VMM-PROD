@@ -42,13 +42,7 @@ jobs:
       - name: Run Playwright tests
         env:
           VMM_ALLOW_INDEX: 'true'
-        run: npx playwright test --workers=4 --update-snapshots=all
-
-      - name: Upload updated snapshots
-        uses: actions/upload-artifact@v4
-        with:
-          name: updated-snapshots
-          path: tests/__snapshots__/
+        run: npm test -- --workers=4
 
       - name: Upload Playwright HTML Report
         uses: actions/upload-artifact@v4
