@@ -46,11 +46,11 @@ const INDEXABLE = ['accueil', 'services', 'portfolio', 'apropos', 'contact'];
 
 // Une page par client qui a au moins une vidéo (portfolio.json). Ajouter un client = modifier seulement ce fichier.
 const clientSlug = (c) => c.slug || slug(c.nom);
-const clientVideos = (c) => portfolio.videos.filter((v) => v.type !== 'coulisses' && v.client === c.nom);
+const clientVideos = (c) => portfolio.videos.filter((v) => v.type !== 'coulisses' && v.client === c.nom).sort((a, b) => (a.publie || a.dateMiseEnLigne || '').localeCompare(b.publie || b.dateMiseEnLigne || ''));
 const CLIENTS = portfolio.clients.filter((c) => clientVideos(c).length);
 // Page de la collection Coulisses (portfolio.json → coulissesCollection)
 const COUL = portfolio.coulissesCollection || { slug: { fr: 'coulisses', en: 'behind-the-scenes' }, clip: '', photo: 'coulisses-01' };
-const coulissesVideos = () => portfolio.videos.filter((v) => v.type === 'coulisses');
+const coulissesVideos = () => portfolio.videos.filter((v) => v.type === 'coulisses').sort((a, b) => (a.publie || a.dateMiseEnLigne || '').localeCompare(b.publie || b.dateMiseEnLigne || ''));
 // Vidéos affichées dans les bibliothèques et comptées (« 01 / N », « N vidéos ») : seulement celles qui ont un ID YouTube.
 // Les autres restent dans portfolio.json et réapparaissent dès qu'un ID est ajouté (Natasha, 2026-11-12).
 const visibleVideos = (list) => list.filter((v) => v.youtubeId);
@@ -268,7 +268,7 @@ const videoName = (v, lang) => (videoTitle(v, lang) ? videoTitle(v, lang) : `${g
 // Vedette de la catégorie qui a un ID YouTube, sinon videoAccueil, sinon la vedette sans ID (placeholder).
 const categoryVideo = (cat) =>
   portfolio.videos.find((v) => v.vedette && v.categorie === cat.id && v.youtubeId) ||
-  (cat.videoAccueil && (portfolio.videos.find((v) => v.youtubeId === cat.videoAccueil) || { youtubeId: cat.videoAccueil, vertical: true, titre: '', client: '', rang: 1 })) ||
+  (cat.videoAccueil && (portfolio.videos.find((v) => v.youtubeId === cat.videoAccueil) || { youtubeId: cat.videoAccueil, vertical: cat.videoAccueil !== '-6N2iah60mc', titre: '', client: '', rang: 1 })) ||
   portfolio.videos.find((v) => v.vedette && v.categorie === cat.id) ||
   null;
 const featured = () => portfolio.videos.filter((v) => v.vedette);
@@ -276,7 +276,7 @@ const featured = () => portfolio.videos.filter((v) => v.vedette);
 // Une vidéo n'entre dans le JSON-LD et le sitemap vidéo qu'avec sa vraie date de mise en ligne (dateMiseEnLigne
 // dans portfolio.json, format AAAA-MM-JJ) : Google exige uploadDate. Les autres restent en réserve, prêtes à sortir
 // dès que la date est remplie.
-const videoReady = (v) => Boolean(v?.youtubeId && v.dateMiseEnLigne);
+const videoReady = (v) => Boolean(v?.youtubeId && (v.publie || v.dateMiseEnLigne));
 
 // pageUrl : la page où la vidéo est montrée ; l'@id de la vidéo est cette URL suivie de #video-<ID YouTube>.
 function videoObject(v, lang, pageUrl) {
@@ -292,7 +292,7 @@ function videoObject(v, lang, pageUrl) {
     embedUrl: ytEmbed(v.youtubeId),
     url: ytUrl(v),
     ...(v.fichier ? { contentUrl: abs(v.fichier) } : {}), // fichier vidéo hébergé sur le site, s'il existe un jour
-    ...(v.dateMiseEnLigne ? { uploadDate: v.dateMiseEnLigne } : {}),
+    ...((v.publie || v.dateMiseEnLigne) ? { uploadDate: (v.publie || v.dateMiseEnLigne).slice(0, 10) } : {}),
     ...(v.langue ? { inLanguage: v.langue === 'en' ? 'en-CA' : 'fr-CA' } : {}),
     publisher: { '@id': `${SITE_URL}/#entreprise` },
   };
