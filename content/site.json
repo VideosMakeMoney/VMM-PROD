@@ -111,11 +111,11 @@
     "widgetHtml": ""
   },
   "drapeaux": {
-    "_aide": "Interrupteurs de contenu (true = affiché, false = masqué ; le code reste en place). strategie : slogan « Strategy first. Camera second. » en bas de Services (la carte Stratégie est confirmée par JD et toujours affichée). servicesCamera : section caméra « Pièce par pièce » de Services, retirée pour l'instant ; elle reviendra à la fin de la page en animation au défilement. servicesFin : bloc « Découvrez nos réalisations. » et bouton vers /portfolio, retirés pour l'instant à la demande de JD. faqPhoto : photo JD dans la section FAQ (Contact), en attente des maquettes de disposition 16:9 et 9:16 de JD.",
+    "_aide": "Interrupteurs de contenu (true = affiché, false = masqué ; le code reste en place). strategie : slogan « Strategy first. Camera second. » en bas de Services (la carte Stratégie est confirmée par JD et toujours affichée). servicesCamera : section caméra « Pièce par pièce » de Services, retirée pour l'instant ; elle reviendra à la fin de la page en animation au défilement. servicesFin : bloc « Découvrez nos réalisations. » et bouton vers /portfolio, retirés pour l'instant à la demande de JD. faqPhoto : photo JD dans la section FAQ (Contact), selon les maquettes de disposition 16:9 et 9:16 de JD reçues le 17 nov. 2026.",
     "strategie": true,
     "servicesCamera": false,
     "servicesFin": false,
-    "faqPhoto": false
+    "faqPhoto": true
   },
   "google": {
     "nom": "Google",
