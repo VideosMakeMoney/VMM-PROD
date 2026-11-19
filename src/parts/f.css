@@ -32,10 +32,14 @@
   :is(html[lang^="fr"], html[lang^="en"]) .pf-shelf-tile .coulisses-count, :is(html[lang^="fr"], html[lang^="en"]) .pf-shelf-tile .logo-btn-cta { font-size: max(.8rem, 4vw); }
 }
 @media (max-width: 899px) and (max-height: 700px) {
-  :is(html[lang^="fr"], html[lang^="en"]) .pf-shelf .pf-coulisses-text h2 { font-size: clamp(1.6rem, 9vw, 2.6rem); }
-  :is(html[lang^="fr"], html[lang^="en"]) .pf-shelf-img { width: min(42vw, 22svh); }
-  :is(html[lang^="fr"], html[lang^="en"]) .pf-shelf-tile .coulisses-text strong { font-size: clamp(1rem, 5vw, 1.3rem); }
-  :is(html[lang^="fr"], html[lang^="en"]) .pf-shelf-tile .coulisses-count, :is(html[lang^="fr"], html[lang^="en"]) .pf-shelf-tile .logo-btn-cta { font-size: max(.75rem, 3.6vw); }
+  :is(html[lang^="fr"], html[lang^="en"]) .pf-shelf-grid { padding-block: clamp(.5rem, 2.5svh, 1rem) clamp(.5rem, 2svh, .75rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .pf-shelf .pf-coulisses-text h2 { font-size: clamp(1.4rem, 7.5vw, 2.2rem); margin-bottom: .25rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .pf-shelf .pf-coulisses-text .jd-lead { font-size: clamp(.85rem, 3.8vw, 1rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .pf-shelf-img { width: min(38vw, 18svh); }
+  :is(html[lang^="fr"], html[lang^="en"]) .pf-shelf-tile { gap: .25rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .pf-shelf-tile .coulisses-text { gap: .15rem; }
+  :is(html[lang^="fr"], html[lang^="en"]) .pf-shelf-tile .coulisses-text strong { font-size: clamp(.95rem, 4.5vw, 1.15rem); }
+  :is(html[lang^="fr"], html[lang^="en"]) .pf-shelf-tile .coulisses-count, :is(html[lang^="fr"], html[lang^="en"]) .pf-shelf-tile .logo-btn-cta { font-size: max(.75rem, 3.4vw); }
 }
 
 /* #10 / #11 À propos JD et Renaud, MOBILE : avec les vraies biographies (2 paragraphes), la zone photo s'étirait

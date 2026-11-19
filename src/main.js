@@ -4,6 +4,18 @@
   root.classList.add('js');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Restauration manuelle du défilement pour garantir le retour en haut lors des navigations (mobile)
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  const resetScroll = () => {
+    if (!window.location.hash) {
+      window.scrollTo(0, 0);
+    }
+  };
+  window.addEventListener('pageshow', resetScroll);
+  resetScroll();
+
   // Menu mobile
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.getElementById('menu');

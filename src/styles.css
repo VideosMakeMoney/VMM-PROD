@@ -1906,7 +1906,7 @@ main > .summary-band-end { scroll-snap-align: start; }
 .pf-shelf-tile:hover .pf-shelf-img img, .pf-shelf-tile:focus-visible .pf-shelf-img img { filter: drop-shadow(0 0 22px rgba(139, 92, 246, .6)) brightness(1.08); }
 .pf-shelf-tile .coulisses-text { display: flex; flex-direction: column; gap: .35rem; align-items: center; }
 .pf-shelf-tile .coulisses-text strong { font-size: 1.15rem; line-height: 1.25; max-width: 15em; }
-.pf-shelf-tile .logo-btn-cta { display: inline-flex; align-items: center; gap: .5rem; }
+.pf-shelf-tile .logo-btn-cta { display: inline-flex; align-items: center; gap: .5rem; color: var(--violet-light); font-weight: 600; }
 .pf-shelf .cta-play { flex: none; }
 @media (min-width: 900px) {
   main > section.jd-screen.pf-shelf { padding-block: 0; }
@@ -1933,7 +1933,7 @@ main > .summary-band-end { scroll-snap-align: start; }
   .pf-shelf-img { width: min(52vw, 23svh); }
   .pf-shelf-tile { gap: .4rem; }
   .pf-shelf-tile .coulisses-text strong { font-size: 1.05rem; }
-  .pf-shelf-tile .cta-play { display: none; }
+  .pf-shelf-tile .cta-play { display: inline-block; }
 }
 
 /* A6 — la règle générale « .pf-coulisses { padding-top … !important } » ne s'applique pas à l'étagère (plein écran) */
