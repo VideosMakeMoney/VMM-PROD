@@ -4,12 +4,14 @@
   root.classList.add('js');
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Restauration manuelle du défilement pour garantir le retour en haut lors des navigations (mobile)
-  if ('scrollRestoration' in history) {
+  const isMobile = () => window.matchMedia('(max-width: 899px)').matches;
+
+  // Restauration manuelle du défilement pour garantir le retour en haut lors des navigations (mobile seulement)
+  if (isMobile() && 'scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
   }
-  const resetScroll = () => {
-    if (!window.location.hash) {
+  const resetScroll = (e) => {
+    if (isMobile() && (!e || !e.persisted) && !window.location.hash) {
       window.scrollTo(0, 0);
     }
   };

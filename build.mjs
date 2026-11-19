@@ -268,7 +268,7 @@ const videoName = (v, lang) => (videoTitle(v, lang) ? videoTitle(v, lang) : `${g
 // Vedette de la catégorie qui a un ID YouTube, sinon videoAccueil, sinon la vedette sans ID (placeholder).
 const categoryVideo = (cat) =>
   portfolio.videos.find((v) => v.vedette && v.categorie === cat.id && v.youtubeId) ||
-  (cat.videoAccueil && (portfolio.videos.find((v) => v.youtubeId === cat.videoAccueil) || { youtubeId: cat.videoAccueil, vertical: cat.videoAccueil !== '-6N2iah60mc', titre: '', client: '', rang: 1 })) ||
+  (cat.videoAccueil && (portfolio.videos.find((v) => v.youtubeId === cat.videoAccueil) || { youtubeId: cat.videoAccueil, vertical: cat.videoAccueilVertical ?? true, titre: '', client: '', rang: 1 })) ||
   portfolio.videos.find((v) => v.vedette && v.categorie === cat.id) ||
   null;
 const featured = () => portfolio.videos.filter((v) => v.vedette);
@@ -648,7 +648,7 @@ function videoTile(v, lang, { shape = 'vertical', caption = true, missing, img =
           ${caption ? `<span class="tile-caption">${name ? `<strong>${esc(name)}</strong>` : ''}${v?.client ? `<span class="muted">${esc(v.client)}</span>` : ''}${t(v?.note || missing || L.lightbox.manquante)}</span>` : ''}
         </button>`;
   }
-  const name = videoName(v, lang);
+  const name = label || videoName(v, lang);
   return `<a href="${ytUrl(v)}" target="_blank" rel="noopener" class="tile tile-${shape}" data-video="${esc(v.youtubeId)}" data-vertical="${v.vertical ? '1' : '0'}" aria-label="${esc(L.lightbox.voir)} : ${esc(name)}">
           <span class="thumb">${own || `<img src="${ytThumb(v.youtubeId)}" alt="" loading="lazy" decoding="async" width="480" height="360">`}<span class="play" aria-hidden="true">▶</span></span>
           ${
@@ -1039,7 +1039,7 @@ function ytTile(v, lang, { label = '', cls = '', img = '' } = {}) {
   if (!v?.youtubeId) {
     return `<span class="yt-tile is-empty${cls ? ` ${cls}` : ''}"><span class="thumb">${own || '<span class="thumb-empty" aria-hidden="true"></span>'}</span>${label ? `<span class="yt-tile-label">${label}</span>` : ''}</span>`;
   }
-  const name = videoName(v, lang);
+  const name = label || videoName(v, lang);
   return `<a class="yt-tile${cls ? ` ${cls}` : ''}" href="${ytUrl(v)}" target="_blank" rel="noopener" aria-label="${esc(L.portfolio.biblio.youtube)} : ${esc(name)}">
           <span class="thumb">${own || `<img src="${ytThumb(v.youtubeId)}" alt="" loading="lazy" decoding="async" width="480" height="360">`}<span class="play" aria-hidden="true">▶</span></span>
           ${label ? `<span class="yt-tile-label">${label}</span>` : ''}

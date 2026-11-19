@@ -64,7 +64,8 @@
       "videoAccueilProvisoire": "a6L9xFtDSgc",
       "miniature": "/img/portfolio/cat-coulisses",
       "titreMaquette": "Caméras en première ligne : le making of",
-      "videoAccueil": "-6N2iah60mc"
+      "videoAccueil": "-6N2iah60mc",
+      "videoAccueilVertical": false
     }
   ],
   "_aideCategories": "videoAccueil = ID YouTube ouvert par la miniature de la catégorie (accueil et page Portfolio). Maquette de JD (PDF « VMM Portfolio LAYOUT », page 2, reçu le 2026-11-05) : titreMaquette = vidéo prévue par JD, miniature = visuel fourni par JD (static/img/portfolio/cat-<id>.webp + .jpg). videoAccueil n'est rempli que si l'ID existe déjà dans « videos » : histoires = g8pY-zSgljI (« 1er juillet », Tapis Rouge). Les 3 autres restent vides : [À CONFIRMER : ID YouTube de JD pour « ICI, TOUT A CHANGÉ », « Une équipe soudée » et « Caméras en première ligne / le making of »]. videoAccueilProvisoire = choix provisoire du 2026-11-05 (avant le PDF), gardé pour mémoire. titrePortfolio = libellé de la page Portfolio s'il diffère de titre.",
