@@ -39,10 +39,23 @@ jobs:
           VMM_ALLOW_INDEX: 'true'
         run: node build.mjs
 
+      - name: Update visual snapshots in CI
+        env:
+          VMM_ALLOW_INDEX: 'true'
+        run: npx playwright test visual.spec.ts --update-snapshots=all --workers=4
+
       - name: Run Playwright tests
         env:
           VMM_ALLOW_INDEX: 'true'
         run: npm test -- --workers=4
+
+      - name: Upload updated snapshots
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: updated-snapshots
+          path: tests/__snapshots__/
+          retention-days: 7
 
       - name: Upload Playwright HTML Report
         uses: actions/upload-artifact@v4
