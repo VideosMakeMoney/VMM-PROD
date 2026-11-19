@@ -3,6 +3,9 @@ import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 const ROOT = process.cwd();
+const desktopFixtures = JSON.parse(
+  readFileSync(new URL('./fixtures/jd-1117-b-desktop-apropos.json', import.meta.url), 'utf8')
+);
 
 test.describe('Ajustements JD du 17 nov. 2026 — PR B : À propos + Accueil p5', () => {
   // ──────────────────────────────────────────────────────────────────────────
@@ -73,19 +76,33 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR B : À propos + Accueil p5'
     const isDesktop = testInfo.project.name.startsWith('desktop');
     test.skip(!isDesktop, 'Test spécifique au layout desktop (16:9)');
 
-    for (const path of ['/about/', '/en/about/']) {
+    const expectedProject = desktopFixtures.viewports[testInfo.project.name];
+    expect(expectedProject, `Référence desktop manquante pour ${testInfo.project.name}`).toBeDefined();
+
+    for (const [path, langKey] of [
+      ['/about/', 'fr'],
+      ['/en/about/', 'en'],
+    ] as const) {
       await page.goto(path);
+      const expected = expectedProject[langKey];
+
       const jdImg = page.locator('#jd .person-photo img');
       await expect(jdImg).toBeVisible();
       const jdBox = await jdImg.boundingBox();
-      expect(jdBox).not.toBeNull();
-      expect(jdBox!.width).toBeGreaterThanOrEqual(300);
+      expect(jdBox, `Boîte de photo JD sur ${path} (${testInfo.project.name}) doit exister`).not.toBeNull();
+      expect(Math.abs(jdBox!.x - expected.jd.x), `x JD sur ${path} (${testInfo.project.name})`).toBeLessThanOrEqual(1);
+      expect(Math.abs(jdBox!.y - expected.jd.y), `y JD sur ${path} (${testInfo.project.name})`).toBeLessThanOrEqual(1);
+      expect(Math.abs(jdBox!.width - expected.jd.width), `width JD sur ${path} (${testInfo.project.name})`).toBeLessThanOrEqual(1);
+      expect(Math.abs(jdBox!.height - expected.jd.height), `height JD sur ${path} (${testInfo.project.name})`).toBeLessThanOrEqual(1);
 
       const renaudImg = page.locator('#renaud .person-photo img');
       await expect(renaudImg).toBeVisible();
       const renaudBox = await renaudImg.boundingBox();
-      expect(renaudBox).not.toBeNull();
-      expect(renaudBox!.width).toBeGreaterThanOrEqual(300);
+      expect(renaudBox, `Boîte de photo Renaud sur ${path} (${testInfo.project.name}) doit exister`).not.toBeNull();
+      expect(Math.abs(renaudBox!.x - expected.renaud.x), `x Renaud sur ${path} (${testInfo.project.name})`).toBeLessThanOrEqual(1);
+      expect(Math.abs(renaudBox!.y - expected.renaud.y), `y Renaud sur ${path} (${testInfo.project.name})`).toBeLessThanOrEqual(1);
+      expect(Math.abs(renaudBox!.width - expected.renaud.width), `width Renaud sur ${path} (${testInfo.project.name})`).toBeLessThanOrEqual(1);
+      expect(Math.abs(renaudBox!.height - expected.renaud.height), `height Renaud sur ${path} (${testInfo.project.name})`).toBeLessThanOrEqual(1);
     }
   });
 
@@ -278,27 +295,138 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR B : À propos + Accueil p5'
   // Point 13 — Parité et étanchéité linguistique FR / EN
   // ──────────────────────────────────────────────────────────────────────────
 
-  test('[JD-1117 #13] Étanchéité linguistique : aucun texte FR dans les pages EN et aucun texte EN dans les pages FR', async ({
+  test('[JD-1117 #13] Parité FR/EN stricte, Coulisses 14 photos, retrait coulisses-02..05 en EN et étanchéité linguistique', async ({
     page,
-  }) => {
-    // Vérification sur /about/ vs /en/about/
+  }, testInfo) => {
+    // 1. Coulisses À propos : exactement 14 photos en FR et en EN
     await page.goto('/about/');
+    const frCoulissesImages = page.locator('.coulisses-grid img');
+    expect(await frCoulissesImages.count(), 'Total de photos de coulisses sur /about/ = 14').toBe(14);
+    for (let i = 0; i < 14; i++) {
+      const alt = await frCoulissesImages.nth(i).getAttribute('alt');
+      expect(alt, `Alt photo ${i + 1} sur /about/`).toContain(`photo ${i + 1} sur 14`);
+      expect(alt).not.toContain('of 14');
+    }
     const frAboutContent = await page.content();
+    expect(frAboutContent, 'Aucun "of 14" sur la page FR /about/').not.toContain('of 14');
+
+    await page.goto('/en/about/');
+    const enCoulissesImages = page.locator('.coulisses-grid img');
+    expect(await enCoulissesImages.count(), 'Total de photos de coulisses sur /en/about/ = 14').toBe(14);
+    for (let i = 0; i < 14; i++) {
+      const alt = await enCoulissesImages.nth(i).getAttribute('alt');
+      expect(alt, `Alt photo ${i + 1} sur /en/about/`).toContain(`photo ${i + 1} of 14`);
+      expect(alt).not.toContain('sur 14');
+    }
+    const enAboutContent = await page.content();
+    expect(enAboutContent, 'Aucun "sur 14" sur la page EN /en/about/').not.toContain('sur 14');
+
+    // 2. Aucune référence à coulisses-02 à coulisses-05 dans les pages EN (DOM, srcset, JSON-LD)
+    for (let n = 2; n <= 5; n++) {
+      const id = `coulisses-0${n}`;
+      expect(enAboutContent, `Page EN /en/about/ ne doit pas référencer ${id}`).not.toContain(id);
+    }
+    await page.goto('/en/portfolio/behind-the-scenes/');
+    const enBtsContent = await page.content();
+    for (let n = 2; n <= 5; n++) {
+      const id = `coulisses-0${n}`;
+      expect(enBtsContent, `Page EN /en/portfolio/behind-the-scenes/ ne doit pas référencer ${id}`).not.toContain(id);
+    }
+
+    // 3. Parité FR/EN des corrections (Points 1, 2, 5)
+    // Point 5 (Toutes résolutions) : Taille et police du bouton à l'Accueil p5
+    await page.goto('/');
+    const frBtnMetrics = await page.locator('#contact .cta-row .btn').evaluate((el: HTMLElement) => {
+      const r = el.getBoundingClientRect();
+      const s = window.getComputedStyle(el);
+      return { height: r.height, fontSize: parseFloat(s.fontSize) };
+    });
+    await page.goto('/en/');
+    const enBtnMetrics = await page.locator('#contact .cta-row .btn').evaluate((el: HTMLElement) => {
+      const r = el.getBoundingClientRect();
+      const s = window.getComputedStyle(el);
+      return { height: r.height, fontSize: parseFloat(s.fontSize) };
+    });
+    expect(
+      Math.abs(enBtnMetrics.height - frBtnMetrics.height),
+      `Parité hauteur bouton contact FR vs EN (${testInfo.project.name})`
+    ).toBeLessThanOrEqual(2);
+    expect(
+      Math.abs(enBtnMetrics.fontSize - frBtnMetrics.fontSize),
+      `Parité police bouton contact FR vs EN (${testInfo.project.name})`
+    ).toBeLessThanOrEqual(2);
+
+    // Parité spécifique Mobile (Points 1 et 2)
+    if (testInfo.project.name.startsWith('mobile')) {
+      // Point 1 : Largeur et hauteur des photos JD et Renaud sur /about/ vs /en/about/
+      await page.goto('/about/');
+      const frJdBox = await page.locator('#jd .person-photo img').boundingBox();
+      const frRenaudBox = await page.locator('#renaud .person-photo img').boundingBox();
+
+      await page.goto('/en/about/');
+      const enJdBox = await page.locator('#jd .person-photo img').boundingBox();
+      const enRenaudBox = await page.locator('#renaud .person-photo img').boundingBox();
+
+      expect(Math.abs(enJdBox!.width - frJdBox!.width), `Parité largeur photo JD (${testInfo.project.name})`).toBeLessThanOrEqual(2);
+      expect(Math.abs(enJdBox!.height - frJdBox!.height), `Parité hauteur photo JD (${testInfo.project.name})`).toBeLessThanOrEqual(2);
+      expect(Math.abs(enRenaudBox!.width - frRenaudBox!.width), `Parité largeur photo Renaud (${testInfo.project.name})`).toBeLessThanOrEqual(2);
+      expect(Math.abs(enRenaudBox!.height - frRenaudBox!.height), `Parité hauteur photo Renaud (${testInfo.project.name})`).toBeLessThanOrEqual(2);
+
+      // Point 2 : Haut de la photo #vision par rapport au bouton sur /about/ vs /en/about/
+      await page.goto('/about/');
+      const frVision = await page.evaluate(() => {
+        const btn = document.querySelector('#vision .cta-row .btn')!.getBoundingClientRect();
+        const img = document.querySelector('#vision .jd-split-photo img')!.getBoundingClientRect();
+        return { imgTop: img.top, imgHeight: img.height, btnBottom: btn.bottom };
+      });
+
+      await page.goto('/en/about/');
+      const enVision = await page.evaluate(() => {
+        const btn = document.querySelector('#vision .cta-row .btn')!.getBoundingClientRect();
+        const img = document.querySelector('#vision .jd-split-photo img')!.getBoundingClientRect();
+        return { imgTop: img.top, imgHeight: img.height, btnBottom: btn.bottom };
+      });
+
+      // Dans les deux langues, le haut de la photo se trouve sous le bouton
+      expect(frVision.imgTop, `Photo #vision FR sous le bouton (${testInfo.project.name})`).toBeGreaterThanOrEqual(frVision.btnBottom - 4);
+      expect(enVision.imgTop, `Photo #vision EN sous le bouton (${testInfo.project.name})`).toBeGreaterThanOrEqual(enVision.btnBottom - 4);
+      // Et le haut et la hauteur de la photo ont une parité stricte à ±2px
+      expect(Math.abs(enVision.imgTop - frVision.imgTop), `Parité haut photo #vision (${testInfo.project.name})`).toBeLessThanOrEqual(2);
+      expect(Math.abs(enVision.imgHeight - frVision.imgHeight), `Parité hauteur photo #vision (${testInfo.project.name})`).toBeLessThanOrEqual(2);
+    }
+
+    // Parité spécifique Desktop (Point 5)
+    if (testInfo.project.name.startsWith('desktop')) {
+      // Point 5 : Écart photo-texte à l'Accueil p5 (#contact)
+      await page.goto('/');
+      const frContactGap = await page.evaluate(() => {
+        const img = document.querySelector('#contact .home-contact-photo img')!.getBoundingClientRect();
+        const text = document.querySelector('#contact .home-split-text')!.getBoundingClientRect();
+        return Math.abs(text.left - img.right);
+      });
+
+      await page.goto('/en/');
+      const enContactGap = await page.evaluate(() => {
+        const img = document.querySelector('#contact .home-contact-photo img')!.getBoundingClientRect();
+        const text = document.querySelector('#contact .home-split-text')!.getBoundingClientRect();
+        return Math.abs(text.left - img.right);
+      });
+      expect(Math.abs(enContactGap - frContactGap), `Parité écart photo-texte #contact (${testInfo.project.name})`).toBeLessThanOrEqual(2);
+    }
+
+    // 4. Contrôle d'étanchéité linguistique FR/EN (préservé)
     expect(frAboutContent).toContain('Fondateur / Vidéaste');
     expect(frAboutContent).toContain('Caméraman');
     expect(frAboutContent).toContain('Coulisses');
     expect(frAboutContent).not.toContain('Founder / Videographer');
     expect(frAboutContent).not.toContain('Behind the scenes');
 
-    await page.goto('/en/about/');
-    const enAboutContent = await page.content();
     expect(enAboutContent).toContain('Founder / Videographer');
     expect(enAboutContent).toContain('Camera operator');
     expect(enAboutContent).toContain('Behind the scenes');
     expect(enAboutContent).not.toContain('Fondateur / Vidéaste');
     expect(enAboutContent).not.toContain('Coulisses de tournage');
 
-    // Vérification sur / vs /en/
     await page.goto('/');
     const frHomeContent = await page.content();
     expect(frHomeContent).toContain('CONTACTEZ-NOUS');

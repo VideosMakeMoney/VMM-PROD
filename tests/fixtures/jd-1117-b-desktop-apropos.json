@@ -1,0 +1,159 @@
+{
+  "_meta": {
+    "gitCommit": "ddb51a3",
+    "measuredAt": "2026-11-19T00:37:24.642Z",
+    "description": "Bounding boxes of #jd and #renaud photos on desktop viewports measured on main (ddb51a3)"
+  },
+  "viewports": {
+    "desktop-1280x720": {
+      "fr": {
+        "jd": {
+          "x": 96,
+          "y": 782.84,
+          "width": 420,
+          "height": 560
+        },
+        "renaud": {
+          "x": 96,
+          "y": 1438.84,
+          "width": 420,
+          "height": 560
+        }
+      },
+      "en": {
+        "jd": {
+          "x": 96,
+          "y": 782.84,
+          "width": 420,
+          "height": 560
+        },
+        "renaud": {
+          "x": 96,
+          "y": 1438.84,
+          "width": 420,
+          "height": 560
+        }
+      }
+    },
+    "desktop-1366x768": {
+      "fr": {
+        "jd": {
+          "x": 139,
+          "y": 831.23,
+          "width": 456,
+          "height": 608
+        },
+        "renaud": {
+          "x": 139,
+          "y": 1535.23,
+          "width": 456,
+          "height": 608
+        }
+      },
+      "en": {
+        "jd": {
+          "x": 139,
+          "y": 831.23,
+          "width": 456,
+          "height": 608
+        },
+        "renaud": {
+          "x": 139,
+          "y": 1535.23,
+          "width": 456,
+          "height": 608
+        }
+      }
+    },
+    "desktop-1440x900": {
+      "fr": {
+        "jd": {
+          "x": 176,
+          "y": 1032.42,
+          "width": 459.98,
+          "height": 613.33
+        },
+        "renaud": {
+          "x": 176,
+          "y": 1868.42,
+          "width": 459.98,
+          "height": 613.33
+        }
+      },
+      "en": {
+        "jd": {
+          "x": 176,
+          "y": 1032.42,
+          "width": 459.98,
+          "height": 613.33
+        },
+        "renaud": {
+          "x": 176,
+          "y": 1868.42,
+          "width": 459.98,
+          "height": 613.33
+        }
+      }
+    },
+    "desktop-1536x864": {
+      "fr": {
+        "jd": {
+          "x": 224,
+          "y": 978.42,
+          "width": 459.98,
+          "height": 613.33
+        },
+        "renaud": {
+          "x": 224,
+          "y": 1778.42,
+          "width": 459.98,
+          "height": 613.33
+        }
+      },
+      "en": {
+        "jd": {
+          "x": 224,
+          "y": 978.42,
+          "width": 459.98,
+          "height": 613.33
+        },
+        "renaud": {
+          "x": 224,
+          "y": 1778.42,
+          "width": 459.98,
+          "height": 613.33
+        }
+      }
+    },
+    "desktop-1920x1080": {
+      "fr": {
+        "jd": {
+          "x": 416,
+          "y": 1302.42,
+          "width": 459.98,
+          "height": 613.33
+        },
+        "renaud": {
+          "x": 416,
+          "y": 2318.42,
+          "width": 459.98,
+          "height": 613.33
+        }
+      },
+      "en": {
+        "jd": {
+          "x": 416,
+          "y": 1302.42,
+          "width": 459.98,
+          "height": 613.33
+        },
+        "renaud": {
+          "x": 416,
+          "y": 2318.42,
+          "width": 459.98,
+          "height": 613.33
+        }
+      }
+    }
+  }
+}

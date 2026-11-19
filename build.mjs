@@ -1334,7 +1334,7 @@ function slug(s) {
 // Page À propos : maquette de JD (PDF « VMM About Section LAYOUT + DIRECTIONS »), même identité que Services.
 // Photos de coulisses (static/img/coulisses/coulisses-NN.webp + variante -576.webp), dans l'ordre des numéros.
 // Grille simple sur /about/, entre les bios et le mot de la fin ; chargement différé.
-// Photos de toit retirées (coulisses-02 à 05 supprimées du repo). coulisses-01 en attente de confirmation JD.
+// Photos de toit : coulisses-01 en attente de confirmation JD.
 // Pour retirer coulisses-01 dès validation de JD, décommenter la ligne dans COULISSES_EXCLUES (modification 1 ligne).
 const COULISSES_EXCLUES = new Set([
   // 'coulisses-01.webp',
