@@ -44,8 +44,8 @@
    si l'écran manque de place ; l'espace libre passe sous le texte, comme sur les maquettes. Titres ramenés à la
    largeur des maquettes (« Rencontrez » ≈ 59 % / 63 % de la largeur au lieu de 69 %) ; texte de Renaud agrandi (≈ 4 vw) comme sur la maquette. */
 @media (max-width: 859px) {
-  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #jd .person-photo { flex: 0 1 82vw; }
-  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #renaud .person-photo { flex: 0 1 76vw; }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #jd .person-photo picture { width: min(82vw, max(250px, 40svh)); max-width: min(82vw, max(250px, 40svh)); }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #renaud .person-photo picture { width: min(78vw, max(250px, 39svh)); max-width: min(78vw, max(250px, 39svh)); }
   :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #jd .person-text h2 { font-size: clamp(2rem, 9.8vw, 3rem); }
   :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #renaud .person-text h2 { font-size: clamp(2rem, 10.3vw, 3rem); }
   :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #renaud .person-text p:not(.jd-role):not(.small) { max-width: none; margin-inline: -2vw; font-size: max(.8rem, 3.95vw); line-height: 1.42; }
