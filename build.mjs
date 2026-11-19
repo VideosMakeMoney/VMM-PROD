@@ -187,6 +187,13 @@ const PLACEHOLDER = /\[(?:À CONFIRMER|TO CONFIRM)[^\]]*\]/g;
 const isPlaceholder = (s) => !s || /\[(?:À CONFIRMER|TO CONFIRM)/.test(s);
 const esc = (s = '') =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const unesc = (s = '') =>
+  String(s)
+    .replace(/&amp;/g, '&')
+    .replace(/&#39;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
 // Texte affiché : échappé, et les placeholders sont rendus bien visibles.
 // Les placeholders [À CONFIRMER …] restent dans content/*.json (pour suivi) mais ne sont jamais publiés dans le HTML.
 const t = (s = '') => esc(s).replace(/\s*\[(?:À CONFIRMER|TO CONFIRM)[^\]]*\]/g, '');
@@ -637,18 +644,19 @@ function videoTile(v, lang, { shape = 'vertical', caption = true, missing, img =
   const L = langs[lang];
   const own = img && existsSync(join(ROOT, 'static', `${img}.webp`)) ? picture(img, '', { w: 460, h: 642 }) : '';
   const title = videoTitle(v, lang);
-  const cap = () => `<span class="tile-caption">${title ? `<strong>${esc(title)}</strong>` : label ? `<strong>${esc(label)}</strong>` : ''}${v?.client ? `<span class="muted">${esc(v.client)}</span>` : ''}</span>`;
+  const cleanLabel = label ? unesc(label) : '';
+  const cap = () => `<span class="tile-caption">${title ? `<strong>${esc(title)}</strong>` : cleanLabel ? `<strong>${esc(cleanLabel)}</strong>` : ''}${v?.client ? `<span class="muted">${esc(v.client)}</span>` : ''}</span>`;
   if (own && !v?.youtubeId) {
     return `<span class="tile tile-${shape} tile-static"><span class="thumb">${own}</span>${caption ? cap() : ''}</span>`;
   }
   if (!v || !v.youtubeId) {
-    const name = title || '';
+    const name = title || cleanLabel || '';
     return `<button type="button" class="tile tile-${shape}" data-video="" aria-label="${esc(L.lightbox.voir)}${name ? ` : ${esc(name)}` : ''}">
           <span class="thumb"><span class="thumb-empty" aria-hidden="true"></span><span class="play" aria-hidden="true">▶</span></span>
           ${caption ? `<span class="tile-caption">${name ? `<strong>${esc(name)}</strong>` : ''}${v?.client ? `<span class="muted">${esc(v.client)}</span>` : ''}${t(v?.note || missing || L.lightbox.manquante)}</span>` : ''}
         </button>`;
   }
-  const name = label || videoName(v, lang);
+  const name = cleanLabel || videoName(v, lang);
   return `<a href="${ytUrl(v)}" target="_blank" rel="noopener" class="tile tile-${shape}" data-video="${esc(v.youtubeId)}" data-vertical="${v.vertical ? '1' : '0'}" aria-label="${esc(L.lightbox.voir)} : ${esc(name)}">
           <span class="thumb">${own || `<img src="${ytThumb(v.youtubeId)}" alt="" loading="lazy" decoding="async" width="480" height="360">`}<span class="play" aria-hidden="true">▶</span></span>
           ${
@@ -1039,7 +1047,8 @@ function ytTile(v, lang, { label = '', cls = '', img = '' } = {}) {
   if (!v?.youtubeId) {
     return `<span class="yt-tile is-empty${cls ? ` ${cls}` : ''}"><span class="thumb">${own || '<span class="thumb-empty" aria-hidden="true"></span>'}</span>${label ? `<span class="yt-tile-label">${label}</span>` : ''}</span>`;
   }
-  const name = label || videoName(v, lang);
+  const cleanLabel = label ? unesc(label) : '';
+  const name = cleanLabel || videoName(v, lang);
   return `<a class="yt-tile${cls ? ` ${cls}` : ''}" href="${ytUrl(v)}" target="_blank" rel="noopener" aria-label="${esc(L.portfolio.biblio.youtube)} : ${esc(name)}">
           <span class="thumb">${own || `<img src="${ytThumb(v.youtubeId)}" alt="" loading="lazy" decoding="async" width="480" height="360">`}<span class="play" aria-hidden="true">▶</span></span>
           ${label ? `<span class="yt-tile-label">${label}</span>` : ''}

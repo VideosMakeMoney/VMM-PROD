@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { readFileSync, existsSync, statSync } from 'fs';
+import { readFileSync, existsSync, statSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { execSync } from 'child_process';
 import crypto from 'crypto';
@@ -480,6 +480,14 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR C : clips, liens YouTube, t
     await page.waitForTimeout(200);
     expect(page.url()).toContain('/production-video-laurentides/');
     expect(await page.evaluate(() => window.scrollY), 'Clic sur lien pied de page doit atterrir à 0').toBe(0);
+    const footerZoneGap = await page.evaluate(() => {
+      const header = document.querySelector('.site-header')!;
+      const text = document.querySelector('.zone-hero .container > p.label') || document.querySelector('.zone-hero h1')!;
+      const hRect = header.getBoundingClientRect();
+      const tRect = text.getBoundingClientRect();
+      return Math.round(tRect.top - hRect.bottom);
+    });
+    expect(footerZoneGap, `Écart sous l en-tête (${footerZoneGap}px) doit être >= 24px`).toBeGreaterThanOrEqual(24);
 
     // 7. Vrais clics sur liens d ancres internes (#svc-liste, #realisons) en FR et EN
     const ANCHOR_TESTS = [
@@ -528,6 +536,25 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR C : clips, liens YouTube, t
       Math.abs(restoredPos - scrolledPos),
       `Position restaurée (${restoredPos}px vs ${scrolledPos}px) doit correspondre à ±10px au Retour`
     ).toBeLessThanOrEqual(10);
+  });
+
+  test('[JD-1117 #11/zones] Pages de zones mobile (360x740, 390x844) : scrollY 0 et texte >= 24px sous l en-tête', async ({ page }) => {
+    test.skip(!page.viewportSize() || page.viewportSize()!.width >= 900, 'Test réservé au mobile');
+    for (const zonePath of ['/production-video-laurentides/', '/en/video-production-laurentians/']) {
+      await page.goto(zonePath, { waitUntil: 'networkidle' });
+      await page.waitForTimeout(200);
+      const scrollY = await page.evaluate(() => window.scrollY);
+      expect(scrollY, `Sur ${zonePath}, la page doit atterrir à scrollY === 0`).toBe(0);
+
+      const gap = await page.evaluate(() => {
+        const header = document.querySelector('.site-header')!;
+        const heroText = document.querySelector('.zone-hero .container > p.label') || document.querySelector('.zone-hero h1')!;
+        const hRect = header.getBoundingClientRect();
+        const tRect = heroText.getBoundingClientRect();
+        return Math.round(tRect.top - hRect.bottom);
+      });
+      expect(gap, `Sur ${zonePath}, l écart entre le bas de l en-tête et le premier texte du héros (${gap}px) doit être >= 24px`).toBeGreaterThanOrEqual(24);
+    }
   });
 
   // =========================================================================
@@ -590,8 +617,19 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR C : clips, liens YouTube, t
       expect(metrics.inViewport, 'Bouton doit être entièrement dans l écran').toBe(true);
       expect(metrics.bottomMargin, `Marge basse (${metrics.bottomMargin.toFixed(1)}px) doit être >= 8px`).toBeGreaterThanOrEqual(8);
 
-      // Vérification de la taille du h2 A8 (identique à main)
+      // Largeur de .pf-shelf-img (>= 90% de main dans chaque viewport, et >= 130px en 390x664)
+      const imgWidth = await shelf.locator('.pf-shelf-img').evaluate((el) => el.getBoundingClientRect().width);
       const vp = page.viewportSize()!;
+      let mainImgWidth = 0.42 * vp.width;
+      if (vp.height <= 700) {
+        mainImgWidth = Math.min(0.42 * vp.width, 0.22 * vp.height);
+        expect(imgWidth, `En hauteur <= 700px (ex. 390x664), l image (${imgWidth.toFixed(1)}px) doit être >= 130px`).toBeGreaterThanOrEqual(130);
+      } else {
+        mainImgWidth = Math.min(0.42 * vp.width, 0.24 * vp.height);
+      }
+      expect(imgWidth, `Largeur de .pf-shelf-img (${imgWidth.toFixed(1)}px) doit être >= 90% de celle de main (${mainImgWidth.toFixed(1)}px)`).toBeGreaterThanOrEqual(0.9 * mainImgWidth);
+
+      // Vérification de la taille du h2 A8 (identique à main)
       if (vp.height <= 700) {
         // max-height: 700px -> clamp(1.6rem, 9vw, 2.6rem)
         const expectedH2 = Math.min(Math.max(1.6 * 16, 0.09 * vp.width), 2.6 * 16);
@@ -604,7 +642,7 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR C : clips, liens YouTube, t
     }
   });
 
-  test('[JD-1117 #12] Desktop (1366x768, 1920x1080) : tuile VMM p.4 identique à main (.cta-play masqué en display:none)', async ({ page }) => {
+  test('[JD-1117 #12] Desktop (1366x768, 1920x1080) : tuile VMM p.4 identique à main (icône visible, bas du libellé à ±1 px de main)', async ({ page }) => {
     test.skip(!page.viewportSize() || page.viewportSize()!.width < 900, 'Test réservé au desktop');
 
     for (const path of ['/portfolio/', '/en/portfolio/']) {
@@ -613,9 +651,26 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR C : clips, liens YouTube, t
       await shelf.scrollIntoViewIfNeeded();
 
       const ctaPlay = shelf.locator('.pf-shelf-tile .cta-play');
-      // Sur desktop, .cta-play doit être display: none (identique à main)
-      const isHidden = await ctaPlay.evaluate((el) => window.getComputedStyle(el).display === 'none');
-      expect(isHidden, 'Sur desktop, l icône .cta-play de la tuile VMM doit être masquée (display: none)').toBe(true);
+      await expect(ctaPlay).toBeVisible();
+      const playDisplay = await ctaPlay.evaluate((el) => window.getComputedStyle(el).display);
+      expect(playDisplay, 'Sur desktop, l icône .cta-play doit être visible (display: block/inline-block)').not.toBe('none');
+
+      const ctaData = await shelf.evaluate((s) => {
+        const ctaEl = s.querySelector('.pf-shelf-tile .logo-btn-cta')!;
+        const cRect = ctaEl.getBoundingClientRect();
+        const sRect = s.getBoundingClientRect();
+        return {
+          ctaBottomRelativeToShelf: Math.round(cRect.bottom - sRect.top),
+        };
+      });
+
+      const vp = page.viewportSize()!;
+      // En 1366x768 et 1920x1080, position du bas du libellé identique à main (±1 px)
+      if (vp.width === 1366 && vp.height === 768) {
+        expect(Math.abs(ctaData.ctaBottomRelativeToShelf - 579), 'Bas du libellé en 1366x768 doit être à ±1 px de main (579px)').toBeLessThanOrEqual(1);
+      } else if (vp.width === 1920 && vp.height === 1080) {
+        expect(Math.abs(ctaData.ctaBottomRelativeToShelf - 817), 'Bas du libellé en 1920x1080 doit être à ±1 px de main (817px)').toBeLessThanOrEqual(1);
+      }
     }
   });
 
@@ -646,6 +701,22 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR C : clips, liens YouTube, t
     await page.goto('/en/portfolio/');
     const pfTileEn = page.locator('a.pf-cat[href*="-6N2iah60mc"]').first();
     await expect(pfTileEn).toHaveAttribute('aria-label', 'Watch on YouTube : Behind the scenes and trailers');
+  });
+
+  test('[JD-1117 #6/aria] Aucun aria-label dans dist/ ne contient « &amp;# » (pas de double échappement)', async () => {
+    const htmlFiles = (readdirSync(join(ROOT, 'dist'), { recursive: true }) as string[])
+      .filter((f) => typeof f === 'string' && f.endsWith('.html'))
+      .map((f) => join(ROOT, 'dist', f));
+    expect(htmlFiles.length).toBeGreaterThan(0);
+    const doubleEscaped: string[] = [];
+    for (const file of htmlFiles) {
+      const content = readFileSync(file, 'utf-8');
+      const matches = content.match(/aria-label="[^"]*&amp;#[^"]*"/g);
+      if (matches) {
+        doubleEscaped.push(`${file}: ${matches.join(', ')}`);
+      }
+    }
+    expect(doubleEscaped, 'Aucun aria-label ne doit contenir &amp;#').toEqual([]);
   });
 
   // =========================================================================
