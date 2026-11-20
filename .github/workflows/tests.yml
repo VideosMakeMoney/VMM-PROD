@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   test:
@@ -21,6 +21,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: fix/contact-doublon
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -44,11 +45,14 @@ jobs:
           VMM_ALLOW_INDEX: 'true'
         run: npx playwright test tests/visual.spec.ts --grep "contact-(fr|en)$" --update-snapshots --workers=4 || true
 
-      - name: TEMP PR G - upload snapshots contact
-        uses: actions/upload-artifact@v4
-        with:
-          name: snapshots-contact
-          path: tests/__snapshots__/visual.spec.ts/contact-*
+      - name: TEMP PR G - commit snapshots contact
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898699+github-actions[bot]@users.noreply.github.com"
+          git add tests/__snapshots__/visual.spec.ts/contact-*
+          git status --short
+          git diff --cached --quiet || git commit -m "PR G — snapshots /contact et /en/contact régénérés en CI"
+          git push origin HEAD:refs/heads/fix/contact-doublon
 
       - name: Run Playwright tests
         env:
