@@ -204,21 +204,90 @@
    jusqu'au bas de l'écran (≈ 70 % de la largeur pour le sujet), centré ; bouton centré (≈ 71 % de la largeur).
    Hauteur imposée, largeur auto (aucune déformation) ; masque progressif (côtés et bas) conservé. Ordinateur inchangé. */
 @media (max-width: 899px) {
-  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos main > section.jd-screen#vision { height: calc(100svh - var(--header-h));
-    background: radial-gradient(ellipse 70% 38% at 50% 72%, rgba(124, 58, 237, .3), transparent 72%), radial-gradient(ellipse 55% 45% at 92% 92%, rgba(124, 58, 237, .28), transparent 70%), var(--bg); }
-  :is(html[lang^="fr"], html[lang^="en"]) #vision.jd-photo-split h2 { font-size: clamp(1.5rem, 7vw, 2.4rem); }
-  :is(html[lang^="fr"], html[lang^="en"]) #vision.jd-photo-split .jd-wrap { min-height: 0; height: 100%; }
-  :is(html[lang^="fr"], html[lang^="en"]) #vision.jd-photo-split .jd-split-text { flex: 0 0 auto; padding: clamp(.8rem, 3.4svh, 1.8rem) 6vw 0; }
-  :is(html[lang^="fr"], html[lang^="en"]) #vision .jd-label { display: flex; align-items: center; gap: .75rem; }
-  :is(html[lang^="fr"], html[lang^="en"]) #vision .jd-label::before { content: ""; flex: 0 0 2.4rem; height: 2px; background: var(--jd-violet); }
-  :is(html[lang^="fr"], html[lang^="en"]) #vision .jd-lead { color: rgba(255, 255, 255, .92); font-size: max(.8rem, 3.6vw); line-height: 1.4; }
-  :is(html[lang^="fr"], html[lang^="en"]) #vision .cta-row { margin-top: clamp(.6rem, 2svh, 1.1rem); text-align: center; }
-  :is(html[lang^="fr"], html[lang^="en"]) #vision .cta-row .btn { min-width: 71%; justify-content: center; }
-  :is(html[lang^="fr"], html[lang^="en"]) #vision.jd-photo-split .jd-split-photo { flex: 1 1 0; min-height: 0; margin-top: clamp(.4rem, 1.5svh, .8rem); display: flex; justify-content: center; align-items: flex-end; overflow: hidden; }
-  :is(html[lang^="fr"], html[lang^="en"]) #vision .jd-split-photo picture { display: block; height: 100%; width: auto; aspect-ratio: 944 / 1665; }
-  :is(html[lang^="fr"], html[lang^="en"]) #vision .jd-split-photo img { display: block; height: 100%; width: 100%; max-width: 90vw; max-height: 100%; aspect-ratio: 944 / 1665; object-fit: contain; object-position: 50% 100%;
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos main > section.jd-screen#vision {
+    height: calc(100svh - var(--header-h));
+    max-height: calc(100svh - var(--header-h));
+    overflow: hidden;
+    background: radial-gradient(ellipse 70% 38% at 50% 72%, rgba(124, 58, 237, .3), transparent 72%), radial-gradient(ellipse 55% 45% at 92% 92%, rgba(124, 58, 237, .28), transparent 70%), var(--bg);
+  }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #vision.jd-photo-split .jd-wrap {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
+  }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #vision.jd-photo-split .jd-split-text {
+    flex: 0 0 auto;
+    padding: clamp(.35rem, 1.5svh, .75rem) 4vw 0;
+  }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #vision .jd-label {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: .15rem;
+  }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #vision .jd-label::before {
+    content: "";
+    flex: 0 0 2rem;
+    height: 2px;
+    background: var(--jd-violet);
+  }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #vision.jd-photo-split h2 {
+    font-size: clamp(1.5rem, 7vw, 2.4rem);
+    line-height: 1.1;
+    margin: 0;
+  }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #vision .jd-lead {
+    color: rgba(255, 255, 255, .92);
+    font-size: max(.8rem, 3.6vw);
+    line-height: 1.3;
+    margin: .25rem 0 0;
+  }
+  :is(html[lang^="fr"], html[lang^="en"]) #vision .cta-row {
+    margin-top: clamp(.35rem, 1.2svh, .65rem);
+    margin-bottom: 0;
+    text-align: center;
+  }
+  :is(html[lang^="fr"], html[lang^="en"]) #vision .cta-row .btn {
+    min-width: 71%;
+    justify-content: center;
+  }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #vision.jd-photo-split .jd-split-photo {
+    position: relative;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    flex: 1 1 0;
+    min-height: 0;
+    width: 100%;
+    height: auto;
+    margin: clamp(.15rem, .8svh, .4rem) 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #vision .jd-split-photo picture {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 100%;
+    width: 100%;
+    max-height: 100%;
+  }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #vision .jd-split-photo img {
+    display: block;
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    aspect-ratio: 944 / 1665;
+    object-fit: contain;
+    object-position: 50% 100%;
     margin-top: 0;
-    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 82%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%);
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 94%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%);
     -webkit-mask-composite: source-in;
-    mask-image: linear-gradient(180deg, #000 0%, #000 82%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%); mask-composite: intersect; }
+    mask-image: linear-gradient(180deg, #000 0%, #000 94%, transparent 100%), linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%);
+    mask-composite: intersect;
+  }
 }
