@@ -1,7 +1,8 @@
 import { test, expect, Page } from '@playwright/test';
 
 // PR H — Les boutons du bas de page qui mènent à la page suivante (Services → Portfolio, Portfolio → À propos,
-// À propos → Contact, Accueil → Contact) doivent ouvrir la nouvelle page EN HAUT, pas en bas.
+// À propos → Contact, Accueil → Contact) doivent ouvrir la nouvelle page EN HAUT, pas en bas, même si le navigateur
+// fait sauter la page vers le bas pendant le chargement (aimantation scroll-snap sur iPhone).
 // Le formulaire n'est jamais soumis : tout POST est intercepté et bloqué.
 const blockPosts = async (page: Page) => {
   await page.route('**/*', (route) => (route.request().method() === 'POST' ? route.abort() : route.continue()));
@@ -48,7 +49,11 @@ test.describe('PR H — bouton « page suivante » : la nouvelle page s\'ouvre e
       const before = await page.evaluate(() => window.scrollY);
       expect(before, 'le bouton est bien en bas de la page de départ').toBeGreaterThan(300);
 
-      await Promise.all([page.waitForURL((u) => u.pathname === c.to), cta.click()]);
+      await Promise.all([page.waitForURL((u) => u.pathname === c.to, { waitUntil: 'domcontentloaded' }), cta.click()]);
+      // Sur iPhone, l'aimantation (scroll-snap) peut renvoyer la page d'arrivée vers le bas pendant son chargement,
+      // sans aucun geste du visiteur. On reproduit ce saut (défilement programmé, sans toucher ni molette) :
+      // la page doit revenir d'elle-même en haut.
+      await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }));
       await page.waitForLoadState('load');
       const y = await settledScrollY(page);
 

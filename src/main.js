@@ -27,7 +27,7 @@
     window.scrollTo({ top: 0, behavior: 'instant' });
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        if (!root.dataset.fieldFocus) {
+        if (!root.dataset.fieldFocus && !root.dataset.navTop) {
           root.classList.remove('snap-off');
         }
       });
@@ -48,7 +48,7 @@
     }
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        if (!root.dataset.fieldFocus) {
+        if (!root.dataset.fieldFocus && !root.dataset.navTop) {
           root.classList.remove('snap-off');
         }
       });
@@ -73,6 +73,60 @@
   };
   window.addEventListener('pageshow', resetScroll);
   resetScroll();
+
+  // Lien vers une autre page du site (ex. boutons « page suivante » en bas de page) : la page d'arrivée s'ouvre en haut.
+  // Pendant le chargement, l'aimantation (scroll-snap) peut ramener la page vers le bas (iPhone surtout) : on retient
+  // le haut de page jusqu'à 2 s après le chargement, et on arrête dès que le visiteur touche, fait défiler ou tape une touche.
+  // Ne s'applique qu'à une page ouverte par un clic sur un lien du site (repère sessionStorage), sans ancre dans l'URL.
+  const NAV_TOP = 'vmm-nav-top';
+  document.addEventListener('click', (e) => {
+    if (e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const link = e.target.closest('a[href]');
+    if (!link || (link.target && link.target !== '_self') || link.hasAttribute('download')) return;
+    let url;
+    try { url = new URL(link.href, window.location.href); } catch { return; }
+    if (url.origin !== window.location.origin || url.hash || url.pathname === window.location.pathname) return;
+    try { sessionStorage.setItem(NAV_TOP, url.pathname); } catch {}
+  });
+  let fromLink = false;
+  try {
+    fromLink = sessionStorage.getItem(NAV_TOP) === window.location.pathname;
+    sessionStorage.removeItem(NAV_TOP);
+  } catch {}
+  const navType = performance.getEntriesByType?.('navigation')?.[0]?.type;
+  if (fromLink && navType === 'navigate' && !(window.location.hash && window.location.hash !== '#')) {
+    root.dataset.navTop = '1';
+    root.classList.add('snap-off');
+    // Premier arrêt d'aimantation : haut de la 1re section sous l'en-tête (0 sur la plupart des pages)
+    const firstStop = () => {
+      const first = document.querySelector('main > section');
+      const pad = parseFloat(getComputedStyle(root).scrollPaddingTop) || 0;
+      return first ? Math.max(0, first.getBoundingClientRect().top + window.scrollY - pad) : 0;
+    };
+    const holdTop = () => {
+      if (root.dataset.navTop && window.scrollY > firstStop() + 2) window.scrollTo({ top: 0, behavior: 'instant' });
+    };
+    const userEvents = ['wheel', 'touchstart', 'pointerdown', 'keydown'];
+    let timer = null;
+    const release = () => {
+      if (!root.dataset.navTop) return;
+      clearTimeout(timer);
+      window.removeEventListener('scroll', holdTop);
+      userEvents.forEach((t) => window.removeEventListener(t, release, true));
+      delete root.dataset.navTop;
+      if (!root.dataset.fieldFocus) root.classList.remove('snap-off');
+    };
+    window.addEventListener('scroll', holdTop, { passive: true });
+    userEvents.forEach((t) => window.addEventListener(t, release, { passive: true, capture: true }));
+    holdTop();
+    const endSoon = () => {
+      holdTop();
+      requestAnimationFrame(holdTop);
+      timer = setTimeout(() => { holdTop(); release(); }, 2000);
+    };
+    if (document.readyState === 'complete') endSoon();
+    else window.addEventListener('load', endSoon, { once: true });
+  }
 
   // Interception des ancres internes (#svc-liste, a[href^="#"], liens vers /page/#ancre)
   document.addEventListener('click', (e) => {
