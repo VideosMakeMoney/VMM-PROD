@@ -1466,11 +1466,16 @@ function contactPage(lang, { faqPhoto } = {}) {
   ${bgVideo('contact-logo')}
   ${contactBlock(lang, { tag: 'h1', id: 'contact-page-title' })}
 </section>
-<section class="section section-tight section-faq${hasFaqPhoto ? ' section-faq--photo faq-with-photo' : ''}" aria-labelledby="faq-title">
-  ${hasFaqPhoto ? `${faqPhotoWrap}\n  ` : ''}<div class="container faq${hasFaqPhoto ? ' faq-with-photo' : ''}">
+${hasFaqPhoto ? `<section class="section section-tight section-faq section-faq--photo faq-with-photo" aria-labelledby="faq-title">
+  ${faqPhotoWrap}
+  <div class="container faq faq-with-photo">
     <div class="faq-content">${faqInner}</div>
   </div>
-</section>`;
+</section>` : `<section class="section section-tight" aria-labelledby="faq-title">
+  <div class="container faq">
+    ${faqInner}
+  </div>
+</section>`}`;
   return layout({ key: 'contact', lang, body, preload: posterPreload('contact-logo') });
 }
 

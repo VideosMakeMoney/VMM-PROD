@@ -53,6 +53,7 @@
   --radius-pill: 9999px;
   --gutter: 16px;
   --header-h: 64px;
+  --lh-tight: 1.15;
   color-scheme: dark;
 }
 
@@ -470,7 +471,8 @@ html:not(.js) .hero-toggle { display: none; }
 /* section.page-contact : le <body> de la page Contact porte aussi la classe page-contact */
 section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
 .page-contact h1 { font-weight: 700; font-size: clamp(2.5rem, 7vw, 4.5rem); }
-.section-faq { padding-block: 0.5rem 0.75rem; }
+.section-faq.faq-with-photo,
+.section-faq--photo { padding-block: 0.5rem 0.75rem; }
 .faq { max-width: 52rem; }
 .faq details { border-top: 1px solid var(--border); }
 .faq summary { min-height: 48px; display: flex; align-items: center; cursor: pointer; font-weight: 600; padding-block: 10px; }
@@ -592,15 +594,16 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
   .section-faq--photo #faq-title {
     margin-bottom: 0.4rem;
     font-size: clamp(1.5rem, 4.5vw, 2.25rem);
-    line-height: var(--lh-tight);
+    line-height: var(--lh-tight, 1.15);
   }
   .section-faq--photo summary {
     min-height: 48px;
-    font-size: 1rem;
+    font-size: 1.0625rem;
+    line-height: 1.55;
     padding-block: 10px;
   }
   .section-faq--photo details p {
-    font-size: 1rem;
+    font-size: 1.0625rem;
   }
   .section-faq--photo .faq-photo-wrap {
     position: absolute;

@@ -433,4 +433,45 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
       }
     }
   });
+
+  // 11. Typographie FAQ Contact desktop (1440x900 et 1366x768) : line-height titre 41,4 px (±0,5) et questions 17 px
+  test('[PR-D #11] Typographie FAQ Contact desktop : line-height titre = 41,4 px (±0,5) et font-size questions = 17 px (FR + EN)', async ({ page }) => {
+    for (const vp of [{ width: 1440, height: 900 }, { width: 1366, height: 768 }]) {
+      await page.setViewportSize(vp);
+      for (const url of ['/contact/', '/en/contact/']) {
+        await page.goto(url);
+
+        const title = page.locator('#faq-title');
+        const titleLh = await title.evaluate((el) => parseFloat(window.getComputedStyle(el).lineHeight));
+        expect(Math.abs(titleLh - 41.4), `Le line-height du titre FAQ (${titleLh}px) doit être à ±0,5 px de 41,4 px sur ${url} en ${vp.width}x${vp.height}`).toBeLessThanOrEqual(0.5);
+
+        const summaries = page.locator('.section-faq--photo details summary');
+        const count = await summaries.count();
+        expect(count, '4 questions doivent être présentes').toBe(4);
+        for (let i = 0; i < count; i++) {
+          const fz = await summaries.nth(i).evaluate((el) => parseFloat(window.getComputedStyle(el).fontSize));
+          expect(fz, `La font-size de la question ${i} (${fz}px) doit être de 17 px sur ${url} en ${vp.width}x${vp.height}`).toBe(17);
+        }
+      }
+    }
+  });
+
+  // 12. FAQ Contact avec faqPhoto=false : HTML de la section FAQ strictement identique à celui de main
+  test('[PR-D #12] FAQ Contact avec faqPhoto=false : HTML de la section FAQ identique à main (FR + EN)', async () => {
+    const { buildContactHtml } = await import('../build.mjs');
+    for (const lang of ['fr', 'en'] as const) {
+      const generatedHtml = buildContactHtml(lang, { faqPhoto: false });
+      const secMatch = generatedHtml.match(/<section[^>]*aria-labelledby="faq-title"[\s\S]*?<\/section>/);
+      expect(secMatch, `La section FAQ doit exister en ${lang}`).not.toBeNull();
+      const currentSecHtml = secMatch![0];
+
+      // Vérifications directes de parité avec main
+      expect(currentSecHtml, `La section FAQ sans photo ne doit pas avoir la classe section-faq en ${lang}`).not.toContain('section-faq');
+      expect(currentSecHtml, `La section FAQ sans photo ne doit pas avoir la classe section-faq--photo en ${lang}`).not.toContain('section-faq--photo');
+      expect(currentSecHtml, `La section FAQ sans photo ne doit pas avoir la classe faq-with-photo en ${lang}`).not.toContain('faq-with-photo');
+      expect(currentSecHtml, `La section FAQ sans photo ne doit pas avoir le conteneur faq-content en ${lang}`).not.toContain('faq-content');
+      expect(currentSecHtml, `La section FAQ sans photo ne doit pas avoir faq-photo-wrap en ${lang}`).not.toContain('faq-photo-wrap');
+      expect(currentSecHtml).toMatch(/<section class="section section-tight" aria-labelledby="faq-title">\s*<div class="container faq">/);
+    }
+  });
 });
