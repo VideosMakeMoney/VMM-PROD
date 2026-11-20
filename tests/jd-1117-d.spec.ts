@@ -399,38 +399,38 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
 
   // 10. Desktop 16:9 : centrage vertical du bloc FAQ (±24 px) et computed styles flex identiques à 616a253
   test('[PR-D #10] Desktop 16:9 : centrage vertical du bloc FAQ (±24 px) et computed styles flex identiques à 616a253 (FR + EN)', async ({ page }) => {
-    const vp = page.viewportSize();
-    test.skip(!vp || (vp.width !== 1440 && vp.width !== 1366), 'Test desktop 1440x900 et 1366x768');
+    for (const vp of [{ width: 1440, height: 900 }, { width: 1366, height: 768 }]) {
+      await page.setViewportSize(vp);
+      for (const url of ['/contact/', '/en/contact/']) {
+        await page.goto(url);
 
-    for (const url of ['/contact/', '/en/contact/']) {
-      await page.goto(url);
+        const faqSec = page.locator('section[aria-labelledby="faq-title"]');
+        await expect(faqSec).toBeVisible();
 
-      const faqSec = page.locator('section[aria-labelledby="faq-title"]');
-      await expect(faqSec).toBeVisible();
+        const secBox = (await faqSec.boundingBox())!;
+        const content = faqSec.locator('.faq-content');
+        const contentBox = (await content.boundingBox())!;
 
-      const secBox = (await faqSec.boundingBox())!;
-      const content = faqSec.locator('.faq-content');
-      const contentBox = (await content.boundingBox())!;
+        // 1. Le centre vertical du bloc titre + questions est à ±24 px du centre vertical de la section
+        const secCenterY = secBox.y + secBox.height / 2;
+        const contentCenterY = contentBox.y + contentBox.height / 2;
+        const diffY = Math.abs(secCenterY - contentCenterY);
+        expect(diffY, `Le centre vertical du bloc FAQ (${contentCenterY}) doit être à ±24 px du centre de la section (${secCenterY}) sur ${url} en ${vp.width}x${vp.height}`).toBeLessThanOrEqual(24);
 
-      // 1. Le centre vertical du bloc titre + questions est à ±24 px du centre vertical de la section
-      const secCenterY = secBox.y + secBox.height / 2;
-      const contentCenterY = contentBox.y + contentBox.height / 2;
-      const diffY = Math.abs(secCenterY - contentCenterY);
-      expect(diffY, `Le centre vertical du bloc FAQ (${contentCenterY}) doit être à ±24 px du centre de la section (${secCenterY}) sur ${url}`).toBeLessThanOrEqual(24);
+        // 2. Computed styles (flex-direction, align-items, justify-content) égaux à ceux mesurés sur 616a253
+        const styles = await faqSec.evaluate((el) => {
+          const cs = window.getComputedStyle(el);
+          return {
+            flexDirection: cs.flexDirection,
+            alignItems: cs.alignItems,
+            justifyContent: cs.justifyContent,
+          };
+        });
 
-      // 2. Computed styles (flex-direction, align-items, justify-content) égaux à ceux mesurés sur 616a253
-      const styles = await faqSec.evaluate((el) => {
-        const cs = window.getComputedStyle(el);
-        return {
-          flexDirection: cs.flexDirection,
-          alignItems: cs.alignItems,
-          justifyContent: cs.justifyContent,
-        };
-      });
-
-      expect(styles.flexDirection, 'flex-direction doit être row comme sur 616a253').toBe('row');
-      expect(styles.alignItems, 'align-items doit être center comme sur 616a253').toBe('center');
-      expect(styles.justifyContent, 'justify-content doit être normal comme sur 616a253').toBe('normal');
+        expect(styles.flexDirection, 'flex-direction doit être row comme sur 616a253').toBe('row');
+        expect(styles.alignItems, 'align-items doit être center comme sur 616a253').toBe('center');
+        expect(styles.justifyContent, 'justify-content doit être normal comme sur 616a253').toBe('normal');
+      }
     }
   });
 });
