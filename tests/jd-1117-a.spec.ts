@@ -378,8 +378,8 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR A : Contact', () => {
     }
   });
 
-  test('[JD-1117 #7] Rendu FAQ par défaut (drapeau false) : La photo FAQ est absente du HTML statique (FR + EN)', async () => {
-    // 1. Vérification dans dist/ (build statique sur disque)
+  test('[JD-1117 #7] Rendu FAQ par défaut (drapeau true) : La photo FAQ est présente dans dist/ (FR + EN) et absente quand faqPhoto: false', async () => {
+    // 1. Vérification dans dist/ (build statique sur disque : photo active par défaut avec maquettes JD)
     const frPath = join(ROOT, 'dist', 'contact', 'index.html');
     const enPath = join(ROOT, 'dist', 'en', 'contact', 'index.html');
 
@@ -387,9 +387,9 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR A : Contact', () => {
     const enDistHtml = readFileSync(enPath, 'utf8');
 
     for (const [lang, html] of [['fr', frDistHtml], ['en', enDistHtml]] as const) {
-      expect(html, `La photo FAQ ne doit pas être active par défaut dans dist/ en ${lang}`).not.toMatch(/<div[^>]+class="[^"]*faq-photo-wrap/);
-      expect(html, `La classe faq-with-photo ne doit pas être présente par défaut dans dist/ en ${lang}`).not.toMatch(/<div[^>]+class="[^"]*faq-with-photo/);
-      expect(html, `L'image faq-jd ne doit pas être référencée par défaut dans dist/ en ${lang}`).not.toContain('src="/img/faq-jd');
+      expect(html, `La photo FAQ doit être active par défaut dans dist/ en ${lang}`).toMatch(/<div[^>]+class="[^"]*faq-photo-wrap/);
+      expect(html, `La classe faq-with-photo doit être présente par défaut dans dist/ en ${lang}`).toMatch(/<div[^>]+class="[^"]*faq-with-photo/);
+      expect(html, `L'image faq-jd doit être référencée par défaut dans dist/ en ${lang}`).toContain('faq-jd');
     }
 
     // 2. Vérification via buildContactHtml(lang, { faqPhoto: false })
@@ -397,6 +397,8 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR A : Contact', () => {
       const generatedHtml = buildContactHtml(lang, { faqPhoto: false });
       expect(generatedHtml).not.toMatch(/<div[^>]+class="[^"]*faq-photo-wrap/);
       expect(generatedHtml).not.toMatch(/<div[^>]+class="[^"]*faq-with-photo/);
+      expect(generatedHtml).not.toMatch(/<div[^>]+class="[^"]*faq-photo-top/);
+      expect(generatedHtml).not.toMatch(/class=[^>]*section-faq--photo/);
     }
   });
 
@@ -432,10 +434,11 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR A : Contact', () => {
       await expect(img).toHaveAttribute('height', '1672');
       await expect(img).toHaveAttribute('loading', 'lazy');
 
-      // Vérification du ratio d'aspect rendu (941/1672 = 0.562799... à ±1 %)
+      // Vérification du ratio d'aspect rendu (941/1672 = 0.562799... à ±1 %) sur desktop (>= 900px)
       const imgBox = await img.boundingBox();
       expect(imgBox).not.toBeNull();
-      if (imgBox) {
+      const viewport = page.viewportSize();
+      if (imgBox && viewport && viewport.width >= 900) {
         const renderedRatio = imgBox.width / imgBox.height;
         const expectedRatio = 941 / 1672;
         const diffRatio = Math.abs(renderedRatio - expectedRatio) / expectedRatio;
@@ -445,12 +448,13 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR A : Contact', () => {
       // Vérification que la section tient dans un écran (spécifiquement requis pour 1366×768 et 390×844)
       const sectionBox = await faqSection.boundingBox();
       expect(sectionBox).not.toBeNull();
-      const viewport = page.viewportSize();
       if (sectionBox && viewport) {
         if (viewport.width === 1366 && viewport.height === 768) {
           expect(sectionBox.height, `La section FAQ (${sectionBox.height}px) doit tenir dans la hauteur desktop 1366x768 (768px)`).toBeLessThanOrEqual(768);
         } else if (viewport.width === 390 && viewport.height === 844) {
           expect(sectionBox.height, `La section FAQ (${sectionBox.height}px) doit tenir dans la hauteur mobile 390x844 (844px)`).toBeLessThanOrEqual(844);
+        } else if (viewport.width === 390 && viewport.height === 664) {
+          expect(sectionBox.height, `La section FAQ (${sectionBox.height}px) doit tenir dans la hauteur mobile 390x664 (664px)`).toBeLessThanOrEqual(664);
         } else if (viewport.height >= 720) {
           expect(sectionBox.height, `La section FAQ (${sectionBox.height}px) doit tenir dans la hauteur d'écran (${viewport.height}px)`).toBeLessThanOrEqual(viewport.height + 5);
         }

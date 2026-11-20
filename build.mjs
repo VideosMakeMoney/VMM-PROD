@@ -1461,15 +1461,21 @@ function contactPage(lang, { faqPhoto } = {}) {
   const faqInner = `
     <h2 id="faq-title" data-reveal>${esc(L.faq.titre)}</h2>
     ${L.faq.items.map((f) => `<details data-reveal><summary>${t(f.q)}</summary><p>${t(f.r)}</p>${f.note && !isPlaceholder(f.note) ? `<p class="small">${t(f.note)}</p>` : ''}</details>`).join('\n    ')}`;
+  const faqPhotoWrap = `<div class="faq-photo-wrap" data-reveal>${picture(L.faq.photo, L.faq.photoAlt, { w: L.faq.photoLargeur || 941, h: L.faq.photoHauteur || 1672, fallback: 'jpg', widths: [470, 720, 941], sizes: '(min-width: 900px) 380px, 100vw' })}<div class="faq-veil" aria-hidden="true"></div></div>`;
   const body = `<section class="section section-contact page-contact has-bg-video" aria-labelledby="contact-page-title">
   ${bgVideo('contact-logo')}
   ${contactBlock(lang, { tag: 'h1', id: 'contact-page-title' })}
 </section>
-<section class="section section-tight" aria-labelledby="faq-title">
-  <div class="container faq${hasFaqPhoto ? ' faq-with-photo' : ''}">
-    ${hasFaqPhoto ? `<div class="faq-photo-wrap" data-reveal>${picture(L.faq.photo, L.faq.photoAlt, { w: L.faq.photoLargeur || 941, h: L.faq.photoHauteur || 1672, fallback: 'jpg', widths: [470, 720, 941], sizes: '(min-width: 900px) 380px, (min-width: 480px) 380px, 100vw' })}</div><div class="faq-content">${faqInner}</div>` : faqInner}
+${hasFaqPhoto ? `<section class="section section-tight section-faq section-faq--photo faq-with-photo" aria-labelledby="faq-title">
+  ${faqPhotoWrap}
+  <div class="container faq faq-with-photo">
+    <div class="faq-content">${faqInner}</div>
   </div>
-</section>`;
+</section>` : `<section class="section section-tight" aria-labelledby="faq-title">
+  <div class="container faq">
+    ${faqInner}
+  </div>
+</section>`}`;
   return layout({ key: 'contact', lang, body, preload: posterPreload('contact-logo') });
 }
 

@@ -53,6 +53,7 @@
   --radius-pill: 9999px;
   --gutter: 16px;
   --header-h: 64px;
+  --lh-tight: 1.15;
   color-scheme: dark;
 }
 
@@ -470,18 +471,181 @@ html:not(.js) .hero-toggle { display: none; }
 /* section.page-contact : le <body> de la page Contact porte aussi la classe page-contact */
 section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
 .page-contact h1 { font-weight: 700; font-size: clamp(2.5rem, 7vw, 4.5rem); }
+.section-faq.faq-with-photo { padding-block: 0; }
 .faq { max-width: 52rem; }
-.faq.faq-with-photo { max-width: var(--max-w); display: grid; grid-template-columns: 1fr; gap: 1rem; align-items: center; }
-.faq-photo-wrap { display: flex; justify-content: center; align-items: center; }
-.faq-photo-wrap picture { display: contents; }
-.faq-photo-wrap img { display: block; width: min(100%, 200px, calc(28vh * 941 / 1672)); height: auto; aspect-ratio: 941 / 1672; object-fit: contain; border-radius: var(--radius-md); }
-@media (min-width: 768px) {
-  .faq.faq-with-photo { grid-template-columns: minmax(280px, 380px) 1fr; gap: 3rem; }
-  .faq-photo-wrap img { width: min(100%, 380px, calc(70vh * 941 / 1672)); }
-}
 .faq details { border-top: 1px solid var(--border); }
 .faq summary { min-height: 48px; display: flex; align-items: center; cursor: pointer; font-weight: 600; padding-block: 10px; }
 .faq details p { color: var(--text-2); }
+
+/* FAQ avec photo Contact selon maquettes JD (PR D) */
+.section-faq--photo {
+  position: relative;
+  min-height: calc(100svh - var(--header-h));
+  width: 100%;
+  overflow: hidden;
+  padding-block: 0;
+  margin: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+.section-faq--photo:has(details[open]) {
+  min-height: max(calc(100svh - var(--header-h)), 880px);
+}
+.section-faq--photo .faq {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 520px;
+  margin-inline: auto;
+  padding-top: clamp(0.35rem, 1svh, 0.6rem);
+  padding-inline: 16px;
+  padding-bottom: 0;
+  box-sizing: border-box;
+}
+.section-faq--photo .faq-content {
+  width: 100%;
+  margin: 0;
+}
+.section-faq--photo #faq-title {
+  margin: 0 0 clamp(0.2rem, 0.5svh, 0.35rem) 0;
+  font-size: clamp(1.1rem, 3.8vw, 1.35rem);
+  line-height: 1.2;
+}
+.section-faq--photo details {
+  border-top: 1px solid var(--border);
+}
+.section-faq--photo summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: clamp(0.875rem, 3.2vw, 0.95rem);
+  line-height: 1.25;
+  padding-block: 4px;
+}
+.section-faq--photo details p {
+  color: var(--text-2);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  margin: 0.25rem 0 0.5rem 0;
+}
+.section-faq--photo .faq-photo-wrap {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.section-faq--photo .faq-photo-wrap picture,
+.section-faq--photo .faq-photo-wrap img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+}
+.section-faq--photo .faq-veil {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(13, 9, 23, 0.78) 0%,
+    rgba(13, 9, 23, 0.88) 32%,
+    rgba(13, 9, 23, 0.82) 42%,
+    rgba(13, 9, 23, 0.15) 50%,
+    rgba(13, 9, 23, 0.05) 75%,
+    rgba(13, 9, 23, 0.6) 96%,
+    var(--bg) 100%
+  );
+}
+@media (min-width: 900px) {
+  .section-faq.section-faq--photo,
+  .section-faq--photo {
+    min-height: calc(100svh - var(--header-h));
+    max-height: calc(100svh - var(--header-h));
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: normal;
+    padding-block: 0;
+    overflow: hidden;
+  }
+  .section-faq--photo .faq {
+    position: relative;
+    z-index: 1;
+    max-width: var(--max-w);
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .section-faq--photo .faq-content {
+    max-width: min(580px, 54%);
+    margin: 0;
+  }
+  .section-faq--photo #faq-title {
+    margin-bottom: 0.4rem;
+    font-size: clamp(1.5rem, 4.5vw, 2.25rem);
+    line-height: var(--lh-tight, 1.15);
+  }
+  .section-faq--photo summary {
+    min-height: 48px;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    padding-block: 10px;
+  }
+  .section-faq--photo details p {
+    font-size: 1.0625rem;
+  }
+  .section-faq--photo .faq-photo-wrap {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    height: 100%;
+    width: min(44vw, calc((100svh - var(--header-h)) * 941 / 1672));
+    z-index: 0;
+    overflow: hidden;
+  }
+  .section-faq--photo .faq-photo-wrap picture {
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
+  .section-faq--photo .faq-photo-wrap img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+    border-radius: 1rem 0 0 1rem;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 20%), linear-gradient(180deg, transparent 0%, #000 12%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(90deg, transparent 0%, #000 20%), linear-gradient(180deg, transparent 0%, #000 12%);
+    mask-composite: intersect;
+  }
+  .section-faq--photo .faq-photo-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: 1rem 0 0 1rem;
+    background:
+      linear-gradient(90deg, var(--bg) 0%, transparent 22%),
+      linear-gradient(180deg, var(--bg) 0%, transparent 14%);
+  }
+  .section-faq--photo .faq-veil {
+    display: none;
+  }
+}
 
 .page-simple { min-height: 60vh; }
 .page-simple h1 { font-weight: 700; font-size: clamp(2.5rem, 7vw, 4.5rem); }

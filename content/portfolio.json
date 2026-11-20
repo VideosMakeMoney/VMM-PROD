@@ -29,8 +29,7 @@
       "videoAccueilProvisoire": "g8pY-zSgljI",
       "miniature": "/img/portfolio/cat-evenements",
       "titreMaquette": "Une équipe soudée (Tapis Rouge)",
-      "videoAccueil": "",
-      "note": "[EN ATTENTE DE JD : B7dWhLnxw08 indisponible sur YouTube (404)]"
+      "videoAccueil": "1NpXK1wLSl8"
     },
     {
       "id": "histoires",
@@ -250,6 +249,30 @@
       "vertical": true,
       "dateMiseEnLigne": "2026-08-16",
       "publie": "2026-08-16T13:00:17-07:00"
+    },
+    {
+      "client": "Tapis Rouge",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "1NpXK1wLSl8",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": "2026-11-18",
+      "publie": "2026-11-18T07:25:33-08:00"
+    },
+    {
+      "client": "Tapis Rouge",
+      "categorie": "",
+      "type": "finale",
+      "youtubeId": "u_HK2iiuUnw",
+      "langue": "",
+      "titre": "",
+      "vedette": false,
+      "vertical": true,
+      "dateMiseEnLigne": "2026-11-18",
+      "publie": "2026-11-18T07:31:48-08:00"
     },
     {
       "client": "PUR Construction",

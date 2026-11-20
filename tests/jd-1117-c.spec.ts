@@ -186,7 +186,7 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR C : clips, liens YouTube, t
   // POINT 9 — Liens YouTube des cartes de catégories (Accueil & Portfolio p.2)
   // =========================================================================
 
-  test('[JD-1117 #9] Cartes des catégories sur Accueil et Portfolio : liens YouTube exacts (LiXjVf43rqo pour promo, -6N2iah60mc pour coulisses, tuile vide pour evenements en attente de JD) (FR + EN)', async ({ page }) => {
+  test('[JD-1117 #9] Cartes des catégories sur Accueil et Portfolio : liens YouTube exacts (LiXjVf43rqo pour promo, -6N2iah60mc pour coulisses, 1NpXK1wLSl8 pour evenements) (FR + EN)', async ({ page }) => {
     for (const path of ['/', '/en/', '/portfolio/', '/en/portfolio/']) {
       await page.goto(path);
 
@@ -200,11 +200,16 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR C : clips, liens YouTube, t
       await expect(coulissesLink).toBeVisible();
       await expect(coulissesLink).toHaveAttribute('href', 'https://www.youtube.com/watch?v=-6N2iah60mc');
 
-      // Événements -> tuile vide non cliquable (B7dWhLnxw08 étant 404, en attente de JD)
-      const emptyCatTile = page.locator('.hp-cards .yt-tile.is-empty, .pf-cat-grid .yt-tile.is-empty');
-      await expect(emptyCatTile.first()).toBeVisible();
+      // Événements -> 1NpXK1wLSl8 (remplace B7dWhLnxw08 404, tuile redevenue cliquable)
+      const evenementsLink = page.locator('a[href*="1NpXK1wLSl8"]').first();
+      await expect(evenementsLink).toBeVisible();
+      await expect(evenementsLink).toHaveAttribute('href', 'https://www.youtube.com/shorts/1NpXK1wLSl8');
 
-      // B7dWhLnxw08 ne doit JAMAIS apparaître nulle part tant qu'elle est 404
+      // Aucune tuile de catégorie vide / non cliquable
+      const emptyCatTile = page.locator('.hp-cards .yt-tile.is-empty, .pf-cat-grid .yt-tile.is-empty');
+      expect(await emptyCatTile.count()).toBe(0);
+
+      // B7dWhLnxw08 ne doit JAMAIS apparaître nulle part
       const b7Link = page.locator('a[href*="B7dWhLnxw08"]');
       expect(await b7Link.count()).toBe(0);
     }
@@ -217,8 +222,9 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR C : clips, liens YouTube, t
       'c6GviSuf6Kc', 'hxhDQdTkXkM', 'WBgsj8VZAzc', 'Ce1zC640M-A', '8X6m5PyYs0w',
       // Hors-Pair (3)
       'aRr26p8dQxk', 'fxGb6xSqsfw', 'LiXjVf43rqo',
-      // Tapis Rouge (7)
+      // Tapis Rouge (9 — dont ajouts 1NpXK1wLSl8 et u_HK2iiuUnw)
       'hmrhpcyGGEk', 'O2UTFiYzGU0', 'kKz1pKN44dM', 'g8pY-zSgljI', '3ru2cIaqzeo', 't7zXkOFUdBs', 'HeLdEo_awQ0',
+      '1NpXK1wLSl8', 'u_HK2iiuUnw',
       // PÜR Construction (7)
       'FOeE9sB-UtY', 'VaEXZ5aXcE0', 'wNGp61LUV8g', 'duRjqB2By-0', 'G3owwW2k1Po', 'F8bCIpVoDFI', '3T-zTO2Q30A',
       // BlueWise (2)
@@ -281,6 +287,8 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR C : clips, liens YouTube, t
           '3ru2cIaqzeo', // 2026-08-10
           't7zXkOFUdBs', // 2026-08-13
           'HeLdEo_awQ0', // 2026-08-16
+          '1NpXK1wLSl8', // 2026-11-18T07:25:33-08:00
+          'u_HK2iiuUnw', // 2026-11-18T07:31:48-08:00
         ],
       },
       purConstruction: {
@@ -365,9 +373,9 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR C : clips, liens YouTube, t
       const coulissesCount = page.locator('.pf-shelf-tile .coulisses-count');
       await expect(coulissesCount).toContainText('9');
 
-      // Tapis Rouge -> 7 vidéos
+      // Tapis Rouge -> 9 vidéos
       const trCount = page.locator('.logo-btn[href*="tapis-rouge"] .logo-btn-count');
-      await expect(trCount).toContainText('7');
+      await expect(trCount).toContainText('9');
 
       // Hors-Pair -> 3 vidéos
       const hpCount = page.locator('.logo-btn[href*="hors-pair"] .logo-btn-count');
