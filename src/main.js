@@ -6,8 +6,8 @@
 
   const isMobile = () => window.matchMedia('(max-width: 899px)').matches;
 
-  // Restauration manuelle du défilement pour garantir le retour en haut lors des navigations
-  if ('scrollRestoration' in history) {
+  // Restauration manuelle du défilement pour garantir le retour en haut lors des navigations (mobile seulement)
+  if (isMobile() && 'scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
   }
 
