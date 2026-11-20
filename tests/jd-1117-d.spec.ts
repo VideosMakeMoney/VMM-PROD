@@ -133,7 +133,7 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
 
       // 3. Les accordéons fermés ne chevauchent pas la casquette ou le visage de JD
       const closedContentBottom = lastDetailsBox.y + lastDetailsBox.height;
-      expect(closedContentBottom, `Le contenu fermé (${closedContentBottom}) ne doit pas chevaucher la casquette de JD (${capTop})`).toBeLessThanOrEqual(capTop + 5);
+      expect(closedContentBottom, `Le contenu fermé (${closedContentBottom}) ne doit pas chevaucher la casquette de JD (${capTop})`).toBeLessThanOrEqual(capTop);
 
       // 4. Pas de vide noir sous la section : écart avec le footer <= 24px
       const footer = page.locator('footer');
@@ -150,9 +150,9 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
       const sumCount = await summaries.count();
       for (let s = 0; s < sumCount; s++) {
         const sumBox = (await summaries.nth(s).boundingBox())!;
-        expect(sumBox.height, `La cible tactile de chaque question doit être >= 44px (reçu ${sumBox.height}px)`).toBeGreaterThanOrEqual(43.5);
+        expect(sumBox.height, `La cible tactile de chaque question doit être >= 44px (reçu ${sumBox.height}px)`).toBeGreaterThanOrEqual(44);
         const fontSize = await summaries.nth(s).evaluate((el) => parseFloat(window.getComputedStyle(el).fontSize));
-        expect(fontSize, `La taille de police de la question doit être >= 14px (reçu ${fontSize}px)`).toBeGreaterThanOrEqual(13.9);
+        expect(fontSize, `La taille de police de la question doit être >= 14px (reçu ${fontSize}px)`).toBeGreaterThanOrEqual(14);
       }
     }
   });
@@ -203,7 +203,7 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
           const scale = Math.max(secBox.width / 941, secBox.height / 1672);
           const imgFaceTop = secBox.y + secBox.height - (1672 - 880) * scale;
           const itemBox = (await item.boundingBox())!;
-          expect(itemBox.y + itemBox.height, `L accordéon ouvert (${itemBox.y + itemBox.height}) ne doit pas chevaucher le visage de JD (${imgFaceTop})`).toBeLessThanOrEqual(imgFaceTop + 5);
+          expect(itemBox.y + itemBox.height, `L accordéon ouvert (${itemBox.y + itemBox.height}) ne doit pas chevaucher le visage de JD (${imgFaceTop})`).toBeLessThanOrEqual(imgFaceTop);
         } else {
           // Desktop : pas de chevauchement horizontal
           const photoBox = (await photoImg.boundingBox())!;
@@ -361,9 +361,21 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
     }
   });
 
-  // 9. Étanchéité CSS : les pages de zones SEO ne reçoivent aucune règle de photo FAQ
+  // 9. Étanchéité CSS : les 8 pages de zones SEO ne reçoivent aucune règle de photo FAQ
   test('[PR-D #9] Pages de zones SEO : la section FAQ ne contient ni photo ni déformation CSS (max-width 52rem, padding normal)', async ({ page }) => {
-    for (const url of ['/production-video-saint-jerome/', '/en/video-production-saint-jerome/']) {
+    const ZONE_URLS = [
+      '/production-video-laurentides/',
+      '/en/video-production-laurentians/',
+      '/production-video-sainte-therese/',
+      '/en/video-production-sainte-therese/',
+      '/production-video-saint-jerome/',
+      '/en/video-production-saint-jerome/',
+      '/production-video-rive-nord-montreal/',
+      '/en/video-production-north-shore-montreal/',
+    ];
+    expect(ZONE_URLS.length, 'Le test doit couvrir les 8 pages de zones SEO').toBe(8);
+
+    for (const url of ZONE_URLS) {
       await page.goto(url);
       const faqSec = page.locator('section[aria-labelledby="zone-faq"]');
       await expect(faqSec).toBeVisible();
@@ -382,6 +394,43 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
       const faqContainer = faqSec.locator('.faq');
       const paddingTop = await faqContainer.evaluate((el) => parseFloat(window.getComputedStyle(el).paddingTop));
       expect(paddingTop, `Le padding-top de la FAQ sur ${url} doit être normal (< 50px)`).toBeLessThan(50);
+    }
+  });
+
+  // 10. Desktop 16:9 : centrage vertical du bloc FAQ (±24 px) et computed styles flex identiques à 616a253
+  test('[PR-D #10] Desktop 16:9 : centrage vertical du bloc FAQ (±24 px) et computed styles flex identiques à 616a253 (FR + EN)', async ({ page }) => {
+    const vp = page.viewportSize();
+    test.skip(!vp || (vp.width !== 1440 && vp.width !== 1366), 'Test desktop 1440x900 et 1366x768');
+
+    for (const url of ['/contact/', '/en/contact/']) {
+      await page.goto(url);
+
+      const faqSec = page.locator('section[aria-labelledby="faq-title"]');
+      await expect(faqSec).toBeVisible();
+
+      const secBox = (await faqSec.boundingBox())!;
+      const content = faqSec.locator('.faq-content');
+      const contentBox = (await content.boundingBox())!;
+
+      // 1. Le centre vertical du bloc titre + questions est à ±24 px du centre vertical de la section
+      const secCenterY = secBox.y + secBox.height / 2;
+      const contentCenterY = contentBox.y + contentBox.height / 2;
+      const diffY = Math.abs(secCenterY - contentCenterY);
+      expect(diffY, `Le centre vertical du bloc FAQ (${contentCenterY}) doit être à ±24 px du centre de la section (${secCenterY}) sur ${url}`).toBeLessThanOrEqual(24);
+
+      // 2. Computed styles (flex-direction, align-items, justify-content) égaux à ceux mesurés sur 616a253
+      const styles = await faqSec.evaluate((el) => {
+        const cs = window.getComputedStyle(el);
+        return {
+          flexDirection: cs.flexDirection,
+          alignItems: cs.alignItems,
+          justifyContent: cs.justifyContent,
+        };
+      });
+
+      expect(styles.flexDirection, 'flex-direction doit être row comme sur 616a253').toBe('row');
+      expect(styles.alignItems, 'align-items doit être center comme sur 616a253').toBe('center');
+      expect(styles.justifyContent, 'justify-content doit être normal comme sur 616a253').toBe('normal');
     }
   });
 });

@@ -398,6 +398,7 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR A : Contact', () => {
       expect(generatedHtml).not.toMatch(/<div[^>]+class="[^"]*faq-photo-wrap/);
       expect(generatedHtml).not.toMatch(/<div[^>]+class="[^"]*faq-with-photo/);
       expect(generatedHtml).not.toMatch(/<div[^>]+class="[^"]*faq-photo-top/);
+      expect(generatedHtml).not.toMatch(/class=[^>]*section-faq--photo/);
     }
   });
 
@@ -452,6 +453,8 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR A : Contact', () => {
           expect(sectionBox.height, `La section FAQ (${sectionBox.height}px) doit tenir dans la hauteur desktop 1366x768 (768px)`).toBeLessThanOrEqual(768);
         } else if (viewport.width === 390 && viewport.height === 844) {
           expect(sectionBox.height, `La section FAQ (${sectionBox.height}px) doit tenir dans la hauteur mobile 390x844 (844px)`).toBeLessThanOrEqual(844);
+        } else if (viewport.width === 390 && viewport.height === 664) {
+          expect(sectionBox.height, `La section FAQ (${sectionBox.height}px) doit tenir dans la hauteur mobile 390x664 (664px)`).toBeLessThanOrEqual(664);
         } else if (viewport.height >= 720) {
           expect(sectionBox.height, `La section FAQ (${sectionBox.height}px) doit tenir dans la hauteur d'écran (${viewport.height}px)`).toBeLessThanOrEqual(viewport.height + 5);
         }

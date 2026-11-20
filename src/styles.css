@@ -569,7 +569,9 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
     max-height: calc(100svh - var(--header-h));
     box-sizing: border-box;
     display: flex;
+    flex-direction: row;
     align-items: center;
+    justify-content: normal;
     padding-block: 0;
     overflow: hidden;
   }
