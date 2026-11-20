@@ -1310,6 +1310,22 @@ h1.jd-label, h2.jd-label, h2.label { font-family: var(--font-label); letter-spac
 /* 3. Règle d'or : une section = un écran (100svh moins l'en-tête), aimantée au défilement (une section par geste).
    Lenis n'est pas démarré quand scroll-snap est actif (main.js). */
 html { scroll-snap-type: y mandatory; scroll-padding-top: var(--header-h); }
+@media (max-width: 899px) {
+  html.snap-off,
+  html.snap-off body {
+    scroll-snap-type: none !important;
+    scroll-behavior: auto !important;
+  }
+  html.snap-off .page-contact .contact-info,
+  html.snap-off .page-contact .contact-form,
+  html.snap-off main > section {
+    scroll-snap-align: none !important;
+    scroll-snap-stop: normal !important;
+  }
+  #svc-liste {
+    scroll-margin-top: 0;
+  }
+}
 main > section { scroll-snap-align: start; min-height: calc(100svh - var(--header-h)); box-sizing: border-box; }
 main > section.jd-screen { display: flex; flex-direction: column; justify-content: center; padding-block: clamp(1rem, 4svh, 3rem); }
 .site-footer { scroll-snap-align: end; }

@@ -6,17 +6,162 @@
 
   const isMobile = () => window.matchMedia('(max-width: 899px)').matches;
 
-  // Restauration manuelle du défilement pour garantir le retour en haut lors des navigations (mobile seulement)
-  if (isMobile() && 'scrollRestoration' in history) {
+  // Restauration manuelle du défilement pour garantir le retour en haut lors des navigations
+  if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
   }
+
+  // Support interactive-widget=resizes-content pour les navigateurs le supportant (Chromium/Android)
+  // Safari/WebKit ne le supporte pas et génère une erreur console WebKit si présent dans le HTML
+  if (typeof navigator !== 'undefined' && !(/AppleWebKit/i.test(navigator.userAgent) && !/Chrome/i.test(navigator.userAgent))) {
+    const meta = document.querySelector('meta[name="viewport"]');
+    if (meta && !meta.content.includes('interactive-widget')) {
+      meta.content += ', interactive-widget=resizes-content';
+    }
+  }
+
+  // Routine de retour en haut fiable : coupe le snap et le smooth, fait scrollTo instant,
+  // puis réactive le snap au prochain frame (double requestAnimationFrame).
+  const scrollToTopInstant = () => {
+    root.classList.add('snap-off');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (!root.dataset.fieldFocus) {
+          root.classList.remove('snap-off');
+        }
+      });
+    });
+  };
+
+  // Routine d'ancre interne : coupe le snap, scrollIntoView({ block: 'start', behavior: 'instant' })
+  // en tenant compte du header (scroll-margin-top = hauteur du header), déplace le focus,
+  // puis réactive le snap au prochain frame.
+  const navigateToAnchor = (target, updateHash = false, hash = '') => {
+    if (!target) return;
+    root.classList.add('snap-off');
+    target.scrollIntoView({ block: 'start', behavior: 'instant' });
+    target.setAttribute('tabindex', '-1');
+    target.focus({ preventScroll: true });
+    if (updateHash && hash) {
+      try { history.pushState(null, '', hash); } catch {}
+    }
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (!root.dataset.fieldFocus) {
+          root.classList.remove('snap-off');
+        }
+      });
+    });
+  };
+
+  // Gère l'affichage initial et pageshow (bfcache iOS) pour remettre en haut sauf si une ancre est dans l'URL
   const resetScroll = (e) => {
-    if (isMobile() && (!e || !e.persisted) && !window.location.hash) {
-      window.scrollTo(0, 0);
+    if (window.location.hash && window.location.hash !== '#') {
+      try {
+        const target = document.querySelector(window.location.hash);
+        if (target) {
+          navigateToAnchor(target, false);
+          return;
+        }
+      } catch {}
+      return;
+    }
+    if (isMobile() && (window.scrollY > 0 || (e && e.persisted))) {
+      scrollToTopInstant();
     }
   };
   window.addEventListener('pageshow', resetScroll);
   resetScroll();
+
+  // Interception des ancres internes (#svc-liste, a[href^="#"], liens vers /page/#ancre)
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a');
+    if (!link) return;
+    const href = link.getAttribute('href');
+    if (!href) return;
+
+    let hash = '';
+    if (href.startsWith('#')) {
+      hash = href;
+    } else {
+      try {
+        const url = new URL(href, window.location.href);
+        if (url.origin === window.location.origin && url.pathname === window.location.pathname && url.hash) {
+          hash = url.hash;
+        }
+      } catch {}
+    }
+
+    if (hash && hash !== '#') {
+      try {
+        const target = document.querySelector(hash);
+        if (target) {
+          e.preventDefault();
+          navigateToAnchor(target, true, hash);
+        }
+      } catch {}
+    }
+  });
+
+  // Clavier mobile sur le formulaire Contact : priorité n° 1
+  const contactForms = document.querySelectorAll('.page-contact form, form.contact-form');
+  if (contactForms.length) {
+    let activeField = null;
+    let blurTimer = null;
+
+    const keepVisible = () => {
+      if (!activeField) return;
+      const rect = activeField.getBoundingClientRect();
+      const vv = window.visualViewport;
+      const vvOffsetTop = vv ? vv.offsetTop : 0;
+      const vvHeight = vv ? vv.height : window.innerHeight;
+      const visibleBottom = vvOffsetTop + vvHeight;
+      const targetBottom = visibleBottom - 12;
+
+      if (rect.bottom > targetBottom) {
+        window.scrollBy({ top: rect.bottom - targetBottom, behavior: 'instant' });
+      }
+    };
+
+    contactForms.forEach((form) => {
+      form.addEventListener('focusin', (e) => {
+        if (!isMobile()) return;
+        const target = e.target;
+        if (!['INPUT', 'TEXTAREA', 'SELECT'].includes(target?.tagName)) return;
+        if (target.type === 'hidden') return;
+
+        clearTimeout(blurTimer);
+        activeField = target;
+        root.dataset.fieldFocus = '1';
+        root.classList.add('snap-off');
+
+        keepVisible();
+        requestAnimationFrame(keepVisible);
+        setTimeout(keepVisible, 100);
+        setTimeout(keepVisible, 300);
+      });
+
+      form.addEventListener('focusout', () => {
+        clearTimeout(blurTimer);
+        blurTimer = setTimeout(() => {
+          const current = document.activeElement;
+          const stillInForm = form.contains(current) && ['INPUT', 'TEXTAREA', 'SELECT'].includes(current?.tagName);
+          if (!stillInForm) {
+            activeField = null;
+            delete root.dataset.fieldFocus;
+            root.classList.remove('snap-off');
+          }
+        }, 120);
+      });
+    });
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', keepVisible);
+      window.visualViewport.addEventListener('scroll', keepVisible);
+    }
+    window.addEventListener('resize', keepVisible);
+  }
 
   // Menu mobile
   const toggle = document.querySelector('.menu-toggle');
@@ -35,7 +180,20 @@
     if (!open) menuY = null;
   };
   toggle?.addEventListener('click', () => setMenu(!nav.classList.contains('open')));
-  nav?.addEventListener('click', (e) => { if (e.target.closest('a')) setMenu(false, false); });
+  nav?.addEventListener('click', (e) => {
+    const a = e.target.closest('a');
+    if (!a) return;
+    setMenu(false, false);
+    const href = a.getAttribute('href');
+    if (!href) return;
+    try {
+      const url = new URL(href, window.location.href);
+      if (url.origin === window.location.origin && url.pathname === window.location.pathname && (!url.hash || url.hash === '#')) {
+        e.preventDefault();
+        scrollToTopInstant();
+      }
+    } catch {}
+  });
   if (toggle && nav) {
     // Échap ferme le menu (le focus revient au bouton s'il était dans le menu) ; un toucher hors du menu le ferme
     // sans activer ce qui est dessous.
