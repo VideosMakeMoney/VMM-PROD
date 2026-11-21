@@ -15,12 +15,12 @@ const PROJETS = ['desktop-1440x900', 'mobile-iphone-390x844'];
 const RATIO = 768 / 1024;
 // Empreintes SHA-256 des 6 dérivés de la nouvelle photo (static/img/faq-jd*)
 const HASHES = new Set<string>([
-  'bab3318be94067f8d5d023aa914aaaddc70332b23b6e25cf93dd500c54ad6046', // faq-jd.jpg
-  '868e3b55a04f7fd7ac02afd65c550300d2f2b72de572eb7b3ca82fa55990656e', // faq-jd.webp
-  'f62f7b1278d74b4cd1709d9d558477ab7311a945a94e9987aa4c83506467c7ac', // faq-jd-720.jpg
-  '98f071dde315a40c9deac6a1d3ebd7fd523b897e513e62cc0507ccb211acfd95', // faq-jd-720.webp
-  'f0139fb96a557beb60022b71df19d7e7a6bad3e8ae225cd18f3ab52393f63de4', // faq-jd-470.jpg
-  '99d527ee81ee642468cf3c0ea401a6b7aba146f71d56b99f9e1fc2d12fcd0b5a', // faq-jd-470.webp
+  '4cec3eefccdae10aff4eaaf9c8e05de73e6127237123313a23be919c523895fa', // faq-jd.jpg
+  '121f44dbc313da3a698c28074ce8b52184e8e1977ccf665ddc061b945c0a7bbf', // faq-jd.webp
+  '48f01f83ee258e30f617b545f529cec24fad1ad1b1d6c66c4ce47ebaba48df20', // faq-jd-720.jpg
+  '34f559561a7d853675cf74cec5ecb2e3874ebc18b8b6d1e78c178d4a05427344', // faq-jd-720.webp
+  '7bd1b710290970bf8f6ef3a215dcd1fdfcfbd4a7edf6c4e3831f311da3377c40', // faq-jd-470.jpg
+  '399739b01509afcac668e2d7b5cdc1092430848ef2967df4a6265a5e2ac45689', // faq-jd-470.webp
 ]);
 
 for (const p of PAGES) {
