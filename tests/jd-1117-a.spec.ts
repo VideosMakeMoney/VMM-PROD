@@ -402,7 +402,7 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR A : Contact', () => {
     }
   });
 
-  test('[JD-1117 #7] Rendu FAQ réel (build avec drapeau allumé) : <picture> généré par build.mjs, alt, loading=lazy, ratio 941/1672 à ±1% et hauteur d\'écran respectée (FR + EN)', async ({ page }) => {
+  test('[JD-1117 #7] Rendu FAQ réel (build avec drapeau allumé) : <picture> généré par build.mjs, alt, loading=lazy, ratio 941/1255 à ±1% et hauteur d\'écran respectée (FR + EN)', async ({ page }) => {
     const testPages = [
       { url: '/contact/', lang: 'fr' as const, expectedAlt: 'JD au studio de VMM Productions' },
       { url: '/en/contact/', lang: 'en' as const, expectedAlt: 'JD in the VMM Productions studio' },
@@ -431,18 +431,18 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR A : Contact', () => {
       // Attributs requis
       await expect(img).toHaveAttribute('alt', expectedAlt);
       await expect(img).toHaveAttribute('width', '941');
-      await expect(img).toHaveAttribute('height', '1672');
+      await expect(img).toHaveAttribute('height', '1255');
       await expect(img).toHaveAttribute('loading', 'lazy');
 
-      // Vérification du ratio d'aspect rendu (941/1672 = 0.562799... à ±1 %) sur desktop (>= 900px)
+      // Vérification du ratio d'aspect rendu (941/1255 = 0.7498 à ±1 %, photo PR L) sur desktop (>= 900px)
       const imgBox = await img.boundingBox();
       expect(imgBox).not.toBeNull();
       const viewport = page.viewportSize();
       if (imgBox && viewport && viewport.width >= 900) {
         const renderedRatio = imgBox.width / imgBox.height;
-        const expectedRatio = 941 / 1672;
+        const expectedRatio = 941 / 1255;
         const diffRatio = Math.abs(renderedRatio - expectedRatio) / expectedRatio;
-        expect(diffRatio, `Le ratio rendu (${renderedRatio}) doit être à ±1 % de 941/1672 (${expectedRatio})`).toBeLessThan(0.01);
+        expect(diffRatio, `Le ratio rendu (${renderedRatio}) doit être à ±1 % de 941/1255 (${expectedRatio})`).toBeLessThan(0.01);
       }
 
       // Vérification que la section tient dans un écran (spécifiquement requis pour 1366×768 et 390×844)

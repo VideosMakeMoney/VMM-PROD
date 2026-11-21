@@ -112,16 +112,16 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
       const titreBox = (await titre.boundingBox())!;
       const lastDetailsBox = (await accordeons.last().boundingBox())!;
 
-      // Calcul des coordonnées rendues de l'image (source 941x1672 avec object-fit: cover, object-position: center bottom)
-      // Proportions relatives dans l'image source (largeur 941, hauteur 1672px) :
-      // - Casquette haut = 800px (47.85%)
-      // - Visage haut = 880px (52.63%), bas = 1140px (68.18%)
-      // - Pupitre bas = 1500px (89.71%)
-      const scale = Math.max(secBox.width / 941, secBox.height / 1672);
-      const capTop = secBox.y + secBox.height - (1672 - 800) * scale;
-      const faceTop = secBox.y + secBox.height - (1672 - 880) * scale;
-      const faceBottom = secBox.y + secBox.height - (1672 - 1140) * scale;
-      const deskBottom = secBox.y + secBox.height - (1672 - 1500) * scale;
+      // Calcul des coordonnées rendues de l'image (source 941x1255 avec object-fit: cover, object-position: 65% bottom)
+      // Repères dans la photo PR L (JD au studio devant le logo VMM, largeur 941, hauteur 1255 px) :
+      // - Casquette haut = 530px (42.2%)
+      // - Visage haut (sous la visière) = 668px (53.2%), bas (menton) = 800px (63.7%)
+      // - Bureau (bas du clavier) = 1180px (94.0%)
+      const scale = Math.max(secBox.width / 941, secBox.height / 1255);
+      const capTop = secBox.y + secBox.height - (1255 - 530) * scale;
+      const faceTop = secBox.y + secBox.height - (1255 - 668) * scale;
+      const faceBottom = secBox.y + secBox.height - (1255 - 800) * scale;
+      const deskBottom = secBox.y + secBox.height - (1255 - 1180) * scale;
 
       // 1. Hauteur de la section FAQ fermée = exactement un écran utile (<= viewport.height)
       expect(secBox.height, `La section FAQ fermée (${secBox.height}px) doit tenir dans l'écran mobile (${viewport.height}px)`).toBeLessThanOrEqual(viewport.height);
@@ -200,8 +200,8 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
         if (isMobile) {
           // Mobile : l'élément ouvert ne doit jamais descendre sur le visage de JD
           const secBox = (await faqSection.boundingBox())!;
-          const scale = Math.max(secBox.width / 941, secBox.height / 1672);
-          const imgFaceTop = secBox.y + secBox.height - (1672 - 880) * scale;
+          const scale = Math.max(secBox.width / 941, secBox.height / 1255);
+          const imgFaceTop = secBox.y + secBox.height - (1255 - 668) * scale;
           const itemBox = (await item.boundingBox())!;
           expect(itemBox.y + itemBox.height, `L accordéon ouvert (${itemBox.y + itemBox.height}) ne doit pas chevaucher le visage de JD (${imgFaceTop})`).toBeLessThanOrEqual(imgFaceTop);
         } else {
