@@ -8,9 +8,9 @@
   "courriel": "jeandavid@videosmakemoney.ca",
   "telephone": "+1-514-604-5682",
   "adresse": {
-    "_aide": "Confirmé par JD : aucune adresse de rue publique. Le JSON-LD ne publie que region (QC) et pays (CA) ; rue, ville et code postal ne sont jamais publiés.",
+    "_aide": "Confirmé par JD : aucune adresse de rue publique. Le JSON-LD publie ville (Sainte-Thérèse, PR I 2026-11-20), region (QC) et pays (CA) ; rue et code postal ne sont jamais publiés (non confirmés).",
     "rue": "",
-    "ville": "",
+    "ville": "Sainte-Thérèse",
     "region": "QC",
     "codePostal": "",
     "pays": "CA"

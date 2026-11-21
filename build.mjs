@@ -198,6 +198,10 @@ const unesc = (s = '') =>
 // Les placeholders [À CONFIRMER …] restent dans content/*.json (pour suivi) mais ne sont jamais publiés dans le HTML.
 const t = (s = '') => esc(s).replace(/\s*\[(?:À CONFIRMER|TO CONFIRM)[^\]]*\]/g, '');
 const note = (s) => (s ? ` ${t(s)}` : '');
+// FAQ : questions et réponses telles qu'affichées dans les accordéons (marqueurs [À CONFIRMER] retirés, comme t()).
+// Source unique pour les <details> et le JSON-LD FAQPage : les deux ne peuvent pas diverger.
+const stripMarks = (s = '') => String(s).replace(/\s*\[(?:À CONFIRMER|TO CONFIRM)[^\]]*\]/g, '');
+const faqVisible = (items = []) => items.map((f) => ({ q: stripMarks(f.q), r: stripMarks(f.r) })).filter((f) => f.q && f.r);
 // Titres des pages Services et À propos : *mot* = mot en violet, retour à la ligne = <br>
 const rich = (s = '') => t(s).replace(/\*([^*]+)\*/g, '<span class="accent">$1</span>').replace(/\n/g, '<br>');
 // Drapeaux de content/site.json (contenu en attente de JD) : un élément avec « drapeau » n'apparaît que si son drapeau est true
@@ -330,7 +334,7 @@ function structuredData(key, lang, pageVideos = [], page = null) {
   });
   const a = site.adresse;
   const business = {
-    '@type': 'ProfessionalService', // sous-type de LocalBusiness ; aucune adresse de rue (confirmé par JD), seulement région et pays
+    '@type': 'ProfessionalService', // sous-type de LocalBusiness ; aucune adresse de rue (confirmé par JD), seulement ville, région et pays
     '@id': biz,
     name: site.nom,
     legalName: site.nomLegal,
@@ -343,8 +347,8 @@ function structuredData(key, lang, pageVideos = [], page = null) {
     image: abs(OG.defaut),
     email: site.courriel,
     ...(site.telephone ? { telephone: site.telephone } : {}),
-    // Pas de rue, de ville ni de code postal : seulement la région et le pays.
-    address: { '@type': 'PostalAddress', addressRegion: a.region, addressCountry: a.pays },
+    // Pas de rue ni de code postal (non confirmés) : seulement la ville, la région et le pays.
+    address: { '@type': 'PostalAddress', ...(a.ville ? { addressLocality: a.ville } : {}), addressRegion: a.region, addressCountry: a.pays },
     // Zone principale : 50 km autour de Sainte-Thérèse (centre de la ville, pas une adresse) ; « Québec » reste la zone élargie
     areaServed: [
       {
@@ -439,11 +443,12 @@ function structuredData(key, lang, pageVideos = [], page = null) {
       '@type': 'FAQPage',
       '@id': pageUrl + '#faq',
       inLanguage: L.lang,
-      mainEntity: Z.faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.r } })),
+      mainEntity: faqVisible(Z.faq).map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.r } })),
     });
   }
   if (key === 'contact') {
-    const faq = L.faq.items.filter((f) => !isPlaceholder(f.r) && !f.note); // réponse signalée (note) : pas dans les données structurées
+    // Mêmes questions et réponses que les accordéons affichés (contactPage → faqVisible), mot pour mot
+    const faq = faqVisible(L.faq.items);
     if (faq.length) {
       graph.push({
         '@type': 'FAQPage',
@@ -1571,6 +1576,11 @@ function llmsTxt() {
     '',
     `Mission : ${fr.mission}`,
     '',
+    '## Désambiguïsation',
+    `${site.nom} (${site.marque}) est une entreprise de production vidéo basée à ${site.adresse.ville}, au Québec, qui sert le Grand Montréal et les Laurentides. Elle n'a aucun lien avec les autres entreprises nommées VMM ou VMM Productions (ex. aux États-Unis) ni avec le domaine vmmproductions.com. Site officiel : ${SITE_URL}`,
+    ...(site.google?.url ? [`- Fiche Google Business : ${site.google.url}`] : []),
+    ...(site.google?.sameAs ? [`- Google (Knowledge Graph) : ${site.google.sameAs}`] : []),
+    '',
     '## Façon de travailler',
     `- ${fr.surMesure}`,
     `- Délai de livraison : ${site.delaiLivraison.fr}, selon la complexité.`,
@@ -1621,6 +1631,11 @@ function llmsTxt() {
     `${site.nom} (legal name: ${site.nomLegal}) is a video production company and corporate videographer based in Greater Montreal and the Laurentians, serving all of Quebec (Canada). Founder: JD. Core statement: "${en.hero.sousTitre}"`,
     '',
     `Mission: ${en.mission}`,
+    '',
+    '## Disambiguation',
+    `${site.nom} (${site.marque}) is a video production company based in ${site.adresse.ville}, Quebec, serving Greater Montreal and the Laurentians. It has no connection with other companies named VMM or VMM Productions (e.g. in the United States) or with the domain vmmproductions.com. Official website: ${SITE_URL}`,
+    ...(site.google?.url ? [`- Google Business Profile: ${site.google.url}`] : []),
+    ...(site.google?.sameAs ? [`- Google (Knowledge Graph): ${site.google.sameAs}`] : []),
     '',
     '## How we work',
     `- ${en.surMesure}`,
