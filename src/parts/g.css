@@ -1,0 +1,36 @@
+/* ==========================================================================
+   À propos, écran 5 « Derrière chaque image, il y a des gens. » — MOBILE (JD, 21 nov. 2026, capture
+   « reference-photo-jd ») : photo de JD agrandie, la casquette commence juste sous le bouton
+   « Donnons vie à votre vision → » et le portrait occupe presque toute la largeur, centré.
+   Le PNG détouré (944 × 1665) a 12,6 % de marge transparente en haut : elle est masquée (marge négative)
+   pour que le sujet commence en haut de la zone photo. La photo remplit la hauteur disponible et garde au
+   moins 76 % de la largeur de l'écran ; sur les petits écrans, le bas (sous la caméra) est coupé en fondu.
+   Aucun texte ne change. Ordinateur inchangé.
+   ========================================================================== */
+@media (max-width: 899px) {
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #vision.jd-photo-split .jd-split-photo {
+    container-type: size;
+    align-items: flex-start;
+    margin-top: clamp(.5rem, 2svh, 1rem);
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 88%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 88%, transparent 100%);
+  }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #vision .jd-split-photo picture {
+    align-items: flex-start;
+    height: auto;
+    max-height: none;
+  }
+  :is(html[lang^="fr"], html[lang^="en"]) .page-apropos #vision .jd-split-photo img {
+    /* largeur = celle qui remplit la hauteur (sujet = 87,4 % de l'image), au moins 76 % de l'écran, au plus 100 % */
+    --jd-w: min(100cqw, max(76cqw, calc(100cqh / .874 * 944 / 1665)));
+    width: var(--jd-w);
+    height: auto;
+    max-width: none;
+    max-height: none;
+    aspect-ratio: 944 / 1665;
+    object-fit: contain;
+    margin-top: calc(var(--jd-w) * -1665 / 944 * .126);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 4%, #000 96%, transparent 100%);
+  }
+}
