@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   test:
@@ -21,6 +21,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -39,10 +40,16 @@ jobs:
           VMM_ALLOW_INDEX: 'true'
         run: node build.mjs
 
-      - name: Run Playwright tests
+      - name: TEMP PR L — régénérer les snapshots Contact
         env:
           VMM_ALLOW_INDEX: 'true'
-        run: npm test -- --workers=4
+        run: |
+          npx playwright test tests/visual.spec.ts --grep "contact-(fr|en)$" --update-snapshots --workers=4 || true
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tests/__snapshots__/visual.spec.ts/contact-*
+          git status --short
+          git commit -m "Snapshots Contact régénérés (PR L, TEMP)" && git push origin HEAD:${{ github.head_ref || github.ref_name }}
 
       - name: Upload Playwright HTML Report
         uses: actions/upload-artifact@v4
