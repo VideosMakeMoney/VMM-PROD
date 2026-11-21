@@ -303,7 +303,7 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
     checkDir(join(ROOT, 'dist'));
   });
 
-  test('[PR-D #8] Page Tapis Rouge (FR + EN) : 9 vidéos visibles dans la bibliothèque, contient 1NpXK1wLSl8 et u_HK2iiuUnw, ordre chronologique publie respecté, compteur 01 / 09', async ({ page }) => {
+  test('[PR-D #8] Page Tapis Rouge (FR + EN) : 9 vidéos visibles dans la bibliothèque, contient 1NpXK1wLSl8 et u_HK2iiuUnw, ordre chronologique publie respecté (le plus récent en premier depuis PR M), compteur 01 / 09', async ({ page }) => {
     const EXPECTED_IDS = [
       'hmrhpcyGGEk', // 2026-07-16
       'O2UTFiYzGU0', // 2026-07-21
@@ -345,7 +345,8 @@ test.describe('PR D — Photo FAQ Contact selon maquettes 16:9 et 9:16 (FR + EN)
           .filter(Boolean);
       });
 
-      expect(renderedIds, `Ordre chronologique strict des 9 vidéos Tapis Rouge sur ${url}`).toEqual(EXPECTED_IDS);
+      // PR M (2026-11-21) : la plus récente en premier, donc la liste chronologique ci-dessus inversée.
+      expect(renderedIds, `Ordre chronologique strict des 9 vidéos Tapis Rouge sur ${url}`).toEqual([...EXPECTED_IDS].reverse());
       expect(renderedIds).toContain('1NpXK1wLSl8');
       expect(renderedIds).toContain('u_HK2iiuUnw');
     }
