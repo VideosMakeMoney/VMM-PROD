@@ -565,10 +565,14 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
   );
 }
 @media (min-width: 900px) {
+  /* PR L (Natasha, 21 nov.) : la section suit la hauteur de la photo (45 % de l'écran, ratio 3:4,
+     70 % de sa hauteur visible : du logo VMM au bureau), au plus 80vh,
+     et au moins la hauteur du bloc FAQ (hauteur automatique) */
   .section-faq.section-faq--photo,
-  .section-faq--photo {
-    min-height: calc(100svh - var(--header-h));
-    max-height: calc(100svh - var(--header-h));
+  .section-faq--photo,
+  .section-faq--photo:has(details[open]) {
+    min-height: min(calc(var(--faq-photo-w) * 1255 / 941 * 0.7), 80svh);
+    max-height: none;
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
@@ -578,9 +582,9 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
     overflow: hidden;
   }
   /* Largeur de la photo de JD : une seule source pour la photo et l'espace vide à sa gauche.
-     PR L : ratio de la nouvelle photo (941×1255, 3:4) pour que le logo VMM et JD restent entiers */
+     PR L : 45 % de la largeur de l'écran (Natasha, 21 nov.) */
   .section-faq--photo {
-    --faq-photo-w: min(44vw, calc((100svh - var(--header-h)) * 941 / 1255));
+    --faq-photo-w: 45vw;
   }
   /* Le bloc FAQ occupe l'espace vide entre le bord gauche et la photo, et s'y centre (Natasha, 21 nov.) */
   .section-faq--photo .faq {
@@ -608,7 +612,8 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
     min-height: 48px;
     font-size: 1.0625rem;
     line-height: 1.55;
-    padding-block: 10px;
+    /* PR L : plus d'air entre les questions sur grand écran pour que le bloc remplisse la hauteur de la photo */
+    padding-block: max(10px, calc(2.7vw - 18px));
   }
   .section-faq--photo details p {
     font-size: 1.0625rem;
@@ -634,7 +639,8 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center center;
+    /* PR L : recadrage surtout par le bas pour garder le logo VMM entier en haut et JD au complet */
+    object-position: 50% 17%;
     border-radius: 1rem 0 0 1rem;
     -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 20%), linear-gradient(180deg, transparent 0%, #000 12%);
     -webkit-mask-composite: source-in;

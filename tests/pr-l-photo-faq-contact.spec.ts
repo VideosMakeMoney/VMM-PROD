@@ -39,3 +39,25 @@ for (const p of PAGES) {
     expect(HASHES.has(hash), `empreinte ${hash} de ${m.src}`).toBe(true);
   });
 }
+
+/**
+ * PR L, ajustement (Natasha, 21 nov.) : sur ordinateur, moins d'espace vide.
+ * Photo d'au moins 40 % de la largeur, section d'au plus 80vh, et espace vide sous la FAQ < 25 % de la section.
+ */
+for (const p of PAGES) {
+  test(`[PR-L #2] ${p.lang} ordinateur : photo large, section ≤ 80vh, peu d'espace vide sous la FAQ`, async ({ page }, testInfo) => {
+    test.skip(!['desktop-1440x900', 'desktop-1920x1080'].includes(testInfo.project.name), 'Ordinateur 1440×900 et 1920×1080');
+    await page.goto(p.path, { waitUntil: 'networkidle' });
+    await page.locator('.section-faq--photo').scrollIntoViewIfNeeded();
+    const m = await page.evaluate(() => {
+      const s = document.querySelector('.section-faq--photo')!.getBoundingClientRect();
+      const ph = document.querySelector('.section-faq--photo .faq-photo-wrap')!.getBoundingClientRect();
+      const c = document.querySelector('.section-faq--photo .faq-content')!.getBoundingClientRect();
+      return { vw: window.innerWidth, vh: window.innerHeight, secH: s.height, secBottom: s.bottom, photoW: ph.width, faqBottom: c.bottom };
+    });
+    expect(m.photoW / m.vw, `photo ${m.photoW}px sur ${m.vw}px`).toBeGreaterThanOrEqual(0.4);
+    expect(m.secH, `section ${m.secH}px, 80vh = ${0.8 * m.vh}px`).toBeLessThanOrEqual(0.8 * m.vh + 0.5);
+    const vide = m.secBottom - m.faqBottom;
+    expect(vide / m.secH, `espace vide sous la FAQ ${vide}px sur ${m.secH}px`).toBeLessThan(0.25);
+  });
+}
