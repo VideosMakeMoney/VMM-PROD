@@ -54,6 +54,12 @@ const coulissesVideos = () => portfolio.videos.filter((v) => v.type === 'couliss
 // Vidéos affichées dans les bibliothèques et comptées (« 01 / N », « N vidéos ») : seulement celles qui ont un ID YouTube.
 // Les autres restent dans portfolio.json et réapparaissent dès qu'un ID est ajouté (Natasha, 2026-11-12).
 const visibleVideos = (list) => list.filter((v) => v.youtubeId);
+// Bibliothèque d'une page client : la plus récente en premier (date de publication YouTube de portfolio.json).
+// clientVideos() est trié du plus vieux au plus récent (tri stable) : on l'inverse, donc deux vidéos de même date
+// gardent leur ordre relatif actuel inversé. Une vidéo sans date n'en reçoit jamais : elle va à la fin, dans l'ordre du JSON.
+// Le reste du site (image de la carte client, pages locales) garde l'ordre de clientVideos() (Natasha, PR M, 2026-11-21).
+const videoDate = (v) => v.publie || v.dateMiseEnLigne || '';
+const newestFirst = (list) => [...list.filter(videoDate)].reverse().concat(list.filter((v) => !videoDate(v)));
 const coulissesRoute = { fr: `${ROUTES.portfolio.fr}${COUL.slug.fr}/`, en: `${ROUTES.portfolio.en}${COUL.slug.en}/` };
 const clientRoute = (c) => ({ fr: `${ROUTES.portfolio.fr}${clientSlug(c)}/`, en: `${ROUTES.portfolio.en}${clientSlug(c)}/` });
 
@@ -1204,7 +1210,7 @@ function collectionScreen(L, lang, { clip, title, h1, list, centered = false }) 
 function clientPage(c, lang) {
   const L = langs[lang];
   const P = L.portfolio;
-  const list = visibleVideos(clientVideos(c));
+  const list = newestFirst(visibleVideos(clientVideos(c)));
   // Élision en français : « de Installations » devient « d'Installations ».
   const fill = (s) => (lang === 'fr' && /^[aeiouyàâéèêîôûh]/i.test(c.nom) ? s.replaceAll('de {client}', 'd’{client}') : s).replaceAll('{client}', c.nom);
   const body = collectionScreen(L, lang, { clip: c.clip, title: c.nomHero || c.nom, h1: fill(P.clientH1), list, centered: true });
