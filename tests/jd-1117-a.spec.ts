@@ -402,7 +402,7 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR A : Contact', () => {
     }
   });
 
-  test('[JD-1117 #7] Rendu FAQ réel (build avec drapeau allumé) : <picture> généré par build.mjs, alt, loading=lazy, ratio 941/1255 à ±1% et hauteur d\'écran respectée (FR + EN)', async ({ page }) => {
+  test('[JD-1117 #7] Rendu FAQ réel (build avec drapeau allumé) : <picture> généré par build.mjs, alt, loading=lazy, ratio 941/1255 à ±1% sans déformation et hauteur d\'écran respectée (FR + EN)', async ({ page }) => {
     const testPages = [
       { url: '/contact/', lang: 'fr' as const, expectedAlt: 'JD au studio de VMM Productions' },
       { url: '/en/contact/', lang: 'en' as const, expectedAlt: 'JD in the VMM Productions studio' },
@@ -434,15 +434,17 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR A : Contact', () => {
       await expect(img).toHaveAttribute('height', '1255');
       await expect(img).toHaveAttribute('loading', 'lazy');
 
-      // Vérification du ratio d'aspect rendu (941/1255 = 0.7498 à ±1 %, photo PR L) sur desktop (>= 900px)
+      // Sans déformation sur desktop (>= 900px) : PR L (Natasha, 21 nov.) — la photo est recadrée en object-fit: cover
+      // dans une boîte de 45 % de l'écran ; l'image elle-même garde son ratio 941/1255 à ±1 %.
       const imgBox = await img.boundingBox();
       expect(imgBox).not.toBeNull();
       const viewport = page.viewportSize();
       if (imgBox && viewport && viewport.width >= 900) {
-        const renderedRatio = imgBox.width / imgBox.height;
+        const rendu = await img.evaluate((el: HTMLImageElement) => ({ fit: getComputedStyle(el).objectFit, w: el.naturalWidth, h: el.naturalHeight }));
+        expect(rendu.fit, 'object-fit: cover (aucune déformation)').toBe('cover');
         const expectedRatio = 941 / 1255;
-        const diffRatio = Math.abs(renderedRatio - expectedRatio) / expectedRatio;
-        expect(diffRatio, `Le ratio rendu (${renderedRatio}) doit être à ±1 % de 941/1255 (${expectedRatio})`).toBeLessThan(0.01);
+        const diffRatio = Math.abs(rendu.w / rendu.h - expectedRatio) / expectedRatio;
+        expect(diffRatio, `Le ratio de l'image (${rendu.w}×${rendu.h}) doit être à ±1 % de 941/1255 (${expectedRatio})`).toBeLessThan(0.01);
       }
 
       // Vérification que la section tient dans un écran (spécifiquement requis pour 1366×768 et 390×844)
