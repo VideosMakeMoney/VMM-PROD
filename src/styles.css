@@ -576,18 +576,25 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
     padding-block: 0;
     overflow: hidden;
   }
+  /* Largeur de la photo de JD : une seule source pour la photo et l'espace vide à sa gauche */
+  .section-faq--photo {
+    --faq-photo-w: min(44vw, calc((100svh - var(--header-h)) * 941 / 1672));
+  }
+  /* Le bloc FAQ occupe l'espace vide entre le bord gauche et la photo, et s'y centre (Natasha, 21 nov.) */
   .section-faq--photo .faq {
     position: relative;
     z-index: 1;
-    max-width: var(--max-w);
-    width: 100%;
-    margin-inline: auto;
+    max-width: none;
+    width: calc(100% - var(--faq-photo-w));
+    margin-inline: 0;
     padding-inline: var(--gutter);
     padding-top: 0;
     padding-bottom: 0;
+    display: flex;
+    justify-content: center;
   }
   .section-faq--photo .faq-content {
-    max-width: min(580px, 54%);
+    max-width: min(580px, 100%);
     margin: 0;
   }
   .section-faq--photo #faq-title {
@@ -611,7 +618,7 @@ section.page-contact { padding-top: clamp(3rem, 8vw, 6rem); }
     bottom: 0;
     left: auto;
     height: 100%;
-    width: min(44vw, calc((100svh - var(--header-h)) * 941 / 1672));
+    width: var(--faq-photo-w);
     z-index: 0;
     overflow: hidden;
   }
