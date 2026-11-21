@@ -134,10 +134,12 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR B : À propos + Accueil p5'
       expect(imgBox!.width).toBeGreaterThan(100);
       expect(imgBox!.height).toBeGreaterThan(200);
 
-      // Le haut de l'image affichée se trouve sous le bas du bouton
+      // Le haut du sujet (casquette) se trouve sous le bas du bouton. PR J (JD, 21 nov.) : la bande transparente
+      // du haut du PNG détouré (12,6 % de sa hauteur, aucun pixel du sujet) est masquée ; on mesure donc le sujet.
+      const subjectTop = imgBox!.y + imgBox!.height * 0.126;
       expect(
-        imgBox!.y,
-        `Le haut de la photo (${imgBox!.y}px) doit être sous le bouton (${btnBox!.y + btnBox!.height}px)`
+        subjectTop,
+        `Le haut du sujet (${subjectTop}px) doit être sous le bouton (${btnBox!.y + btnBox!.height}px)`
       ).toBeGreaterThanOrEqual(btnBox!.y + btnBox!.height - 4);
 
       // Vérification que le haut de l'image source n'est pas rogné (pas de margin-top négatif ni object-position qui coupe le haut)
@@ -150,7 +152,9 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR B : À propos + Accueil p5'
         };
       });
 
-      expect(imgDetails.marginTop, 'Pas de margin-top négatif qui repousse la tête au-delà du conteneur').toBeGreaterThanOrEqual(0);
+      // PR J : un margin-top négatif est permis seulement pour masquer la bande transparente (≤ 12,6 % de la hauteur) :
+      // la tête n'est jamais rognée.
+      expect(-imgDetails.marginTop, 'margin-top négatif limité à la bande transparente, la tête reste entière').toBeLessThanOrEqual(imgBox!.height * 0.127 + 1);
       // object-position ne doit pas être décalé vers le bas pour rogner le haut (y ne doit pas être négatif)
       expect(imgDetails.objectFit).toBe('contain');
     }
@@ -377,14 +381,14 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR B : À propos + Accueil p5'
       const frVision = await page.evaluate(() => {
         const btn = document.querySelector('#vision .cta-row .btn')!.getBoundingClientRect();
         const img = document.querySelector('#vision .jd-split-photo img')!.getBoundingClientRect();
-        return { imgTop: img.top, imgHeight: img.height, btnBottom: btn.bottom };
+        return { imgTop: img.top + img.height * 0.126, imgHeight: img.height, btnBottom: btn.bottom }; // haut du sujet (PR J)
       });
 
       await page.goto('/en/about/');
       const enVision = await page.evaluate(() => {
         const btn = document.querySelector('#vision .cta-row .btn')!.getBoundingClientRect();
         const img = document.querySelector('#vision .jd-split-photo img')!.getBoundingClientRect();
-        return { imgTop: img.top, imgHeight: img.height, btnBottom: btn.bottom };
+        return { imgTop: img.top + img.height * 0.126, imgHeight: img.height, btnBottom: btn.bottom }; // haut du sujet (PR J)
       });
 
       // Dans les deux langues, le haut de la photo se trouve sous le bouton

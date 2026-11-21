@@ -51,10 +51,12 @@ test.describe('PR F — Photo JD À propos mobile (dernière section #vision)', 
           `Largeur de la photo (${imgBox.width.toFixed(1)}px) doit être >= 72% du viewport (${minExpectedWidth.toFixed(1)}px) ou >= 1.12x main (${minRatioVsMain.toFixed(1)}px)`
         ).toBe(true);
 
-        // 3. Tête entièrement visible : haut de l'img >= bas du bouton CTA
+        // 3. Tête entièrement visible : haut du sujet >= bas du bouton CTA. PR J (JD, 21 nov.) : la bande transparente
+        //    du haut du PNG (12,6 % de sa hauteur) est masquée, on mesure donc le haut du sujet.
+        const subjectTop = imgBox.y + imgBox.height * 0.126;
         expect(
-          imgBox.y,
-          `Haut de l'image (${imgBox.y.toFixed(1)}px) doit être >= bas du bouton CTA (${(ctaBox.y + ctaBox.height).toFixed(1)}px)`
+          subjectTop,
+          `Haut du sujet (${subjectTop.toFixed(1)}px) doit être >= bas du bouton CTA (${(ctaBox.y + ctaBox.height).toFixed(1)}px)`
         ).toBeGreaterThanOrEqual(ctaBox.y + ctaBox.height - 2);
 
         // 4. Ratio rendu reste 944/1665 (±1%)
@@ -76,10 +78,12 @@ test.describe('PR F — Photo JD À propos mobile (dernière section #vision)', 
           `Hauteur de la section (${visionBox.height.toFixed(1)}px) doit être <= hauteur disponible (${vp.height - 64}px)`
         ).toBeLessThanOrEqual(vp.height - 64 + 4);
 
-        // Le bas de la photo ne doit pas dépasser le bas de la section
+        // Le bas de la zone photo ne doit pas dépasser le bas de la section (PR J : sur les petits écrans, l'image est
+        // coupée en fondu par le bas de sa zone, qui elle reste dans l'écran)
+        const photoBox = (await vision.locator('.jd-split-photo').boundingBox())!;
         expect(
-          imgBox.y + imgBox.height,
-          `Bas de la photo (${(imgBox.y + imgBox.height).toFixed(1)}px) doit être <= bas de la section (${(visionBox.y + visionBox.height).toFixed(1)}px)`
+          photoBox.y + photoBox.height,
+          `Bas de la zone photo (${(photoBox.y + photoBox.height).toFixed(1)}px) doit être <= bas de la section (${(visionBox.y + visionBox.height).toFixed(1)}px)`
         ).toBeLessThanOrEqual(visionBox.y + visionBox.height + 4);
       });
     }
