@@ -58,6 +58,7 @@ const visibleVideos = (list) => list.filter((v) => v.youtubeId);
 // clientVideos() est trié du plus vieux au plus récent (tri stable) : on l'inverse, donc deux vidéos de même date
 // gardent leur ordre relatif actuel inversé. Une vidéo sans date n'en reçoit jamais : elle va à la fin, dans l'ordre du JSON.
 // Le reste du site (image de la carte client, pages locales) garde l'ordre de clientVideos() (Natasha, PR M, 2026-11-21).
+// Même règle pour la bibliothèque Coulisses / Making-of / Bandes-annonces (Natasha, PR N, 2026-11-21).
 const videoDate = (v) => v.publie || v.dateMiseEnLigne || '';
 const newestFirst = (list) => [...list.filter(videoDate)].reverse().concat(list.filter((v) => !videoDate(v)));
 const coulissesRoute = { fr: `${ROUTES.portfolio.fr}${COUL.slug.fr}/`, en: `${ROUTES.portfolio.en}${COUL.slug.en}/` };
@@ -1229,7 +1230,7 @@ function coulissesPage(lang) {
   const L = langs[lang];
   const P = L.portfolio;
   const C = P.coulissesPage;
-  const list = visibleVideos(coulissesVideos());
+  const list = newestFirst(visibleVideos(coulissesVideos()));
   const body = collectionScreen(L, lang, { clip: COUL.clip, title: C.titreHero || C.titre, h1: C.h1, list });
   return layout({
     key: 'portfolio',
