@@ -250,7 +250,7 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR C : clips, liens YouTube, t
   // POINT 10 — Bibliothèques client et coulisses, tri chronologique strict
   // =========================================================================
 
-  test('[JD-1117 #10] Bibliothèques client et coulisses : liste exacte des IDs et tri strictement chronologique selon publie, croissant pour coulisses, décroissant pour les clients depuis PR M (FR + EN)', async ({ page }) => {
+  test('[JD-1117 #10] Bibliothèques client et coulisses : liste exacte des IDs et tri strictement chronologique selon publie, décroissant pour les clients depuis PR M et pour coulisses depuis PR N (FR + EN)', async ({ page }) => {
     const EXPECTED_ORDERS: Record<string, { fr: string; en: string; ids: string[] }> = {
       coulisses: {
         fr: '/portfolio/coulisses/',
@@ -314,7 +314,7 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR C : clips, liens YouTube, t
       },
     };
 
-    for (const [groupKey, info] of Object.entries(EXPECTED_ORDERS)) {
+    for (const info of Object.values(EXPECTED_ORDERS)) {
       for (const url of [info.fr, info.en]) {
         await page.goto(url);
 
@@ -328,8 +328,8 @@ test.describe('Ajustements JD du 17 nov. 2026 — PR C : clips, liens YouTube, t
             .filter(Boolean);
         });
 
-        // PR M (2026-11-21) : bibliothèques clients de la plus récente à la plus vieille ; coulisses inchangées (croissant).
-        const attendu = groupKey === 'coulisses' ? info.ids : [...info.ids].reverse();
+        // PR M (2026-11-21) : bibliothèques clients de la plus récente à la plus vieille ; PR N : coulisses aussi.
+        const attendu = [...info.ids].reverse();
         expect(pageYtLinks, `Ordre et contenu des IDs vidéo sur ${url}`).toEqual(attendu);
       }
     }
